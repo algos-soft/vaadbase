@@ -1,0 +1,45 @@
+package it.algos.@PROJECT@.modules.@PACKAGE@;
+
+import com.vaadin.flow.spring.annotation.SpringComponent;
+import it.algos.vaadbase.annotation.AIScript;
+import it.algos.vaadbase.presenter.APresenter;
+import org.springframework.beans.factory.annotation.Qualifier;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Qualifier;
+import org.springframework.context.annotation.Lazy;
+import org.springframework.context.annotation.Scope;
+import org.springframework.beans.factory.config.ConfigurableBeanFactory;
+import it.algos.vaadbase.backend.service.IAService;
+import it.algos.vaadbase.ui.IAView;
+import static it.algos.vaadbase.application.BaseCost.@QUALIFIER@;
+
+/**
+ * Project @PROJECT@
+ * Created by Algos
+ * User: @USER@
+ * Date: @TODAY@
+ * Estende la Entity astratta APresenter che gestisce la business logic
+ * Annotated with @SpringComponent (obbligatorio)
+ * Annotated with @Scope (obbligatorio = 'session')
+ * Annotated with @Qualifier (obbligatorio) per permettere a Spring di istanziare la sottoclasse specifica
+ * Annotated with @AIScript (facoltativo) per controllare la ri-creazione di questo file nello script del framework
+ * Costruttore con dei link @Autowired di tipo @Lazy per evitare un loop nella injection
+ */
+@SpringComponent
+@Scope(ConfigurableBeanFactory.SCOPE_SINGLETON)
+@Qualifier(@QUALIFIER@)
+@AIScript(sovrascrivibile = true)
+public class @ENTITY@Presenter extends APresenter {
+
+    /**
+     * Costruttore @Autowired (nella superclasse)
+     * Si usa un @Qualifier(), per avere la sottoclasse specifica
+     * Si usa una costante statica, per essere sicuri di scrivere sempre uguali i riferimenti
+     * Regola il modello-dati specifico
+     */
+    public @ENTITY@Presenter(@Lazy @Qualifier(@QUALIFIER@) IAService service, @Lazy @Qualifier(@QUALIFIER@) IAView view) {
+        super(@ENTITY@.class, service, view);
+     }// end of Spring constructor
+
+
+}// end of class

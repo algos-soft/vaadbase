@@ -1,0 +1,9 @@
+    /**
+     * Opportunità di usare una idKey specifica.
+     * Invocato appena prima del save(), solo per una nuova entity
+     *
+     * @param entityBean da salvare
+     */
+    protected void creaIdKeySpecifica(AEntity entityBean) {
+        entityBean.id = ((@ENTITY@)entityBean).getCode();
+    }// end of method

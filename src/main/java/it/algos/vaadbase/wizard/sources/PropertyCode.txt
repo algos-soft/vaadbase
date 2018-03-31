@@ -1,0 +1,11 @@
+
+    /**
+     * codice di riferimento (obbligatorio, unico)
+     */
+    @NotEmpty
+    @Size()
+    @Indexed()
+    @AIField(type = EAFieldType.text, required = true, focus = true, widthEM = 12, dev = EAFieldAccessibility.allways)
+    @AIColumn(width = 210)
+    private String code;
+

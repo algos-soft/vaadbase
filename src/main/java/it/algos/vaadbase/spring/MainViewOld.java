@@ -1,0 +1,32 @@
+package it.algos.vaadbase.spring;
+
+import com.vaadin.flow.component.UI;
+import com.vaadin.flow.component.button.Button;
+import com.vaadin.flow.component.dependency.HtmlImport;
+import com.vaadin.flow.component.orderedlayout.VerticalLayout;
+import com.vaadin.flow.component.page.BodySize;
+import com.vaadin.flow.component.polymertemplate.Id;
+import com.vaadin.flow.router.Route;
+import com.vaadin.flow.theme.Theme;
+import com.vaadin.flow.theme.lumo.Lumo;
+import org.springframework.beans.factory.annotation.Autowired;
+
+/**
+ * The main view contains a simple label element and a template element.
+ */
+@HtmlImport("styles/shared-styles.html")
+@Route("old")
+@Theme(Lumo.class)
+@BodySize(height = "100vh", width = "100vw")
+public class MainViewOld extends VerticalLayout {
+
+
+//    public MainViewOld(@Autowired ExampleTemplate template) {
+//        // This is just a simple label created via Elements API
+//        Button button = new Button("Click me", event -> template.setValue("Clicked!"));
+//        // This is a simple template example
+//        add(button, template);
+//        setClassName("main-layout");
+//    }
+
+}

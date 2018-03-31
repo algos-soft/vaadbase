@@ -1,0 +1,19 @@
+    /**
+     * Creazione in memoria di una nuova entity che NON viene salvata
+     * Eventuali regolazioni iniziali delle property
+     * All properties
+     * Gli argomenti (parametri) della new Entity DEVONO essere ordinati come nella Entity (costruttore lombok)
+     *
+     @PARAMETERSDOC@
+     *
+     * @return la nuova entity appena creata (non salvata)
+     */
+    public @ENTITY@ newEntity(@PARAMETERS@) {
+        @ENTITY@ entity = null;
+
+        @KEYUNICA@
+        entity = @ENTITY@.builder()@BUILDER@
+                .build();
+
+        return entity;
+    }// end of method

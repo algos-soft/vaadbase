@@ -1,0 +1,56 @@
+<link rel="import" href="../bower_components/polymer/polymer-element.html">
+
+<!--  Ensure that all components not used in templates but
+      created from server-side are bundled -->
+<link rel="import" href="components/confirm-dialog.html">
+<link rel="import" href="views/errors/access-denied-view.html">
+<link rel="import" href="views/login/login-view.html">
+<link rel="import" href="views/storefront/storefront-view.html">
+<link rel="import" href="views/storefront/order-card.html">
+<link rel="import" href="views/dashboard/dashboard-view.html">
+<link rel="import" href="views/admin/users/users-view.html">
+<link rel="import" href="views/admin/products/products-view.html">
+
+<!-- Imports used in this page -->
+<link rel="import" href="components/app-container.html">
+<link rel="import" href="components/app-navigation.html">
+
+<dom-module id="main-view">
+  <template>
+    <style>
+      app-container {
+        background-color: var(--lumo-shade-5pct);
+        color: var(--lumo-body-text-color);
+        font-family: var(--lumo-font-family);
+        overflow: auto;
+        flex-direction: column-reverse;
+      }
+
+      app-container ::slotted(:not(app-navigation)) {
+        flex: 1;
+        align-items: center;
+      }
+
+      @media (min-width: 600px) {
+        app-container {
+          flex-direction: column;
+        }
+      }
+    </style>
+
+    <app-container>
+      <app-navigation id="appNavigation"></app-navigation>
+      <slot></slot>
+    </app-container>
+  </template>
+
+  <script>
+    class MainView extends Polymer.Element {
+      static get is() {
+        return 'main-view';
+      }
+    }
+
+    window.customElements.define(MainView.is, MainView);
+  </script>
+</dom-module>
