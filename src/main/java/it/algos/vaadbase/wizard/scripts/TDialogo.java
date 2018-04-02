@@ -255,7 +255,6 @@ public class TDialogo extends Dialog {
         confirmButton.setHeight(NORMAL_HEIGHT);
 
         layoutFooter.add(cancelButton, confirmButton);
-
         layout.add(layoutFooter);
         return layout;
     }// end of method
