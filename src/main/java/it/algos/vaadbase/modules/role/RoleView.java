@@ -18,8 +18,6 @@ import com.vaadin.flow.spring.annotation.SpringComponent;
 import com.vaadin.flow.component.orderedlayout.VerticalLayout;
 import javax.annotation.PostConstruct;
 import java.util.List;
-
-import it.algos.vaadbase.ui.MainView;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.config.ConfigurableBeanFactory;
 import org.springframework.beans.factory.annotation.Qualifier;
@@ -35,7 +33,7 @@ import static it.algos.vaadbase.application.BaseCost.TAG_ROL;
  * Project vaadbase
  * Created by Algos
  * User: Gac
- * Date: 2018-03-30
+ * Date: 2018-04-02
  * Estende la Entity astratta AList di tipo AView per visualizzare la Grid
  * Annotated with @SpringComponent (obbligatorio)
  * Annotated with @Scope (obbligatorio = 'session')
@@ -49,8 +47,7 @@ import static it.algos.vaadbase.application.BaseCost.TAG_ROL;
 @SpringComponent
 @Scope(ConfigurableBeanFactory.SCOPE_SINGLETON)
 @Qualifier(TAG_ROL)
-//@Route(TAG_ROL)
-@Route(value = "",layout = MainView.class)
+@Route(TAG_ROL)
 @AIView(roleTypeVisibility = EARoleType.user)
 @AIScript(sovrascrivibile = true)
 public class RoleView extends AView {

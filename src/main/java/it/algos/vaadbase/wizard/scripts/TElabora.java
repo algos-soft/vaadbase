@@ -1,7 +1,5 @@
 package it.algos.vaadbase.wizard.scripts;
 
-import com.vaadin.flow.router.PageTitle;
-import com.vaadin.flow.router.Route;
 import com.vaadin.flow.spring.annotation.SpringComponent;
 import it.algos.vaadbase.service.AFileService;
 import it.algos.vaadbase.service.ATextService;
@@ -11,7 +9,6 @@ import it.algos.vaadbase.wizard.enumeration.Task;
 import it.algos.vaadbase.wizard.enumeration.Token;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.beans.factory.config.ConfigurableBeanFactory;
 import org.springframework.context.annotation.Scope;
 
@@ -30,19 +27,6 @@ import java.util.Map;
 @SpringComponent
 @Scope(ConfigurableBeanFactory.SCOPE_SINGLETON)
 public class TElabora {
-
-
-    /**
-     * Libreria di servizio. Inietta da Spring come 'singleton'
-     */
-    @Autowired
-    public AFileService file;
-
-    /**
-     * Libreria di servizio. Inietta da Spring come 'singleton'
-     */
-    @Autowired
-    public ATextService text;
 
 
     private static final String SEP = "/";
@@ -85,8 +69,16 @@ public class TElabora {
     private static final String METHOD_NEW_ENTITY = METHOD + "NewEntity" + SOURCE_SUFFIX;
     private static final String METHOD_NEW_ORDINE = METHOD + "NewOrdine" + SOURCE_SUFFIX;
     private static final String METHOD_ID_KEY_SPECIFICA = METHOD + "IdKeySpecifica" + SOURCE_SUFFIX;
-
-
+    /**
+     * Libreria di servizio. Inietta da Spring come 'singleton'
+     */
+    @Autowired
+    public AFileService file;
+    /**
+     * Libreria di servizio. Inietta da Spring come 'singleton'
+     */
+    @Autowired
+    public ATextService text;
     //--regolate indipendentemente dai risultati del dialogo
     private String userDir;                 //--di sistema
     private String ideaProjectRootPath;     //--userDir meno PROJECT_BASE_NAME
@@ -125,6 +117,7 @@ public class TElabora {
     private String qualifierView;   //--NAME_COST (springvaadin) o NAME_APP_COST (altri progetti) più VIEW più tagBreveTreChar
     private String queryText;
     private String propertiesText;
+    private String parametersEntityText;
     private String parametersDocText;
     private String parametersText;
     private String methodFindText;
@@ -410,6 +403,8 @@ public class TElabora {
         if (flagCode) {
             methodFindText += leggeFile(METHOD_FIND);
             methodFindText = Token.replace(Token.entity, methodFindText, newEntityName);
+            methodFindText = Token.replace(Token.newEntityParameters, methodFindText, creaParametersEntity());
+            methodFindText = Token.replace(Token.parameters, methodFindText, creaParameters());
         }// end of if cycle
 
         return methodFindText;
@@ -499,6 +494,27 @@ public class TElabora {
 
         propertiesText = text.levaCoda(propertiesText, virgola);
         return propertiesText;
+    }// end of method
+
+
+    private String creaParametersEntity() {
+        parametersEntityText = "";
+        String tagOrdine = "0";
+        String tagDescrizione = "\"\"";
+        String virgola = ", ";
+
+        if (flagOrdine) {
+            parametersEntityText += tagOrdine + virgola;
+        }// end of if cycle
+        if (flagCode) {
+            parametersEntityText += PROPERTY_CODE_NAME.toLowerCase() + virgola;
+        }// end of if cycle
+        if (flagDescrizione) {
+            parametersEntityText += tagDescrizione + virgola;
+        }// end of if cycle
+
+        parametersEntityText = text.levaCoda(parametersEntityText, virgola);
+        return parametersEntityText;
     }// end of method
 
 

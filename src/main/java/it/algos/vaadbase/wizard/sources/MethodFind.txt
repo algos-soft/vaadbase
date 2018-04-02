@@ -9,7 +9,7 @@
         @ENTITY@ entity = findByKeyUnica(code);
 
         if (entity == null) {
-            entity = newEntity(code);
+            entity = newEntity(@PARAMETERSNEWENTITY@);
             save(entity);
         }// end of if cycle
 

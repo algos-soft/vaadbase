@@ -26,24 +26,25 @@ import static it.algos.vaadbase.application.BaseCost.TAG_ROL;
  * Project vaadbase
  * Created by Algos
  * User: Gac
- * Date: 2018-03-30
- * Estende la Entity astratta AEntity che contiene la key property ObjectId
- * Annotated with @SpringComponent (obbligatorio)
- * Annotated with @Document (facoltativo) per avere un nome della collection (DB Mongo) diverso dal nome della Entity
- * Annotated with @Scope (obbligatorio = 'singleton')
- * Annotated with @Data (Lombok) for automatic use of Getter and Setter
- * Annotated with @NoArgsConstructor (Lombok) for JavaBean specifications
- * Annotated with @AllArgsConstructor (Lombok) per usare il costruttore completo nel Service
+ * Date: 2018-04-02
+ * <br>
+ * Estende la Entity astratta AEntity che contiene la key property ObjectId <br>
+ * Annotated with @SpringComponent (obbligatorio) <br>
+ * Annotated with @Document (facoltativo) per avere un nome della collection (DB Mongo) diverso dal nome della Entity <br>
+ * Annotated with @Scope (obbligatorio = 'singleton') <br>
+ * Annotated with @Data (Lombok) for automatic use of Getter and Setter <br>
+ * Annotated with @NoArgsConstructor (Lombok) for JavaBean specifications <br>
+ * Annotated with @AllArgsConstructor (Lombok) per usare il costruttore completo nel Service <br>
  * Annotated with @Builder (Lombok) lets you automatically produce the code required to have your class
- * be instantiable with code such as: Person.builder().name("Adam Savage").city("San Francisco").build();
- * Annotated with @EqualsAndHashCode (facoltativo) per ???
- * Annotated with @Qualifier (obbligatorio) per permettere a Spring di istanziare la sottoclasse specifica
- * Annotated with @AIEntity (facoltativo) per alcuni parametri generali del modulo
- * Annotated with @AIList (facoltativo) per le colonne della Lista e loro visibilità/accessibilità relativa all'utente
- * Annotated with @AIForm (facoltativo) per i fields del Form e loro visibilità/accessibilità relativa all'utente
- * Annotated with @AIScript (facoltativo) per controllare la ri-creazione di questo file nello script del framework
- * Inserisce SEMPRE la versione di serializzazione che viene poi filtrata per non mostrarla in List e Form
- * Le singole property sono annotate con @AIField (obbligatorio per il tipo di Field) e @AIColumn (facoltativo)
+ * be instantiable with code such as: Person.builder().name("Adam Savage").city("San Francisco").build(); <br>
+ * Annotated with @EqualsAndHashCode (facoltativo) per ??? <br>
+ * Annotated with @Qualifier (obbligatorio) per permettere a Spring di istanziare la sottoclasse specifica <br>
+ * Annotated with @AIEntity (facoltativo) per alcuni parametri generali del modulo <br>
+ * Annotated with @AIList (facoltativo) per le colonne della Lista e loro visibilità/accessibilità relativa all'utente <br>
+ * Annotated with @AIForm (facoltativo) per i fields del Form e loro visibilità/accessibilità relativa all'utente <br>
+ * Annotated with @AIScript (facoltativo) per controllare la ri-creazione di questo file nello script del framework <br>
+ * Inserisce SEMPRE la versione di serializzazione che viene poi filtrata per non mostrarla in List e Form <br>
+ * Le singole property sono annotate con @AIField (obbligatorio per il tipo di Field) e @AIColumn (facoltativo) <br>
  */
 @SpringComponent
 @Document(collection = "role")

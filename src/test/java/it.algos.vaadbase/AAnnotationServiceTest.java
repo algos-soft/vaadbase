@@ -9,10 +9,7 @@ import it.algos.vaadbase.service.ATextService;
 import it.algos.vaadbase.ui.IAView;
 import it.algos.vaadbase.ui.annotation.*;
 import name.falgout.jeffrey.testing.junit5.MockitoExtension;
-import org.junit.jupiter.api.BeforeAll;
-import org.junit.jupiter.api.DisplayName;
-import org.junit.jupiter.api.Test;
-import org.junit.jupiter.api.TestInstance;
+import org.junit.jupiter.api.*;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
 import org.mockito.MockitoAnnotations;
@@ -32,6 +29,7 @@ import static org.junit.jupiter.api.Assertions.assertNull;
  */
 @ExtendWith(MockitoExtension.class)
 @TestInstance(TestInstance.Lifecycle.PER_CLASS)
+@Tag("annotation")
 @DisplayName("Test sulla annotazioni Algos")
 public class AAnnotationServiceTest extends ATest {
 

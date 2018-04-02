@@ -4,10 +4,7 @@ package it.algos.vaadbase;
 import com.vaadin.flow.component.html.Label;
 import it.algos.vaadbase.service.ATextService;
 import name.falgout.jeffrey.testing.junit5.MockitoExtension;
-import org.junit.jupiter.api.BeforeAll;
-import org.junit.jupiter.api.DisplayName;
-import org.junit.jupiter.api.Test;
-import org.junit.jupiter.api.TestInstance;
+import org.junit.jupiter.api.*;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
@@ -24,6 +21,7 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
  */
 @ExtendWith(MockitoExtension.class)
 @TestInstance(TestInstance.Lifecycle.PER_CLASS)
+@Tag("text")
 @DisplayName("Test sul service di elaborazione stringhe")
 public class ATextServiceTest extends ATest{
 

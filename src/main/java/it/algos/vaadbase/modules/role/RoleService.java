@@ -19,7 +19,7 @@ import static it.algos.vaadbase.application.BaseCost.TAG_ROL;
  * Project vaadbase
  * Created by Algos
  * User: Gac
- * Date: 2018-03-30
+ * Date: 2018-04-02
  * Estende la Entity astratta AService. Layer di collegamento tra il Presenter e la Repository.
  * Annotated with @@Slf4j (facoltativo) per i logs automatici
  * Annotated with @SpringComponent (obbligatorio)
@@ -69,7 +69,7 @@ public class RoleService extends AService {
         Role entity = findByKeyUnica(code);
 
         if (entity == null) {
-            entity = newEntity(0,code);
+            entity = newEntity(0, code);
             save(entity);
         }// end of if cycle
 
@@ -151,7 +151,7 @@ public class RoleService extends AService {
      */
     @Override
     public List<Role> findAll() {
-        return repository.findAllByOrderByOrdineAsc();
+        return repository.findAllByOrderByCodeAsc();
     }// end of method
 
 

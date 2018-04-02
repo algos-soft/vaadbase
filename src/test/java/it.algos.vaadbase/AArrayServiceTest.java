@@ -5,10 +5,7 @@ import com.vaadin.flow.component.html.Label;
 import it.algos.vaadbase.service.AArrayService;
 import it.algos.vaadbase.service.ATextService;
 import name.falgout.jeffrey.testing.junit5.MockitoExtension;
-import org.junit.jupiter.api.BeforeAll;
-import org.junit.jupiter.api.DisplayName;
-import org.junit.jupiter.api.Test;
-import org.junit.jupiter.api.TestInstance;
+import org.junit.jupiter.api.*;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
 import org.mockito.MockitoAnnotations;
@@ -30,6 +27,7 @@ import static org.junit.jupiter.api.Assertions.assertNotNull;
  */
 @ExtendWith(MockitoExtension.class)
 @TestInstance(TestInstance.Lifecycle.PER_CLASS)
+@Tag("array")
 @DisplayName("Test sul service di utility per gli arry")
 public class AArrayServiceTest extends ATest{
 

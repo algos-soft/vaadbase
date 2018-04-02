@@ -70,7 +70,7 @@ public class RoleData extends AData {
      */
     private void creaData() {
         for (EARole ruolo : EARole.values()) {
-            service.findOrCrea(ruolo.toString());
+//            service.findOrCrea(ruolo.toString());
         }// end of for cycle
     }// end of method
 

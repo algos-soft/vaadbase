@@ -4,10 +4,7 @@ import it.algos.vaadbase.service.AFileService;
 import it.algos.vaadbase.service.ATextService;
 import lombok.extern.slf4j.Slf4j;
 import name.falgout.jeffrey.testing.junit5.MockitoExtension;
-import org.junit.jupiter.api.BeforeAll;
-import org.junit.jupiter.api.DisplayName;
-import org.junit.jupiter.api.Test;
-import org.junit.jupiter.api.TestInstance;
+import org.junit.jupiter.api.*;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
 import org.mockito.MockitoAnnotations;
@@ -26,6 +23,7 @@ import static org.junit.jupiter.api.Assertions.*;
  */
 @ExtendWith(MockitoExtension.class)
 @TestInstance(TestInstance.Lifecycle.PER_CLASS)
+@Tag("file")
 @DisplayName("Test sul service di accesso ai files")
 public class AFileServiceTest extends ATest {
 

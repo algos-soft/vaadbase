@@ -17,7 +17,7 @@ import static it.algos.vaadbase.application.BaseCost.TAG_ROL;
  * Project vaadbase
  * Created by Algos
  * User: Gac
- * Date: 2018-03-30
+ * Date: 2018-04-02
  * Estende la Entity astratta APresenter che gestisce la business logic
  * Annotated with @SpringComponent (obbligatorio)
  * Annotated with @Scope (obbligatorio = 'session')

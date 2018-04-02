@@ -25,6 +25,7 @@ public enum Token {
     methodNewEntity("NEWENTITY"),
     methodNewOrdine("NEWORDINE"),
     methodIdKeySpecifica("IDKEYSPECIFICA"),
+    newEntityParameters("PARAMETERSNEWENTITY"),
     parameters("PARAMETERS"),
     parametersDoc("PARAMETERSDOC"),
     keyUnica("KEYUNICA"),

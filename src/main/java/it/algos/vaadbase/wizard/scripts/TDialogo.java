@@ -4,24 +4,25 @@ import com.vaadin.flow.component.Component;
 import com.vaadin.flow.component.button.Button;
 import com.vaadin.flow.component.checkbox.Checkbox;
 import com.vaadin.flow.component.combobox.ComboBox;
+import com.vaadin.flow.component.dialog.Dialog;
 import com.vaadin.flow.component.html.Label;
 import com.vaadin.flow.component.html.NativeButton;
+import com.vaadin.flow.component.notification.Notification;
 import com.vaadin.flow.component.orderedlayout.HorizontalLayout;
 import com.vaadin.flow.component.orderedlayout.VerticalLayout;
 import com.vaadin.flow.component.textfield.TextField;
 import com.vaadin.flow.shared.Registration;
+import com.vaadin.flow.spring.annotation.SpringComponent;
 import it.algos.vaadbase.service.ATextService;
 import it.algos.vaadbase.wizard.enumeration.Chiave;
 import it.algos.vaadbase.wizard.enumeration.Progetto;
 import lombok.extern.slf4j.Slf4j;
-import com.vaadin.flow.spring.annotation.SpringComponent;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.context.annotation.Scope;
 import org.springframework.beans.factory.config.ConfigurableBeanFactory;
-import com.vaadin.flow.component.dialog.Dialog;
+import org.springframework.context.annotation.Scope;
 
 import javax.annotation.PostConstruct;
-import java.awt.*;
+import javax.swing.*;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -38,12 +39,6 @@ import java.util.Map;
 public class TDialogo extends Dialog {
 
 
-    /**
-     * Libreria di servizio. Inietta da Spring nel costruttore come 'singleton'
-     */
-    public ATextService text;
-
-
     public final static String NORMAL_WIDTH = "9em";
     public final static String NORMAL_HEIGHT = "3em";
     public final static boolean DEFAULT_USA_ORDINE = true;
@@ -52,22 +47,21 @@ public class TDialogo extends Dialog {
     public final static boolean DEFAULT_USA_KEY_CODE_SPECIFICA = false;
     public final static boolean DEFAULT_USA_COMPANY = false;
     public final static boolean DEFAULT_USA_SOVRASCRIVE = false;
-
+    private static Progetto PROGETTO_STANDARD_SUGGERITO = Progetto.vaadin;
+    private static String NOME_PACKAGE_STANDARD_SUGGERITO = "role";
+    private static String CAPTION_A = "Creazione di un nuovo package";
+    private static String CAPTION_B = "Modifica di un package esistente";
+    /**
+     * Libreria di servizio. Inietta da Spring nel costruttore come 'singleton'
+     */
+    public ATextService text;
     private Label labelUno;
     private Label labelDue;
     private Button buttonUno;
     private NativeButton confirmButton;
     private NativeButton cancelButton;
-
     private Dialog dialog = new Dialog();
-
-    private static Progetto PROGETTO_STANDARD_SUGGERITO = Progetto.vaadin;
-    private static String NOME_PACKAGE_STANDARD_SUGGERITO = "role";
-
     private boolean newPackage;
-    private static String CAPTION_A = "Creazione di un nuovo package";
-    private static String CAPTION_B = "Modifica di un package esistente";
-
     private TRecipient recipient;
 
     private ComboBox fieldComboProgetti;
@@ -96,8 +90,8 @@ public class TDialogo extends Dialog {
     }// end of method
 
 
-    public void open(TRecipient recipient,boolean newPackage) {
-        this.newPackage=newPackage;
+    public void open(TRecipient recipient, boolean newPackage) {
+        this.newPackage = newPackage;
         this.recipient = recipient;
         this.removeAll();
         super.open();
@@ -109,7 +103,7 @@ public class TDialogo extends Dialog {
     }// end of method
 
 
-    public Component creaLabel() {
+    private Component creaLabel() {
         VerticalLayout layoutLabel = new VerticalLayout();
         layoutLabel.setMargin(true);
         layoutLabel.setSpacing(true);
@@ -124,7 +118,7 @@ public class TDialogo extends Dialog {
     }// end of method
 
 
-    public Component creaBody() {
+    private Component creaBody() {
         VerticalLayout layoutText = new VerticalLayout();
         layoutText.setMargin(true);
         layoutText.setSpacing(false);
@@ -151,7 +145,7 @@ public class TDialogo extends Dialog {
     }// end of method
 
 
-    public Component creaCombo() {
+    private Component creaCombo() {
         fieldComboProgetti = new ComboBox();
         Progetto[] progetti = Progetto.values();
         String label = "Progetto";
@@ -164,7 +158,7 @@ public class TDialogo extends Dialog {
     }// end of method
 
 
-    public Component creaPackage(String promptPackage) {
+    private Component creaPackage(String promptPackage) {
         fieldTextPackage = new TextField();
         String label = "Package";
 
@@ -178,49 +172,49 @@ public class TDialogo extends Dialog {
     }// end of method
 
 
-    public Component creaEntity() {
+    private Component creaEntity() {
         fieldTextEntity = new TextField();
         fieldTextEntity.setLabel("Entity");
         return fieldTextEntity;
     }// end of method
 
 
-    public Component creaTag() {
+    private Component creaTag() {
         fieldTextTag = new TextField();
         fieldTextTag.setLabel("Tag");
         return fieldTextTag;
     }// end of method
 
 
-    public Component creaOrdine() {
+    private Component creaOrdine() {
         fieldCheckBoxPropertyOrdine = new Checkbox();
         fieldCheckBoxPropertyOrdine.setLabel("Usa la property Ordine (int)");
         fieldCheckBoxPropertyOrdine.setValue(DEFAULT_USA_ORDINE);
         return fieldCheckBoxPropertyOrdine;
     }// end of method
 
-    public Component creaCode() {
+    private Component creaCode() {
         fieldCheckBoxPropertyCode = new Checkbox();
         fieldCheckBoxPropertyCode.setLabel("Usa la property Code (String)");
         fieldCheckBoxPropertyCode.setValue(DEFAULT_USA_CODE);
         return fieldCheckBoxPropertyCode;
     }// end of method
 
-    public Component creaDescrizione() {
+    private Component creaDescrizione() {
         fieldCheckBoxPropertyDescrizione = new Checkbox();
         fieldCheckBoxPropertyDescrizione.setLabel("Usa la property Descrizione (String)");
         fieldCheckBoxPropertyDescrizione.setValue(DEFAULT_USA_DESCRIZIONE);
         return fieldCheckBoxPropertyDescrizione;
     }// end of method
 
-    public Component creaKeyIdCode() {
+    private Component creaKeyIdCode() {
         fieldCheckBoxUsaKeyIdCode = new Checkbox();
         fieldCheckBoxUsaKeyIdCode.setLabel("Usa la property Code (String) come keyID");
         fieldCheckBoxUsaKeyIdCode.setValue(DEFAULT_USA_KEY_CODE_SPECIFICA);
         return fieldCheckBoxUsaKeyIdCode;
     }// end of method
 
-    public Component creaCompany() {
+    private Component creaCompany() {
         fieldCheckBoxCompany = new Checkbox();
         fieldCheckBoxCompany.setLabel("Utilizza MultiCompany");
         fieldCheckBoxCompany.setValue(DEFAULT_USA_COMPANY);
@@ -228,7 +222,7 @@ public class TDialogo extends Dialog {
     }// end of method
 
 
-    public Component creaSovrascrive() {
+    private Component creaSovrascrive() {
         fieldCheckBoxSovrascrive = new Checkbox();
         fieldCheckBoxSovrascrive.setLabel("Sovrascrive tutti i files esistenti del package");
         fieldCheckBoxSovrascrive.setValue(DEFAULT_USA_SOVRASCRIVE);
@@ -236,7 +230,7 @@ public class TDialogo extends Dialog {
     }// end of method
 
 
-    public Component creaFooter() {
+    private Component creaFooter() {
         VerticalLayout layout = new VerticalLayout();
         HorizontalLayout layoutFooter = new HorizontalLayout();
         layoutFooter.setSpacing(true);
@@ -250,9 +244,12 @@ public class TDialogo extends Dialog {
         cancelButton.setHeight(NORMAL_HEIGHT);
 
         confirmButton = new NativeButton("Conferma", event -> {
-            setMappa();
-            recipient.gotInput(mappaInput);
-            dialog.close();
+            if (fieldCheckBoxPropertyCode.getValue()) {
+                chiudeDialogo();
+            } else {
+//                Notification.show("Stai creando una EntityClass SENZA la property 'code'. È possibile, ma alcune linee di codice andranno riscritte.",2000,Notification.Position.MIDDLE);
+                Notification.show("Stai tentando di creare una EntityClass SENZA la property 'code'. Non è possibile.",3000,Notification.Position.MIDDLE);
+            }// end of if/else cycle
         });//end of lambda expressions
         confirmButton.setWidth(NORMAL_WIDTH);
         confirmButton.setHeight(NORMAL_HEIGHT);
@@ -263,7 +260,14 @@ public class TDialogo extends Dialog {
         return layout;
     }// end of method
 
-    public void sincronizza() {
+
+    private void chiudeDialogo() {
+        setMappa();
+        recipient.gotInput(mappaInput);
+        dialog.close();
+    }// end of method
+
+    private void sincronizza() {
         String valueFromPackage = fieldTextPackage.getValue();
         String valueForEntity = text.primaMaiuscola(valueFromPackage);
         String valueForTag = "";
@@ -282,7 +286,7 @@ public class TDialogo extends Dialog {
     }// end of method
 
 
-    public void setMappa() {
+    private void setMappa() {
         if (mappaInput != null) {
             mappaInput.put(Chiave.targetProjectName, fieldComboProgetti.getValue());
             mappaInput.put(Chiave.newPackageName, fieldTextPackage.getValue().toLowerCase());
