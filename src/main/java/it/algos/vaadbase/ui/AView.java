@@ -1,5 +1,6 @@
 package it.algos.vaadbase.ui;
 
+import com.vaadin.flow.component.button.Button;
 import com.vaadin.flow.component.grid.Grid;
 import com.vaadin.flow.component.html.Label;
 import com.vaadin.flow.component.orderedlayout.VerticalLayout;
@@ -129,6 +130,7 @@ public abstract class AView extends VerticalLayout implements IAView, BeforeEnte
         this.regolaMenu();
         this.add(menu);
 
+//        this.add(new Button("Pippoz"));
 
         //--componente grafico facoltativo
         VerticalLayout topLayout = creaTop(items);

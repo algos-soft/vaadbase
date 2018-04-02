@@ -21,7 +21,7 @@ import java.util.ArrayList;
  */
 @Slf4j
 @SpringComponent
-@Scope(ConfigurableBeanFactory.SCOPE_SINGLETON)
+@Scope(ConfigurableBeanFactory.SCOPE_PROTOTYPE)
 public class AMenu extends HorizontalLayout {
 
 
@@ -43,6 +43,7 @@ public class AMenu extends HorizontalLayout {
     @PostConstruct
     protected void inizia() {
         this.setMargin(false);
+        this.setSpacing(true);
 
         //--Crea i menu per la gestione delle Views (standard e specifiche)
         this.addAllViste();

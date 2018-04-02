@@ -18,6 +18,8 @@ import com.vaadin.flow.spring.annotation.SpringComponent;
 import com.vaadin.flow.component.orderedlayout.VerticalLayout;
 import javax.annotation.PostConstruct;
 import java.util.List;
+
+import it.algos.vaadbase.ui.MainView;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.config.ConfigurableBeanFactory;
 import org.springframework.beans.factory.annotation.Qualifier;
@@ -47,7 +49,7 @@ import static it.algos.vaadbase.application.BaseCost.TAG_ROL;
 @SpringComponent
 @Scope(ConfigurableBeanFactory.SCOPE_SINGLETON)
 @Qualifier(TAG_ROL)
-@Route(TAG_ROL)
+@Route(value = TAG_ROL,layout = MainView.class)
 @AIView(roleTypeVisibility = EARoleType.user)
 @AIScript(sovrascrivibile = true)
 public class RoleView extends AView {
