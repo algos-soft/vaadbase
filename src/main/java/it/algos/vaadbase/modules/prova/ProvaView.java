@@ -5,8 +5,6 @@ import com.vaadin.flow.component.grid.Grid;
 import com.vaadin.flow.component.polymertemplate.Id;
 import com.vaadin.flow.theme.Theme;
 import com.vaadin.flow.theme.lumo.Lumo;
-import it.algos.vaadbase.modules.company.Company;
-import it.algos.vaadbase.modules.company.CompanyService;
 import com.vaadin.flow.component.html.Label;
 
 
@@ -86,11 +84,9 @@ public class ProvaView extends AView {
      * @param presenter iniettato da Spring come sottoclasse concreta specificata dal @Qualifier
      * @param service   iniettato da Spring come sottoclasse concreta specificata dal @Qualifier
      */
-    public ProvaView(CompanyService companyService,
-                     @Lazy @Qualifier(TAG_PRO) IAPresenter presenter,
+    public ProvaView(@Lazy @Qualifier(TAG_PRO) IAPresenter presenter,
                      @Lazy @Qualifier(TAG_PRO) IAService service) {
         super(presenter);
-        this.companyService = companyService;
 
         //        this.service = service;
         Label label = new Label("prova company");
@@ -108,13 +104,6 @@ public class ProvaView extends AView {
 //        }// end of for cycle
     }// end of Spring constructor
 
-    /**
-     * Il service viene iniettato dal costruttore, in modo che sia disponibile nella superclasse,
-     * dove viene usata l'interfaccia IAService
-     * Spring costruisce al volo, quando serve, una implementazione di IAService (come previsto dal @Qualifier)
-     * Qui si una una interfaccia locale (col casting nel costruttore) per usare i metodi specifici
-     */
-    private CompanyService companyService;
 
 
 //    /**

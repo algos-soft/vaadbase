@@ -27,6 +27,7 @@ import it.algos.vaadbase.backend.entity.AEntity;
 import it.algos.vaadbase.ui.enumeration.EARoleType;
 import it.algos.vaadbase.annotation.AIScript;
 import it.algos.vaadbase.ui.annotation.AIView;
+import it.algos.vaadbase.ui.MainView;
 import static it.algos.vaadbase.application.BaseCost.@QUALIFIER@;
 
 /**
@@ -47,7 +48,7 @@ import static it.algos.vaadbase.application.BaseCost.@QUALIFIER@;
 @SpringComponent
 @Scope(ConfigurableBeanFactory.SCOPE_SINGLETON)
 @Qualifier(@QUALIFIER@)
-@Route(@QUALIFIER@, layout = MainView.class)
+@Route(value = @QUALIFIER@, layout = MainView.class)
 @AIView(roleTypeVisibility = EARoleType.user)
 @AIScript(sovrascrivibile = true)
 public class @ENTITY@View extends AView {
@@ -59,7 +60,7 @@ public class @ENTITY@View extends AView {
      * Nella menuBar appare invece visibile il MENU_NAME, indicato qui
      * Se manca il MENU_NAME, di default usa il 'name' della view
      */
-    public static final String MENU_NAME = TAG_ROL;
+    public static final String MENU_NAME = @QUALIFIER@;
 
 
     /**

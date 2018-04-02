@@ -1,6 +1,8 @@
 package it.algos.vaadbase.ui.menu;
 
+import com.vaadin.flow.component.UI;
 import com.vaadin.flow.component.button.Button;
+import com.vaadin.flow.component.html.NativeButton;
 import com.vaadin.flow.component.orderedlayout.HorizontalLayout;
 import com.vaadin.flow.component.orderedlayout.VerticalLayout;
 import lombok.extern.slf4j.Slf4j;
@@ -136,7 +138,25 @@ public class AMenu extends HorizontalLayout {
     public void start() {
         this.removeAll();
 
-        this.add(new Button("Role"),new Button("Company"));
+        Button  roleButton = new Button("Role", event -> {
+            UI.getCurrent().navigate("role");
+        });//end of lambda expressions
+        this.add(roleButton);
+
+        Button  wizardButton = new Button("Wizard", event -> {
+            UI.getCurrent().navigate("wizard");
+        });//end of lambda expressions
+        this.add(wizardButton);
+
+        Button  addressButton = new Button("Address", event -> {
+            UI.getCurrent().navigate("address");
+        });//end of lambda expressions
+        this.add(addressButton);
+
+        Button  companyButton = new Button("Company", event -> {
+            UI.getCurrent().navigate("company");
+        });//end of lambda expressions
+        this.add(companyButton);
 
 //        if (AlgosApp.USE_SECURITY) {
 //            if (firstMenuBar.getItems().size() > 0) {

@@ -130,7 +130,6 @@ public abstract class AView extends VerticalLayout implements IAView, BeforeEnte
         this.regolaMenu();
         this.add(menu);
 
-//        this.add(new Button("Pippoz"));
 
         //--componente grafico facoltativo
         VerticalLayout topLayout = creaTop(items);

@@ -3,8 +3,6 @@ package it.algos.vaadbase.modules.role;
 
 
 import com.vaadin.flow.component.grid.Grid;
-import it.algos.vaadbase.modules.company.Company;
-import it.algos.vaadbase.modules.company.CompanyService;
 import com.vaadin.flow.component.html.Label;
 
 

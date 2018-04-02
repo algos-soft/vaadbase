@@ -4,6 +4,7 @@ import com.vaadin.flow.spring.annotation.SpringComponent;
 import it.algos.vaadbase.application.BaseCost;
 import it.algos.vaadbase.backend.data.AData;
 import it.algos.vaadbase.backend.service.IAService;
+import it.algos.vaadbase.modules.role.RoleService;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.beans.factory.config.ConfigurableBeanFactory;
@@ -36,16 +37,14 @@ public class CompanyData extends AData {
     /**
      * Costruttore @Autowired
      * In the newest Spring release, it’s constructor does not need to be annotated with @Autowired annotation
-     * Se ci sono DUE o più costruttori, va in errore
-     * Se ci sono DUE costruttori, di cui uno senza parametri, inietta quello senza parametri
      * Si usa un @Qualifier(), per avere la sottoclasse specifica
      * Si usa una costante statica, per essere sicuri di scrivere sempre uguali i riferimenti
      *
      * @param service iniettato da Spring come sottoclasse concreta specificata dal @Qualifier
      */
-    public CompanyData(CompanyService service) {
+    public CompanyData(@Qualifier(BaseCost.TAG_COM) IAService service) {
         super(service);
-        this.service = (IAService) service;
+        this.service = (CompanyService) service;
     }// end of Spring constructor
 
 
