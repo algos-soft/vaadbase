@@ -69,16 +69,19 @@ public class TElabora {
     private static final String METHOD_NEW_ENTITY = METHOD + "NewEntity" + SOURCE_SUFFIX;
     private static final String METHOD_NEW_ORDINE = METHOD + "NewOrdine" + SOURCE_SUFFIX;
     private static final String METHOD_ID_KEY_SPECIFICA = METHOD + "IdKeySpecifica" + SOURCE_SUFFIX;
+
     /**
      * Libreria di servizio. Inietta da Spring come 'singleton'
      */
     @Autowired
     public AFileService file;
+
     /**
      * Libreria di servizio. Inietta da Spring come 'singleton'
      */
     @Autowired
     public ATextService text;
+
     //--regolate indipendentemente dai risultati del dialogo
     private String userDir;                 //--di sistema
     private String ideaProjectRootPath;     //--userDir meno PROJECT_BASE_NAME
@@ -178,7 +181,7 @@ public class TElabora {
         Progetto progetto;
 
         if (mappaInput.containsKey(Chiave.targetProjectName)) {
-            progetto = (Progetto) mappaInput.get(Chiave.targetProjectName);
+            progetto = (Progetto)mappaInput.get(Chiave.targetProjectName);
             if (progetto != null) {
                 this.targetProjectName = progetto.getNameProject().toLowerCase();
                 this.projectPath = ideaProjectRootPath + SEP + targetProjectName;
@@ -213,8 +216,8 @@ public class TElabora {
         }// end of if cycle
 
         if (mappaInput.containsKey(Chiave.targetProjectName)) {
-            progetto = (Progetto) mappaInput.get(Chiave.targetProjectName);
-            if (progetto != null) {
+            progetto = (Progetto)mappaInput.get(Chiave.targetProjectName);
+            if (text.isValid(progetto)) {
 //                if (progetto == Progetto.vaadin) {
 //                    nameCost = NAME_COST;
 //                    dirCost = DIR_LIB;

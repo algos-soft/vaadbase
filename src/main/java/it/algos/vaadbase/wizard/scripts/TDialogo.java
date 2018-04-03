@@ -11,8 +11,8 @@ import com.vaadin.flow.component.notification.Notification;
 import com.vaadin.flow.component.orderedlayout.HorizontalLayout;
 import com.vaadin.flow.component.orderedlayout.VerticalLayout;
 import com.vaadin.flow.component.textfield.TextField;
-import com.vaadin.flow.shared.Registration;
 import com.vaadin.flow.spring.annotation.SpringComponent;
+import it.algos.vaadbase.service.AFileService;
 import it.algos.vaadbase.service.ATextService;
 import it.algos.vaadbase.wizard.enumeration.Chiave;
 import it.algos.vaadbase.wizard.enumeration.Progetto;
@@ -22,9 +22,7 @@ import org.springframework.beans.factory.config.ConfigurableBeanFactory;
 import org.springframework.context.annotation.Scope;
 
 import javax.annotation.PostConstruct;
-import javax.swing.*;
-import java.util.HashMap;
-import java.util.Map;
+import java.util.*;
 
 /**
  * Project vbase
@@ -47,14 +45,27 @@ public class TDialogo extends Dialog {
     public final static boolean DEFAULT_USA_KEY_CODE_SPECIFICA = false;
     public final static boolean DEFAULT_USA_COMPANY = false;
     public final static boolean DEFAULT_USA_SOVRASCRIVE = false;
+    private static final String DIR_MAIN = "/src/main";
+    private static final String DIR_JAVA = DIR_MAIN + "/java/it/algos";
+    private static final String ENTITIES_NAME = "modules";
     private static Progetto PROGETTO_STANDARD_SUGGERITO = Progetto.vaadin;
     private static String NOME_PACKAGE_STANDARD_SUGGERITO = "role";
+    private static String CAPTION = "Package";
     private static String CAPTION_A = "Creazione di un nuovo package";
     private static String CAPTION_B = "Modifica di un package esistente";
+
     /**
-     * Libreria di servizio. Inietta da Spring nel costruttore come 'singleton'
+     * Service iniettato da Spring (@Scope = 'singleton'). Unica per tutta l'applicazione. Usata come libreria.
      */
+    @Autowired
     public ATextService text;
+
+    /**
+     * Service iniettato da Spring (@Scope = 'singleton'). Unica per tutta l'applicazione. Usata come libreria.
+     */
+    @Autowired
+    public AFileService file;
+
     private Label labelUno;
     private Label labelDue;
     private Button buttonUno;
@@ -63,8 +74,11 @@ public class TDialogo extends Dialog {
     private Dialog dialog = new Dialog();
     private boolean newPackage;
     private TRecipient recipient;
+    private Progetto project;
+    private String packageName;
+    private List<String> packages;
 
-    private ComboBox fieldComboProgetti;
+    private ComboBox<Progetto> fieldComboProgetti;
     private TextField fieldTextPackage;
     private TextField fieldTextEntity; // suggerito
     private TextField fieldTextTag; // suggerito
@@ -90,8 +104,9 @@ public class TDialogo extends Dialog {
     }// end of method
 
 
-    public void open(TRecipient recipient, boolean newPackage) {
-        this.newPackage = newPackage;
+    public void open(TRecipient recipient, Progetto progetto, String packageName) {
+        this.project = progetto != null ? progetto : PROGETTO_STANDARD_SUGGERITO;
+        this.packageName = text.isValid(packageName) ? packageName : "";
         this.recipient = recipient;
         this.removeAll();
         super.open();
@@ -100,6 +115,8 @@ public class TDialogo extends Dialog {
         this.add(creaLabel());
         this.add(creaBody());
         this.add(creaFooter());
+
+        sincroProject();
     }// end of method
 
 
@@ -108,11 +125,9 @@ public class TDialogo extends Dialog {
         layoutLabel.setMargin(true);
         layoutLabel.setSpacing(true);
 
-        if (newPackage) {
-            layoutLabel.add(new Label(CAPTION_A));
-        } else {
-            layoutLabel.add(new Label(CAPTION_B));
-        }// end of if/else cycle
+        labelUno = new Label();
+        labelUno.setText(CAPTION);
+        layoutLabel.add(labelUno);
 
         return layoutLabel;
     }// end of method
@@ -126,8 +141,8 @@ public class TDialogo extends Dialog {
         layoutCheck.setMargin(true);
         layoutCheck.setSpacing(false);
 
-        layoutText.add(creaCombo());
-        layoutText.add(creaPackage(""));
+        layoutText.add(creaProject());
+        layoutText.add(creaPackage());
         layoutText.add(creaEntity());
         layoutText.add(creaTag());
 
@@ -138,35 +153,37 @@ public class TDialogo extends Dialog {
         layoutCheck.add(creaCompany());
         layoutCheck.add(creaSovrascrive());
 
-        sincronizza();
-
 //        layoutBody.add(bodyLayout);
         return new VerticalLayout(layoutText, layoutCheck);
     }// end of method
 
 
-    private Component creaCombo() {
-        fieldComboProgetti = new ComboBox();
-        Progetto[] progetti = Progetto.values();
+    private Component creaProject() {
+        fieldComboProgetti = new ComboBox<>();
+        fieldComboProgetti.setAllowCustomValue(false);
         String label = "Progetto";
+        Progetto[] progetti = Progetto.values();
 
         fieldComboProgetti.setLabel(label);
-        fieldComboProgetti.setItems(progetti);
-        fieldComboProgetti.setValue(PROGETTO_STANDARD_SUGGERITO);
+        fieldComboProgetti.setItems(Arrays.asList(progetti));
+        fieldComboProgetti.setValue(project);
+
+        // Handle changes in the value
+        fieldComboProgetti.addValueChangeListener(event -> sincroProject());
 
         return fieldComboProgetti;
     }// end of method
 
 
-    private Component creaPackage(String promptPackage) {
+    private Component creaPackage() {
         fieldTextPackage = new TextField();
         String label = "Package";
 
         fieldTextPackage.setLabel(label);
-        fieldTextPackage.setValue(promptPackage.equals("") ? NOME_PACKAGE_STANDARD_SUGGERITO : promptPackage);
+        fieldTextPackage.setValue(packageName);
 
         // Handle changes in the value
-        Registration registration = fieldTextPackage.addValueChangeListener(event -> sincronizza());
+        fieldTextPackage.addValueChangeListener(event -> sincroPackage());
 
         return fieldTextPackage;
     }// end of method
@@ -175,6 +192,8 @@ public class TDialogo extends Dialog {
     private Component creaEntity() {
         fieldTextEntity = new TextField();
         fieldTextEntity.setLabel("Entity");
+
+        fieldTextEntity.setEnabled(false);
         return fieldTextEntity;
     }// end of method
 
@@ -182,6 +201,8 @@ public class TDialogo extends Dialog {
     private Component creaTag() {
         fieldTextTag = new TextField();
         fieldTextTag.setLabel("Tag");
+
+        fieldTextTag.setEnabled(false);
         return fieldTextTag;
     }// end of method
 
@@ -248,7 +269,7 @@ public class TDialogo extends Dialog {
                 chiudeDialogo();
             } else {
 //                Notification.show("Stai creando una EntityClass SENZA la property 'code'. È possibile, ma alcune linee di codice andranno riscritte.",2000,Notification.Position.MIDDLE);
-                Notification.show("Stai tentando di creare una EntityClass SENZA la property 'code'. Non è possibile.",3000,Notification.Position.MIDDLE);
+                Notification.show("Stai tentando di creare una EntityClass SENZA la property 'code'. Non è possibile.", 3000, Notification.Position.MIDDLE);
             }// end of if/else cycle
         });//end of lambda expressions
         confirmButton.setWidth(NORMAL_WIDTH);
@@ -266,24 +287,90 @@ public class TDialogo extends Dialog {
         dialog.close();
     }// end of method
 
-    private void sincronizza() {
+
+    private void sincroProject() {
+        Progetto progetto = fieldComboProgetti.getValue();
+
+        if (progetto == null) {
+            invalida(true);
+            fieldTextPackage.setValue("");
+        } else {
+            packages = recuperaPackageEsistenti(progetto.getNameProject());
+            fieldTextPackage.setValue(packages.get(0));
+        }// end of if/else cycle
+
+        sincroPackage();
+    }// end of method
+
+    private void sincroPackage() {
         String valueFromPackage = fieldTextPackage.getValue();
         String valueForEntity = text.primaMaiuscola(valueFromPackage);
         String valueForTag = "";
 
         if (valueFromPackage.length() < 3) {
+            invalida(true);
             valueForTag = valueFromPackage;
+            if (confirmButton != null) {
+                confirmButton.setVisible(false);
+            }// end of if cycle
         } else {
+            invalida(false);
             valueForTag = valueFromPackage.substring(0, 3);
+            if (confirmButton != null) {
+                confirmButton.setVisible(true);
+            }// end of if cycle
         }// end of if/else cycle
         valueForTag = valueForTag.toUpperCase();
 
         fieldTextEntity.setValue(valueForEntity);
         fieldTextTag.setValue(valueForTag);
 
+        if (isPackagingEsistente()) {
+            labelUno.setText(CAPTION_B);
+        } else {
+            labelUno.setText(CAPTION_A);
+        }// end of if/else cycle
+
         setMappa();
     }// end of method
 
+    private void invalida(boolean status) {
+        fieldTextPackage.setInvalid(status);
+        fieldTextEntity.setInvalid(status);
+        fieldTextTag.setInvalid(status);
+    }// end of method
+
+    private boolean isPackagingEsistente() {
+        String pathFile = "";
+        String sep = "/";
+        String java = ".java";
+        String userDir = System.getProperty("user.dir");
+        Progetto project = fieldComboProgetti.getValue();
+        String projectName = "";
+        String pack = fieldTextPackage.getValue().toLowerCase();
+        String entity = text.primaMaiuscola(fieldTextEntity.getValue());
+
+        if (project != null) {
+            projectName = project.getNameProject();
+        }// end of if cycle
+
+        String ideaProjectRootPath = text.levaCodaDa(userDir, sep);
+        String projectBasePath = ideaProjectRootPath + sep + projectName;
+
+        pathFile += projectBasePath;
+        pathFile += DIR_JAVA;
+        pathFile += sep;
+        pathFile += projectName;
+        pathFile += sep;
+        pathFile += ENTITIES_NAME;
+        pathFile += sep;
+        pathFile += pack;
+        pathFile += sep;
+        pathFile += entity;
+        pathFile += java;
+
+        return file.isEsisteFile(pathFile);
+    }// end of method
 
     private void setMappa() {
         if (mappaInput != null) {
@@ -298,6 +385,21 @@ public class TDialogo extends Dialog {
             mappaInput.put(Chiave.flagCompany, fieldCheckBoxCompany.getValue());
             mappaInput.put(Chiave.flagSovrascrive, fieldCheckBoxSovrascrive.getValue());
         }// end of if cycle
+    }// end of method
+
+    private List<String> recuperaPackageEsistenti(String projectName) {
+        List<String> lista = new ArrayList<>();
+
+        if (projectName.equals("vaadbase")) {
+            lista.add("address");
+            lista.add("role");
+        } else {
+            lista.add("pippoz");
+            lista.add("plutoz");
+            lista.add("paperinoz");
+        }// end of if/else cycle
+
+        return lista;
     }// end of method
 
 }// end of class

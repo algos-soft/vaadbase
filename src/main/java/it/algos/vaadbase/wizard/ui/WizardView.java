@@ -1,29 +1,22 @@
 package it.algos.vaadbase.wizard.ui;
 
 import com.vaadin.flow.component.Component;
-import com.vaadin.flow.component.Tag;
 import com.vaadin.flow.component.button.Button;
 import com.vaadin.flow.component.checkbox.Checkbox;
 import com.vaadin.flow.component.combobox.ComboBox;
-import com.vaadin.flow.component.dependency.HtmlImport;
 import com.vaadin.flow.component.html.Label;
 import com.vaadin.flow.component.html.NativeButton;
 import com.vaadin.flow.component.notification.Notification;
 import com.vaadin.flow.component.orderedlayout.HorizontalLayout;
-import com.vaadin.flow.component.orderedlayout.VerticalLayout;
-import com.vaadin.flow.component.page.BodySize;
-import com.vaadin.flow.component.polymertemplate.PolymerTemplate;
 import com.vaadin.flow.component.textfield.TextField;
-import com.vaadin.flow.router.BeforeEnterObserver;
-import com.vaadin.flow.router.PageTitle;
+import com.vaadin.flow.router.BeforeEnterEvent;
 import com.vaadin.flow.router.Route;
-import com.vaadin.flow.router.RouterLayout;
 import com.vaadin.flow.spring.annotation.SpringComponent;
-import com.vaadin.flow.templatemodel.TemplateModel;
 import com.vaadin.flow.theme.Theme;
 import com.vaadin.flow.theme.lumo.Lumo;
 import it.algos.vaadbase.application.BaseCost;
 import it.algos.vaadbase.service.ATextService;
+import it.algos.vaadbase.ui.AView;
 import it.algos.vaadbase.wizard.enumeration.Chiave;
 import it.algos.vaadbase.wizard.enumeration.Progetto;
 import it.algos.vaadbase.wizard.scripts.TDialogo;
@@ -35,7 +28,6 @@ import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.beans.factory.config.ConfigurableBeanFactory;
 import org.springframework.context.annotation.Scope;
 
-import javax.annotation.PostConstruct;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -54,44 +46,35 @@ import java.util.Map;
 @Route(value = BaseCost.PAGE_WIZARD)
 @Theme(Lumo.class)
 @Qualifier(BaseCost.TAG_WIZ)
-public class WizardView extends VerticalLayout {
+public class WizardView extends AView {
 
 
+    public final static String NORMAL_WIDTH = "9em";
+    public final static String NORMAL_HEIGHT = "3em";
+    private static Progetto PROGETTO_STANDARD_SUGGERITO = Progetto.vaadin;
+    private static String NOME_PACKAGE_STANDARD_SUGGERITO = "prova";
+    private static String LABEL_A = "Creazione di un nuovo project";
+    private static String LABEL_B = "Update di un project esistente";
+    private static String LABEL_C = "Creazione di un nuovo package";
+    private static String LABEL_D = "Modifica di un package esistente";
     /**
      * Libreria di servizio. Inietta da Spring nel costruttore come 'singleton'
      */
     public ATextService text;
-
-    public final static String NORMAL_WIDTH = "9em";
-    public final static String NORMAL_HEIGHT = "3em";
-
     private Label labelUno;
     private Label labelDue;
     private Label labelTre;
     private Label labelQuattro;
-
     private Button buttonUno;
     private Button buttonDue;
     private Button buttonTre;
     private Button buttonQuattro;
     private NativeButton confirmButton;
     private NativeButton cancelButton;
-
     @Autowired
     private TDialogo dialog;
-
     @Autowired
     private TElabora elabora;
-
-    private static Progetto PROGETTO_STANDARD_SUGGERITO = Progetto.vaadin;
-    private static String NOME_PACKAGE_STANDARD_SUGGERITO = "prova";
-
-
-    private static String LABEL_A = "Creazione di un nuovo project";
-    private static String LABEL_B = "Update di un project esistente";
-    private static String LABEL_C = "Creazione di un nuovo package";
-    private static String LABEL_D = "Modifica di un package esistente";
-
     private TRecipient recipient;
 
     private ComboBox fieldComboProgetti;
@@ -109,12 +92,10 @@ public class WizardView extends VerticalLayout {
     }// end of Spring constructor
 
 
-    @PostConstruct
+    //    @PostConstruct
     public void inizia() {
         this.setMargin(true);
         this.setSpacing(true);
-
-        this.add(creaMenu());
 
         labelUno = new Label("Creazione di un nuovo project, tramite dialogo wizard");
         this.add(labelUno);
@@ -127,34 +108,35 @@ public class WizardView extends VerticalLayout {
 
     }// end of method
 
+    @Override
+    public void beforeEnter(BeforeEnterEvent event) {
+        this.removeAll();
+
+        //--componente grafico facoltativo
+        this.regolaMenu();
+        this.add(menu);
+
+        this.add(creaMenu());
+
+        inizia();
+    }// end of method
+
     private Component creaMenu() {
         HorizontalLayout layout = new HorizontalLayout();
-        layout.setMargin(true);
+        layout.setMargin(false);
         layout.setSpacing(true);
 
-        buttonUno = new Button("Crea project", event -> Notification.show("Non ancora funzionante",3000, Notification.Position.MIDDLE));
+        buttonUno = new Button("Crea project", event -> Notification.show("Non ancora funzionante", 3000, Notification.Position.MIDDLE));
         layout.add(buttonUno);
 
-        buttonDue = new Button("Update project", event -> Notification.show("Non ancora funzionante",3000, Notification.Position.MIDDLE));
+        buttonDue = new Button("Crea package");
+        buttonDue.addClickListener(event -> dialog.open(new TRecipient() {
+            @Override
+            public void gotInput(Map<Chiave, Object> mappaInput) {
+                elabora(mappaInput);
+            }// end of inner method
+        }, Progetto.vaadin,""));// end of lambda expressions and anonymous inner class
         layout.add(buttonDue);
-
-        buttonTre = new Button("Crea package");
-        buttonTre.addClickListener(event -> dialog.open(new TRecipient() {
-            @Override
-            public void gotInput(Map<Chiave, Object> mappaInput) {
-                elabora(mappaInput);
-            }// end of inner method
-        }, true));// end of lambda expressions and anonymous inner class
-        layout.add(buttonTre);
-
-        buttonQuattro = new Button("Update package");
-        buttonQuattro.addClickListener(event -> dialog.open(new TRecipient() {
-            @Override
-            public void gotInput(Map<Chiave, Object> mappaInput) {
-                elabora(mappaInput);
-            }// end of inner method
-        }, false));// end of lambda expressions and anonymous inner class
-        layout.add(buttonQuattro);
 
         return layout;
     }// end of method

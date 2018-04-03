@@ -124,6 +124,7 @@ public abstract class AView extends VerticalLayout implements IAView, BeforeEnte
 
     @Override
     public void beforeEnter(BeforeEnterEvent event) {
+        this.removeAll();
         List items = service.findAll();
 
         //--componente grafico facoltativo
