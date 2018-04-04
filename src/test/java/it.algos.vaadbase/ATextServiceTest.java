@@ -7,7 +7,6 @@ import name.falgout.jeffrey.testing.junit5.MockitoExtension;
 import org.junit.jupiter.api.*;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
-import org.mockito.Mock;
 import org.mockito.MockitoAnnotations;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
@@ -23,7 +22,7 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 @TestInstance(TestInstance.Lifecycle.PER_CLASS)
 @Tag("text")
 @DisplayName("Test sul service di elaborazione stringhe")
-public class ATextServiceTest extends ATest{
+public class ATextServiceTest extends ATest {
 
 
     private String sorgente = "";
@@ -182,6 +181,11 @@ public class ATextServiceTest extends ATest{
         sorgente = " afRodiSiacHo ";
         previsto = "AfRodiSiacHo";
         ottenuto = SERVICE.primaMaiuscola(sorgente);
+        assertEquals(previsto, ottenuto);
+        print("Prima maiuscola", sorgente, ottenuto);
+
+        previsto = "";
+        ottenuto = SERVICE.primaMaiuscola(null);
         assertEquals(previsto, ottenuto);
         print("Prima maiuscola", sorgente, ottenuto);
     }// end of single test

@@ -129,13 +129,13 @@ public class WizardView extends AView {
         buttonUno = new Button("Crea project", event -> Notification.show("Non ancora funzionante", 3000, Notification.Position.MIDDLE));
         layout.add(buttonUno);
 
-        buttonDue = new Button("Crea package");
+        buttonDue = new Button("Package");
         buttonDue.addClickListener(event -> dialog.open(new TRecipient() {
             @Override
             public void gotInput(Map<Chiave, Object> mappaInput) {
                 elabora(mappaInput);
             }// end of inner method
-        }, Progetto.vaadin,""));// end of lambda expressions and anonymous inner class
+        },  Progetto.vaadin, ""));// end of lambda expressions and anonymous inner class
         layout.add(buttonDue);
 
         return layout;

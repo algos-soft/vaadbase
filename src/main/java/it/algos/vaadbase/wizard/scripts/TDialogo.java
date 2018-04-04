@@ -10,6 +10,7 @@ import com.vaadin.flow.component.html.NativeButton;
 import com.vaadin.flow.component.notification.Notification;
 import com.vaadin.flow.component.orderedlayout.HorizontalLayout;
 import com.vaadin.flow.component.orderedlayout.VerticalLayout;
+import com.vaadin.flow.component.radiobutton.RadioButtonGroup;
 import com.vaadin.flow.component.textfield.TextField;
 import com.vaadin.flow.spring.annotation.SpringComponent;
 import it.algos.vaadbase.service.AFileService;
@@ -51,8 +52,8 @@ public class TDialogo extends Dialog {
     private static Progetto PROGETTO_STANDARD_SUGGERITO = Progetto.vaadin;
     private static String NOME_PACKAGE_STANDARD_SUGGERITO = "role";
     private static String CAPTION = "Package";
-    private static String CAPTION_A = "Creazione di un nuovo package";
-    private static String CAPTION_B = "Modifica di un package esistente";
+    private static String RADIO_NEW = "Creazione di un nuovo package";
+    private static String RADIO_UPDATE = "Modifica di un package esistente";
 
     /**
      * Service iniettato da Spring (@Scope = 'singleton'). Unica per tutta l'applicazione. Usata come libreria.
@@ -66,8 +67,6 @@ public class TDialogo extends Dialog {
     @Autowired
     public AFileService file;
 
-    private Label labelUno;
-    private Label labelDue;
     private Button buttonUno;
     private NativeButton confirmButton;
     private NativeButton cancelButton;
@@ -78,7 +77,10 @@ public class TDialogo extends Dialog {
     private String packageName;
     private List<String> packages;
 
+    private RadioButtonGroup<String> groupTitolo;
     private ComboBox<Progetto> fieldComboProgetti;
+    private HorizontalLayout packagePlaceHolder;
+    private ComboBox<String> fieldComboPackage;
     private TextField fieldTextPackage;
     private TextField fieldTextEntity; // suggerito
     private TextField fieldTextTag; // suggerito
@@ -105,30 +107,44 @@ public class TDialogo extends Dialog {
 
 
     public void open(TRecipient recipient, Progetto progetto, String packageName) {
+        this.recipient = recipient;
         this.project = progetto != null ? progetto : PROGETTO_STANDARD_SUGGERITO;
         this.packageName = text.isValid(packageName) ? packageName : "";
-        this.recipient = recipient;
         this.removeAll();
         super.open();
 
+        this.newPackage = true;
+
         this.add(new Label());
-        this.add(creaLabel());
+        this.add(creaRadio());
         this.add(creaBody());
         this.add(creaFooter());
+
+        addListener();
 
         sincroProject();
     }// end of method
 
+    private void addListener() {
+        groupTitolo.addValueChangeListener(event -> sincroRadio(event.getValue()));
+        fieldComboProgetti.addValueChangeListener(event -> sincroProject());
+        fieldComboPackage.addValueChangeListener(event -> sincroPackage());
+        fieldTextPackage.addValueChangeListener(event -> sincroPackage());
+    }// end of method
 
-    private Component creaLabel() {
+
+    private Component creaRadio() {
         VerticalLayout layoutLabel = new VerticalLayout();
         layoutLabel.setMargin(true);
         layoutLabel.setSpacing(true);
 
-        labelUno = new Label();
-        labelUno.setText(CAPTION);
-        layoutLabel.add(labelUno);
+        groupTitolo = new RadioButtonGroup<>();
+        groupTitolo.setItems(RADIO_NEW, RADIO_UPDATE);
+        groupTitolo.getElement().getStyle().set("display", "flex");
+        groupTitolo.getElement().getStyle().set("flexDirection", "column");
+        groupTitolo.setValue(RADIO_NEW);
 
+        layoutLabel.add(groupTitolo);
         return layoutLabel;
     }// end of method
 
@@ -153,7 +169,6 @@ public class TDialogo extends Dialog {
         layoutCheck.add(creaCompany());
         layoutCheck.add(creaSovrascrive());
 
-//        layoutBody.add(bodyLayout);
         return new VerticalLayout(layoutText, layoutCheck);
     }// end of method
 
@@ -168,24 +183,32 @@ public class TDialogo extends Dialog {
         fieldComboProgetti.setItems(Arrays.asList(progetti));
         fieldComboProgetti.setValue(project);
 
-        // Handle changes in the value
-        fieldComboProgetti.addValueChangeListener(event -> sincroProject());
-
         return fieldComboProgetti;
     }// end of method
 
 
     private Component creaPackage() {
-        fieldTextPackage = new TextField();
+        packagePlaceHolder = new HorizontalLayout();
+
+        fieldComboPackage = new ComboBox<>();
+        fieldComboPackage.setAllowCustomValue(true);
         String label = "Package";
 
+        fieldComboPackage.setLabel(label);
+
+        fieldTextPackage = new TextField();
         fieldTextPackage.setLabel(label);
-        fieldTextPackage.setValue(packageName);
+        fieldTextPackage.setEnabled(true);
 
-        // Handle changes in the value
-        fieldTextPackage.addValueChangeListener(event -> sincroPackage());
+        if (newPackage) {
+            fieldTextPackage.focus();
+            packagePlaceHolder.add(fieldTextPackage);
+        } else {
+            fieldComboPackage.focus();
+            packagePlaceHolder.add(fieldComboPackage);
+        }// end of if/else cycle
 
-        return fieldTextPackage;
+        return packagePlaceHolder;
     }// end of method
 
 
@@ -193,7 +216,16 @@ public class TDialogo extends Dialog {
         fieldTextEntity = new TextField();
         fieldTextEntity.setLabel("Entity");
 
-        fieldTextEntity.setEnabled(false);
+        fieldTextEntity.setEnabled(true);
+
+        fieldTextEntity.addValueChangeListener(event -> {
+            if (text.isValid(event.getValue()) && event.getValue().length() > 2) {
+                fieldTextEntity.setInvalid(false);
+            } else {
+                fieldTextEntity.setInvalid(true);
+            }// end of if/else cycle
+        });//end of lambda expressions
+
         return fieldTextEntity;
     }// end of method
 
@@ -202,7 +234,15 @@ public class TDialogo extends Dialog {
         fieldTextTag = new TextField();
         fieldTextTag.setLabel("Tag");
 
-        fieldTextTag.setEnabled(false);
+        fieldTextTag.setEnabled(true);
+        fieldTextTag.addValueChangeListener(event -> {
+            if (text.isValid(event.getValue()) && event.getValue().length() > 2) {
+                fieldTextTag.setInvalid(false);
+            } else {
+                fieldTextTag.setInvalid(true);
+            }// end of if/else cycle
+        });//end of lambda expressions
+
         return fieldTextTag;
     }// end of method
 
@@ -288,56 +328,133 @@ public class TDialogo extends Dialog {
     }// end of method
 
 
+    private void sincroRadio(String radioSelected) {
+
+        if (radioSelected.equals(RADIO_NEW)) {
+            newPackage = true;
+        }// end of if cycle
+
+        if (radioSelected.equals(RADIO_UPDATE)) {
+            newPackage = false;
+        }// end of if cycle
+
+        sincroPackage();
+    }// end of method
+
     private void sincroProject() {
         Progetto progetto = fieldComboProgetti.getValue();
 
         if (progetto == null) {
             invalida(true);
-            fieldTextPackage.setValue("");
+            fieldComboPackage.setValue(null);
         } else {
             packages = recuperaPackageEsistenti(progetto.getNameProject());
-            fieldTextPackage.setValue(packages.get(0));
+            fieldComboPackage.setItems(packages);
         }// end of if/else cycle
 
         sincroPackage();
     }// end of method
 
     private void sincroPackage() {
-        String valueFromPackage = fieldTextPackage.getValue();
-        String valueForEntity = text.primaMaiuscola(valueFromPackage);
+        String valueFromPackage = "";
+        String valueForEntity = "";
         String valueForTag = "";
 
-        if (valueFromPackage.length() < 3) {
+        if (newPackage) {
+            valueFromPackage = fieldTextPackage.getValue();
+        } else {
+            valueFromPackage = fieldComboPackage.getValue() != null ? fieldComboPackage.getValue() : "";
+        }// end of if/else cycle
+
+        if (text.isValid(valueFromPackage) && valueFromPackage.length() > 2) {
+            invalida(false);
+            valueForTag = valueFromPackage.substring(0, 3).toUpperCase();
+            if (confirmButton != null) {
+                confirmButton.setVisible(true);
+            }// end of if cycle
+        } else {
             invalida(true);
             valueForTag = valueFromPackage;
             if (confirmButton != null) {
                 confirmButton.setVisible(false);
             }// end of if cycle
-        } else {
-            invalida(false);
-            valueForTag = valueFromPackage.substring(0, 3);
-            if (confirmButton != null) {
-                confirmButton.setVisible(true);
-            }// end of if cycle
         }// end of if/else cycle
-        valueForTag = valueForTag.toUpperCase();
 
+        valueForEntity = text.primaMaiuscola(valueFromPackage);
         fieldTextEntity.setValue(valueForEntity);
         fieldTextTag.setValue(valueForTag);
 
         if (isPackagingEsistente()) {
-            labelUno.setText(CAPTION_B);
+//            labelUno.setText(CAPTION_B);
         } else {
-            labelUno.setText(CAPTION_A);
+//            labelUno.setText(CAPTION_A);
         }// end of if/else cycle
 
         setMappa();
     }// end of method
 
+    private void sincroPackageNew() {
+        String valueFromPackage = fieldComboPackage.getValue() != null ? fieldComboPackage.getValue() : "";
+        String valueForTag = "";
+    }// end of method
+
     private void invalida(boolean status) {
-        fieldTextPackage.setInvalid(status);
+        fieldComboPackage.setInvalid(status);
         fieldTextEntity.setInvalid(status);
         fieldTextTag.setInvalid(status);
+    }// end of method
+
+    private boolean checkPackage() {
+        boolean esiste = false;
+
+        return esiste;
+    }// end of method
+
+    private boolean checkEntity() {
+        boolean esiste = false;
+
+        return esiste;
+    }// end of method
+
+    private boolean checkTag() {
+        boolean esiste = false;
+
+        return esiste;
+    }// end of method
+
+    private boolean checkBase() {
+        boolean esiste = false;
+
+        String pathFile = "";
+        String sep = "/";
+        String java = ".java";
+        String userDir = System.getProperty("user.dir");
+        Progetto project = fieldComboProgetti.getValue();
+        String projectName = "";
+        String pack = fieldComboPackage.getValue() != null ? fieldComboPackage.getValue().toLowerCase() : "";
+        String entity = text.primaMaiuscola(fieldTextEntity.getValue());
+
+        if (project != null) {
+            projectName = project.getNameProject();
+        }// end of if cycle
+
+        String ideaProjectRootPath = text.levaCodaDa(userDir, sep);
+        String projectBasePath = ideaProjectRootPath + sep + projectName;
+
+        pathFile += projectBasePath;
+        pathFile += DIR_JAVA;
+        pathFile += sep;
+        pathFile += projectName;
+        pathFile += sep;
+        pathFile += ENTITIES_NAME;
+        pathFile += sep;
+        pathFile += pack;
+        pathFile += sep;
+        pathFile += entity;
+        pathFile += java;
+
+        esiste = file.isEsisteFile(pathFile);
+        return esiste;
     }// end of method
 
     private boolean isPackagingEsistente() {
@@ -347,7 +464,7 @@ public class TDialogo extends Dialog {
         String userDir = System.getProperty("user.dir");
         Progetto project = fieldComboProgetti.getValue();
         String projectName = "";
-        String pack = fieldTextPackage.getValue().toLowerCase();
+        String pack = fieldComboPackage.getValue() != null ? fieldComboPackage.getValue().toLowerCase() : "";
         String entity = text.primaMaiuscola(fieldTextEntity.getValue());
 
         if (project != null) {
@@ -375,7 +492,7 @@ public class TDialogo extends Dialog {
     private void setMappa() {
         if (mappaInput != null) {
             mappaInput.put(Chiave.targetProjectName, fieldComboProgetti.getValue());
-            mappaInput.put(Chiave.newPackageName, fieldTextPackage.getValue().toLowerCase());
+            mappaInput.put(Chiave.newPackageName, fieldComboPackage.getValue() != null ? fieldComboPackage.getValue().toLowerCase() : "");
             mappaInput.put(Chiave.newEntityName, text.primaMaiuscola(fieldTextEntity.getValue()));
             mappaInput.put(Chiave.newEntityTag, fieldTextTag.getValue());
             mappaInput.put(Chiave.flagOrdine, fieldCheckBoxPropertyOrdine.getValue());

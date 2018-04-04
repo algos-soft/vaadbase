@@ -22,6 +22,10 @@ import org.springframework.context.annotation.Scope;
 public class ATextService {
 
 
+    private static boolean isNumber(char ch) {
+        return ch >= '0' && ch <= '9';
+    }// end of method
+
     /**
      * Null-safe, short-circuit evaluation.
      *
@@ -33,7 +37,6 @@ public class ATextService {
         return stringa == null || stringa.trim().isEmpty();
     }// end of method
 
-
     /**
      * Null-safe, short-circuit evaluation.
      *
@@ -44,7 +47,6 @@ public class ATextService {
     public boolean isValid(final String stringa) {
         return !isEmpty(stringa);
     }// end of method
-
 
     /**
      * Controlla che sia una stringa e che sia valida.
@@ -61,7 +63,6 @@ public class ATextService {
         }// end of if/else cycle
     }// end of method
 
-
     /**
      * Forza il primo carattere della stringa secondo il flag
      * <p>
@@ -74,13 +75,14 @@ public class ATextService {
      *
      * @return uscita string in uscita
      */
-    private String primoCarattere(final String testoIn, EAFirstChar flag) {
-        String testoOut = testoIn.trim();
+    private String primoCarattere(String testoIn, EAFirstChar flag) {
+        String testoOut = "";
         String primo;
         String rimanente;
 
-        if (this.isValid(testoOut)) {
-            primo = testoOut.substring(0, 1);
+        if (this.isValid(testoIn)) {
+            testoIn = testoIn.trim();
+            primo = testoIn.substring(0, 1);
             switch (flag) {
                 case maiuscolo:
                     primo = primo.toUpperCase();
@@ -91,7 +93,7 @@ public class ATextService {
                 default: // caso non definito
                     break;
             } // fine del blocco switch
-            rimanente = testoOut.substring(1);
+            rimanente = testoIn.substring(1);
             testoOut = primo + rimanente;
         }// fine del blocco if
 
@@ -127,7 +129,6 @@ public class ATextService {
     public String primaMinuscola(final String testoIn) {
         return primoCarattere(testoIn, EAFirstChar.minuscolo);
     }// end of method
-
 
     /**
      * Elimina dal testo il tagIniziale, se esiste
@@ -179,7 +180,6 @@ public class ATextService {
         return testoOut.trim();
     }// end of method
 
-
     /**
      * Elimina il testo da tagFinale in poi
      * <p>
@@ -204,7 +204,6 @@ public class ATextService {
 
         return testoOut.trim();
     }// end of methodlevaCodaDa
-
 
     /**
      * Sostituisce nel testo tutte le occorrenze di oldTag con newTag.
@@ -277,7 +276,6 @@ public class ATextService {
         return testoOut.trim();
     }// end of  method
 
-
     public boolean isNumber(String value) {
         boolean status = true;
         char[] caratteri = value.toCharArray();
@@ -291,16 +289,9 @@ public class ATextService {
         return status;
     }// end of method
 
-
     private boolean isNotNumber(char ch) {
         return !isNumber(ch);
     }// end of method
-
-
-    private static boolean isNumber(char ch) {
-        return ch >= '0' && ch <= '9';
-    }// end of method
-
 
     public String getModifiche(Object oldValue, Object newValue) {
         return getModifiche(oldValue, newValue, EAPrefType.string);
