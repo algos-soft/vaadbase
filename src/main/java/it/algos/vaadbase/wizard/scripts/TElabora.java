@@ -29,6 +29,7 @@ import java.util.Map;
 public class TElabora {
 
 
+    private static final String A_CAPO = "\n";
     private static final String SEP = "/";
     private static final String JAVA_SUFFIX = ".java";
     private static final String SOURCE_SUFFIX = ".txt";
@@ -181,7 +182,7 @@ public class TElabora {
         Progetto progetto;
 
         if (mappaInput.containsKey(Chiave.targetProjectName)) {
-            progetto = (Progetto)mappaInput.get(Chiave.targetProjectName);
+            progetto = (Progetto) mappaInput.get(Chiave.targetProjectName);
             if (progetto != null) {
                 this.targetProjectName = progetto.getNameProject().toLowerCase();
                 this.projectPath = ideaProjectRootPath + SEP + targetProjectName;
@@ -216,7 +217,7 @@ public class TElabora {
         }// end of if cycle
 
         if (mappaInput.containsKey(Chiave.targetProjectName)) {
-            progetto = (Progetto)mappaInput.get(Chiave.targetProjectName);
+            progetto = (Progetto) mappaInput.get(Chiave.targetProjectName);
             if (text.isValid(progetto)) {
 //                if (progetto == Progetto.vaadin) {
 //                    nameCost = NAME_COST;
@@ -610,6 +611,9 @@ public class TElabora {
 
         if (flagOrdine) {
             entityPropertyText = leggeFile(PROPERTY_ORDINE_SOURCE_NAME);
+            if (text.isValid(entityPropertyText)) {
+                entityPropertyText = A_CAPO + entityPropertyText;
+            }// end of if cycle
         }// end of if cycle
 
         return entityPropertyText;
@@ -621,6 +625,9 @@ public class TElabora {
 
         if (flagCode) {
             entityPropertyText = leggeFile(PROPERTY_CODE_SOURCE_NAME);
+            if (text.isValid(entityPropertyText)) {
+                entityPropertyText = A_CAPO + entityPropertyText;
+            }// end of if cycle
         }// end of if cycle
 
         return entityPropertyText;
@@ -632,6 +639,9 @@ public class TElabora {
 
         if (flagDescrizione) {
             entityPropertyText = leggeFile(PROPERTY_DESCRIZIONE_SOURCE_NAME);
+            if (text.isValid(entityPropertyText)) {
+                entityPropertyText = A_CAPO + entityPropertyText;
+            }// end of if cycle
         }// end of if cycle
 
         return entityPropertyText;

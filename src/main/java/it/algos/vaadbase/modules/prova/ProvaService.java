@@ -19,7 +19,7 @@ import static it.algos.vaadbase.application.BaseCost.TAG_PRO;
  * Project vaadbase
  * Created by Algos
  * User: Gac
- * Date: 2018-03-27
+ * Date: 2018-04-04
  * Estende la Entity astratta AService. Layer di collegamento tra il Presenter e la Repository.
  * Annotated with @@Slf4j (facoltativo) per i logs automatici
  * Annotated with @SpringComponent (obbligatorio)
@@ -58,7 +58,23 @@ public class ProvaService extends AService {
         super.entityClass = Prova.class;
    }// end of Spring constructor
 
-    
+    /**
+     * Ricerca di una entity (la crea se non la trova)
+     *
+     * @param code di riferimento (obbligatorio ed unico)
+     *
+     * @return la entity trovata o appena creata
+     */
+    public Prova findOrCrea(String code) {
+        Prova entity = findByKeyUnica(code);
+
+        if (entity == null) {
+            entity = newEntity(0, code);
+            save(entity);
+        }// end of if cycle
+
+        return entity;
+    }// end of method
 
 //    /**
 //     * Creazione in memoria di una nuova entity che NON viene salvata
@@ -93,11 +109,12 @@ public class ProvaService extends AService {
      * All properties
      * Gli argomenti (parametri) della new Entity DEVONO essere ordinati come nella Entity (costruttore lombok)
      *
-     * @param code        codice di riferimento (obbligatorio)
+     * @param ordine      di presentazione (obbligatorio con inserimento automatico se è zero)
+	* @param code        codice di riferimento (obbligatorio)
      *
      * @return la nuova entity appena creata (non salvata)
      */
-    public Prova newEntity(String code) {
+    public Prova newEntity(int ordine, String code) {
         Prova entity = null;
 
         entity = findByKeyUnica(code);
@@ -106,6 +123,7 @@ public class ProvaService extends AService {
 		}// end of if cycle
 		
         entity = Prova.builder()
+				.ordine(ordine != 0 ? ordine : this.getNewOrdine())
 				.code(code)
                 .build();
 
@@ -132,7 +150,7 @@ public class ProvaService extends AService {
      * @return lista ordinata di tutte le entities
      */
     @Override
-    public List findAll() {
+    public List<Prova> findAll() {
         return repository.findAllByOrderByCodeAsc();
     }// end of method
 
@@ -148,6 +166,31 @@ public class ProvaService extends AService {
         return findByKeyUnica(((Prova) entityBean).getCode()) != null;
     }// end of method
 
-    
+    /**
+     * Opportunità di usare una idKey specifica.
+     * Invocato appena prima del save(), solo per una nuova entity
+     *
+     * @param entityBean da salvare
+     */
+    protected void creaIdKeySpecifica(AEntity entityBean) {
+        entityBean.id = ((Prova)entityBean).getCode();
+    }// end of method
+
+    /**
+     * Ordine di presentazione (obbligatorio, unico per tutte le eventuali company),
+     * Viene calcolato in automatico alla creazione della entity
+     * Recupera dal DB il valore massimo pre-esistente della property
+     * Incrementa di uno il risultato
+     */
+    public int getNewOrdine() {
+        int ordine = 0;
+
+        List<Prova> lista = repository.findTop1AllByOrderByOrdineDesc();
+        if (lista != null && lista.size() == 1) {
+            ordine = lista.get(0).getOrdine();
+        }// end of if cycle
+
+        return ordine + 1;
+    }// end of method
 
 }// end of class

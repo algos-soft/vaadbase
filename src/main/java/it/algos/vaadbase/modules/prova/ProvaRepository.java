@@ -14,7 +14,7 @@ import static it.algos.vaadbase.application.BaseCost.TAG_PRO;
  * Project vaadbase
  * Created by Algos
  * User: Gac
- * Date: 2018-03-27
+ * Date: 2018-04-04
  * Estende la l'interaccia MongoRepository col casting alla Entity relativa di questa repository
  * Annotated with @SpringComponent (obbligatorio)
  * Annotated with @Scope (obbligatorio = 'singleton')
@@ -34,5 +34,11 @@ public interface ProvaRepository extends MongoRepository<Prova, String> {
 	public Prova findByCode(String code);
 
 	public List<Prova> findAllByOrderByCodeAsc();
+
+	public Prova findByOrdine(int ordine);
+
+	public List<Prova> findAllByOrderByOrdineAsc();
+
+	public List<Prova> findTop1AllByOrderByOrdineDesc();
 
 }// end of class

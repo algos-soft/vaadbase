@@ -1,25 +1,24 @@
 package it.algos.vaadbase.modules.prova;
 
 
+
 import com.vaadin.flow.component.grid.Grid;
-import com.vaadin.flow.component.polymertemplate.Id;
-import com.vaadin.flow.theme.Theme;
-import com.vaadin.flow.theme.lumo.Lumo;
+import it.algos.vaadbase.modules.company.Company;
+import it.algos.vaadbase.modules.company.CompanyService;
 import com.vaadin.flow.component.html.Label;
 
 
+
+import com.vaadin.flow.router.BeforeEnterEvent;
 import it.algos.vaadbase.presenter.IAPresenter;
 import it.algos.vaadbase.backend.service.IAService;
 import it.algos.vaadbase.ui.AView;
 import com.vaadin.flow.router.Route;
 import com.vaadin.flow.spring.annotation.SpringComponent;
 import com.vaadin.flow.component.orderedlayout.VerticalLayout;
-
 import javax.annotation.PostConstruct;
 import java.util.List;
-
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.config.ConfigurableBeanFactory;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.context.annotation.Lazy;
@@ -28,14 +27,14 @@ import it.algos.vaadbase.backend.entity.AEntity;
 import it.algos.vaadbase.ui.enumeration.EARoleType;
 import it.algos.vaadbase.annotation.AIScript;
 import it.algos.vaadbase.ui.annotation.AIView;
-
+import it.algos.vaadbase.ui.MainView;
 import static it.algos.vaadbase.application.BaseCost.TAG_PRO;
 
 /**
  * Project vaadbase
  * Created by Algos
  * User: Gac
- * Date: 2018-03-27
+ * Date: 2018-04-04
  * Estende la Entity astratta AList di tipo AView per visualizzare la Grid
  * Annotated with @SpringComponent (obbligatorio)
  * Annotated with @Scope (obbligatorio = 'session')
@@ -46,9 +45,10 @@ import static it.algos.vaadbase.application.BaseCost.TAG_PRO;
  * Costruttore con un link @Autowired al IAPresenter, di tipo @Lazy per evitare un loop nella injection
  */
 @Slf4j
+@SpringComponent
 @Scope(ConfigurableBeanFactory.SCOPE_SINGLETON)
-@Route(TAG_PRO)
 @Qualifier(TAG_PRO)
+@Route(value = TAG_PRO, layout = MainView.class)
 @AIView(roleTypeVisibility = EARoleType.user)
 @AIScript(sovrascrivibile = true)
 public class ProvaView extends AView {
@@ -61,6 +61,14 @@ public class ProvaView extends AView {
      * Se manca il MENU_NAME, di default usa il 'name' della view
      */
     public static final String MENU_NAME = TAG_PRO;
+
+
+    /**
+     * Il service viene regolato nel costruttore recuperandolo del presenter
+     * in modo che sia disponibile nella superclasse, dove viene usata l'interfaccia IAService
+     * Qui si una una sottoclasse locale (col casting nel costruttore) per usare i metodi specifici
+     */
+    private ProvaService service;
 
 
 //    /**
@@ -82,28 +90,11 @@ public class ProvaView extends AView {
      * The injected bean will only be fully created when it’s first needed.
      *
      * @param presenter iniettato da Spring come sottoclasse concreta specificata dal @Qualifier
-     * @param service   iniettato da Spring come sottoclasse concreta specificata dal @Qualifier
      */
-    public ProvaView(@Lazy @Qualifier(TAG_PRO) IAPresenter presenter,
-                     @Lazy @Qualifier(TAG_PRO) IAService service) {
+     public ProvaView(@Lazy @Qualifier(TAG_PRO) IAPresenter presenter) {
         super(presenter);
-
-        //        this.service = service;
-        Label label = new Label("prova company");
-        this.add(label);
-//        grid = new Grid(Company.class);
-
-//        grid.removeColumnByKey("id");
-//        grid.removeColumnByKey("creazione");
-//        grid.removeColumnByKey("modifica");
-//        grid.removeColumnByKey("note");
-
-
-//        for (Company company : items) {
-//            this.add(new Label(company.getCode()));
-//        }// end of for cycle
-    }// end of Spring constructor
-
+        this.service = (ProvaService) service;
+       }// end of Spring constructor
 
 
 //    /**

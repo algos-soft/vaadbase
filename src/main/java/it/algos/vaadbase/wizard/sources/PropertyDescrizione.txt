@@ -7,4 +7,3 @@
     @AIField(type = EAFieldType.text, firstCapital = true, widthEM = 24, help = "Descrizione della company")
     @AIColumn(width = 370)
     private String descrizione;
-

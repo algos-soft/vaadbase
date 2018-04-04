@@ -66,11 +66,8 @@ public class @ENTITY@ extends @SUPERCLASSENTITY@ {
      * versione della classe per la serializzazione
      */
     private final static long serialVersionUID = 1L;
-
     @ORDINE@
-
     @CODE@
-
     @DESCRIZIONE@
 
     /**
@@ -80,7 +77,6 @@ public class @ENTITY@ extends @SUPERCLASSENTITY@ {
     public String toString() {
         @TOSTRING@
     }// end of method
-
 
 
 }// end of entity class

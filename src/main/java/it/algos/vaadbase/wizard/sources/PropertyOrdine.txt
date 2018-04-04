@@ -1,4 +1,3 @@
-
     /**
      * ordine di presentazione (obbligatorio, unico)
      * il più importante per primo
@@ -8,4 +7,3 @@
     @AIField(type = EAFieldType.integer, widthEM = 3, dev = EAFieldAccessibility.showOnly, admin = EAFieldAccessibility.never)
     @AIColumn(name = "#", width = 55)
     private int ordine;
-

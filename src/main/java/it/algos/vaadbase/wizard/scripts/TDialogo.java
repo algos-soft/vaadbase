@@ -109,14 +109,13 @@ public class TDialogo extends Dialog {
     }// end of method
 
 
-    public void open(TRecipient recipient, Progetto progetto, String packageName) {
+    public void open(boolean newPackage, TRecipient recipient, Progetto progetto, String packageName) {
+        this.newPackage = newPackage;
         this.recipient = recipient;
         this.project = progetto != null ? progetto : PROGETTO_STANDARD_SUGGERITO;
         this.packageName = text.isValid(packageName) ? packageName : "";
         this.removeAll();
         super.open();
-
-        this.newPackage = true;
 
         this.add(new Label());
         this.add(creaRadio());
@@ -145,7 +144,11 @@ public class TDialogo extends Dialog {
         groupTitolo.setItems(RADIO_NEW, RADIO_UPDATE);
         groupTitolo.getElement().getStyle().set("display", "flex");
         groupTitolo.getElement().getStyle().set("flexDirection", "column");
-        groupTitolo.setValue(RADIO_NEW);
+        if (newPackage) {
+            groupTitolo.setValue(RADIO_NEW);
+        } else {
+            groupTitolo.setValue(RADIO_UPDATE);
+        }// end of if/else cycle
 
         groupTitolo.addValueChangeListener(event -> {
             sincroRadio(event.getValue());
@@ -222,8 +225,15 @@ public class TDialogo extends Dialog {
             fieldTextPackage.focus();
             packagePlaceHolder.add(fieldTextPackage);
         } else {
+            packages = recuperaPackageEsistenti(project.getNameProject());
+            fieldComboPackage.setItems(packages);
             fieldComboPackage.focus();
             packagePlaceHolder.add(fieldComboPackage);
+            if (text.isValid(packageName)) {
+                if (packages.contains(packageName)) {
+                    fieldComboPackage.setValue(packageName);
+                }// end of if cycle
+            }// end of if cycle
         }// end of if/else cycle
 
         return packagePlaceHolder;
@@ -368,12 +378,6 @@ public class TDialogo extends Dialog {
         String namePackage;
         packagePlaceHolder.removeAll();
 
-//        fieldComboPackage.setValue(getPackage());
-//        groupTitolo.setValue(RADIO_UPDATE);
-//        packagePlaceHolder.removeAll();
-//        packagePlaceHolder.add(fieldComboPackage);
-
-
         if (radioSelected.equals(RADIO_NEW)) {
             newPackage = true;
             packagePlaceHolder.add(fieldTextPackage);
@@ -403,7 +407,9 @@ public class TDialogo extends Dialog {
             fieldComboPackage.setValue(null);
         } else {
             packages = recuperaPackageEsistenti(progetto.getNameProject());
-            fieldComboPackage.setItems(packages);
+            if (packages!=null) {
+                fieldComboPackage.setItems(packages);
+            }// end of if cycle
         }// end of if/else cycle
 
         sincroPackage();
@@ -453,9 +459,15 @@ public class TDialogo extends Dialog {
     }// end of method
 
     private void invalida(boolean status) {
-        fieldComboPackage.setInvalid(status);
-        fieldTextEntity.setInvalid(status);
-        fieldTextTag.setInvalid(status);
+        if (fieldComboPackage!=null) {
+            fieldComboPackage.setInvalid(status);
+        }// end of if cycle
+        if (fieldTextEntity!=null) {
+            fieldTextEntity.setInvalid(status);
+        }// end of if cycle
+        if (fieldTextTag!=null) {
+            fieldTextTag.setInvalid(status);
+        }// end of if cycle
     }// end of method
 
     private boolean isPackageEsistente() {

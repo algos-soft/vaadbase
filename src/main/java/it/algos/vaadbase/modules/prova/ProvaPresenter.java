@@ -6,18 +6,18 @@ import it.algos.vaadbase.presenter.APresenter;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
-import org.springframework.beans.factory.config.ConfigurableBeanFactory;
 import org.springframework.context.annotation.Lazy;
 import org.springframework.context.annotation.Scope;
-import static it.algos.vaadbase.application.BaseCost.TAG_PRO;
+import org.springframework.beans.factory.config.ConfigurableBeanFactory;
 import it.algos.vaadbase.backend.service.IAService;
 import it.algos.vaadbase.ui.IAView;
+import static it.algos.vaadbase.application.BaseCost.TAG_PRO;
 
 /**
  * Project vaadbase
  * Created by Algos
  * User: Gac
- * Date: 2018-03-27
+ * Date: 2018-04-04
  * Estende la Entity astratta APresenter che gestisce la business logic
  * Annotated with @SpringComponent (obbligatorio)
  * Annotated with @Scope (obbligatorio = 'session')
