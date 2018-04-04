@@ -23,7 +23,10 @@ import org.springframework.beans.factory.config.ConfigurableBeanFactory;
 import org.springframework.context.annotation.Scope;
 
 import javax.annotation.PostConstruct;
-import java.util.*;
+import java.util.Arrays;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 
 /**
  * Project vbase
@@ -144,6 +147,10 @@ public class TDialogo extends Dialog {
         groupTitolo.getElement().getStyle().set("flexDirection", "column");
         groupTitolo.setValue(RADIO_NEW);
 
+        groupTitolo.addValueChangeListener(event -> {
+            sincroRadio(event.getValue());
+        });//end of lambda expressions
+
         layoutLabel.add(groupTitolo);
         return layoutLabel;
     }// end of method
@@ -200,6 +207,17 @@ public class TDialogo extends Dialog {
         fieldTextPackage.setLabel(label);
         fieldTextPackage.setEnabled(true);
 
+        fieldTextPackage.addValueChangeListener(event -> {
+            if (newPackage && isPackageEsistente()) {
+                Notification.show("Esiste già questo package", 3000, Notification.Position.MIDDLE);
+                fieldComboPackage.setValue(getPackage());
+                newPackage = false;
+                groupTitolo.setValue(RADIO_UPDATE);
+                packagePlaceHolder.removeAll();
+                packagePlaceHolder.add(fieldComboPackage);
+            }// end of if cycle
+        });//end of lambda expressions
+
         if (newPackage) {
             fieldTextPackage.focus();
             packagePlaceHolder.add(fieldTextPackage);
@@ -220,8 +238,17 @@ public class TDialogo extends Dialog {
 
         fieldTextEntity.addValueChangeListener(event -> {
             if (text.isValid(event.getValue()) && event.getValue().length() > 2) {
-                fieldTextEntity.setInvalid(false);
+                if (newPackage) {
+                    if (isEntityEsistente()) {
+                        Notification.show("Esiste già questa entity", 3000, Notification.Position.MIDDLE);
+                        fieldTextEntity.setInvalid(true);
+                    } else {
+                        fieldTextEntity.setInvalid(false);
+                    }// end of if/else cycle
+                }// end of if cycle
+                fieldTextEntity.setValue(text.primaMaiuscola(fieldTextEntity.getValue()));
             } else {
+                Notification.show("La entity deve essere di almeno 3 caratteri", 3000, Notification.Position.MIDDLE);
                 fieldTextEntity.setInvalid(true);
             }// end of if/else cycle
         });//end of lambda expressions
@@ -237,8 +264,17 @@ public class TDialogo extends Dialog {
         fieldTextTag.setEnabled(true);
         fieldTextTag.addValueChangeListener(event -> {
             if (text.isValid(event.getValue()) && event.getValue().length() > 2) {
-                fieldTextTag.setInvalid(false);
+                if (newPackage) {
+                    if (isTagEsistente()) {
+                        Notification.show("Esiste già questo tag", 3000, Notification.Position.MIDDLE);
+                        fieldTextTag.setInvalid(true);
+                    } else {
+                        fieldTextTag.setInvalid(false);
+                    }// end of if/else cycle
+                }// end of if cycle
+                fieldTextTag.setValue(fieldTextTag.getValue().toUpperCase());
             } else {
+                Notification.show("Il tag deve essere di almeno 3 caratteri", 3000, Notification.Position.MIDDLE);
                 fieldTextTag.setInvalid(true);
             }// end of if/else cycle
         });//end of lambda expressions
@@ -329,13 +365,31 @@ public class TDialogo extends Dialog {
 
 
     private void sincroRadio(String radioSelected) {
+        String namePackage;
+        packagePlaceHolder.removeAll();
+
+//        fieldComboPackage.setValue(getPackage());
+//        groupTitolo.setValue(RADIO_UPDATE);
+//        packagePlaceHolder.removeAll();
+//        packagePlaceHolder.add(fieldComboPackage);
+
 
         if (radioSelected.equals(RADIO_NEW)) {
             newPackage = true;
+            packagePlaceHolder.add(fieldTextPackage);
+            fieldTextPackage.setValue("");
         }// end of if cycle
 
         if (radioSelected.equals(RADIO_UPDATE)) {
             newPackage = false;
+            packagePlaceHolder.add(fieldComboPackage);
+            sincroProject();
+            namePackage = fieldTextPackage.getValue();
+            if (text.isValid(namePackage)) {
+                if (packages.contains(namePackage)) {
+                    fieldComboPackage.setValue(namePackage);
+                }// end of if cycle
+            }// end of if cycle
         }// end of if cycle
 
         sincroPackage();
@@ -404,35 +458,44 @@ public class TDialogo extends Dialog {
         fieldTextTag.setInvalid(status);
     }// end of method
 
-    private boolean checkPackage() {
+    private boolean isPackageEsistente() {
         boolean esiste = false;
+        String pathModules = getPathModules();
+        List<String> packagesEsistenti = file.getSubdiretories(pathModules);
+
+        if (packagesEsistenti.contains(getPackage())) {
+            esiste = true;
+        }// end of if cycle
 
         return esiste;
     }// end of method
 
-    private boolean checkEntity() {
-        boolean esiste = false;
-
-        return esiste;
-    }// end of method
-
-    private boolean checkTag() {
-        boolean esiste = false;
-
-        return esiste;
-    }// end of method
-
-    private boolean checkBase() {
-        boolean esiste = false;
-
-        String pathFile = "";
-        String sep = "/";
+    private boolean isEntityEsistente() {
         String java = ".java";
+        String entity = text.primaMaiuscola(fieldTextEntity.getValue()) + java;
+
+        return checkBase(entity);
+    }// end of method
+
+    private boolean isTagEsistente() {
+        boolean esiste = false;
+
+        if (fieldTextTag.getValue().equals("ROL")) {
+            esiste = true;
+        } else {
+            esiste = false;
+        }// end of if/else cycle
+
+        return esiste;
+    }// end of method
+
+
+    private String getPathModules() {
+        String path = "";
+        String sep = "/";
         String userDir = System.getProperty("user.dir");
         Progetto project = fieldComboProgetti.getValue();
         String projectName = "";
-        String pack = fieldComboPackage.getValue() != null ? fieldComboPackage.getValue().toLowerCase() : "";
-        String entity = text.primaMaiuscola(fieldTextEntity.getValue());
 
         if (project != null) {
             projectName = project.getNameProject();
@@ -441,20 +504,48 @@ public class TDialogo extends Dialog {
         String ideaProjectRootPath = text.levaCodaDa(userDir, sep);
         String projectBasePath = ideaProjectRootPath + sep + projectName;
 
-        pathFile += projectBasePath;
-        pathFile += DIR_JAVA;
-        pathFile += sep;
-        pathFile += projectName;
-        pathFile += sep;
-        pathFile += ENTITIES_NAME;
-        pathFile += sep;
-        pathFile += pack;
-        pathFile += sep;
-        pathFile += entity;
-        pathFile += java;
+        path += projectBasePath;
+        path += DIR_JAVA;
+        path += sep;
+        path += projectName;
+        path += sep;
+        path += ENTITIES_NAME;
 
-        esiste = file.isEsisteFile(pathFile);
+        return path;
+    }// end of method
+
+    private boolean checkBase(String name) {
+        boolean esiste = false;
+        String path = "";
+        String sep = "/";
+        String pack = getPackage();
+        String pathModules = getPathModules();
+
+        path += pathModules;
+        path += pack;
+        path += sep;
+        path += name;
+
+        if (path.endsWith(sep)) {
+            path = text.levaCodaDa(path, sep);
+            esiste = file.isEsisteDirectory(path);
+        } else {
+            esiste = file.isEsisteFile(path);
+        }// end of if/else cycle
+
         return esiste;
+    }// end of method
+
+    private String getPackage() {
+        String pack = "";
+
+        if (newPackage) {
+            pack = fieldTextPackage.getValue();
+        } else {
+            pack = fieldComboPackage.getValue() != null ? fieldComboPackage.getValue().toLowerCase() : "";
+        }// end of if/else cycle
+
+        return pack;
     }// end of method
 
     private boolean isPackagingEsistente() {
@@ -505,18 +596,7 @@ public class TDialogo extends Dialog {
     }// end of method
 
     private List<String> recuperaPackageEsistenti(String projectName) {
-        List<String> lista = new ArrayList<>();
-
-        if (projectName.equals("vaadbase")) {
-            lista.add("address");
-            lista.add("role");
-        } else {
-            lista.add("pippoz");
-            lista.add("plutoz");
-            lista.add("paperinoz");
-        }// end of if/else cycle
-
-        return lista;
+        return file.getSubdiretories(getPathModules());
     }// end of method
 
 }// end of class

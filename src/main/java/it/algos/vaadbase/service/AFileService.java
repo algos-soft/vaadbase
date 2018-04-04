@@ -11,6 +11,8 @@ import java.io.BufferedReader;
 import java.io.File;
 import java.io.FileReader;
 import java.io.FileWriter;
+import java.util.ArrayList;
+import java.util.List;
 
 /**
  * Project springvaadin
@@ -42,13 +44,13 @@ public class AFileService {
     /**
      * Controlla l'esistenza di un file
      *
-     * @param nameFileToBeChecked nome completo del file
+     * @param pathFileToBeChecked nome completo del file
      *
      * @return true se il file esiste
      * false se non è un file o se non esiste
      */
-    public boolean isEsisteFile(String nameFileToBeChecked) {
-        return isEsisteFile(new File(nameFileToBeChecked));
+    public boolean isEsisteFile(String pathFileToBeChecked) {
+        return isEsisteFile(new File(pathFileToBeChecked));
     }// end of method
 
 
@@ -82,13 +84,13 @@ public class AFileService {
     /**
      * Controlla l'esistenza di una directory
      *
-     * @param nameDirectoryToBeChecked nome completo della directory
+     * @param pathDirectoryToBeChecked nome completo della directory
      *
      * @return true se la directory esiste
      * false se non è una directory o se non esiste
      */
-    public boolean isEsisteDirectory(String nameDirectoryToBeChecked) {
-        return isEsisteDirectory(new File(nameDirectoryToBeChecked));
+    public boolean isEsisteDirectory(String pathDirectoryToBeChecked) {
+        return isEsisteDirectory(new File(pathDirectoryToBeChecked));
     }// end of method
 
 
@@ -122,10 +124,10 @@ public class AFileService {
     /**
      * Cancella un file
      *
-     * @param nameFileToBeDeleted nome completo del file
+     * @param pathFileToBeDeleted nome completo del file
      */
-    public boolean deleteFile(String nameFileToBeDeleted) {
-        return deleteFile(new File(nameFileToBeDeleted));
+    public boolean deleteFile(String pathFileToBeDeleted) {
+        return deleteFile(new File(pathFileToBeDeleted));
     }// end of method
 
 
@@ -164,10 +166,10 @@ public class AFileService {
     /**
      * Cancella una directory
      *
-     * @param nameDirectoryToBeDeleted nome completo della directory
+     * @param pathDirectoryToBeDeleted nome completo della directory
      */
-    public boolean deleteDirectory(String nameDirectoryToBeDeleted) {
-        return deleteDirectory(new File(nameDirectoryToBeDeleted.toLowerCase()));
+    public boolean deleteDirectory(String pathDirectoryToBeDeleted) {
+        return deleteDirectory(new File(pathDirectoryToBeDeleted.toLowerCase()));
     }// end of method
 
 
@@ -206,10 +208,10 @@ public class AFileService {
     /**
      * Crea un file
      *
-     * @param nameFileToBeCreated nome completo del file
+     * @param pathFileToBeCreated nome completo del file
      */
-    public boolean creaFile(String nameFileToBeCreated) {
-        return creaFile(new File(nameFileToBeCreated));
+    public boolean creaFile(String pathFileToBeCreated) {
+        return creaFile(new File(pathFileToBeCreated));
     }// end of method
 
 
@@ -261,11 +263,11 @@ public class AFileService {
      * Scrive un file
      * Se non esiste, lo crea
      *
-     * @param nameFileToBeWritten nome completo del file
+     * @param pathFileToBeWritten nome completo del file
      * @param text                contenuto del file
      */
-    public boolean scriveFile(String nameFileToBeWritten, String text) {
-        return scriveFile(nameFileToBeWritten, text, false);
+    public boolean scriveFile(String pathFileToBeWritten, String text) {
+        return scriveFile(pathFileToBeWritten, text, false);
     }// end of method
 
 
@@ -273,30 +275,30 @@ public class AFileService {
      * Scrive un file
      * Se non esiste, lo crea
      *
-     * @param nameFileToBeWritten nome completo del file
+     * @param pathFileToBeWritten nome completo del file
      * @param text                contenuto del file
      * @param sovrascrive         anche se esiste già
      */
-    public boolean scriveFile(String nameFileToBeWritten, String text, boolean sovrascrive) {
+    public boolean scriveFile(String pathFileToBeWritten, String text, boolean sovrascrive) {
         boolean status = false;
         File fileToBeWritten;
         FileWriter fileWriter;
 
-        if (isEsisteFile(nameFileToBeWritten)) {
+        if (isEsisteFile(pathFileToBeWritten)) {
             if (sovrascrive) {
-                status = sovraScriveFile(nameFileToBeWritten, text);
-                System.out.println("Il file " + nameFileToBeWritten + " esisteva già ed è stato aggiornato");
+                status = sovraScriveFile(pathFileToBeWritten, text);
+                System.out.println("Il file " + pathFileToBeWritten + " esisteva già ed è stato aggiornato");
             } else {
-                System.out.println("Il file " + nameFileToBeWritten + " esisteva già e non è stato modificato");
+                System.out.println("Il file " + pathFileToBeWritten + " esisteva già e non è stato modificato");
                 return false;
             }// end of if/else cycle
         } else {
-            status = creaFile(nameFileToBeWritten);
+            status = creaFile(pathFileToBeWritten);
             if (status) {
-                status = sovraScriveFile(nameFileToBeWritten, text);
-                System.out.println("Il file " + nameFileToBeWritten + " non esisteva ed è stato creato");
+                status = sovraScriveFile(pathFileToBeWritten, text);
+                System.out.println("Il file " + pathFileToBeWritten + " non esisteva ed è stato creato");
             } else {
-                System.out.println("Il file " + nameFileToBeWritten + " non esisteva e non è stato creato");
+                System.out.println("Il file " + pathFileToBeWritten + " non esisteva e non è stato creato");
                 return false;
             }// end of if/else cycle
         }// end of if/else cycle
@@ -308,16 +310,16 @@ public class AFileService {
     /**
      * Sovrascrive un file
      *
-     * @param nameFileToBeWritten nome completo del file
+     * @param pathFileToBeWritten nome completo del file
      * @param text                contenuto del file
      */
-    public boolean sovraScriveFile(String nameFileToBeWritten, String text) {
+    public boolean sovraScriveFile(String pathFileToBeWritten, String text) {
         boolean status = false;
         File fileToBeWritten;
         FileWriter fileWriter = null;
 
-        if (isEsisteFile(nameFileToBeWritten)) {
-            fileToBeWritten = new File(nameFileToBeWritten);
+        if (isEsisteFile(pathFileToBeWritten)) {
+            fileToBeWritten = new File(pathFileToBeWritten);
             try { // prova ad eseguire il codice
                 fileWriter = new FileWriter(fileToBeWritten);
                 fileWriter.write(text);
@@ -335,7 +337,7 @@ public class AFileService {
                 }// fine del blocco try-catch
             }// fine del blocco try-catch-finally
         } else {
-            System.out.println("Il file " + nameFileToBeWritten + " non esiste e non è stato creato");
+            System.out.println("Il file " + pathFileToBeWritten + " non esiste e non è stato creato");
         }// end of if/else cycle
 
         return status;
@@ -344,9 +346,9 @@ public class AFileService {
     /**
      * Legge un file
      *
-     * @param nameFileToBeRead nome completo del file
+     * @param pathFileToBeWritten nome completo del file
      */
-    public String leggeFile(String nameFileToBeRead) {
+    public String leggeFile(String pathFileToBeWritten) {
         String testo = "";
         String aCapo = "\n";
         String currentLine;
@@ -354,7 +356,7 @@ public class AFileService {
         //-- non va, perché se arriva it/algos/Alfa.java becca anche il .java
 //        nameFileToBeRead=  nameFileToBeRead.replaceAll("\\.","/");
 
-        try (BufferedReader br = new BufferedReader(new FileReader(nameFileToBeRead))) {
+        try (BufferedReader br = new BufferedReader(new FileReader(pathFileToBeWritten))) {
             while ((currentLine = br.readLine()) != null) {
                 testo += currentLine;
                 testo += "\n";
@@ -366,6 +368,32 @@ public class AFileService {
         }// fine del blocco try-catch
 
         return testo;
+    }// end of method
+
+    /**
+     * Legge il contenuto di una directory
+     *
+     * @param pathDirectoryToBeScanned nome completo della directory
+     */
+    public List<String> getSubdiretories(String pathDirectoryToBeScanned) {
+        List<String> subDirectory = null;
+        File[] allFiles = null;
+        File directory = new File(pathDirectoryToBeScanned);
+
+        if (directory != null) {
+            allFiles = directory.listFiles();
+        }// end of if cycle
+
+        if (allFiles != null) {
+            subDirectory=new ArrayList<>();
+            for (File file : allFiles) {
+                if (file.isDirectory()) {
+                    subDirectory.add(file.getName());
+                }// end of if cycle
+            }// end of for cycle
+        }// end of if cycle
+
+        return subDirectory;
     }// end of method
 
 }// end of class

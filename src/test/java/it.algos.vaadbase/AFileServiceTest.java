@@ -2,7 +2,6 @@ package it.algos.vaadbase;
 
 import it.algos.vaadbase.service.AFileService;
 import it.algos.vaadbase.service.ATextService;
-import lombok.extern.slf4j.Slf4j;
 import name.falgout.jeffrey.testing.junit5.MockitoExtension;
 import org.junit.jupiter.api.*;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -28,19 +27,18 @@ import static org.junit.jupiter.api.Assertions.*;
 public class AFileServiceTest extends ATest {
 
 
-    @InjectMocks
-    private AFileService service;
-
-    @InjectMocks
-    private ATextService textService;
-
-    private static String PATH = "/Users/gac/Documents/IdeaProjects/vaadbase/src/main/java/it/algos/vaadbase/wizard/sources/";
-    private static String DIR = PATH + "Prova";
+    private static String PATH = "/Users/gac/Documents/IdeaProjects/vaadbase/src/main/java/it/algos/vaadbase/";
+    private static String SOURCES = PATH + "wizard/sources/";
+    private static String MODULES = PATH + "modules/";
+    private static String DIR = SOURCES + "Prova";
     private static String READ = "README.txt";
     private static String PACKAGE = "package it.algos.vaadbase;\n";
     private static String TESTO = PACKAGE + "public class Alfa {}";
     private static String NOME_FILE = PATH + "Alfa.java";
-
+    @InjectMocks
+    private AFileService service;
+    @InjectMocks
+    private ATextService textService;
     private boolean statusPrevisto;
     private boolean statusOttenuto;
 
@@ -92,7 +90,7 @@ public class AFileServiceTest extends ATest {
         statusPrevisto = false;
         statusOttenuto = service.isEsisteFile(nomeCompletoFile);
         assertEquals(statusPrevisto, statusOttenuto);
-    }// end of method
+    }// end of single test
 
 
     @SuppressWarnings("javadoc")
@@ -127,7 +125,7 @@ public class AFileServiceTest extends ATest {
         statusOttenuto = service.isEsisteDirectory(nomeCompletoDirectory);
         assertEquals(statusPrevisto, statusOttenuto);
         System.out.println("*isEsisteDirectory - fine");
-    }// end of method
+    }// end of single test
 
 
     @SuppressWarnings("javadoc")
@@ -155,9 +153,8 @@ public class AFileServiceTest extends ATest {
         statusOttenuto = service.deleteFile(DIR);
         assertEquals(statusPrevisto, statusOttenuto);
 
-
         System.out.println("*deleteFile - fine");
-    }// end of method
+    }// end of single test
 
 
     @SuppressWarnings("javadoc")
@@ -187,7 +184,7 @@ public class AFileServiceTest extends ATest {
         assertEquals(statusPrevisto, statusOttenuto);
 
         System.out.println("*deleteDirectory - fine");
-    }// end of method
+    }// end of single test
 
 
     @SuppressWarnings("javadoc")
@@ -254,14 +251,14 @@ public class AFileServiceTest extends ATest {
 
         service.deleteFile(nomeFile);
         System.out.println("*scriveFile - fine");
-    }// end of method
+    }// end of single test
 
 
     @SuppressWarnings("javadoc")
     /**
      * Legge un file
      *
-     * @param nameFileToBeRead nome completo del file
+     * @param pathFileToBeWritten nome completo del file
      */
     @Test
     public void leggeFile() {
@@ -288,6 +285,13 @@ public class AFileServiceTest extends ATest {
         testoOttenuto = service.leggeFile(nomeFile);
         assertEquals("", testoOttenuto);
         assertTrue(testoOttenuto.length() == 0);
-    }// end of method
+    }// end of single test
+
+    @Test
+    public void getSubdiretories() {
+        ottenutoList = service.getSubdiretories(MODULES);
+        ottenutoList = service.getSubdiretories(MODULES);
+    }// end of single test
+
 
 }// end of class
