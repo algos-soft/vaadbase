@@ -1,6 +1,6 @@
     /**
-     * Opportunità di usare una idKey specifica.
-     * Invocato appena prima del save(), solo per una nuova entity
+     * Opportunità di usare una idKey specifica. <br>
+     * Invocato appena prima del save(), solo per una nuova entity <br>
      *
      * @param entityBean da salvare
      */

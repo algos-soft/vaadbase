@@ -1,8 +1,8 @@
     /**
-     * Ordine di presentazione (obbligatorio, unico per tutte le eventuali company),
-     * Viene calcolato in automatico alla creazione della entity
-     * Recupera dal DB il valore massimo pre-esistente della property
-     * Incrementa di uno il risultato
+     * Ordine di presentazione (obbligatorio, unico per tutte le eventuali company), <br>
+     * Viene calcolato in automatico alla creazione della entity <br>
+     * Recupera dal DB il valore massimo pre-esistente della property <br>
+     * Incrementa di uno il risultato <br>
      */
     public int getNewOrdine() {
         int ordine = 0;

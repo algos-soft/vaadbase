@@ -1,6 +1,6 @@
 
     /**
-     * descrizione (obbligatoria, non unica)
+     * descrizione (obbligatoria, non unica) <br>
      */
     @NotEmpty(message = "La descrizione è obbligatoria")
     @Size(min = 2, max = 50)

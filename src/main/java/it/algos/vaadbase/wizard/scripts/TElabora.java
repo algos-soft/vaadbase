@@ -13,6 +13,9 @@ import org.springframework.beans.factory.config.ConfigurableBeanFactory;
 import org.springframework.context.annotation.Scope;
 
 import java.time.LocalDate;
+import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
+import java.time.format.FormatStyle;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -380,7 +383,7 @@ public class TElabora {
         mappa.put(Token.projectName, targetProjectName);
         mappa.put(Token.packageName, newPackageName);
         mappa.put(Token.user, "Gac");
-        mappa.put(Token.today, LocalDate.now().toString());
+        mappa.put(Token.today, LocalDateTime.now().format(DateTimeFormatter.ofLocalizedDateTime(FormatStyle.MEDIUM)));
         mappa.put(Token.qualifier, qualifier != null ? qualifier : "");
         mappa.put(Token.tagView, "");
         mappa.put(Token.entity, newEntityName);

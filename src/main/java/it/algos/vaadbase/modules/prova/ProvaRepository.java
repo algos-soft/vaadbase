@@ -14,12 +14,13 @@ import static it.algos.vaadbase.application.BaseCost.TAG_PRO;
  * Project vaadbase
  * Created by Algos
  * User: Gac
- * Date: 2018-04-04
- * Estende la l'interaccia MongoRepository col casting alla Entity relativa di questa repository
- * Annotated with @SpringComponent (obbligatorio)
- * Annotated with @Scope (obbligatorio = 'singleton')
- * Annotated with @Qualifier (obbligatorio) per permettere a Spring di istanziare la sottoclasse specifica
- * Annotated with @AIScript (facoltativo) per controllare la ri-creazione di questo file nello script del framework
+ * Date: 5-apr-2018 12.31.00
+ * <br>
+ * Estende la l'interaccia MongoRepository col casting alla Entity relativa di questa repository <br>
+ * Annotated with @SpringComponent (obbligatorio) <br>
+ * Annotated with @Scope (obbligatorio = 'singleton') <br>
+ * Annotated with @Qualifier (obbligatorio) per permettere a Spring di istanziare la sottoclasse specifica <br>
+ * Annotated with @AIScript (facoltativo) per controllare la ri-creazione di questo file nello script del framework <br>
  */
 @SpringComponent
 @Scope(ConfigurableBeanFactory.SCOPE_SINGLETON)

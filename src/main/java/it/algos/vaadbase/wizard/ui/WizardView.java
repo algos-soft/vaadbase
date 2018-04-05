@@ -117,7 +117,6 @@ public class WizardView extends AView {
         //--componente grafico facoltativo
         this.regolaMenu();
         this.add(menu);
-
         this.add(creaMenu());
 
         inizia();
@@ -132,12 +131,12 @@ public class WizardView extends AView {
         layout.add(buttonUno);
 
         buttonDue = new Button("Package");
-        buttonDue.addClickListener(event -> dialog.open(false, new TRecipient() {
+        buttonDue.addClickListener(event -> dialog.open(new TRecipient() {
             @Override
             public void gotInput(Map<Chiave, Object> mappaInput) {
                 elabora(mappaInput);
             }// end of inner method
-        }, Progetto.vaadin, NOME_PACKAGE_STANDARD_SUGGERITO));// end of lambda expressions and anonymous inner class
+        }, true, Progetto.vaadin, NOME_PACKAGE_STANDARD_SUGGERITO));// end of lambda expressions and anonymous inner class
         layout.add(buttonDue);
 
         return layout;

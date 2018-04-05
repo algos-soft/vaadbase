@@ -34,15 +34,16 @@ import static it.algos.vaadbase.application.BaseCost.TAG_PRO;
  * Project vaadbase
  * Created by Algos
  * User: Gac
- * Date: 2018-04-04
- * Estende la Entity astratta AList di tipo AView per visualizzare la Grid
- * Annotated with @SpringComponent (obbligatorio)
- * Annotated with @Scope (obbligatorio = 'session')
- * Annotated with @Qualifier (obbligatorio) per permettere a Spring di istanziare la sottoclasse specifica
- * Annotated with @SpringView (obbligatorio) per gestire la visualizzazione di questa view con SprinNavigator
- * Annotated with @AIView (facoltativo) per selezionarne la 'visibilità' secondo il ruolo dell'User collegato
- * Annotated with @AIScript (facoltativo) per controllare la ri-creazione di questo file nello script del framework
- * Costruttore con un link @Autowired al IAPresenter, di tipo @Lazy per evitare un loop nella injection
+ * Date: 5-apr-2018 12.31.00
+ * <br>
+ * Estende la Entity astratta AList di tipo AView per visualizzare la Grid <br>
+ * Annotated with @SpringComponent (obbligatorio) <br>
+ * Annotated with @Scope (obbligatorio = 'session') <br>
+ * Annotated with @Qualifier (obbligatorio) per permettere a Spring di istanziare la sottoclasse specifica <br>
+ * Annotated with @SpringView (obbligatorio) per gestire la visualizzazione di questa view con SprinNavigator <br>
+ * Annotated with @AIView (facoltativo) per selezionarne la 'visibilità' secondo il ruolo dell'User collegato <br>
+ * Annotated with @AIScript (facoltativo) per controllare la ri-creazione di questo file nello script del framework <br>
+ * Costruttore con un link @Autowired al IAPresenter, di tipo @Lazy per evitare un loop nella injection <br>
  */
 @Slf4j
 @SpringComponent
@@ -55,18 +56,18 @@ public class ProvaView extends AView {
 
 
     /**
-     * Label del menu (facoltativa)
-     * SpringNavigator usa il 'name' della Annotation @SpringView per identificare (internamente) e recuperare la view
-     * Nella menuBar appare invece visibile il MENU_NAME, indicato qui
-     * Se manca il MENU_NAME, di default usa il 'name' della view
+     * Label del menu (facoltativa) <br>
+     * SpringNavigator usa il 'name' della Annotation @SpringView per identificare (internamente) e recuperare la view <br>
+     * Nella menuBar appare invece visibile il MENU_NAME, indicato qui <br>
+     * Se manca il MENU_NAME, di default usa il 'name' della view <br>
      */
     public static final String MENU_NAME = TAG_PRO;
 
 
     /**
-     * Il service viene regolato nel costruttore recuperandolo del presenter
-     * in modo che sia disponibile nella superclasse, dove viene usata l'interfaccia IAService
-     * Qui si una una sottoclasse locale (col casting nel costruttore) per usare i metodi specifici
+     * Il service viene regolato nel costruttore recuperandolo del presenter <br>
+     * in modo che sia disponibile nella superclasse, dove viene usata l'interfaccia IAService <br>
+     * Qui si una una sottoclasse locale (col casting nel costruttore) per usare i metodi specifici <br>
      */
     private ProvaService service;
 
@@ -80,14 +81,14 @@ public class ProvaView extends AView {
 
 
     /**
-     * Costruttore @Autowired
-     * In the newest Spring release, it’s constructor does not need to be annotated with @Autowired annotation
-     * Si usa un @Qualifier(), per avere la sottoclasse specifica
-     * Si usa una costante statica, per essere sicuri di scrivere sempre uguali i riferimenti
-     * Use @Lazy to avoid the Circular Dependency
-     * A simple way to break the cycle is saying Spring to initialize one of the beans lazily.
-     * That is: instead of fully initializing the bean, it will create a proxy to inject it into the other bean.
-     * The injected bean will only be fully created when it’s first needed.
+     * Costruttore @Autowired <br>
+     * In the newest Spring release, it’s constructor does not need to be annotated with @Autowired annotation <br>
+     * Si usa un @Qualifier(), per avere la sottoclasse specifica <br>
+     * Si usa una costante statica, per essere sicuri di scrivere sempre uguali i riferimenti <br>
+     * Use @Lazy to avoid the Circular Dependency <br>
+     * A simple way to break the cycle is saying Spring to initialize one of the beans lazily. <br>
+     * That is: instead of fully initializing the bean, it will create a proxy to inject it into the other bean. <br>
+     * The injected bean will only be fully created when it’s first needed. <br>
      *
      * @param presenter iniettato da Spring come sottoclasse concreta specificata dal @Qualifier
      */

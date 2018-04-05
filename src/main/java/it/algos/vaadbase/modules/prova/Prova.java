@@ -23,10 +23,10 @@ import it.algos.vaadbase.annotation.*;
 import static it.algos.vaadbase.application.BaseCost.TAG_PRO;
 
 /**
- * Project vaadbase
- * Created by Algos
- * User: Gac
- * Date: 2018-04-04
+ * Project vaadbase <br>
+ * Created by Algos <br>
+ * User: Gac <br>
+ * Date: 5-apr-2018 12.31.00 <br>
  * <br>
  * Estende la Entity astratta AEntity che contiene la key property ObjectId <br>
  * Annotated with @SpringComponent (obbligatorio) <br>
@@ -68,8 +68,8 @@ public class Prova extends AEntity {
     private final static long serialVersionUID = 1L;
     
 /**
-     * ordine di presentazione (obbligatorio, unico)
-     * il più importante per primo
+     * ordine di presentazione (obbligatorio, unico) <br>
+     * il più importante per primo <br>
      */
     @NotNull
     @Indexed()
@@ -78,7 +78,7 @@ public class Prova extends AEntity {
     private int ordine;
     
 /**
-     * codice di riferimento (obbligatorio, unico)
+     * codice di riferimento (obbligatorio, unico) <br>
      */
     @NotEmpty
     @Size()

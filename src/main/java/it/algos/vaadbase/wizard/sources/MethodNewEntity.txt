@@ -1,8 +1,8 @@
     /**
-     * Creazione in memoria di una nuova entity che NON viene salvata
-     * Eventuali regolazioni iniziali delle property
-     * All properties
-     * Gli argomenti (parametri) della new Entity DEVONO essere ordinati come nella Entity (costruttore lombok)
+     * Creazione in memoria di una nuova entity che NON viene salvata <br>
+     * Eventuali regolazioni iniziali delle property <br>
+     * All properties <br>
+     * Gli argomenti (parametri) della new Entity DEVONO essere ordinati come nella Entity (costruttore lombok) <br>
      *
      @PARAMETERSDOC@
      *

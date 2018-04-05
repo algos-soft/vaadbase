@@ -41,6 +41,7 @@ import java.util.Map;
 public class TDialogo extends Dialog {
 
 
+    public final static int DURATA = 2000;
     public final static String NORMAL_WIDTH = "9em";
     public final static String NORMAL_HEIGHT = "3em";
     public final static boolean DEFAULT_USA_ORDINE = true;
@@ -109,9 +110,9 @@ public class TDialogo extends Dialog {
     }// end of method
 
 
-    public void open(boolean newPackage, TRecipient recipient, Progetto progetto, String packageName) {
-        this.newPackage = newPackage;
+    public void open(TRecipient recipient, boolean newPackage, Progetto progetto, String packageName) {
         this.recipient = recipient;
+        this.newPackage = newPackage;
         this.project = progetto != null ? progetto : PROGETTO_STANDARD_SUGGERITO;
         this.packageName = text.isValid(packageName) ? packageName : "";
         this.removeAll();
@@ -122,16 +123,16 @@ public class TDialogo extends Dialog {
         this.add(creaBody());
         this.add(creaFooter());
 
+        sincroRadio(groupTitolo.getValue());
         addListener();
-
-        sincroProject();
+        sincroPackageNew(packageName);
     }// end of method
 
     private void addListener() {
-        groupTitolo.addValueChangeListener(event -> sincroRadio(event.getValue()));
-        fieldComboProgetti.addValueChangeListener(event -> sincroProject());
-        fieldComboPackage.addValueChangeListener(event -> sincroPackage());
-        fieldTextPackage.addValueChangeListener(event -> sincroPackage());
+        groupTitolo.addValueChangeListener(event -> sincroRadio(event.getValue()));//end of lambda expressions
+        fieldComboProgetti.addValueChangeListener(event -> sincroProject(event.getValue()));//end of lambda expressions
+        fieldTextPackage.addValueChangeListener(event -> sincroPackage(event.getValue()));//end of lambda expressions
+        fieldComboPackage.addValueChangeListener(event -> sincroPackage(event.getValue()));//end of lambda expressions
     }// end of method
 
 
@@ -144,15 +145,12 @@ public class TDialogo extends Dialog {
         groupTitolo.setItems(RADIO_NEW, RADIO_UPDATE);
         groupTitolo.getElement().getStyle().set("display", "flex");
         groupTitolo.getElement().getStyle().set("flexDirection", "column");
+
         if (newPackage) {
             groupTitolo.setValue(RADIO_NEW);
         } else {
             groupTitolo.setValue(RADIO_UPDATE);
         }// end of if/else cycle
-
-        groupTitolo.addValueChangeListener(event -> {
-            sincroRadio(event.getValue());
-        });//end of lambda expressions
 
         layoutLabel.add(groupTitolo);
         return layoutLabel;
@@ -191,7 +189,10 @@ public class TDialogo extends Dialog {
 
         fieldComboProgetti.setLabel(label);
         fieldComboProgetti.setItems(Arrays.asList(progetti));
-        fieldComboProgetti.setValue(project);
+
+        if (Arrays.asList(progetti).contains(project)) {
+            fieldComboProgetti.setValue(project);
+        }// end of if cycle
 
         return fieldComboProgetti;
     }// end of method
@@ -199,42 +200,15 @@ public class TDialogo extends Dialog {
 
     private Component creaPackage() {
         packagePlaceHolder = new HorizontalLayout();
+        String label = "Package";
 
         fieldComboPackage = new ComboBox<>();
         fieldComboPackage.setAllowCustomValue(true);
-        String label = "Package";
-
         fieldComboPackage.setLabel(label);
 
         fieldTextPackage = new TextField();
         fieldTextPackage.setLabel(label);
         fieldTextPackage.setEnabled(true);
-
-        fieldTextPackage.addValueChangeListener(event -> {
-            if (newPackage && isPackageEsistente()) {
-                Notification.show("Esiste già questo package", 3000, Notification.Position.MIDDLE);
-                fieldComboPackage.setValue(getPackage());
-                newPackage = false;
-                groupTitolo.setValue(RADIO_UPDATE);
-                packagePlaceHolder.removeAll();
-                packagePlaceHolder.add(fieldComboPackage);
-            }// end of if cycle
-        });//end of lambda expressions
-
-        if (newPackage) {
-            fieldTextPackage.focus();
-            packagePlaceHolder.add(fieldTextPackage);
-        } else {
-            packages = recuperaPackageEsistenti(project.getNameProject());
-            fieldComboPackage.setItems(packages);
-            fieldComboPackage.focus();
-            packagePlaceHolder.add(fieldComboPackage);
-            if (text.isValid(packageName)) {
-                if (packages.contains(packageName)) {
-                    fieldComboPackage.setValue(packageName);
-                }// end of if cycle
-            }// end of if cycle
-        }// end of if/else cycle
 
         return packagePlaceHolder;
     }// end of method
@@ -245,24 +219,6 @@ public class TDialogo extends Dialog {
         fieldTextEntity.setLabel("Entity");
 
         fieldTextEntity.setEnabled(true);
-
-        fieldTextEntity.addValueChangeListener(event -> {
-            if (text.isValid(event.getValue()) && event.getValue().length() > 2) {
-                if (newPackage) {
-                    if (isEntityEsistente()) {
-                        Notification.show("Esiste già questa entity", 3000, Notification.Position.MIDDLE);
-                        fieldTextEntity.setInvalid(true);
-                    } else {
-                        fieldTextEntity.setInvalid(false);
-                    }// end of if/else cycle
-                }// end of if cycle
-                fieldTextEntity.setValue(text.primaMaiuscola(fieldTextEntity.getValue()));
-            } else {
-                Notification.show("La entity deve essere di almeno 3 caratteri", 3000, Notification.Position.MIDDLE);
-                fieldTextEntity.setInvalid(true);
-            }// end of if/else cycle
-        });//end of lambda expressions
-
         return fieldTextEntity;
     }// end of method
 
@@ -272,23 +228,6 @@ public class TDialogo extends Dialog {
         fieldTextTag.setLabel("Tag");
 
         fieldTextTag.setEnabled(true);
-        fieldTextTag.addValueChangeListener(event -> {
-            if (text.isValid(event.getValue()) && event.getValue().length() > 2) {
-                if (newPackage) {
-                    if (isTagEsistente()) {
-                        Notification.show("Esiste già questo tag", 3000, Notification.Position.MIDDLE);
-                        fieldTextTag.setInvalid(true);
-                    } else {
-                        fieldTextTag.setInvalid(false);
-                    }// end of if/else cycle
-                }// end of if cycle
-                fieldTextTag.setValue(fieldTextTag.getValue().toUpperCase());
-            } else {
-                Notification.show("Il tag deve essere di almeno 3 caratteri", 3000, Notification.Position.MIDDLE);
-                fieldTextTag.setInvalid(true);
-            }// end of if/else cycle
-        });//end of lambda expressions
-
         return fieldTextTag;
     }// end of method
 
@@ -355,7 +294,7 @@ public class TDialogo extends Dialog {
                 chiudeDialogo();
             } else {
 //                Notification.show("Stai creando una EntityClass SENZA la property 'code'. È possibile, ma alcune linee di codice andranno riscritte.",2000,Notification.Position.MIDDLE);
-                Notification.show("Stai tentando di creare una EntityClass SENZA la property 'code'. Non è possibile.", 3000, Notification.Position.MIDDLE);
+                Notification.show("Stai tentando di creare una EntityClass SENZA la property 'code'. Non è possibile.", DURATA, Notification.Position.MIDDLE);
             }// end of if/else cycle
         });//end of lambda expressions
         confirmButton.setWidth(NORMAL_WIDTH);
@@ -375,97 +314,101 @@ public class TDialogo extends Dialog {
 
 
     private void sincroRadio(String radioSelected) {
-        String namePackage;
-        packagePlaceHolder.removeAll();
-
         if (radioSelected.equals(RADIO_NEW)) {
             newPackage = true;
-            packagePlaceHolder.add(fieldTextPackage);
-            fieldTextPackage.setValue("");
+            packageName = "";
         }// end of if cycle
 
         if (radioSelected.equals(RADIO_UPDATE)) {
             newPackage = false;
-            packagePlaceHolder.add(fieldComboPackage);
-            sincroProject();
-            namePackage = fieldTextPackage.getValue();
-            if (text.isValid(namePackage)) {
-                if (packages.contains(namePackage)) {
-                    fieldComboPackage.setValue(namePackage);
-                }// end of if cycle
-            }// end of if cycle
         }// end of if cycle
 
-        sincroPackage();
+        sincroProject(fieldComboProgetti.getValue());
     }// end of method
 
-    private void sincroProject() {
-        Progetto progetto = fieldComboProgetti.getValue();
 
-        if (progetto == null) {
-            invalida(true);
-            fieldComboPackage.setValue(null);
-        } else {
-            packages = recuperaPackageEsistenti(progetto.getNameProject());
-            if (packages!=null) {
-                fieldComboPackage.setItems(packages);
-            }// end of if cycle
-        }// end of if/else cycle
-
-        sincroPackage();
-    }// end of method
-
-    private void sincroPackage() {
-        String valueFromPackage = "";
-        String valueForEntity = "";
-        String valueForTag = "";
+    private void sincroProject(Progetto progettoSelezionato) {
+        String namePackage;
+        packagePlaceHolder.removeAll();
 
         if (newPackage) {
-            valueFromPackage = fieldTextPackage.getValue();
+            packagePlaceHolder.add(fieldTextPackage);
+            fieldTextPackage.setValue("");
+            sincroPackage(packageName);
         } else {
-            valueFromPackage = fieldComboPackage.getValue() != null ? fieldComboPackage.getValue() : "";
-        }// end of if/else cycle
+            packagePlaceHolder.add(fieldComboPackage);
+            if (progettoSelezionato == null) {
+                invalida(true);
+                fieldComboPackage.setValue(null);
+            } else {
+                packages = recuperaPackageEsistenti(progettoSelezionato.getNameProject());
+                if (packages != null && fieldComboPackage != null) {
+                    fieldComboPackage.setItems(packages);
+                }// end of if cycle
 
+                namePackage = packageName;
+                if (text.isValid(namePackage)) {
+                    if (packages.contains(namePackage)) {
+                        fieldComboPackage.setValue(namePackage);
+                    }// end of if cycle
+                }// end of if cycle
+            }// end of if/else cycle
+            sincroPackage(fieldComboPackage.getValue() != null ? fieldComboPackage.getValue() : "");
+        }// end of if/else cycle
+    }// end of method
+
+
+    private void sincroPackage(String valueFromPackage) {
         if (text.isValid(valueFromPackage) && valueFromPackage.length() > 2) {
-            invalida(false);
-            valueForTag = valueFromPackage.substring(0, 3).toUpperCase();
-            if (confirmButton != null) {
-                confirmButton.setVisible(true);
-            }// end of if cycle
+
+            if (newPackage && isPackageEsistente()) {
+                Notification.show("Esiste già questo package", DURATA, Notification.Position.MIDDLE);
+                packageName = fieldTextPackage.getValue();
+                groupTitolo.setValue(RADIO_UPDATE);
+            } else {
+                valueFromPackage = valueFromPackage.toLowerCase();
+                fieldTextPackage.setValue(valueFromPackage);
+                fieldTextEntity.setValue(text.primaMaiuscola(fieldTextEntity.getValue()));
+
+                invalida(false);
+                if (confirmButton != null) {
+                    confirmButton.setVisible(true);
+                }// end of if cycle
+
+                fieldTextEntity.setValue(text.primaMaiuscola(valueFromPackage));
+                fieldTextTag.setValue(valueFromPackage.substring(0, 3).toUpperCase());
+            }// end of if/else cycle
         } else {
             invalida(true);
-            valueForTag = valueFromPackage;
+            Notification.show("Il nome del package deve essere di almeno 3 caratteri", DURATA, Notification.Position.MIDDLE);
             if (confirmButton != null) {
                 confirmButton.setVisible(false);
             }// end of if cycle
+
+            fieldTextEntity.setValue("");
+            fieldTextTag.setValue("");
         }// end of if/else cycle
 
-        valueForEntity = text.primaMaiuscola(valueFromPackage);
-        fieldTextEntity.setValue(valueForEntity);
-        fieldTextTag.setValue(valueForTag);
 
-        if (isPackagingEsistente()) {
-//            labelUno.setText(CAPTION_B);
-        } else {
-//            labelUno.setText(CAPTION_A);
-        }// end of if/else cycle
-
-        setMappa();
+////        setMappa();
     }// end of method
 
-    private void sincroPackageNew() {
-        String valueFromPackage = fieldComboPackage.getValue() != null ? fieldComboPackage.getValue() : "";
-        String valueForTag = "";
+    private void sincroPackageNew(String packageName) {
+        fieldTextPackage.setValue(packageName);
+        this.packageName = packageName;
     }// end of method
 
     private void invalida(boolean status) {
-        if (fieldComboPackage!=null) {
+        if (fieldComboPackage != null) {
             fieldComboPackage.setInvalid(status);
         }// end of if cycle
-        if (fieldTextEntity!=null) {
+        if (fieldTextPackage != null) {
+            fieldTextPackage.setInvalid(status);
+        }// end of if cycle
+        if (fieldTextEntity != null) {
             fieldTextEntity.setInvalid(status);
         }// end of if cycle
-        if (fieldTextTag!=null) {
+        if (fieldTextTag != null) {
             fieldTextTag.setInvalid(status);
         }// end of if cycle
     }// end of method
@@ -560,42 +503,13 @@ public class TDialogo extends Dialog {
         return pack;
     }// end of method
 
-    private boolean isPackagingEsistente() {
-        String pathFile = "";
-        String sep = "/";
-        String java = ".java";
-        String userDir = System.getProperty("user.dir");
-        Progetto project = fieldComboProgetti.getValue();
-        String projectName = "";
-        String pack = fieldComboPackage.getValue() != null ? fieldComboPackage.getValue().toLowerCase() : "";
-        String entity = text.primaMaiuscola(fieldTextEntity.getValue());
-
-        if (project != null) {
-            projectName = project.getNameProject();
-        }// end of if cycle
-
-        String ideaProjectRootPath = text.levaCodaDa(userDir, sep);
-        String projectBasePath = ideaProjectRootPath + sep + projectName;
-
-        pathFile += projectBasePath;
-        pathFile += DIR_JAVA;
-        pathFile += sep;
-        pathFile += projectName;
-        pathFile += sep;
-        pathFile += ENTITIES_NAME;
-        pathFile += sep;
-        pathFile += pack;
-        pathFile += sep;
-        pathFile += entity;
-        pathFile += java;
-
-        return file.isEsisteFile(pathFile);
-    }// end of method
 
     private void setMappa() {
         if (mappaInput != null) {
             mappaInput.put(Chiave.targetProjectName, fieldComboProgetti.getValue());
-            mappaInput.put(Chiave.newPackageName, fieldComboPackage.getValue() != null ? fieldComboPackage.getValue().toLowerCase() : "");
+            if (fieldComboPackage != null) {
+                mappaInput.put(Chiave.newPackageName, fieldComboPackage.getValue() != null ? fieldComboPackage.getValue().toLowerCase() : "");
+            }// end of if cycle
             mappaInput.put(Chiave.newEntityName, text.primaMaiuscola(fieldTextEntity.getValue()));
             mappaInput.put(Chiave.newEntityTag, fieldTextTag.getValue());
             mappaInput.put(Chiave.flagOrdine, fieldCheckBoxPropertyOrdine.getValue());

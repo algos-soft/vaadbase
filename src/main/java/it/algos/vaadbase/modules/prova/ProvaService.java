@@ -19,14 +19,15 @@ import static it.algos.vaadbase.application.BaseCost.TAG_PRO;
  * Project vaadbase
  * Created by Algos
  * User: Gac
- * Date: 2018-04-04
- * Estende la Entity astratta AService. Layer di collegamento tra il Presenter e la Repository.
- * Annotated with @@Slf4j (facoltativo) per i logs automatici
- * Annotated with @SpringComponent (obbligatorio)
- * Annotated with @Service (ridondante)
- * Annotated with @Scope (obbligatorio = 'singleton')
- * Annotated with @Qualifier (obbligatorio) per permettere a Spring di istanziare la sottoclasse specifica
- * Annotated with @AIScript (facoltativo) per controllare la ri-creazione di questo file nello script del framework
+ * Date: 5-apr-2018 12.31.00
+ * <br>
+ * Estende la Entity astratta AService. Layer di collegamento tra il Presenter e la Repository. <br>
+ * Annotated with @@Slf4j (facoltativo) per i logs automatici <br>
+ * Annotated with @SpringComponent (obbligatorio) <br>
+ * Annotated with @Service (ridondante) <br>
+ * Annotated with @Scope (obbligatorio = 'singleton') <br>
+ * Annotated with @Qualifier (obbligatorio) per permettere a Spring di istanziare la sottoclasse specifica <br>
+ * Annotated with @AIScript (facoltativo) per controllare la ri-creazione di questo file nello script del framework <br>
  */
 @Slf4j
 @SpringComponent
@@ -38,19 +39,19 @@ public class ProvaService extends AService {
 
 
     /**
-     * La repository viene iniettata dal costruttore, in modo che sia disponibile nella superclasse,
+     * La repository viene iniettata dal costruttore, in modo che sia disponibile nella superclasse, <br>
      * dove viene usata l'interfaccia MongoRepository
-     * Spring costruisce al volo, quando serve, una implementazione di RoleRepository (come previsto dal @Qualifier)
-     * Qui si una una interfaccia locale (col casting nel costruttore) per usare i metodi specifici
+     * Spring costruisce al volo, quando serve, una implementazione di RoleRepository (come previsto dal @Qualifier) <br>
+     * Qui si una una interfaccia locale (col casting nel costruttore) per usare i metodi specifici <br>
      */
     private ProvaRepository repository;
 
 
     /**
-     * Costruttore @Autowired (nella superclasse)
-     * In the newest Spring release, it’s constructor does not need to be annotated with @Autowired annotation
-     * Si usa un @Qualifier(), per avere la sottoclasse specifica
-     * Si usa una costante statica, per essere sicuri di scrivere sempre uguali i riferimenti
+     * Costruttore @Autowired (nella superclasse) <br>
+     * In the newest Spring release, it’s constructor does not need to be annotated with @Autowired annotation <br>
+     * Si usa un @Qualifier(), per avere la sottoclasse specifica <br>
+     * Si usa una costante statica, per essere sicuri di scrivere sempre uguali i riferimenti <br>
      */
     public ProvaService(@Qualifier(TAG_PRO) MongoRepository repository) {
         super(repository);
@@ -59,7 +60,7 @@ public class ProvaService extends AService {
    }// end of Spring constructor
 
     /**
-     * Ricerca di una entity (la crea se non la trova)
+     * Ricerca di una entity (la crea se non la trova) <br>
      *
      * @param code di riferimento (obbligatorio ed unico)
      *
@@ -104,10 +105,10 @@ public class ProvaService extends AService {
 //    }// end of method
 
     /**
-     * Creazione in memoria di una nuova entity che NON viene salvata
-     * Eventuali regolazioni iniziali delle property
-     * All properties
-     * Gli argomenti (parametri) della new Entity DEVONO essere ordinati come nella Entity (costruttore lombok)
+     * Creazione in memoria di una nuova entity che NON viene salvata <br>
+     * Eventuali regolazioni iniziali delle property <br>
+     * All properties <br>
+     * Gli argomenti (parametri) della new Entity DEVONO essere ordinati come nella Entity (costruttore lombok) <br>
      *
      * @param ordine      di presentazione (obbligatorio con inserimento automatico se è zero)
 	* @param code        codice di riferimento (obbligatorio)
@@ -131,7 +132,7 @@ public class ProvaService extends AService {
     }// end of method
 
     /**
-     * Recupera una istanza della Entity usando la query della property specifica (obbligatoria ed unica)
+     * Recupera una istanza della Entity usando la query della property specifica (obbligatoria ed unica) <br>
      *
      * @param code di riferimento (obbligatorio)
      *
@@ -143,9 +144,9 @@ public class ProvaService extends AService {
 
 
     /**
-     * Returns all instances of the type
-     * La Entity è EACompanyRequired.nonUsata. Non usa Company.
-     * Lista ordinata
+     * Returns all instances of the type <br>
+     * La Entity è EACompanyRequired.nonUsata. Non usa Company. <br>
+     * Lista ordinata <br>
      *
      * @return lista ordinata di tutte le entities
      */
@@ -156,8 +157,8 @@ public class ProvaService extends AService {
 
 
     /**
-     * Opportunità di controllare (per le nuove schede) che la key unica non esista già.
-     * Invocato appena prima del save(), solo per una nuova entity
+     * Opportunità di controllare (per le nuove schede) che la key unica non esista già. <br>
+     * Invocato appena prima del save(), solo per una nuova entity <br>
      *
      * @param entityBean nuova da creare
      */
@@ -167,8 +168,8 @@ public class ProvaService extends AService {
     }// end of method
 
     /**
-     * Opportunità di usare una idKey specifica.
-     * Invocato appena prima del save(), solo per una nuova entity
+     * Opportunità di usare una idKey specifica. <br>
+     * Invocato appena prima del save(), solo per una nuova entity <br>
      *
      * @param entityBean da salvare
      */
@@ -177,10 +178,10 @@ public class ProvaService extends AService {
     }// end of method
 
     /**
-     * Ordine di presentazione (obbligatorio, unico per tutte le eventuali company),
-     * Viene calcolato in automatico alla creazione della entity
-     * Recupera dal DB il valore massimo pre-esistente della property
-     * Incrementa di uno il risultato
+     * Ordine di presentazione (obbligatorio, unico per tutte le eventuali company), <br>
+     * Viene calcolato in automatico alla creazione della entity <br>
+     * Recupera dal DB il valore massimo pre-esistente della property <br>
+     * Incrementa di uno il risultato <br>
      */
     public int getNewOrdine() {
         int ordine = 0;

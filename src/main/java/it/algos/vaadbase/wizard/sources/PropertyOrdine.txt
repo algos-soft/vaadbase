@@ -1,6 +1,6 @@
     /**
-     * ordine di presentazione (obbligatorio, unico)
-     * il più importante per primo
+     * ordine di presentazione (obbligatorio, unico) <br>
+     * il più importante per primo <br>
      */
     @NotNull
     @Indexed()
