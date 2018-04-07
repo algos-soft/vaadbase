@@ -346,9 +346,9 @@ public class AFileService {
     /**
      * Legge un file
      *
-     * @param pathFileToBeWritten nome completo del file
+     * @param pathFileToBeRead nome completo del file
      */
-    public String leggeFile(String pathFileToBeWritten) {
+    public String leggeFile(String pathFileToBeRead) {
         String testo = "";
         String aCapo = "\n";
         String currentLine;
@@ -356,7 +356,7 @@ public class AFileService {
         //-- non va, perché se arriva it/algos/Alfa.java becca anche il .java
 //        nameFileToBeRead=  nameFileToBeRead.replaceAll("\\.","/");
 
-        try (BufferedReader br = new BufferedReader(new FileReader(pathFileToBeWritten))) {
+        try (BufferedReader br = new BufferedReader(new FileReader(pathFileToBeRead))) {
             while ((currentLine = br.readLine()) != null) {
                 testo += currentLine;
                 testo += "\n";

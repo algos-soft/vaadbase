@@ -13,8 +13,9 @@ import java.util.Map;
 public enum Token {
 
     projectName("PROJECT"),
+    moduleName("MODULE"),
     packageName("PACKAGE"),
-    importCost("IMPORT_COST"),
+    appCost("APPCOST"),
     user("USER"),
     today("TODAY"),
     qualifier("QUALIFIER"),

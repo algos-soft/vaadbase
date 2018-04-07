@@ -51,7 +51,7 @@ public class WizardView extends AView {
 
     public final static String NORMAL_WIDTH = "9em";
     public final static String NORMAL_HEIGHT = "3em";
-    private static Progetto PROGETTO_STANDARD_SUGGERITO = Progetto.vaadin;
+    private static Progetto PROGETTO_STANDARD_SUGGERITO = Progetto.test;
     private static String NOME_PACKAGE_STANDARD_SUGGERITO = "prova";
     private static String LABEL_A = "Creazione di un nuovo project";
     private static String LABEL_B = "Update di un project esistente";
@@ -136,7 +136,7 @@ public class WizardView extends AView {
             public void gotInput(Map<Chiave, Object> mappaInput) {
                 elabora(mappaInput);
             }// end of inner method
-        }, true, Progetto.vaadin, NOME_PACKAGE_STANDARD_SUGGERITO));// end of lambda expressions and anonymous inner class
+        }, false, PROGETTO_STANDARD_SUGGERITO, NOME_PACKAGE_STANDARD_SUGGERITO));// end of lambda expressions and anonymous inner class
         layout.add(buttonDue);
 
         return layout;

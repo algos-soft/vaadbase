@@ -1,4 +1,4 @@
-package it.algos.@PROJECT@.modules.@PACKAGE@;
+package it.algos.@MODULE@.modules.@PACKAGE@;
 
 import com.vaadin.flow.spring.annotation.SpringComponent;
 import it.algos.vaadbase.annotation.AIScript;
@@ -11,13 +11,13 @@ import org.springframework.context.annotation.Scope;
 import org.springframework.beans.factory.config.ConfigurableBeanFactory;
 import it.algos.vaadbase.backend.service.IAService;
 import it.algos.vaadbase.ui.IAView;
-import static it.algos.vaadbase.application.BaseCost.@QUALIFIER@;
+import static it.algos.@MODULE@.application.@APPCOST@.@QUALIFIER@;
 
 /**
- * Project @PROJECT@
- * Created by Algos
- * User: @USER@
- * Date: @TODAY@* <br>
+ * Project @PROJECT@ <br>
+ * Created by Algos <br>
+ * User: @USER@ <br>
+ * Date: @TODAY@ <br>
  * <br>
  * Estende la classe astratta APresenter che gestisce la business logic del package <br>
  * <br>

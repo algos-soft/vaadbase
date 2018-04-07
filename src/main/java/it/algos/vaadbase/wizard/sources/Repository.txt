@@ -1,4 +1,4 @@
-package it.algos.@PROJECT@.modules.@PACKAGE@;
+package it.algos.@MODULE@.modules.@PACKAGE@;
 
 import com.vaadin.flow.spring.annotation.SpringComponent;
 import it.algos.vaadbase.annotation.AIScript;
@@ -8,13 +8,13 @@ import org.springframework.beans.factory.config.ConfigurableBeanFactory;
 import org.springframework.context.annotation.Scope;
 import org.springframework.data.mongodb.repository.MongoRepository;
 import java.util.List;
-import static it.algos.vaadbase.application.BaseCost.@QUALIFIER@;
+import static it.algos.@MODULE@.application.@APPCOST@.@QUALIFIER@;
 
 /**
- * Project @PROJECT@
- * Created by Algos
- * User: @USER@
- * Date: @TODAY@
+ * Project @PROJECT@ <br>
+ * Created by Algos <br>
+ * User: @USER@ <br>
+ * Date: @TODAY@ <br>
  * <br>
  * Estende la l'interaccia MongoRepository col casting alla Entity relativa di questa repository <br>
  * <br>
@@ -28,7 +28,6 @@ import static it.algos.vaadbase.application.BaseCost.@QUALIFIER@;
 @Qualifier(@QUALIFIER@)
 @AIScript(sovrascrivibile = true)
 public interface @ENTITY@Repository extends MongoRepository<@ENTITY@, String> {
-
 
     //@TODO
     // Le query riportate sono INDICATIVE e possono essere sostituite@QUERY@

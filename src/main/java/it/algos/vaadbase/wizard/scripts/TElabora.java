@@ -12,7 +12,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.config.ConfigurableBeanFactory;
 import org.springframework.context.annotation.Scope;
 
-import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 import java.time.format.FormatStyle;
@@ -33,6 +32,7 @@ public class TElabora {
 
 
     private static final String A_CAPO = "\n";
+    private static final String TAB = "\t";
     private static final String SEP = "/";
     private static final String JAVA_SUFFIX = ".java";
     private static final String SOURCE_SUFFIX = ".txt";
@@ -40,8 +40,6 @@ public class TElabora {
 //    private static String FORM_VIEW_SUFFIX = "Form";
     private static final String TAG = "TAG_";
     private static final String VIEW = "VIEW_";
-    //    private static String NAME_COST = "ACost";
-//    private static String NAME_APP_COST = "AppCost";
     private static final String IMPORT = "import it.algos.";
     private static final String DIR_MAIN = "/src/main";
     private static final String DIR_JAVA = DIR_MAIN + "/java/it/algos";
@@ -95,6 +93,7 @@ public class TElabora {
 
     //--risultati del dialogo
     private String targetProjectName;       //--dal dialogo di input
+    private String targetModuleName;        //--dal dialogo di input
     private String newProjectName;          //--dal dialogo di input
     private String newPackageName;          //--dal dialogo di input
     private String newEntityName;           //--dal dialogo di input
@@ -115,6 +114,7 @@ public class TElabora {
     private String applicationPath;     //--projectJavaPath più APP_NAME
     private String uiPath;              //--projectJavaPath più UI_NAME
     private String entityPath;          //--projectJavaPath più newPackageName
+    private String nameClassCost;
 
     private String packagePath;         //--entityPath più newPackageName
     private String nameCost;        //--NAME_COST (springvaadin) o NAME_APP_COST (altri progetti)
@@ -188,8 +188,10 @@ public class TElabora {
             progetto = (Progetto) mappaInput.get(Chiave.targetProjectName);
             if (progetto != null) {
                 this.targetProjectName = progetto.getNameProject().toLowerCase();
+                this.targetModuleName = progetto.getNameModule().toLowerCase();
+                this.nameClassCost = progetto.getNameClassCost();
                 this.projectPath = ideaProjectRootPath + SEP + targetProjectName;
-                this.projectJavaPath = projectPath + DIR_JAVA + SEP + targetProjectName;
+                this.projectJavaPath = projectPath + DIR_JAVA + SEP + targetModuleName;
                 this.applicationPath = projectJavaPath + SEP + APP_NAME;
                 this.uiPath = projectJavaPath + SEP + UI_NAME;
                 this.entityPath = projectJavaPath + SEP + ENTITIES_NAME;
@@ -198,6 +200,7 @@ public class TElabora {
 
         log.info("");
         log.info("targetProjectName: " + targetProjectName);
+        log.info("targetModuleName: " + targetModuleName);
         log.info("projectPath: " + projectPath);
         log.info("projectJavaPath: " + projectJavaPath);
         log.info("applicationPath: " + applicationPath);
@@ -279,6 +282,7 @@ public class TElabora {
         log.info("flagCompany: " + flagCompany);
         log.info("flagSovrascrive: " + flagSovrascrive);
     }// end of method
+
 
     private void creaDirectory() {
         if (text.isValid(newPackageName)) {
@@ -381,14 +385,15 @@ public class TElabora {
         Map<Token, String> mappa = new HashMap<>();
 
         mappa.put(Token.projectName, targetProjectName);
+        mappa.put(Token.moduleName, targetModuleName);
         mappa.put(Token.packageName, newPackageName);
+        mappa.put(Token.appCost, nameClassCost);
         mappa.put(Token.user, "Gac");
         mappa.put(Token.today, LocalDateTime.now().format(DateTimeFormatter.ofLocalizedDateTime(FormatStyle.MEDIUM)));
         mappa.put(Token.qualifier, qualifier != null ? qualifier : "");
         mappa.put(Token.tagView, "");
         mappa.put(Token.entity, newEntityName);
         mappa.put(Token.superClassEntity, superClassEntity);
-        mappa.put(Token.importCost, importCost != null ? importCost : "");
         mappa.put(Token.methodFind, creaFind());
         mappa.put(Token.methodNewEntity, creaNewEntity());
         mappa.put(Token.methodNewOrdine, creaNewOrdine());
@@ -615,7 +620,7 @@ public class TElabora {
         if (flagOrdine) {
             entityPropertyText = leggeFile(PROPERTY_ORDINE_SOURCE_NAME);
             if (text.isValid(entityPropertyText)) {
-                entityPropertyText = A_CAPO + entityPropertyText;
+                entityPropertyText = A_CAPO + TAB + entityPropertyText;
             }// end of if cycle
         }// end of if cycle
 
@@ -629,7 +634,7 @@ public class TElabora {
         if (flagCode) {
             entityPropertyText = leggeFile(PROPERTY_CODE_SOURCE_NAME);
             if (text.isValid(entityPropertyText)) {
-                entityPropertyText = A_CAPO + entityPropertyText;
+                entityPropertyText = A_CAPO + TAB + entityPropertyText;
             }// end of if cycle
         }// end of if cycle
 
@@ -643,7 +648,7 @@ public class TElabora {
         if (flagDescrizione) {
             entityPropertyText = leggeFile(PROPERTY_DESCRIZIONE_SOURCE_NAME);
             if (text.isValid(entityPropertyText)) {
-                entityPropertyText = A_CAPO + entityPropertyText;
+                entityPropertyText = A_CAPO + TAB + entityPropertyText;
             }// end of if cycle
         }// end of if cycle
 
@@ -734,35 +739,43 @@ public class TElabora {
 
 
     private void addTagCostanti() {
-//        this.addTagCost(TAG + tagBreveTreChar, namePackageLower);
-//        this.addTagCost(VIEW + tagBreveTreChar + "_" + LIST_VIEW_SUFFIX.toUpperCase(), namePackageLower + LIST_VIEW_SUFFIX);
-//        this.addTagCost(VIEW + tagBreveTreChar + "_" + FORM_VIEW_SUFFIX.toUpperCase(), namePackageLower + FORM_VIEW_SUFFIX);
+        String textCostClass;
+        String path = applicationPath + SEP + nameClassCost + JAVA_SUFFIX;
+        String tagOld = "public class " + nameClassCost + " {";
+        String tagRif = "public static final String " + qualifier + " =\"" + newPackageName + "\";";
+        String tagNew = tagOld + A_CAPO + TAB + tagRif;
+
+        textCostClass = file.leggeFile(path);
+        if (!textCostClass.contains(tagRif)) {
+            textCostClass = text.sostituisce(textCostClass, tagOld, tagNew);
+            file.scriveFile(path, textCostClass, true);
+        }// end of if cycle
     }// end of method
 
-    private void addTagCost(String tag, String value) {
-        String aCapo = "\n\t";
-        String tagFind = "public abstract class " + nameCost + " {";
-        String tagStaticFind = "";
-        String tagStaticReplace = "";
-        String textCostClass = file.leggeFile(pathFileCost);
-        int posIni = 0;
 
-        tagStaticFind = "public final static String " + tag;
-        tagStaticReplace = tagStaticFind + " = \"" + value + "\";";
-
-        if (textCostClass.contains(tagStaticFind)) {
-        } else {
-            posIni = textCostClass.indexOf(tagFind);
-            posIni = posIni + tagFind.length();
-            tagStaticReplace = aCapo + tagStaticReplace;
-
-            textCostClass = text.inserisce(textCostClass, tagStaticReplace, posIni);
-            file.scriveFile(pathFileCost, textCostClass, true);
-
-            System.out.println("La costante statica TAG_" + tag + " è stata inserita nel file " + nameCost);
-        }// end of if/else cycle
-
-    }// end of method
+//    private void addTagCost(String tag, String value) {
+//        String aCapo = "\n\t";
+//        String tagFind = "public abstract class " + nameCost + " {";
+//        String tagStaticFind = "";
+//        String tagStaticReplace = "";
+//        String textCostClass = file.leggeFile(pathFileCost);
+//        int posIni = 0;
+//
+//        tagStaticFind = "public final static String " + tag;
+//        tagStaticReplace = tagStaticFind + " = \"" + value + "\";";
+//
+//        if (textCostClass.contains(tagStaticFind)) {
+//        } else {
+//            posIni = textCostClass.indexOf(tagFind);
+//            posIni = posIni + tagFind.length();
+//            tagStaticReplace = aCapo + tagStaticReplace;
+//
+//            textCostClass = text.inserisce(textCostClass, tagStaticReplace, posIni);
+//            file.scriveFile(pathFileCost, textCostClass, true);
+//
+//            System.out.println("La costante statica TAG_" + tag + " è stata inserita nel file " + nameCost);
+//        }// end of if/else cycle
+//    }// end of method
 
 
 }// end of class

@@ -1,4 +1,4 @@
-package it.algos.@PROJECT@.modules.@PACKAGE@;
+package it.algos.@MODULE@.modules.@PACKAGE@;
 
 import com.vaadin.flow.spring.annotation.SpringComponent;
 import lombok.extern.slf4j.Slf4j;
@@ -13,13 +13,13 @@ import org.springframework.context.annotation.Scope;
 import it.algos.vaadbase.annotation.AIScript;
 import it.algos.vaadbase.backend.service.AService;
 import it.algos.vaadbase.backend.entity.AEntity;
-import static it.algos.vaadbase.application.BaseCost.@QUALIFIER@;
+import static it.algos.@MODULE@.application.@APPCOST@.@QUALIFIER@;
 
 /**
- * Project @PROJECT@
- * Created by Algos
- * User: @USER@
- * Date: @TODAY@
+ * Project @PROJECT@ <br>
+ * Created by Algos <br>
+ * User: @USER@ <br>
+ * Date: @TODAY@ <br>
  * <br>
  * Estende la classe astratta AService. Layer di collegamento tra il Presenter e la Repository. <br>
  * <br>
