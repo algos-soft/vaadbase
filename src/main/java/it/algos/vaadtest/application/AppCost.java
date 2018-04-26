@@ -16,6 +16,7 @@ import org.springframework.beans.factory.config.ConfigurableBeanFactory;
 @SpringComponent
 @Scope(ConfigurableBeanFactory.SCOPE_SINGLETON)
 public class AppCost {
+	public static final String TAG_FAT ="fattura";
 	public static final String TAG_BOL ="bolla";
 	public static final String TAG_PRO ="prova";
 }// end of class

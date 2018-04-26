@@ -1,18 +1,19 @@
 package it.algos.vaadbase.modules.role;
 
 import com.vaadin.flow.spring.annotation.SpringComponent;
+import it.algos.vaadbase.annotation.AIScript;
+import it.algos.vaadbase.backend.entity.AEntity;
+import it.algos.vaadbase.backend.service.AService;
 import lombok.extern.slf4j.Slf4j;
-import org.bson.types.ObjectId;
-import java.util.List;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.beans.factory.config.ConfigurableBeanFactory;
+import org.springframework.context.annotation.Scope;
 import org.springframework.data.mongodb.repository.MongoRepository;
 import org.springframework.stereotype.Service;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.context.annotation.Scope;
-import it.algos.vaadbase.annotation.AIScript;
-import it.algos.vaadbase.backend.service.AService;
-import it.algos.vaadbase.backend.entity.AEntity;
+
+import java.util.List;
+
 import static it.algos.vaadbase.application.BaseCost.TAG_ROL;
 
 /**
@@ -36,6 +37,7 @@ import static it.algos.vaadbase.application.BaseCost.TAG_ROL;
 @AIScript(sovrascrivibile = true)
 public class RoleService extends AService {
 
+    private static final RoleService INSTANCE = new RoleService();
 
     /**
      * La repository viene iniettata dal costruttore, in modo che sia disponibile nella superclasse,
@@ -49,14 +51,30 @@ public class RoleService extends AService {
     /**
      * Costruttore @Autowired (nella superclasse)
      * In the newest Spring release, it’s constructor does not need to be annotated with @Autowired annotation
+     * Se i costruttori sono più di uno, si DEVE usare @Autowired
      * Si usa un @Qualifier(), per avere la sottoclasse specifica
      * Si usa una costante statica, per essere sicuri di scrivere sempre uguali i riferimenti
      */
+    @Autowired
     public RoleService(@Qualifier(TAG_ROL) MongoRepository repository) {
         super(repository);
         this.repository = (RoleRepository) repository;
         super.entityClass = Role.class;
-   }// end of Spring constructor
+    }// end of Spring constructor
+
+
+    //private constructor to avoid client applications to use constructor
+    private RoleService(){}
+
+
+    /**
+     * Gets the unique instance of this Singleton.
+     *
+     * @return the unique instance of this Singleton
+     */
+    public static RoleService getInstance() {
+        return INSTANCE;
+    }// end of method
 
     /**
      * Ricerca di una entity (la crea se non la trova)
@@ -109,8 +127,8 @@ public class RoleService extends AService {
      * All properties
      * Gli argomenti (parametri) della new Entity DEVONO essere ordinati come nella Entity (costruttore lombok)
      *
-     * @param ordine      di presentazione (obbligatorio con inserimento automatico se è zero)
-	* @param code        codice di riferimento (obbligatorio)
+     * @param ordine di presentazione (obbligatorio con inserimento automatico se è zero)
+     * @param code   codice di riferimento (obbligatorio)
      *
      * @return la nuova entity appena creata (non salvata)
      */
@@ -118,13 +136,13 @@ public class RoleService extends AService {
         Role entity = null;
 
         entity = findByKeyUnica(code);
-		if (entity != null) {
-			return findByKeyUnica(code);
-		}// end of if cycle
-		
+        if (entity != null) {
+            return findByKeyUnica(code);
+        }// end of if cycle
+
         entity = Role.builder()
-				.ordine(ordine != 0 ? ordine : this.getNewOrdine())
-				.code(code)
+                .ordine(ordine != 0 ? ordine : this.getNewOrdine())
+                .code(code)
                 .build();
 
         return entity;
@@ -173,7 +191,7 @@ public class RoleService extends AService {
      * @param entityBean da salvare
      */
     protected void creaIdKeySpecifica(AEntity entityBean) {
-        entityBean.id = ((Role)entityBean).getCode();
+        entityBean.id = ((Role) entityBean).getCode();
     }// end of method
 
     /**

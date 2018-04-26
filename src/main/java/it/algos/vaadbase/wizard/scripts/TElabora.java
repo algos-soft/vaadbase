@@ -36,8 +36,7 @@ public class TElabora {
     private static final String SEP = "/";
     private static final String JAVA_SUFFIX = ".java";
     private static final String SOURCE_SUFFIX = ".txt";
-    //    private static String LIST_VIEW_SUFFIX = "List";
-//    private static String FORM_VIEW_SUFFIX = "Form";
+    private static final String LAYOUT_SUFFIX = "Layout";
     private static final String TAG = "TAG_";
     private static final String VIEW = "VIEW_";
     private static final String IMPORT = "import it.algos.";
@@ -71,7 +70,8 @@ public class TElabora {
     private static final String METHOD_NEW_ENTITY = METHOD + "NewEntity" + SOURCE_SUFFIX;
     private static final String METHOD_NEW_ORDINE = METHOD + "NewOrdine" + SOURCE_SUFFIX;
     private static final String METHOD_ID_KEY_SPECIFICA = METHOD + "IdKeySpecifica" + SOURCE_SUFFIX;
-
+    //    private static String LIST_VIEW_SUFFIX = "List";
+    private static String VIEW_SUFFIX = "View";
     /**
      * Libreria di servizio. Inietta da Spring come 'singleton'
      */
@@ -108,10 +108,12 @@ public class TElabora {
 
     //--regolate elaborando i risultati del dialogo
     private String projectPath;         //--ideaProjectRootPath più targetProjectName (usato come radice per pom.xml e README.text)
+    private String targetModuleCapitalName;   //--targetModuleName con la prima maiuscola
     private String projectJavaPath;     //--projectPath più DIR_JAVA più targetProjectName
     //    private String pathMain;        //--pathProject più PATH_MAIN (usato come radice per resources e webapp)
 //    private String pathModulo;    //--pathMain più PATH_JAVA più nameProject (usato come radice per i files java)
     private String applicationPath;     //--projectJavaPath più APP_NAME
+    private String layoutPath;          //--applicationPath più LAYOUT_SUFFIX più JAVA_SUFFIX
     private String uiPath;              //--projectJavaPath più UI_NAME
     private String entityPath;          //--projectJavaPath più newPackageName
     private String nameClassCost;
@@ -135,7 +137,6 @@ public class TElabora {
     private String methodBuilderText;
     private String superClassEntity;
     private String importCost;
-    private String nameClassLayout;
 
 
     public TElabora() {
@@ -190,13 +191,15 @@ public class TElabora {
             if (progetto != null) {
                 this.targetProjectName = progetto.getNameProject().toLowerCase();
                 this.targetModuleName = progetto.getNameModule().toLowerCase();
+                this.targetModuleCapitalName = text.primaMaiuscola(targetModuleName);
                 this.nameClassCost = progetto.getNameClassCost();
                 this.projectPath = ideaProjectRootPath + SEP + targetProjectName;
                 this.projectJavaPath = projectPath + DIR_JAVA + SEP + targetModuleName;
                 this.applicationPath = projectJavaPath + SEP + APP_NAME;
                 this.uiPath = projectJavaPath + SEP + UI_NAME;
                 this.entityPath = projectJavaPath + SEP + ENTITIES_NAME;
-                this.nameClassLayout=
+                //--applicationPath più LAYOUT_SUFFIX più JAVA_SUFFIX
+                this.layoutPath = applicationPath + SEP + targetModuleCapitalName + LAYOUT_SUFFIX + JAVA_SUFFIX;
             }// end of if cycle
         }// end of if cycle
 
@@ -387,7 +390,8 @@ public class TElabora {
         Map<Token, String> mappa = new HashMap<>();
 
         mappa.put(Token.projectName, targetProjectName);
-        mappa.put(Token.moduleName, targetModuleName);
+        mappa.put(Token.moduleNameMinuscolo, targetModuleName);
+        mappa.put(Token.moduleNameMaiuscolo, targetModuleCapitalName);
         mappa.put(Token.packageName, newPackageName);
         mappa.put(Token.appCost, nameClassCost);
         mappa.put(Token.user, "Gac");
@@ -674,35 +678,37 @@ public class TElabora {
 
 
     private void addPackageMenu() {
+        String viewClass = text.primaMaiuscola(newPackageName) + VIEW_SUFFIX;
+
 //        String fileNameUIClass = "";
 //        String pathFileUIClass = "";
 //
 //        fileNameUIClass = text.primaMaiuscola(nameModuloUI) + "UI";
 //        pathFileUIClass = pathModuloUI + SEP + fileNameUIClass + JAVA_SUFFIX;
 //
-//        addVisteSpecifichePackage(fileNameUIClass, pathFileUIClass);
-//        addImportPackage(pathFileUIClass, nameEntityFirstUpper);
+        addVisteSpecifichePackage(layoutPath, viewClass);
+        addImportPackage(layoutPath, viewClass);
 //        addImportPackage(pathFileUIClass, nameEntityFirstUpper + LIST_VIEW_SUFFIX);
     }// end of method
 
 
-    private void addVisteSpecifichePackage(String fileNameUIClass, String pathFileUIClass) {
-//        String aCapo = "\n\t\t";
-//        String tagPackage = "";
-//        String tagMethod = "protected void addVisteSpecifiche() {";
-//        String textUIClass = file.leggeFile(pathFileUIClass);
-//
-//        if (isEsisteMetodo(fileNameUIClass, textUIClass, tagMethod)) {
-//            tagPackage = "menuLayout.addView(" + nameEntityFirstUpper + ".class, " + nameEntityFirstUpper + "List.class);";
-//
-//            if (textUIClass.contains(tagPackage)) {
-//            } else {
-//                textUIClass = text.sostituisce(textUIClass, tagMethod, tagMethod + aCapo + tagPackage);
-//                file.scriveFile(pathFileUIClass, textUIClass, true);
-//
-//                System.out.println("Il package " + text.primaMaiuscola(namePackageLower) + " è stato aggiunto al menu");
-//            }// end of if/else cycle
-//        }// end of if cycle
+    private void addVisteSpecifichePackage(String layoutPath, String viewClass) {
+        String aCapo = "\n\t\t";
+        String tagPackage = "";
+        String tagMethod = "protected void addVisteSpecifiche() {";
+        String textUIClass = file.leggeFile(layoutPath);
+
+        if (isEsisteMetodo(targetModuleCapitalName + LAYOUT_SUFFIX, textUIClass, tagMethod)) {
+            tagPackage = "addView(" + viewClass + ".class, " + viewClass + ".VIEW_ICON, " + viewClass + ".MENU_NAME);";
+
+            if (textUIClass.contains(tagPackage)) {
+            } else {
+                textUIClass = text.sostituisce(textUIClass, tagMethod, tagMethod + aCapo + tagPackage);
+                file.scriveFile(layoutPath, textUIClass, true);
+
+                System.out.println("Il package " + text.primaMaiuscola(newPackageName) + " è stato aggiunto al menu");
+            }// end of if/else cycle
+        }// end of if cycle
     }// end of method
 
 
@@ -719,24 +725,24 @@ public class TElabora {
     }// end of method
 
 
-    private void addImportPackage(String pathFileUIClass, String fileNameClass) {
-//        String aCapo = "\n";
-//        String tagImport = "";
-//        String tagInizioInserimento = "\n/**";
-//        int posIni = 0;
-//        String textUIClass = file.leggeFile(pathFileUIClass);
-//
-//        tagImport = "import it.algos." + nameModulo + ".entity." + namePackageLower + "." + fileNameClass + ";";
-//
-//        if (textUIClass.contains(tagImport)) {
-//        } else {
-//            posIni = textUIClass.indexOf(tagInizioInserimento);
-//            tagImport = tagImport + aCapo;
-//            textUIClass = text.inserisce(textUIClass, tagImport, posIni);
-//            file.scriveFile(pathFileUIClass, textUIClass, true);
-//
-//            System.out.println("L'import del file " + fileNameClass + " è stato inserito negli import iniziali");
-//        }// end of if/else cycle
+    private void addImportPackage(String layoutPath, String viewClass) {
+        String aCapo = "\n";
+        String tagImport = "";
+        String tagInizioInserimento = "\n/**";
+        int posIni = 0;
+        String textUIClass = file.leggeFile(layoutPath);
+
+        tagImport = "import it.algos." + targetModuleName + ".modules." + newPackageName + "." + viewClass + ";";
+
+        if (textUIClass.contains(tagImport)) {
+        } else {
+            posIni = textUIClass.indexOf(tagInizioInserimento);
+            tagImport = tagImport + aCapo;
+            textUIClass = text.inserisce(textUIClass, tagImport, posIni);
+            file.scriveFile(layoutPath, textUIClass, true);
+
+            System.out.println("L'import del file " + viewClass + " è stato inserito negli import iniziali");
+        }// end of if/else cycle
     }// end of method
 
 

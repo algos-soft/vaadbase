@@ -3,23 +3,25 @@ package it.algos.vaadbase.ui;
 import com.vaadin.flow.component.button.Button;
 import com.vaadin.flow.component.grid.Grid;
 import com.vaadin.flow.component.html.Label;
+import com.vaadin.flow.component.icon.Icon;
 import com.vaadin.flow.component.orderedlayout.VerticalLayout;
+import com.vaadin.flow.data.renderer.ComponentRenderer;
 import com.vaadin.flow.router.BeforeEnterEvent;
 import com.vaadin.flow.router.BeforeEnterObserver;
-import com.vaadin.flow.theme.Theme;
-import com.vaadin.flow.theme.lumo.Lumo;
+import com.vaadin.flow.spring.annotation.SpringComponent;
 import it.algos.vaadbase.backend.entity.AEntity;
 import it.algos.vaadbase.backend.service.IAService;
+import it.algos.vaadbase.modules.role.Role;
+import it.algos.vaadbase.modules.role.RoleEditorDialog;
 import it.algos.vaadbase.presenter.IAPresenter;
 import it.algos.vaadbase.service.ATextService;
+import it.algos.vaadbase.ui.dialog.AbstractEditorDialog;
 import it.algos.vaadbase.ui.menu.AMenu;
 import lombok.extern.slf4j.Slf4j;
-import com.vaadin.flow.spring.annotation.SpringComponent;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.context.annotation.Scope;
 import org.springframework.beans.factory.config.ConfigurableBeanFactory;
+import org.springframework.context.annotation.Scope;
 
-import javax.annotation.PostConstruct;
 import java.util.List;
 
 /**
@@ -33,35 +35,29 @@ import java.util.List;
 @SpringComponent
 //@Theme(Lumo.class)
 @Scope(ConfigurableBeanFactory.SCOPE_SINGLETON)
-public abstract class AView extends VerticalLayout implements IAView, BeforeEnterObserver {
+public class AView extends VerticalLayout implements IAView, BeforeEnterObserver {
 
+
+    private final RoleEditorDialog form = new RoleEditorDialog(this::saveRole, this::deleteRole);
 
     /**
      * Service iniettato da Spring (@Scope = 'singleton'). Unica per tutta l'applicazione. Usata come libreria.
      */
     @Autowired
     protected ATextService text;
-
-
     /**
      * Il presenter viene iniettato dal costruttore della sottoclasse concreta
      */
     protected IAPresenter presenter;
-
-
     /**
      * Il modello-dati specifico viene recuperato dal presenter
      */
     protected Class<? extends AEntity> entityClazz;
-
-
     /**
      * Il service viene recuperato dal presenter,
      * La repository è gestita direttamente dal service
      */
     protected IAService service;
-
-
     /**
      * Contenitore grafico per la barra di menu principale e per il menu/bottone del Login
      * Un eventuale menuBar specifica può essere iniettata dalla sottoclasse concreta
@@ -70,9 +66,7 @@ public abstract class AView extends VerticalLayout implements IAView, BeforeEnte
      */
     @Autowired
     protected AMenu menu;
-
     protected Grid<AEntity> grid;
-
     /**
      * Caption sovrastante il body della view
      * Valore che può essere regolato nella classe specifica
@@ -101,24 +95,44 @@ public abstract class AView extends VerticalLayout implements IAView, BeforeEnte
         this.presenter = presenter;
         this.entityClazz = presenter.getEntityClazz();
         this.service = presenter.getService();
+        initView();
     }// end of Spring constructor
 
 
-    /**
-     * Metodo @PostConstruct invocato (da Spring) subito DOPO il costruttore (si può usare qualsiasi firma)
-     */
-    @PostConstruct
-    private void inizia() {
-        //@todo RIMETTERE
-//        if (pref.isTrue(Cost.KEY_USE_DEBUG, false)) {
-//        }// end of if cycle
-
-//            this.addStyleName("blueBg");
-
+    protected void initView() {
         this.setSpacing(true);
         this.setMargin(true);
         this.setWidth("100%");
         this.setHeight("100%");
+
+//        addClassName("categories-list");
+        setDefaultHorizontalComponentAlignment(Alignment.STRETCH);
+
+        addSearchBar();
+        addGrid();
+
+        updateView();
+    }// end of method
+
+
+    protected void addSearchBar() {
+    }// end of method
+
+
+    protected void addGrid() {
+    }// end of method
+
+
+    private Button createEditButton(Role role) {
+        Button edit = new Button("Edit", event -> form.open(role, AbstractEditorDialog.Operation.EDIT));
+        edit.setIcon(new Icon("lumo", "edit"));
+        edit.addClassName("review__edit");
+        edit.getElement().setAttribute("theme", "tertiary");
+        return edit;
+    }// end of method
+
+
+    protected void updateView() {
     }// end of method
 
 
@@ -217,6 +231,9 @@ public abstract class AView extends VerticalLayout implements IAView, BeforeEnte
         for (String property : gridPropertiesName) {
             grid.addColumn(property);
         }// end of for cycle
+        ComponentRenderer alfa=(new ComponentRenderer<>(this::createEditButton));
+        grid.addColumn(alfa);
+        this.setFlexGrow(0);
 
         grid.setWidth("50em");
         grid.setHeightByRows(true);
@@ -241,6 +258,13 @@ public abstract class AView extends VerticalLayout implements IAView, BeforeEnte
         } else {
             caption += "Elenco di " + items.size() + " schede ";
         }// end of if/else cycle
+    }// end of method
+
+
+    private void saveRole(Role role, AbstractEditorDialog.Operation operation) {
+    }// end of method
+
+    private void deleteRole(Role role) {
     }// end of method
 
 }// end of class

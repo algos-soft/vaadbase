@@ -1,4 +1,4 @@
-package it.algos.@MODULE@.modules.@PACKAGE@;
+package it.algos.@MODULELOWER@.modules.@PACKAGE@;
 
 import com.vaadin.flow.spring.annotation.SpringComponent;
 import lombok.extern.slf4j.Slf4j;
@@ -13,7 +13,7 @@ import org.springframework.context.annotation.Scope;
 import it.algos.vaadbase.annotation.AIScript;
 import it.algos.vaadbase.backend.service.AService;
 import it.algos.vaadbase.backend.entity.AEntity;
-import static it.algos.@MODULE@.application.@APPCOST@.@QUALIFIER@;
+import static it.algos.@MODULELOWER@.application.@APPCOST@.@QUALIFIER@;
 
 /**
  * Project @PROJECT@ <br>

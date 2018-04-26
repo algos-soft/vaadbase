@@ -13,7 +13,8 @@ import java.util.Map;
 public enum Token {
 
     projectName("PROJECT"),
-    moduleName("MODULE"),
+    moduleNameMinuscolo("MODULELOWER"),
+    moduleNameMaiuscolo("MODULEUPPER"),
     packageName("PACKAGE"),
     appCost("APPCOST"),
     user("USER"),

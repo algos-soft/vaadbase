@@ -1,4 +1,4 @@
-package it.algos.@MODULE@.modules.@PACKAGE@;
+package it.algos.@MODULELOWER@.modules.@PACKAGE@;
 
 import it.algos.vaadbase.backend.annotation.EACompanyRequired;
 import it.algos.vaadbase.ui.annotation.*;
@@ -20,7 +20,7 @@ import it.algos.vaadbase.ui.annotation.AIField;
 import it.algos.vaadbase.ui.enumeration.EAFieldAccessibility;
 import it.algos.vaadbase.ui.enumeration.EAFieldType;
 import it.algos.vaadbase.annotation.*;
-import static it.algos.@MODULE@.application.@APPCOST@.@QUALIFIER@;
+import static it.algos.@MODULELOWER@.application.@APPCOST@.@QUALIFIER@;
 
 /**
  * Project @PROJECT@ <br>

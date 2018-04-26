@@ -3,14 +3,11 @@ package it.algos.vaadtest.application;
 import com.vaadin.flow.component.html.Label;
 import com.vaadin.flow.component.icon.VaadinIcons;
 import com.vaadin.flow.router.*;
-import it.algos.vaadbase.modules.company.CompanyService;
 import it.algos.vaadbase.ui.AView;
-import it.algos.vaadbase.ui.MainLayout;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.context.annotation.Scope;
 import org.springframework.beans.factory.config.ConfigurableBeanFactory;
 
-import static it.algos.vaadbase.application.BaseCost.TAG_COM;
 import static it.algos.vaadbase.application.BaseCost.TAG_HOM;
 
 /**
@@ -24,7 +21,7 @@ import static it.algos.vaadbase.application.BaseCost.TAG_HOM;
 //@Tag("storefront-view")
 //@HtmlImport("src/views/storefront-view.html")
 //@PageTitle("Pippoz")
-@Route(value = "", layout = TestLayout.class)
+@Route(value = "", layout = VaadtestLayout.class)
 @Scope(ConfigurableBeanFactory.SCOPE_SINGLETON)
 public class HomeView extends AView {
 
