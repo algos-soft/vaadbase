@@ -23,7 +23,7 @@ import java.util.ArrayList;
  */
 @Slf4j
 @SpringComponent
-@Scope(ConfigurableBeanFactory.SCOPE_PROTOTYPE)
+@Scope(ConfigurableBeanFactory.SCOPE_SINGLETON)
 public class AMenu extends HorizontalLayout {
 
 
@@ -42,7 +42,7 @@ public class AMenu extends HorizontalLayout {
      * di norma DOPO aver effettuato alcune regolazioni <br>
      * Nella sottoclasse specifica viene eventualmente regolato il nome del modulo di partenza <br>
      */
-    @PostConstruct
+//    @PostConstruct
     protected void inizia() {
         this.setMargin(false);
         this.setSpacing(true);

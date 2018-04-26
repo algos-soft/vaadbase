@@ -128,8 +128,8 @@ public abstract class AView extends VerticalLayout implements IAView, BeforeEnte
         List items = service.findAll();
 
         //--componente grafico facoltativo
-        this.regolaMenu();
-        this.add(menu);
+//        this.regolaMenu();
+//        this.add(menu);
 
 
         //--componente grafico facoltativo
@@ -220,6 +220,8 @@ public abstract class AView extends VerticalLayout implements IAView, BeforeEnte
 
         grid.setWidth("50em");
         grid.setHeightByRows(true);
+        grid.addClassName("pippoz");
+        grid.getElement().setAttribute("theme", "row-dividers");
 
         bodyLayout.add(grid);
         return bodyLayout;

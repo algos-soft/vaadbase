@@ -135,6 +135,7 @@ public class TElabora {
     private String methodBuilderText;
     private String superClassEntity;
     private String importCost;
+    private String nameClassLayout;
 
 
     public TElabora() {
@@ -195,6 +196,7 @@ public class TElabora {
                 this.applicationPath = projectJavaPath + SEP + APP_NAME;
                 this.uiPath = projectJavaPath + SEP + UI_NAME;
                 this.entityPath = projectJavaPath + SEP + ENTITIES_NAME;
+                this.nameClassLayout=
             }// end of if cycle
         }// end of if cycle
 

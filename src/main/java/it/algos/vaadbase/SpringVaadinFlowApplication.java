@@ -1,5 +1,6 @@
 package it.algos.vaadbase;
 
+import it.algos.vaadbase.ui.MainLayout;
 import it.algos.vaadbase.ui.MainView;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.boot.SpringApplication;
@@ -39,10 +40,10 @@ import org.springframework.data.mongodb.repository.config.EnableMongoRepositorie
  * The @SpringBootApplication annotation is equivalent to using @Configuration, @EnableAutoConfiguration and @ComponentScan with their default attributes:
  */
 @Slf4j
-@SpringBootApplication(scanBasePackageClasses = {MainView.class, SpringVaadinFlowApplication.class})
-@ComponentScan({"it.algos.vaadbase"})
-@EntityScan({"it.algos.vaadbase.modules"})
-@EnableMongoRepositories({"it.algos.vaadbase.modules"})
+@SpringBootApplication(scanBasePackageClasses = {MainLayout.class,SpringVaadinFlowApplication.class})
+@ComponentScan({"it.algos.vaadbase","it.algos.vaadtest.modules"})
+@EntityScan({"it.algos.vaadbase.modules","it.algos.vaadtest.modules"})
+@EnableMongoRepositories({"it.algos.vaadbase.modules","it.algos.vaadtest.modules"})
 public class SpringVaadinFlowApplication extends SpringBootServletInitializer {
 
     /**

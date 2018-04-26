@@ -1,6 +1,6 @@
 package it.algos.vaadtest;
 
-import it.algos.vaadbase.ui.MainView;
+import it.algos.vaadbase.ui.MainLayout;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
@@ -19,7 +19,7 @@ import org.springframework.data.mongodb.repository.config.EnableMongoRepositorie
  * Time: 18:43
  */
 @Slf4j
-@SpringBootApplication(scanBasePackageClasses = {MainView.class, it.algos.vaadtest.TestApplication.class})
+@SpringBootApplication(scanBasePackageClasses = {MainLayout.class, TestApplication.class})
 @ComponentScan({"it.algos"})
 @EntityScan({"it.algos"})
 @EnableMongoRepositories({"it.algos"})
@@ -31,13 +31,13 @@ public class TestApplication extends SpringBootServletInitializer {
      * @param args eventuali parametri in ingresso
      */
     public static void main(String[] args) {
-        ApplicationContext context = SpringApplication.run(it.algos.vaadtest.TestApplication.class, args);
+        ApplicationContext context = SpringApplication.run(TestApplication.class, args);
     }// end of constructor
 
 
     @Override
     protected SpringApplicationBuilder configure(SpringApplicationBuilder applicationBuilder) {
-        return applicationBuilder.sources(it.algos.vaadtest.TestApplication.class);
+        return applicationBuilder.sources(TestApplication.class);
     }// end of method
 
 }// end of main class

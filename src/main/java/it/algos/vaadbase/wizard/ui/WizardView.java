@@ -6,6 +6,7 @@ import com.vaadin.flow.component.checkbox.Checkbox;
 import com.vaadin.flow.component.combobox.ComboBox;
 import com.vaadin.flow.component.html.Label;
 import com.vaadin.flow.component.html.NativeButton;
+import com.vaadin.flow.component.icon.VaadinIcons;
 import com.vaadin.flow.component.notification.Notification;
 import com.vaadin.flow.component.orderedlayout.HorizontalLayout;
 import com.vaadin.flow.component.textfield.TextField;
@@ -17,6 +18,7 @@ import com.vaadin.flow.theme.lumo.Lumo;
 import it.algos.vaadbase.application.BaseCost;
 import it.algos.vaadbase.service.ATextService;
 import it.algos.vaadbase.ui.AView;
+import it.algos.vaadbase.ui.MainLayout;
 import it.algos.vaadbase.wizard.enumeration.Chiave;
 import it.algos.vaadbase.wizard.enumeration.Progetto;
 import it.algos.vaadbase.wizard.scripts.TDialogo;
@@ -31,6 +33,10 @@ import org.springframework.context.annotation.Scope;
 import java.util.HashMap;
 import java.util.Map;
 
+import static it.algos.vaadbase.application.BaseCost.PAGE_WIZARD;
+import static it.algos.vaadbase.application.BaseCost.TAG_COM;
+import static it.algos.vaadbase.application.BaseCost.TAG_WIZ;
+
 /**
  * Project vbase
  * Created by Algos
@@ -43,9 +49,8 @@ import java.util.Map;
 @Slf4j
 @SpringComponent
 @Scope(ConfigurableBeanFactory.SCOPE_SINGLETON)
-@Route(value = BaseCost.PAGE_WIZARD)
-@Theme(Lumo.class)
-@Qualifier(BaseCost.TAG_WIZ)
+@Route(value = TAG_WIZ, layout = MainLayout.class)
+@Qualifier(TAG_WIZ)
 public class WizardView extends AView {
 
 
@@ -61,6 +66,7 @@ public class WizardView extends AView {
     /**
      * Libreria di servizio. Inietta da Spring nel costruttore come 'singleton'
      */
+    @Autowired
     private ATextService text;
 
     private Label labelUno;
@@ -73,10 +79,13 @@ public class WizardView extends AView {
     private Button buttonQuattro;
     private NativeButton confirmButton;
     private NativeButton cancelButton;
+
     @Autowired
     private TDialogo dialog;
+
     @Autowired
     private TElabora elabora;
+
     private TRecipient recipient;
 
     private ComboBox fieldComboProgetti;
@@ -88,9 +97,14 @@ public class WizardView extends AView {
 
     private Map<Chiave, Object> mappaInput = new HashMap<>();
 
-    @Autowired
-    public WizardView(ATextService text) {
-        this.text = text;
+    /**
+     * Icona visibile nel menu (facoltativa)
+     * Nella menuBar appare invece visibile il MENU_NAME, indicato qui
+     * Se manca il MENU_NAME, di default usa il 'name' della view
+     */
+    public static final VaadinIcons VIEW_ICON = VaadinIcons.MAGIC;
+
+    public WizardView() {
     }// end of Spring constructor
 
 
@@ -115,8 +129,8 @@ public class WizardView extends AView {
         this.removeAll();
 
         //--componente grafico facoltativo
-        this.regolaMenu();
-        this.add(menu);
+//        this.regolaMenu();
+//        this.add(menu);
         this.add(creaMenu());
 
         inizia();

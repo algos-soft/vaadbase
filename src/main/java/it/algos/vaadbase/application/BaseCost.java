@@ -1,5 +1,7 @@
 package it.algos.vaadbase.application;
 
+import com.vaadin.flow.router.RouterLayout;
+import it.algos.vaadbase.ui.MainLayout;
 import org.springframework.data.domain.Sort;
 
 import java.util.Arrays;
@@ -10,6 +12,10 @@ public class BaseCost {
     public final static boolean USA_BAKERY_PAGES = false;
     public static final Locale APP_LOCALE = Locale.US;
 
+    public final static Class<? extends RouterLayout> LAYOUT = MainLayout.class;
+    public final static String LAYOUT_NAME = "MainLayout";
+
+    public final static String TAG_HOM = "home";
     public final static String TAG_WIZ = "wizard";
     public final static String TAG_ADD = "address";
     public final static String TAG_PER = "person";

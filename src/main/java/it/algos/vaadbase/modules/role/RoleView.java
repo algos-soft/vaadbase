@@ -1,33 +1,27 @@
 package it.algos.vaadbase.modules.role;
 
 
-
 import com.vaadin.flow.component.grid.Grid;
-import it.algos.vaadbase.modules.company.Company;
-import it.algos.vaadbase.modules.company.CompanyService;
-import com.vaadin.flow.component.html.Label;
-
-
-
-import com.vaadin.flow.router.BeforeEnterEvent;
-import it.algos.vaadbase.presenter.IAPresenter;
-import it.algos.vaadbase.backend.service.IAService;
-import it.algos.vaadbase.ui.AView;
+import com.vaadin.flow.component.icon.VaadinIcons;
+import com.vaadin.flow.component.orderedlayout.VerticalLayout;
+import com.vaadin.flow.router.PageTitle;
 import com.vaadin.flow.router.Route;
 import com.vaadin.flow.spring.annotation.SpringComponent;
-import com.vaadin.flow.component.orderedlayout.VerticalLayout;
-import javax.annotation.PostConstruct;
-import java.util.List;
+import it.algos.vaadbase.annotation.AIScript;
+import it.algos.vaadbase.backend.entity.AEntity;
+import it.algos.vaadbase.presenter.IAPresenter;
+import it.algos.vaadbase.ui.AView;
+import it.algos.vaadbase.ui.MainLayout;
+import it.algos.vaadbase.ui.annotation.AIView;
+import it.algos.vaadbase.ui.enumeration.EARoleType;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.beans.factory.config.ConfigurableBeanFactory;
 import org.springframework.beans.factory.annotation.Qualifier;
+import org.springframework.beans.factory.config.ConfigurableBeanFactory;
 import org.springframework.context.annotation.Lazy;
 import org.springframework.context.annotation.Scope;
-import it.algos.vaadbase.backend.entity.AEntity;
-import it.algos.vaadbase.ui.enumeration.EARoleType;
-import it.algos.vaadbase.annotation.AIScript;
-import it.algos.vaadbase.ui.annotation.AIView;
-import it.algos.vaadbase.ui.MainView;
+
+import java.util.List;
+
 import static it.algos.vaadbase.application.BaseCost.TAG_ROL;
 
 /**
@@ -48,7 +42,8 @@ import static it.algos.vaadbase.application.BaseCost.TAG_ROL;
 @SpringComponent
 @Scope(ConfigurableBeanFactory.SCOPE_SINGLETON)
 @Qualifier(TAG_ROL)
-@Route(value = TAG_ROL, layout = MainView.class)
+@Route(value = TAG_ROL, layout = MainLayout.class)
+@PageTitle("Role List")
 @AIView(roleTypeVisibility = EARoleType.user)
 @AIScript(sovrascrivibile = true)
 public class RoleView extends AView {
@@ -62,6 +57,12 @@ public class RoleView extends AView {
      */
     public static final String MENU_NAME = TAG_ROL;
 
+    /**
+     * Icona visibile nel menu (facoltativa)
+     * Nella menuBar appare invece visibile il MENU_NAME, indicato qui
+     * Se manca il MENU_NAME, di default usa il 'name' della view
+     */
+    public static final VaadinIcons VIEW_ICON = VaadinIcons.ACADEMY_CAP;
 
     /**
      * Il service viene regolato nel costruttore recuperandolo del presenter
@@ -69,14 +70,6 @@ public class RoleView extends AView {
      * Qui si una una sottoclasse locale (col casting nel costruttore) per usare i metodi specifici
      */
     private RoleService service;
-
-
-//    /**
-//     * Icona visibile nel menu (facoltativa)
-//     * Nella menuBar appare invece visibile il MENU_NAME, indicato qui
-//     * Se manca il MENU_NAME, di default usa il 'name' della view
-//     */
-//    public static final Resource VIEW_ICON = VaadinIcons.ASTERISK;
 
 
     /**
@@ -91,10 +84,10 @@ public class RoleView extends AView {
      *
      * @param presenter iniettato da Spring come sottoclasse concreta specificata dal @Qualifier
      */
-     public RoleView(@Lazy @Qualifier(TAG_ROL) IAPresenter presenter) {
+    public RoleView(@Lazy @Qualifier(TAG_ROL) IAPresenter presenter) {
         super(presenter);
         this.service = (RoleService) service;
-       }// end of Spring constructor
+    }// end of Spring constructor
 
 
 //    /**
@@ -110,5 +103,41 @@ public class RoleView extends AView {
 //            caption += "</br>Solo il developer vede queste note";
 //        }// end of if cycle
 //    }// end of method
+
+
+    /**
+     * Crea il corpo centrale della view
+     * Componente grafico obbligatorio
+     * Sovrascritto nella sottoclasse della view specifica (AList, AForm, ...)
+     *
+     * @param items da visualizzare nella Grid
+     */
+    protected VerticalLayout creaBody2(List items) {
+        VerticalLayout bodyLayout = new VerticalLayout();
+        List<String> gridPropertiesName = service.getGridPropertiesName();
+
+        if (AEntity.class.isAssignableFrom(entityClazz)) {
+            try { // prova ad eseguire il codice
+                grid = new Grid(entityClazz);
+            } catch (Exception unErrore) { // intercetta l'errore
+                log.error(unErrore.toString());
+            }// fine del blocco try-catch
+        }// end of if cycle
+
+
+        grid.setItems(items);
+        for (Grid.Column column : grid.getColumns()) {
+            grid.removeColumn(column);
+        }// end of for cycle
+        for (String property : gridPropertiesName) {
+            grid.addColumn(property);
+        }// end of for cycle
+
+        grid.setWidth("50em");
+        grid.setHeightByRows(true);
+
+        bodyLayout.add(grid);
+        return bodyLayout;
+    }// end of method
 
 }// end of class
