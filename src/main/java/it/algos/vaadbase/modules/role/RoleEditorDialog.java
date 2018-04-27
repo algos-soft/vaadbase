@@ -30,7 +30,7 @@ public class RoleEditorDialog extends AbstractEditorDialog<Role> {
     private final TextField roleNameField = new TextField("Role Code");
 
     public RoleEditorDialog(BiConsumer<Role, AbstractEditorDialog.Operation> itemSaver, Consumer<Role> itemDeleter) {
-        super("Category", itemSaver, itemDeleter);
+        super("Role", itemSaver, itemDeleter);
 
         addNameField();
     }
@@ -43,10 +43,10 @@ public class RoleEditorDialog extends AbstractEditorDialog<Role> {
                 .withValidator(new StringLengthValidator(
                         "Role name must contain at least 3 printable characters",
                         3, null))
-                .withValidator(
-                        code -> RoleService.getInstance()
-                                .findByKeyUnica(code) == null,
-                        "Role name must be unique")
+//                .withValidator(
+//                        code -> RoleService.getInstance()
+//                                .findByKeyUnica(code) == null,
+//                        "Role name must be unique")
                 .bind(Role::getCode, Role::setCode);
     }
 

@@ -38,7 +38,7 @@ public class TElabora {
     private static final String SOURCE_SUFFIX = ".txt";
     private static final String LAYOUT_SUFFIX = "Layout";
     private static final String TAG = "TAG_";
-    private static final String VIEW = "VIEW_";
+//    private static final String VIEW = "VIEW_";
     private static final String IMPORT = "import it.algos.";
     private static final String DIR_MAIN = "/src/main";
     private static final String DIR_JAVA = DIR_MAIN + "/java/it/algos";
@@ -71,7 +71,7 @@ public class TElabora {
     private static final String METHOD_NEW_ORDINE = METHOD + "NewOrdine" + SOURCE_SUFFIX;
     private static final String METHOD_ID_KEY_SPECIFICA = METHOD + "IdKeySpecifica" + SOURCE_SUFFIX;
     //    private static String LIST_VIEW_SUFFIX = "List";
-    private static String VIEW_SUFFIX = "View";
+    private static String VIEW_SUFFIX = "List";
     /**
      * Libreria di servizio. Inietta da Spring come 'singleton'
      */

@@ -38,7 +38,6 @@ import java.util.List;
 public class AView extends VerticalLayout implements IAView, BeforeEnterObserver {
 
 
-    private final RoleEditorDialog form = new RoleEditorDialog(this::saveRole, this::deleteRole);
 
     /**
      * Service iniettato da Spring (@Scope = 'singleton'). Unica per tutta l'applicazione. Usata come libreria.
@@ -119,32 +118,66 @@ public class AView extends VerticalLayout implements IAView, BeforeEnterObserver
     }// end of method
 
 
+    /**
+     * Crea il corpo centrale della view
+     * Componente grafico obbligatorio
+     * Sovrascritto nella sottoclasse della view specifica (AList, AForm, ...)
+     */
     protected void addGrid() {
+        List<String> gridPropertiesName = service.getGridPropertiesName();
+
+        if (AEntity.class.isAssignableFrom(entityClazz)) {
+            try { // prova ad eseguire il codice
+                grid = new Grid(entityClazz);
+            } catch (Exception unErrore) { // intercetta l'errore
+                log.error(unErrore.toString());
+                return;
+            }// fine del blocco try-catch
+        }// end of if cycle
+
+        for (Grid.Column column : grid.getColumns()) {
+            grid.removeColumn(column);
+        }// end of for cycle
+        for (String property : gridPropertiesName) {
+            grid.addColumn(property);
+        }// end of for cycle
+
+//        ComponentRenderer renderer = new ComponentRenderer<>(this::createEditButton);
+//        grid.addColumn(renderer);
+//        this.setFlexGrow(0);
+
+        grid.setWidth("50em");
+        grid.setHeightByRows(true);
+        grid.addClassName("pippoz");
+        grid.getElement().setAttribute("theme", "row-dividers");
+        add(grid);
     }// end of method
 
 
-    private Button createEditButton(Role role) {
-        Button edit = new Button("Edit", event -> form.open(role, AbstractEditorDialog.Operation.EDIT));
-        edit.setIcon(new Icon("lumo", "edit"));
-        edit.addClassName("review__edit");
-        edit.getElement().setAttribute("theme", "tertiary");
-        return edit;
-    }// end of method
+//    private Button createEditButton(Role role) {
+//        Button edit = new Button("Edit", event -> form.open(role, AbstractEditorDialog.Operation.EDIT));
+//        edit.setIcon(new Icon("lumo", "edit"));
+//        edit.addClassName("review__edit");
+//        edit.getElement().setAttribute("theme", "tertiary");
+//        return edit;
+//    }// end of method
 
 
     protected void updateView() {
+        List items = service.findAll();
+        grid.setItems(items);
     }// end of method
 
 
     @Override
     public void beforeEnter(BeforeEnterEvent event) {
-        this.removeAll();
+//        this.removeAll();
         List items = service.findAll();
 
         //--componente grafico facoltativo
 //        this.regolaMenu();
 //        this.add(menu);
-
+//
 
         //--componente grafico facoltativo
         VerticalLayout topLayout = creaTop(items);
@@ -154,8 +187,8 @@ public class AView extends VerticalLayout implements IAView, BeforeEnterObserver
 
 
         //--componente grafico obbligatorio
-        VerticalLayout bodyLayout = creaBody(items);
-        this.add(bodyLayout);
+//        VerticalLayout bodyLayout = creaBody(items);
+//        this.add(bodyLayout);
 
     }// end of method
 
@@ -204,45 +237,45 @@ public class AView extends VerticalLayout implements IAView, BeforeEnterObserver
     }// end of method
 
 
-    /**
-     * Crea il corpo centrale della view
-     * Componente grafico obbligatorio
-     * Sovrascritto nella sottoclasse della view specifica (AList, AForm, ...)
-     *
-     * @param items da visualizzare nella Grid
-     */
-    protected VerticalLayout creaBody(List items) {
-        VerticalLayout bodyLayout = new VerticalLayout();
-        List<String> gridPropertiesName = service.getGridPropertiesName();
-
-        if (AEntity.class.isAssignableFrom(entityClazz)) {
-            try { // prova ad eseguire il codice
-                grid = new Grid(entityClazz);
-            } catch (Exception unErrore) { // intercetta l'errore
-                log.error(unErrore.toString());
-            }// fine del blocco try-catch
-        }// end of if cycle
-
-
-        grid.setItems(items);
-        for (Grid.Column column : grid.getColumns()) {
-            grid.removeColumn(column);
-        }// end of for cycle
-        for (String property : gridPropertiesName) {
-            grid.addColumn(property);
-        }// end of for cycle
-        ComponentRenderer alfa=(new ComponentRenderer<>(this::createEditButton));
-        grid.addColumn(alfa);
-        this.setFlexGrow(0);
-
-        grid.setWidth("50em");
-        grid.setHeightByRows(true);
-        grid.addClassName("pippoz");
-        grid.getElement().setAttribute("theme", "row-dividers");
-
-        bodyLayout.add(grid);
-        return bodyLayout;
-    }// end of method
+//    /**
+//     * Crea il corpo centrale della view
+//     * Componente grafico obbligatorio
+//     * Sovrascritto nella sottoclasse della view specifica (AList, AForm, ...)
+//     *
+//     * @param items da visualizzare nella Grid
+//     */
+//    protected VerticalLayout creaBody(List items) {
+//        VerticalLayout bodyLayout = new VerticalLayout();
+//        List<String> gridPropertiesName = service.getGridPropertiesName();
+//
+//        if (AEntity.class.isAssignableFrom(entityClazz)) {
+//            try { // prova ad eseguire il codice
+//                grid = new Grid(entityClazz);
+//            } catch (Exception unErrore) { // intercetta l'errore
+//                log.error(unErrore.toString());
+//            }// fine del blocco try-catch
+//        }// end of if cycle
+//
+//
+//        grid.setItems(items);
+//        for (Grid.Column column : grid.getColumns()) {
+//            grid.removeColumn(column);
+//        }// end of for cycle
+//        for (String property : gridPropertiesName) {
+//            grid.addColumn(property);
+//        }// end of for cycle
+//        ComponentRenderer renderer = new ComponentRenderer<>(this::createEditButton);
+//        grid.addColumn(renderer);
+//        this.setFlexGrow(0);
+//
+//        grid.setWidth("50em");
+//        grid.setHeightByRows(true);
+//        grid.addClassName("pippoz");
+//        grid.getElement().setAttribute("theme", "row-dividers");
+//
+//        bodyLayout.add(grid);
+//        return bodyLayout;
+//    }// end of method
 
     /**
      * Crea la scritta esplicativa
@@ -261,10 +294,5 @@ public class AView extends VerticalLayout implements IAView, BeforeEnterObserver
     }// end of method
 
 
-    private void saveRole(Role role, AbstractEditorDialog.Operation operation) {
-    }// end of method
-
-    private void deleteRole(Role role) {
-    }// end of method
 
 }// end of class

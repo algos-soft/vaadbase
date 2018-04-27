@@ -1,7 +1,9 @@
 package it.algos.vaadbase.modules.role;
 
 
+import com.vaadin.flow.component.button.Button;
 import com.vaadin.flow.component.grid.Grid;
+import com.vaadin.flow.component.icon.Icon;
 import com.vaadin.flow.component.icon.VaadinIcons;
 import com.vaadin.flow.component.orderedlayout.VerticalLayout;
 import com.vaadin.flow.router.PageTitle;
@@ -13,6 +15,8 @@ import it.algos.vaadbase.presenter.IAPresenter;
 import it.algos.vaadbase.ui.AView;
 import it.algos.vaadbase.ui.MainLayout;
 import it.algos.vaadbase.ui.annotation.AIView;
+import it.algos.vaadbase.ui.dialog.AForm;
+import it.algos.vaadbase.ui.dialog.AbstractEditorDialog;
 import it.algos.vaadbase.ui.enumeration.EARoleType;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Qualifier;
@@ -38,15 +42,15 @@ import static it.algos.vaadbase.application.BaseCost.TAG_ROL;
  * Annotated with @AIScript (facoltativo) per controllare la ri-creazione di questo file nello script del framework
  * Costruttore con un link @Autowired al IAPresenter, di tipo @Lazy per evitare un loop nella injection
  */
-//@Slf4j
-//@SpringComponent
-//@Scope(ConfigurableBeanFactory.SCOPE_SINGLETON)
-//@Qualifier(TAG_ROL)
-//@Route(value = TAG_ROL, layout = MainLayout.class)
-//@PageTitle("Role List")
-//@AIView(roleTypeVisibility = EARoleType.user)
-//@AIScript(sovrascrivibile = true)
-public class RoleView extends AView {
+@Slf4j
+@SpringComponent
+@Scope(ConfigurableBeanFactory.SCOPE_SINGLETON)
+@Qualifier(TAG_ROL)
+@Route(value = TAG_ROL, layout = MainLayout.class)
+@PageTitle("Role List")
+@AIView(roleTypeVisibility = EARoleType.user)
+@AIScript(sovrascrivibile = true)
+public class RoleList extends AView {
 
 
     /**
@@ -72,6 +76,8 @@ public class RoleView extends AView {
     private RoleService service;
 
 
+    private final RoleForm form = new RoleForm(this::saveRole, this::deleteRole);
+
     /**
      * Costruttore @Autowired
      * In the newest Spring release, it’s constructor does not need to be annotated with @Autowired annotation
@@ -84,7 +90,7 @@ public class RoleView extends AView {
      *
      * @param presenter iniettato da Spring come sottoclasse concreta specificata dal @Qualifier
      */
-    public RoleView(@Lazy @Qualifier(TAG_ROL) IAPresenter presenter) {
+    public RoleList(@Lazy @Qualifier(TAG_ROL) IAPresenter presenter) {
         super(presenter);
         this.service = (RoleService) service;
     }// end of Spring constructor
@@ -105,39 +111,21 @@ public class RoleView extends AView {
 //    }// end of method
 
 
-    /**
-     * Crea il corpo centrale della view
-     * Componente grafico obbligatorio
-     * Sovrascritto nella sottoclasse della view specifica (AList, AForm, ...)
-     *
-     * @param items da visualizzare nella Grid
-     */
-    protected VerticalLayout creaBody2(List items) {
-        VerticalLayout bodyLayout = new VerticalLayout();
-        List<String> gridPropertiesName = service.getGridPropertiesName();
-
-        if (AEntity.class.isAssignableFrom(entityClazz)) {
-            try { // prova ad eseguire il codice
-                grid = new Grid(entityClazz);
-            } catch (Exception unErrore) { // intercetta l'errore
-//                log.error(unErrore.toString());
-            }// fine del blocco try-catch
-        }// end of if cycle
-
-
-        grid.setItems(items);
-        for (Grid.Column column : grid.getColumns()) {
-            grid.removeColumn(column);
-        }// end of for cycle
-        for (String property : gridPropertiesName) {
-            grid.addColumn(property);
-        }// end of for cycle
-
-        grid.setWidth("50em");
-        grid.setHeightByRows(true);
-
-        bodyLayout.add(grid);
-        return bodyLayout;
+    private Button createEditButton(Role role) {
+        Button edit = new Button("Edit", event -> form.open(role, AForm.Operation.EDIT));
+        edit.setIcon(new Icon("lumo", "edit"));
+        edit.addClassName("review__edit");
+        edit.getElement().setAttribute("theme", "tertiary");
+        return edit;
     }// end of method
+
+
+    private void saveRole(Role role, AForm.Operation operation) {
+    }// end of method
+
+
+    private void deleteRole(Role role) {
+    }// end of method
+
 
 }// end of class

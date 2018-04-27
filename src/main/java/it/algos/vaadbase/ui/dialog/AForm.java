@@ -49,7 +49,7 @@ import java.util.stream.Collectors;
  * @param <T>
  *            the type of the item to be added, edited or deleted
  */
-public abstract class AbstractEditorDialog<T extends Serializable> extends Dialog {
+public abstract class AForm<T extends Serializable> extends Dialog {
 
     /**
      * The operations supported by this dialog. Delete is enabled when editing
@@ -110,7 +110,7 @@ public abstract class AbstractEditorDialog<T extends Serializable> extends Dialo
      * @param itemDeleter
      *            Callback to delete the edited item
      */
-    protected AbstractEditorDialog(String itemType, BiConsumer<T, Operation> itemSaver, Consumer<T> itemDeleter) {
+    protected AForm(String itemType, BiConsumer<T, Operation> itemSaver, Consumer<T> itemDeleter) {
         this.itemType = itemType;
         this.itemSaver = itemSaver;
         this.itemDeleter = itemDeleter;
@@ -223,7 +223,6 @@ public abstract class AbstractEditorDialog<T extends Serializable> extends Dialo
         confirmDelete();
     }
 
-    protected abstract void confirmDelete();
 
     /**
      * Opens the confirmation dialog before deleting the current item.
@@ -245,6 +244,9 @@ public abstract class AbstractEditorDialog<T extends Serializable> extends Dialo
                 true, getCurrentItem(), this::deleteConfirmed,
                 this::open);
     }
+
+    protected void confirmDelete() {
+    }// end of method
 
     private void deleteConfirmed(T item) {
         itemDeleter.accept(item);

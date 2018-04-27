@@ -17,9 +17,12 @@ import com.vaadin.flow.server.PageConfigurator;
 import com.vaadin.flow.theme.Theme;
 import com.vaadin.flow.theme.lumo.Lumo;
 import it.algos.vaadbase.modules.company.CompanyView;
+import it.algos.vaadbase.modules.role.RoleList;
 import it.algos.vaadbase.modules.role.RoleView;
+import it.algos.vaadbase.service.ATextService;
 import it.algos.vaadtest.application.HomeView;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.config.ConfigurableBeanFactory;
 import org.springframework.context.annotation.Scope;
 
@@ -108,7 +111,7 @@ public class MainLayout extends Div implements RouterLayout, AfterNavigationObse
      */
     protected void addVisteStandard() {
         addView(HomeView.class, HomeView.VIEW_ICON, HomeView.MENU_NAME);
-        addView(RoleView.class, RoleView.VIEW_ICON, RoleView.MENU_NAME);
+        addView(RoleList.class, RoleList.VIEW_ICON, RoleList.MENU_NAME);
         addView(CompanyView.class, CompanyView.VIEW_ICON, CompanyView.MENU_NAME);
     }// end of method
 

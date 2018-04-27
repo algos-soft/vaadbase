@@ -2,14 +2,12 @@ package it.algos.vaadtest.application;
 
 import it.algos.vaadbase.ui.MainLayout;
 import it.algos.vaadbase.wizard.ui.WizardView;
-import it.algos.vaadtest.modules.bolla.BollaView;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.config.ConfigurableBeanFactory;
 import org.springframework.context.annotation.Scope;
 
 import static it.algos.vaadbase.application.BaseCost.TAG_WIZ;
-import it.algos.vaadtest.modules.prova.ProvaView;
-import it.algos.vaadtest.modules.fattura.FatturaView;
+import it.algos.vaadtest.modules.prova.ProvaList;
 
 /**
  * Project vaadbase
@@ -50,10 +48,8 @@ public class VaadtestLayout extends MainLayout {
      * La vista viene aggiunta alla barra di menu principale (di partenza)
      */
     protected void addVisteSpecifiche() {
-		addView(FatturaView.class, FatturaView.VIEW_ICON, FatturaView.MENU_NAME);
-		addView(ProvaView.class, ProvaView.VIEW_ICON, ProvaView.MENU_NAME);
+		addView(ProvaList.class, ProvaList.VIEW_ICON, ProvaList.MENU_NAME);
         addView(WizardView.class, WizardView.VIEW_ICON, TAG_WIZ);
-        addView(BollaView.class, BollaView.VIEW_ICON, BollaView.MENU_NAME);
     }// end of method
 
 
