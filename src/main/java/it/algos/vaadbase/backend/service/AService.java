@@ -615,23 +615,23 @@ public abstract class AService implements IAService {
 //        return true;
 //    }// end of method
 
-//    /**
-//     * Deletes a given entity.
-//     *
-//     * @param entityBean must not be null
-//     *
-//     * @return true, se la entity è stata effettivamente cancellata
-//     *
-//     * @throws IllegalArgumentException in case the given entity is {@literal null}.
-//     */
-//    @Override
-//    public boolean delete(AEntity entityBean) {
-//        repository.delete(entityBean.getId());
+    /**
+     * Deletes a given entity.
+     *
+     * @param entityBean must not be null
+     *
+     * @return true, se la entity è stata effettivamente cancellata
+     *
+     * @throws IllegalArgumentException in case the given entity is {@literal null}.
+     */
+    @Override
+    public boolean delete(AEntity entityBean) {
+        repository.delete(entityBean);
 //        logDeleteBean(entityBean);
-//
-//        //@todo aggiungere controllo se il record è stato cancellato
-//        return true;
-//    }// end of method
+
+        //@todo aggiungere controllo se il record è stato cancellato
+        return true;
+    }// end of method
 
 
 //    public void logDeleteBean(AEntity deletedBean) {

@@ -146,18 +146,18 @@ public interface IAService {
     public AEntity newEntity();
 
 
-//    /**
-//     * Deletes a given entity.
-//     *
-//     * @param entityBean must not be null
-//     *
-//     * @return true, se la entity è stata effettivamente cancellata
-//     *
-//     * @throws IllegalArgumentException in case the given entity is {@literal null}.
-//     */
-//    public boolean delete(AEntity entityBean);
-//
-//
+    /**
+     * Deletes a given entity.
+     *
+     * @param entityBean must not be null
+     *
+     * @return true, se la entity è stata effettivamente cancellata
+     *
+     * @throws IllegalArgumentException in case the given entity is {@literal null}.
+     */
+    public boolean delete(AEntity entityBean);
+
+
 //    /**
 //     * Deletes all entities of the collection.
 //     */

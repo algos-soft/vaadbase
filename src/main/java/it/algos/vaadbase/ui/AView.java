@@ -155,12 +155,8 @@ public class AView extends VerticalLayout implements IAView, BeforeEnterObserver
     }// end of method
 
 
-//    private Button createEditButton(Role role) {
-//        Button edit = new Button("Edit", event -> form.open(role, AbstractEditorDialog.Operation.EDIT));
-//        edit.setIcon(new Icon("lumo", "edit"));
-//        edit.addClassName("review__edit");
-//        edit.getElement().setAttribute("theme", "tertiary");
-//        return edit;
+//    protected Button createEditButton(Role role) {
+//        return null;
 //    }// end of method
 
 

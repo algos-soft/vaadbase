@@ -103,7 +103,7 @@ public class RoleList extends AView {
 //    }// end of method
 
 
-    private Button createEditButton(Role role) {
+    protected Button createEditButton(Role role) {
         Button edit = new Button("Edit", event -> form.open(role, AForm.Operation.EDIT));
         edit.setIcon(new Icon("lumo", "edit"));
         edit.addClassName("review__edit");
