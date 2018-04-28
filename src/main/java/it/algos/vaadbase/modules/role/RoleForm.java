@@ -2,9 +2,8 @@ package it.algos.vaadbase.modules.role;
 
 import com.vaadin.flow.component.textfield.TextField;
 import com.vaadin.flow.data.validator.StringLengthValidator;
-import com.vaadin.flow.spring.annotation.SpringComponent;
+import it.algos.vaadbase.backend.service.IAService;
 import it.algos.vaadbase.ui.dialog.AForm;
-import it.algos.vaadbase.ui.dialog.AbstractEditorDialog;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.config.ConfigurableBeanFactory;
 import org.springframework.context.annotation.Scope;
@@ -26,8 +25,8 @@ public class RoleForm extends AForm<Role> {
 
     private final TextField roleCodeField = new TextField("Role Code");
 
-    public RoleForm(BiConsumer<Role, AForm.Operation> itemSaver, Consumer<Role> itemDeleter) {
-        super("Role", itemSaver, itemDeleter);
+    public RoleForm(BiConsumer<Role, AForm.Operation> itemSaver, Consumer<Role> itemDeleter, IAService service) {
+        super("Role", itemSaver, itemDeleter, service);
 
         creaCodeField();
     }// end of constructor

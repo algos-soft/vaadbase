@@ -3,6 +3,7 @@ package it.algos.vaadbase.service;
 import com.vaadin.flow.spring.annotation.SpringComponent;
 import it.algos.vaadbase.enumeration.EAFirstChar;
 import it.algos.vaadbase.enumeration.EAPrefType;
+import it.algos.vaadbase.modules.role.RoleService;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.config.ConfigurableBeanFactory;
 import org.springframework.context.annotation.Scope;
@@ -21,6 +22,16 @@ import org.springframework.context.annotation.Scope;
 @Scope(ConfigurableBeanFactory.SCOPE_SINGLETON)
 public class ATextService {
 
+    private static final ATextService INSTANCE = new ATextService();
+
+    /**
+     * Gets the unique instance of this Singleton.
+     *
+     * @return the unique instance of this Singleton
+     */
+    public static ATextService getInstance() {
+        return INSTANCE;
+    }// end of method
 
     private static boolean isNumber(char ch) {
         return ch >= '0' && ch <= '9';

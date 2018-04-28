@@ -98,6 +98,7 @@ public class AView extends VerticalLayout implements IAView, BeforeEnterObserver
     }// end of Spring constructor
 
 
+
     protected void initView() {
         this.setSpacing(true);
         this.setMargin(true);

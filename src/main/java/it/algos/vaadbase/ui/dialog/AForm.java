@@ -27,6 +27,7 @@ import com.vaadin.flow.data.binder.Binder;
 import com.vaadin.flow.data.binder.BinderValidationStatus;
 import com.vaadin.flow.data.binder.ValidationResult;
 import com.vaadin.flow.shared.Registration;
+import it.algos.vaadbase.backend.service.IAService;
 
 import java.io.Serializable;
 import java.util.function.BiConsumer;
@@ -35,7 +36,7 @@ import java.util.stream.Collectors;
 
 /**
  * Abstract base class for dialogs adding, editing or deleting items.
- *
+ * <p>
  * Subclasses are expected to
  * <ul>
  * <li>add, during construction, the needed UI components to
@@ -46,74 +47,37 @@ import java.util.stream.Collectors;
  * {@link #openConfirmationDialog(String, String, String)}.</li>
  * </ul>
  *
- * @param <T>
- *            the type of the item to be added, edited or deleted
+ * @param <T> the type of the item to be added, edited or deleted
  */
 public abstract class AForm<T extends Serializable> extends Dialog {
-
-    /**
-     * The operations supported by this dialog. Delete is enabled when editing
-     * an already existing item.
-     */
-    public enum Operation {
-        ADD("Add New", "add", false),
-        EDIT("Edit", "edit", true);
-
-        private final String nameInTitle;
-        private final String nameInText;
-        private final boolean deleteEnabled;
-
-        Operation(String nameInTitle, String nameInText, boolean deleteEnabled) {
-            this.nameInTitle = nameInTitle;
-            this.nameInText = nameInText;
-            this.deleteEnabled = deleteEnabled;
-        }
-
-        public String getNameInTitle() {
-            return nameInTitle;
-        }
-
-        public String getNameInText() {
-            return nameInText;
-        }
-
-        public boolean isDeleteEnabled() {
-            return deleteEnabled;
-        }
-    }
 
     private final H2 titleField = new H2();
     private final Button saveButton = new Button("Save");
     private final Button cancelButton = new Button("Cancel");
     private final Button deleteButton = new Button("Delete");
-    private Registration registrationForSave;
-
     private final FormLayout formLayout = new FormLayout();
     private final HorizontalLayout buttonBar = new HorizontalLayout(saveButton, cancelButton, deleteButton);
-
-    private Binder<T> binder = new Binder<>();
-    private T currentItem;
-
     private final ConfirmationDialog<T> confirmationDialog = new ConfirmationDialog<>();
-
     private final String itemType;
     private final BiConsumer<T, Operation> itemSaver;
     private final Consumer<T> itemDeleter;
+    protected IAService service;
+    private Registration registrationForSave;
+    private Binder<T> binder = new Binder<>();
+    private T currentItem;
 
     /**
      * Constructs a new instance.
      *
-     * @param itemType
-     *            The readable name of the item type
-     * @param itemSaver
-     *            Callback to save the edited item
-     * @param itemDeleter
-     *            Callback to delete the edited item
+     * @param itemType    The readable name of the item type
+     * @param itemSaver   Callback to save the edited item
+     * @param itemDeleter Callback to delete the edited item
      */
-    protected AForm(String itemType, BiConsumer<T, Operation> itemSaver, Consumer<T> itemDeleter) {
+    protected AForm(String itemType, BiConsumer<T, Operation> itemSaver, Consumer<T> itemDeleter, IAService service) {
         this.itemType = itemType;
         this.itemSaver = itemSaver;
         this.itemDeleter = itemDeleter;
+        this.service = service;
 
         initTitle();
         initFormLayout();
@@ -182,13 +146,16 @@ public abstract class AForm<T extends Serializable> extends Dialog {
     /**
      * Opens the given item for editing in the dialog.
      *
-     * @param item
-     *            The item to edit; it may be an existing or a newly created
-     *            instance
-     * @param operation
-     *            The operation being performed on the item
+     * @param item      The item to edit; it may be an existing or a newly created
+     *                  instance
+     * @param operation The operation being performed on the item
      */
     public final void open(T item, Operation operation) {
+        if (item == null) {
+            Notification.show("Qualcosa non ha funzionato in AForm.open()", 3000, Notification.Position.BOTTOM_START);
+            return;
+        }// end of if cycle
+
         currentItem = item;
         titleField.setText(operation.getNameInTitle() + " " + itemType);
         if (registrationForSave != null) {
@@ -223,22 +190,18 @@ public abstract class AForm<T extends Serializable> extends Dialog {
         confirmDelete();
     }
 
-
     /**
      * Opens the confirmation dialog before deleting the current item.
-     *
+     * <p>
      * The dialog will display the given title and message(s), then call
      * {@link #deleteConfirmed(Serializable)} if the Delete button is clicked.
      *
-     * @param title
-     *            The title text
-     * @param message
-     *            Detail message (optional, may be empty)
-     * @param additionalMessage
-     *            Additional message (optional, may be empty)
+     * @param title             The title text
+     * @param message           Detail message (optional, may be empty)
+     * @param additionalMessage Additional message (optional, may be empty)
      */
     protected final void openConfirmationDialog(String title, String message,
-            String additionalMessage) {
+                                                String additionalMessage) {
         close();
         confirmationDialog.open(title, message, additionalMessage, "Delete",
                 true, getCurrentItem(), this::deleteConfirmed,
@@ -251,5 +214,36 @@ public abstract class AForm<T extends Serializable> extends Dialog {
     private void deleteConfirmed(T item) {
         itemDeleter.accept(item);
         close();
+    }
+
+    /**
+     * The operations supported by this dialog. Delete is enabled when editing
+     * an already existing item.
+     */
+    public enum Operation {
+        ADD("Add New", "add", false),
+        EDIT("Edit", "edit", true);
+
+        private final String nameInTitle;
+        private final String nameInText;
+        private final boolean deleteEnabled;
+
+        Operation(String nameInTitle, String nameInText, boolean deleteEnabled) {
+            this.nameInTitle = nameInTitle;
+            this.nameInText = nameInText;
+            this.deleteEnabled = deleteEnabled;
+        }
+
+        public String getNameInTitle() {
+            return nameInTitle;
+        }
+
+        public String getNameInText() {
+            return nameInText;
+        }
+
+        public boolean isDeleteEnabled() {
+            return deleteEnabled;
+        }
     }
 }

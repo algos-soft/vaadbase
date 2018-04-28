@@ -62,19 +62,19 @@ public class @ENTITY@Service extends AService {
 
     @FIND@
 
-//    /**
-//     * Creazione in memoria di una nuova entity che NON viene salvata
-//     * Eventuali regolazioni iniziali delle property
-//     * Senza properties per compatibilità con la superclasse
-//     *
-//     * @return la nuova entity appena creata (non salvata)
-//     */
-//    @Override
-//    public Prova newEntity() {
-//        return newEntity("");
-//    }// end of method
-//
-//
+    /**
+     * Creazione in memoria di una nuova entity che NON viene salvata
+     * Eventuali regolazioni iniziali delle property
+     * Senza properties per compatibilità con la superclasse
+     *
+     * @return la nuova entity appena creata (non salvata)
+     */
+    @Override
+    public Prova newEntity() {
+        return newEntity("");
+    }// end of method
+
+
 //    /**
 //     * Creazione in memoria di una nuova entity che NON viene salvata
 //     * Eventuali regolazioni iniziali delle property
@@ -112,7 +112,25 @@ public class @ENTITY@Service extends AService {
      */
     @Override
     public List<@ENTITY@> findAll() {
-        return repository.findAllByOrderByCodeAsc();
+        List<@ENTITY@> lista = null;
+
+        try { // prova ad eseguire il codice
+            lista = repository.findAllByOrderByOrdineAsc();
+        } catch (Exception unErrore) { // intercetta l'errore
+            log.error(unErrore.toString());
+            try { // prova ad eseguire il codice
+                lista = repository.findAllByOrderByCodeAsc();
+            } catch (Exception unErrore2) { // intercetta l'errore
+                log.error(unErrore2.toString());
+                try { // prova ad eseguire il codice
+                    lista = repository.findAll();
+                } catch (Exception unErrore3) { // intercetta l'errore
+                    log.error(unErrore3.toString());
+                }// fine del blocco try-catch
+            }// fine del blocco try-catch
+        }// fine del blocco try-catch
+
+        return lista;
     }// end of method
 
 

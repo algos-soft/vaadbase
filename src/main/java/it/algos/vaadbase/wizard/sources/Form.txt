@@ -3,6 +3,9 @@ package it.algos.@MODULELOWER@.modules.@PACKAGE@;
 import java.util.function.BiConsumer;
 import java.util.function.Consumer;
 import com.vaadin.flow.component.textfield.TextField;
+import com.vaadin.flow.data.converter.StringToIntegerConverter;
+import com.vaadin.flow.data.validator.IntegerRangeValidator;
+import com.vaadin.flow.data.validator.StringLengthValidator;
 import it.algos.vaadbase.annotation.AIScript;
 import it.algos.vaadbase.presenter.IAPresenter;
 import it.algos.vaadbase.ui.dialog.AForm;
@@ -31,12 +34,14 @@ import static it.algos.@MODULELOWER@.application.@APPCOST@.@QUALIFIER@;
 @Scope(ConfigurableBeanFactory.SCOPE_SINGLETON)
 @Qualifier(@QUALIFIER@)
 @AIScript(sovrascrivibile = true)
-public class @ENTITY@Form extends AForm {
+public class @ENTITY@Form extends AForm<@ENTITY@> {
 
 
+    private final TextField ordineField = new TextField("Ordine");
+    private final TextField codeField = new TextField("Code");
 
-
-    private final TextField roleCodeField = new TextField("Role Code");
+    @Autowired
+    private @ENTITY@Service service;
 
     /**
      * Costruttore
@@ -44,23 +49,28 @@ public class @ENTITY@Form extends AForm {
     public @ENTITY@Form(BiConsumer<@ENTITY@, AForm.Operation> itemSaver, Consumer<@ENTITY@> itemDeleter) {
         super("@ENTITY@", itemSaver, itemDeleter);
 
+        creaOrdineField();
         creaCodeField();
     }// end of constructor
 
-    private void creaCodeField() {
-//        getFormLayout().add(roleCodeField);
-//
-//        getBinder().forField(roleCodeField)
-//                .withConverter(String::trim, String::trim)
-//                .withValidator(new StringLengthValidator(
-//                        "Role name must contain at least 3 printable characters",
-//                        3, null))
-////                .withValidator(
-////                        code -> RoleService.getInstance()
-////                                .findByKeyUnica(code) == null,
-////                        "Role name must be unique")
-//                .bind(Role::getCode, Role::setCode);
+    private void creaOrdineField() {
+        getFormLayout().add(ordineField);
+        getBinder()
+                .forField(ordineField)
+                .withConverter(new StringToIntegerConverter(0, "Must enter a number."))
+                .withValidator(new IntegerRangeValidator("Ordine must be between 1 and 99.", 1, 99))
+                .bind(@ENTITY@::getOrdine, @ENTITY@::setOrdine);
     }// end of method
+
+    private void creaCodeField() {
+        getFormLayout().add(codeField);
+        getBinder()
+                .forField(codeField)
+                .withConverter(String::trim, String::trim)
+                .withValidator(new StringLengthValidator("Code must contain at least 3 printable characters", 3, null))
+                .withValidator(code -> service.findByKeyUnica(code) == null, "Code name must be unique")
+                .bind(@ENTITY@::getCode, @ENTITY@::setCode);
+        }// end of method
 
 }// end of class
 

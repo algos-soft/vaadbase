@@ -18,11 +18,9 @@ import com.vaadin.flow.theme.Theme;
 import com.vaadin.flow.theme.lumo.Lumo;
 import it.algos.vaadbase.modules.company.CompanyView;
 import it.algos.vaadbase.modules.role.RoleList;
-import it.algos.vaadbase.modules.role.RoleView;
 import it.algos.vaadbase.service.ATextService;
 import it.algos.vaadtest.application.HomeView;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.config.ConfigurableBeanFactory;
 import org.springframework.context.annotation.Scope;
 
@@ -53,11 +51,10 @@ import java.util.List;
 @Viewport("width=device-width, minimum-scale=1.0, initial-scale=1.0, user-scalable=yes")
 public class MainLayout extends Div implements RouterLayout, AfterNavigationObserver, PageConfigurator {
 
-
     protected static final String ACTIVE_ITEM_STYLE = "main-layout__nav-item--selected";
-
     protected List<RouterLink> arrayRouterLink;
     protected H2 title;
+    private ATextService text = ATextService.getInstance();
 
 
     public MainLayout() {
@@ -145,7 +142,7 @@ public class MainLayout extends Div implements RouterLayout, AfterNavigationObse
         }// fine del blocco try-catch
 
         if (routerLink != null) {
-            routerLink.add(new Icon(icon), new Text(tagMenu));
+            routerLink.add(new Icon(icon), new Text(text.primaMaiuscola(tagMenu)));
             routerLink.addClassName("main-layout__nav-item");
             arrayRouterLink.add(routerLink);
         }// end of if cycle

@@ -2,29 +2,23 @@ package it.algos.vaadbase.modules.role;
 
 
 import com.vaadin.flow.component.button.Button;
-import com.vaadin.flow.component.grid.Grid;
 import com.vaadin.flow.component.icon.Icon;
 import com.vaadin.flow.component.icon.VaadinIcons;
-import com.vaadin.flow.component.orderedlayout.VerticalLayout;
 import com.vaadin.flow.router.PageTitle;
 import com.vaadin.flow.router.Route;
 import com.vaadin.flow.spring.annotation.SpringComponent;
 import it.algos.vaadbase.annotation.AIScript;
-import it.algos.vaadbase.backend.entity.AEntity;
 import it.algos.vaadbase.presenter.IAPresenter;
 import it.algos.vaadbase.ui.AView;
 import it.algos.vaadbase.ui.MainLayout;
 import it.algos.vaadbase.ui.annotation.AIView;
 import it.algos.vaadbase.ui.dialog.AForm;
-import it.algos.vaadbase.ui.dialog.AbstractEditorDialog;
 import it.algos.vaadbase.ui.enumeration.EARoleType;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.beans.factory.config.ConfigurableBeanFactory;
 import org.springframework.context.annotation.Lazy;
 import org.springframework.context.annotation.Scope;
-
-import java.util.List;
 
 import static it.algos.vaadbase.application.BaseCost.TAG_ROL;
 
@@ -67,16 +61,13 @@ public class RoleList extends AView {
      * Se manca il MENU_NAME, di default usa il 'name' della view
      */
     public static final VaadinIcons VIEW_ICON = VaadinIcons.ACADEMY_CAP;
-
+    private final RoleForm form;
     /**
      * Il service viene regolato nel costruttore recuperandolo del presenter
      * in modo che sia disponibile nella superclasse, dove viene usata l'interfaccia IAService
      * Qui si una una sottoclasse locale (col casting nel costruttore) per usare i metodi specifici
      */
     private RoleService service;
-
-
-    private final RoleForm form = new RoleForm(this::saveRole, this::deleteRole);
 
     /**
      * Costruttore @Autowired
@@ -93,6 +84,7 @@ public class RoleList extends AView {
     public RoleList(@Lazy @Qualifier(TAG_ROL) IAPresenter presenter) {
         super(presenter);
         this.service = (RoleService) service;
+        form = new RoleForm(this::saveRole, this::deleteRole, service);
     }// end of Spring constructor
 
 
