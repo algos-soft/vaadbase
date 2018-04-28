@@ -78,7 +78,7 @@ public class @ENTITY@List extends AView {
     public static final VaadinIcons VIEW_ICON = VaadinIcons.ASTERISK;
 
 
-    private final @ENTITY@Form form = new @ENTITY@Form(this::save@ENTITY@, this::delete@ENTITY@);
+    private final @ENTITY@Form form;
 
 
     /**
@@ -95,10 +95,11 @@ public class @ENTITY@List extends AView {
      */
      public @ENTITY@List(@Lazy @Qualifier(@QUALIFIER@) IAPresenter presenter) {
         super(presenter);
+        form = new @ENTITY@Form(this::save@ENTITY@, this::delete@ENTITY@, service);
      }// end of Spring constructor
 
 
-    protected void addSearchBar() {
+     protected void addSearchBar() {
         Div viewToolbar = new Div();
         viewToolbar.addClassName("view-toolbar");
 

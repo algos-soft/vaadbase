@@ -10,6 +10,7 @@ import it.algos.vaadbase.annotation.AIScript;
 import it.algos.vaadbase.presenter.IAPresenter;
 import it.algos.vaadbase.ui.dialog.AForm;
 import lombok.extern.slf4j.Slf4j;
+import it.algos.vaadbase.backend.service.IAService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.beans.factory.config.ConfigurableBeanFactory;
@@ -40,14 +41,12 @@ public class @ENTITY@Form extends AForm<@ENTITY@> {
     private final TextField ordineField = new TextField("Ordine");
     private final TextField codeField = new TextField("Code");
 
-    @Autowired
-    private @ENTITY@Service service;
 
     /**
      * Costruttore
      */
-    public @ENTITY@Form(BiConsumer<@ENTITY@, AForm.Operation> itemSaver, Consumer<@ENTITY@> itemDeleter) {
-        super("@ENTITY@", itemSaver, itemDeleter);
+    public @ENTITY@Form(BiConsumer<@ENTITY@, AForm.Operation> itemSaver, Consumer<@ENTITY@> itemDeleter, IAService service) {
+        super("@ENTITY@", itemSaver, itemDeleter, service);
 
         creaOrdineField();
         creaCodeField();
@@ -68,7 +67,7 @@ public class @ENTITY@Form extends AForm<@ENTITY@> {
                 .forField(codeField)
                 .withConverter(String::trim, String::trim)
                 .withValidator(new StringLengthValidator("Code must contain at least 3 printable characters", 3, null))
-                .withValidator(code -> service.findByKeyUnica(code) == null, "Code name must be unique")
+                .withValidator(code -> ((@ENTITY@Service) service).findByKeyUnica(code) == null, "Code name must be unique")
                 .bind(@ENTITY@::getCode, @ENTITY@::setCode);
         }// end of method
 

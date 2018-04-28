@@ -71,7 +71,7 @@ public class @ENTITY@Service extends AService {
      */
     @Override
     public Prova newEntity() {
-        return newEntity("");
+        return newEntity(0,"");
     }// end of method
 
 

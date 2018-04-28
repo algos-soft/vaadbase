@@ -39,7 +39,7 @@ public class @ENTITY@Presenter extends APresenter {
      * Si usa una costante statica, per essere sicuri di scrivere sempre uguali i riferimenti <br>
      * Regola il modello-dati specifico <br>
      */
-    public @ENTITY@Presenter(@Lazy @Qualifier(@QUALIFIER@) IAService service, @Lazy @Qualifier(@QUALIFIER@) IAView view) {
+    public @ENTITY@Presenter(@Qualifier(@QUALIFIER@) IAService service, @Lazy @Qualifier(@QUALIFIER@) IAView view) {
         super(@ENTITY@.class, service, view);
      }// end of Spring constructor
 
