@@ -1,9 +1,8 @@
 package it.algos.vaadbase.backend.service;
 
 import it.algos.vaadbase.backend.entity.AEntity;
-import it.algos.vaadbase.modules.company.Company;
+import it.algos.vaadbase.service.AAnnotationService;
 
-import java.lang.reflect.Field;
 import java.util.List;
 
 /**
@@ -14,6 +13,12 @@ import java.util.List;
  * Time: 21:08
  */
 public interface IAService {
+
+
+    /**
+     * Service iniettato da Spring (@Scope = 'singleton'). Unica per tutta l'applicazione. Usata come libreria.
+     */
+    public AAnnotationService getAnnotation();
 
 
     /**
@@ -49,6 +54,20 @@ public interface IAService {
      * @return all entities
      */
     public List<? extends AEntity> findAll();
+
+
+    /**
+     * Fetches the entities whose 'main text property' matches the given filter text.
+     * <p>
+     * The matching is case insensitive. When passed an empty filter text,
+     * the method returns all categories. The returned list is ordered by name.
+     * The 'main text property' is different in each entity class and chosen in the specific subclass
+     *
+     * @param filter the filter text
+     *
+     * @return the list of matching entities
+     */
+    public List<? extends AEntity> findFilter(String filter);
 
 
     /**
@@ -101,6 +120,18 @@ public interface IAService {
      * @return lista di nomi di property, oppure null se non esiste l'Annotation specifica @AIList() nella Entity
      */
     public List<String> getGridPropertiesName();
+
+
+    /**
+     * Nomi delle properties del, estratti dalle @Annotation della Entity
+     * Se la classe AEntity->@AIForm prevede una lista specifica, usa quella lista (con o senza ID)
+     * Se l'annotation @AIForm non esiste od è vuota,
+     * restituisce tutti i campi (properties della classe e superclasse)
+     * Sovrascrivibile
+     *
+     * @return lista di nomi di property, oppure null se non esiste l'Annotation specifica @AIForm() nella Entity
+     */
+    public List<String> getFormPropertiesName();
 
 //    /**
 //     * Fields visibili (e ordinati) nel Form

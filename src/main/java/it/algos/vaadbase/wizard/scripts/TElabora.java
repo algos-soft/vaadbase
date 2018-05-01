@@ -401,6 +401,7 @@ public class TElabora {
         mappa.put(Token.entity, newEntityName);
         mappa.put(Token.superClassEntity, superClassEntity);
         mappa.put(Token.methodFind, creaFind());
+        mappa.put(Token.parametersNewEntity, creaParametersNewEntity());
         mappa.put(Token.methodNewEntity, creaNewEntity());
         mappa.put(Token.methodNewOrdine, creaNewOrdine());
         mappa.put(Token.methodIdKeySpecifica, creaIdKeySpecifica());
@@ -421,7 +422,7 @@ public class TElabora {
         if (flagCode) {
             methodFindText += leggeFile(METHOD_FIND);
             methodFindText = Token.replace(Token.entity, methodFindText, newEntityName);
-            methodFindText = Token.replace(Token.newEntityParameters, methodFindText, creaParametersEntity());
+            methodFindText = Token.replace(Token.parametersFind, methodFindText, creaParametersFind());
             methodFindText = Token.replace(Token.parameters, methodFindText, creaParameters());
         }// end of if cycle
 
@@ -515,7 +516,7 @@ public class TElabora {
     }// end of method
 
 
-    private String creaParametersEntity() {
+    private String creaParametersFind() {
         parametersEntityText = "";
         String tagOrdine = "0";
         String tagDescrizione = "\"\"";
@@ -555,6 +556,27 @@ public class TElabora {
 
         parametersDocText = text.levaCoda(parametersDocText, virgola);
         return parametersDocText;
+    }// end of method
+
+
+    private String creaParametersNewEntity() {
+        String testo = "";
+        String tagNumerico = "0";
+        String tagTesto = "\"\"";
+        String virgola = ", ";
+
+        if (flagOrdine) {
+            testo += tagNumerico + virgola;
+        }// end of if cycle
+        if (flagCode) {
+            testo += tagTesto + virgola;
+        }// end of if cycle
+        if (flagDescrizione) {
+            testo += tagTesto + virgola;
+        }// end of if cycle
+
+        testo = text.levaCoda(testo, virgola);
+        return testo;
     }// end of method
 
 

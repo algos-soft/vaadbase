@@ -2,8 +2,8 @@
     /**
      * descrizione (obbligatoria, non unica) <br>
      */
-    @NotEmpty(message = "La descrizione è obbligatoria")
+    @NotNull(message = "La descrizione è obbligatoria")
     @Size(min = 2, max = 50)
-    @AIField(type = EAFieldType.text, firstCapital = true, widthEM = 24, help = "Descrizione della company")
+    @AIField(type = EAFieldType.text, firstCapital = true, widthEM = 24)
     @AIColumn(width = 370)
     private String descrizione;

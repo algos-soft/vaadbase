@@ -1,6 +1,7 @@
 package it.algos.vaadbase.modules.role;
 
 import com.vaadin.flow.component.textfield.TextField;
+import com.vaadin.flow.data.binder.Binder;
 import com.vaadin.flow.data.validator.StringLengthValidator;
 import it.algos.vaadbase.backend.service.IAService;
 import it.algos.vaadbase.ui.dialog.AForm;
@@ -26,7 +27,7 @@ public class RoleForm extends AForm<Role> {
     private final TextField roleCodeField = new TextField("Role Code");
 
     public RoleForm(BiConsumer<Role, AForm.Operation> itemSaver, Consumer<Role> itemDeleter, IAService service) {
-        super("Role", itemSaver, itemDeleter, service);
+        super("Role", itemSaver, itemDeleter, service, Role.class);
 
         creaCodeField();
     }// end of constructor

@@ -6,17 +6,11 @@ import it.algos.vaadbase.service.AAnnotationService;
 import it.algos.vaadbase.service.ATextService;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.autoconfigure.data.web.SpringDataWebProperties;
 import org.springframework.context.annotation.Scope;
 import org.springframework.data.domain.Sort;
 import org.springframework.data.mongodb.repository.MongoRepository;
 
-import java.lang.reflect.Field;
-import java.time.LocalDateTime;
-import java.util.Arrays;
-import java.util.LinkedHashMap;
 import java.util.List;
-import java.util.Map;
 
 /**
  * Project springvaadin
@@ -28,7 +22,7 @@ import java.util.Map;
 @Slf4j
 @SpringComponent
 @Scope("singleton")
-public abstract class AService implements IAService {
+public  class AService implements IAService {
 
 
     /**
@@ -36,6 +30,10 @@ public abstract class AService implements IAService {
      */
     @Autowired
     public AAnnotationService annotation;
+    @Override
+    public AAnnotationService getAnnotation() {
+        return annotation;
+    }// end of method
 
 
 //    @Autowired
@@ -129,18 +127,34 @@ public abstract class AService implements IAService {
      */
     @Override
     public List<? extends AEntity> findAll() {
-       Sort sort;
+        Sort sort;
 
         if (true) {
-            sort = new Sort(Sort.Direction.DESC,"ordine");
+            sort = new Sort(Sort.Direction.DESC, "ordine");
             return repository.findAll(sort);
         } else {
             return repository.findAll();
         }// end of if/else cycle
     }// end of method
 
+    /**
+     * Fetches the entities whose 'main text property' matches the given filter text.
+     * <p>
+     * The matching is case insensitive. When passed an empty filter text,
+     * the method returns all categories. The returned list is ordered by name.
+     * The 'main text property' is different in each entity class and chosen in the specific subclass
+     *
+     * @param filter the filter text
+     *
+     * @return the list of matching entities
+     */
+    @Override
+    public List<? extends AEntity> findFilter(String filter) {
+        return findAll();
+    }// end of method
 
-//    /**
+
+    //    /**
 //     * Colonne visibili (e ordinate) nella Grid
 //     * Sovrascrivibile
 //     * La colonna key ID normalmente non si visualizza
@@ -182,6 +196,19 @@ public abstract class AService implements IAService {
         return annotation.getGridPropertiesName(entityClass);
     }// end of method
 
+    /**
+     * Nomi delle properties del, estratti dalle @Annotation della Entity
+     * Se la classe AEntity->@AIForm prevede una lista specifica, usa quella lista (con o senza ID)
+     * Se l'annotation @AIForm non esiste od è vuota,
+     * restituisce tutti i campi (properties della classe e superclasse)
+     * Sovrascrivibile
+     *
+     * @return lista di nomi di property, oppure null se non esiste l'Annotation specifica @AIForm() nella Entity
+     */
+    @Override
+    public List<String> getFormPropertiesName() {
+        return annotation.getFormPropertiesName(entityClass);
+    }// end of method
 
 //    /**
 //     * Fields dichiarati nella Entity, da usare come columns della Grid (List)

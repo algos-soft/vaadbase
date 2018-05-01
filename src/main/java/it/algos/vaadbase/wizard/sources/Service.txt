@@ -4,6 +4,7 @@ import com.vaadin.flow.spring.annotation.SpringComponent;
 import lombok.extern.slf4j.Slf4j;
 import org.bson.types.ObjectId;
 import java.util.List;
+import java.util.stream.Collectors;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.beans.factory.config.ConfigurableBeanFactory;
 import org.springframework.data.mongodb.repository.MongoRepository;
@@ -70,24 +71,10 @@ public class @ENTITY@Service extends AService {
      * @return la nuova entity appena creata (non salvata)
      */
     @Override
-    public Prova newEntity() {
-        return newEntity(0,"");
+    public @ENTITY@ newEntity() {
+        return newEntity(@PARAMETERSNEWENTITY@);
     }// end of method
 
-
-//    /**
-//     * Creazione in memoria di una nuova entity che NON viene salvata
-//     * Eventuali regolazioni iniziali delle property
-//     * Properties obbligatorie
-//     * Gli argomenti (parametri) della new Entity DEVONO essere ordinati come nella Entity (costruttore lombok)
-//     *
-//     * @param code codice di riferimento (obbligatorio)
-//     *
-//     * @return la nuova entity appena creata (non salvata)
-//     */
-//    public Prova newEntity(String code) {
-//        return newEntity(code, "");
-//    }// end of method
 
     @NEWENTITY@
 
@@ -131,6 +118,29 @@ public class @ENTITY@Service extends AService {
         }// fine del blocco try-catch
 
         return lista;
+    }// end of method
+
+
+    /**
+     * Fetches the entities whose 'main text property' matches the given filter text.
+     * <p>
+     * The matching is case insensitive. When passed an empty filter text,
+     * the method returns all categories. The returned list is ordered by name.
+     * The 'main text property' is different in each entity class and chosen in the specific subclass
+     *
+     * @param filter the filter text
+     *
+     * @return the list of matching entities
+     */
+    @Override
+    public List<@ENTITY@> findFilter(String filter) {
+        String normalizedFilter = filter.toLowerCase();
+        List<@ENTITY@> lista = findAll();
+
+        return lista.stream()
+                .filter(entity -> entity.getCode().toLowerCase().contains(normalizedFilter))
+                .sorted((entity1, entity2) -> entity1.getCode().compareToIgnoreCase(entity2.getCode()))
+                .collect(Collectors.toList());
     }// end of method
 
 

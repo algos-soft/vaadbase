@@ -38,7 +38,7 @@ class ConfirmationDialog<T extends Serializable> extends Dialog {
     private final Div messageLabel = new Div();
     private final Div extraMessageLabel = new Div();
     private final Button confirmButton = new Button();
-    private final Button cancelButton = new Button("Cancel");
+    private final Button cancelButton = new Button("Annulla");
     private Registration registrationForConfirm;
     private Registration registrationForCancel;
 

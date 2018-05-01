@@ -2,10 +2,9 @@ package it.algos.vaadbase.service;
 
 import com.vaadin.flow.spring.annotation.SpringComponent;
 import it.algos.vaadbase.backend.entity.AEntity;
-import it.algos.vaadbase.presenter.IAPresenter;
-import it.algos.vaadbase.ui.AView;
 import it.algos.vaadbase.ui.IAView;
 import it.algos.vaadbase.ui.annotation.*;
+import it.algos.vaadbase.ui.enumeration.EAFieldType;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.config.ConfigurableBeanFactory;
@@ -144,6 +143,7 @@ public class AAnnotationService {
     }// end of method
 
 
+
     /**
      * Get the specific annotation of the field.
      *
@@ -157,6 +157,29 @@ public class AAnnotationService {
         } else {
             return null;
         }// end of if/else cycle
+    }// end of method
+
+
+    /**
+     * Get the specific annotation of the field.
+     *
+     * @param entityClazz the entity class
+     * @param fieldName   the property name
+     *
+     * @return the Annotation for the specific field
+     */
+    public AIField getAIField(Class<? extends AEntity> entityClazz, String fieldName) {
+        AIField annotation = null;
+        Field reflectionJavaField;
+
+        try { // prova ad eseguire il codice
+            reflectionJavaField = entityClazz.getDeclaredField(fieldName);
+            annotation= getAIField(reflectionJavaField);
+        } catch (Exception unErrore) { // intercetta l'errore
+            log.error(unErrore.toString());
+        }// fine del blocco try-catch
+
+        return annotation;
     }// end of method
 
 
@@ -177,6 +200,9 @@ public class AAnnotationService {
 
         return name;
     }// end of method
+
+
+
 
 
     /**
@@ -206,6 +232,30 @@ public class AAnnotationService {
         return lista;
     }// end of method
 
+    /**
+     * Nomi delle properties del, estratti dalle @Annotation della Entity
+     * Se la classe AEntity->@AIForm prevede una lista specifica, usa quella lista (con o senza ID)
+     * Se l'annotation @AIForm non esiste od è vuota,
+     * restituisce tutti i campi (properties della classe e superclasse)
+     * Sovrascrivibile
+     *
+     * @return lista di nomi di property, oppure null se non esiste l'Annotation specifica @AIForm() nella Entity
+     */
+    public List<String> getFormPropertiesName(final Class<? extends AEntity> entityClazz) {
+        List<String> lista = null;
+        String[] properties = null;
+        AIForm annotation = this.getAIForm(entityClazz);
+
+        if (annotation != null) {
+            properties = annotation.fields();
+        }// end of if cycle
+
+        if (array.isValid(properties)) {
+            lista = Arrays.asList(properties);
+        }// end of if cycle
+
+        return lista;
+    }// end of method
 
     /**
      * Nomi dei fields da considerare per estrarre i Java Reflected Field dalle @Annotation della Entity
@@ -484,23 +534,43 @@ public class AAnnotationService {
     }// end of method
 
 
-//    /**
-//     * Get the type (field) of the property.
-//     *
-//     * @param reflectionJavaField di riferimento per estrarre la Annotation
-//     *
-//     * @return the type for the specific column
-//     */
-//    public EAFieldType getFormType(final Field reflectionJavaField) {
-//        EAFieldType type = null;
-//        AIField annotation = this.getAIField(reflectionJavaField);
-//
-//        if (annotation != null) {
-//            type = annotation.type();
-//        }// end of if cycle
-//
-//        return type;
-//    }// end of method
+    /**
+     * Get the type (field) of the property.
+     *
+     * @param reflectionJavaField di riferimento per estrarre la Annotation
+     *
+     * @return the type for the specific column
+     */
+    public EAFieldType getFormType(final Field reflectionJavaField) {
+        EAFieldType type = null;
+        AIField annotation = this.getAIField(reflectionJavaField);
+
+        if (annotation != null) {
+            type = annotation.type();
+        }// end of if cycle
+
+        return type;
+    }// end of method
+
+
+    /**
+     * Get the type (field) of the property.
+     *
+     * @param entityClazz the entity class
+     * @param fieldName   the property name
+     *
+     * @return the type for the specific column
+     */
+    public EAFieldType getFormType(Class<? extends AEntity> entityClazz, String fieldName) {
+        EAFieldType type = null;
+        AIField annotation = this.getAIField(entityClazz,fieldName);
+
+        if (annotation != null) {
+            type = annotation.type();
+        }// end of if cycle
+
+        return type;
+    }// end of method
 
 
     /**
@@ -941,7 +1011,7 @@ public class AAnnotationService {
      * @return lista di bottoni visibili nella toolbar
      */
     @SuppressWarnings("all")
-    public  EAFormButton getFormBottonDev(final Class<? extends AEntity> clazz) {
+    public EAFormButton getFormBottonDev(final Class<? extends AEntity> clazz) {
         EAFormButton listaNomiBottoni = EAFormButton.standard;
         AIForm annotation = this.getAIForm(clazz);
 
@@ -961,7 +1031,7 @@ public class AAnnotationService {
      * @return lista di bottoni visibili nella toolbar
      */
     @SuppressWarnings("all")
-    public  EAFormButton getFormBottonAdmin(final Class<? extends AEntity> clazz) {
+    public EAFormButton getFormBottonAdmin(final Class<? extends AEntity> clazz) {
         EAFormButton listaNomiBottoni = EAFormButton.standard;
         AIForm annotation = this.getAIForm(clazz);
 
@@ -981,7 +1051,7 @@ public class AAnnotationService {
      * @return lista di bottoni visibili nella toolbar
      */
     @SuppressWarnings("all")
-    public  EAFormButton getFormBottonUser(final Class<? extends AEntity> clazz) {
+    public EAFormButton getFormBottonUser(final Class<? extends AEntity> clazz) {
         EAFormButton listaNomiBottoni = EAFormButton.standard;
         AIForm annotation = this.getAIForm(clazz);
 

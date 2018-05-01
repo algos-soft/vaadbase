@@ -37,39 +37,22 @@ import static it.algos.@MODULELOWER@.application.@APPCOST@.@QUALIFIER@;
 @AIScript(sovrascrivibile = true)
 public class @ENTITY@Form extends AForm<@ENTITY@> {
 
-
-    private final TextField ordineField = new TextField("Ordine");
-    private final TextField codeField = new TextField("Code");
-
-
     /**
      * Costruttore
      */
     public @ENTITY@Form(BiConsumer<@ENTITY@, AForm.Operation> itemSaver, Consumer<@ENTITY@> itemDeleter, IAService service) {
-        super("@ENTITY@", itemSaver, itemDeleter, service);
-
-        creaOrdineField();
-        creaCodeField();
+        super("@ENTITY@", itemSaver, itemDeleter, service, @ENTITY@.class);
     }// end of constructor
 
-    private void creaOrdineField() {
-        getFormLayout().add(ordineField);
-        getBinder()
-                .forField(ordineField)
-                .withConverter(new StringToIntegerConverter(0, "Must enter a number."))
-                .withValidator(new IntegerRangeValidator("Ordine must be between 1 and 99.", 1, 99))
-                .bind(@ENTITY@::getOrdine, @ENTITY@::setOrdine);
-    }// end of method
 
-    private void creaCodeField() {
-        getFormLayout().add(codeField);
-        getBinder()
-                .forField(codeField)
-                .withConverter(String::trim, String::trim)
-                .withValidator(new StringLengthValidator("Code must contain at least 3 printable characters", 3, null))
-                .withValidator(code -> ((@ENTITY@Service) service).findByKeyUnica(code) == null, "Code name must be unique")
-                .bind(@ENTITY@::getCode, @ENTITY@::setCode);
-        }// end of method
+//    @Override
+//    protected void confirmDelete() {
+//        openConfirmationDialog(
+//                "Delete Prova “" + getCurrentItem().getCode() + "”?",
+//                "There are some reviews associated with this category.",
+//                "Deleting the category will mark the associated reviews as “undefined”."
+//                        + "You may link the reviews to other categories on the edit page.");
+//    }// end of method
 
 }// end of class
 

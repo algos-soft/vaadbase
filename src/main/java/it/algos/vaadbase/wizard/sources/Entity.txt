@@ -56,8 +56,8 @@ import static it.algos.@MODULELOWER@.application.@APPCOST@.@QUALIFIER@;
 @Builder
 @EqualsAndHashCode(callSuper = false)
 @Qualifier(@QUALIFIER@)
-@AIEntity(roleTypeVisibility = EARoleType.user, company = EACompanyRequired.nonUsata)
-@AIList(fields = {@PROPERTIES@}, dev = EAListButton.standard, admin = EAListButton.noSearch, user = EAListButton.show)
+@AIEntity(company = EACompanyRequired.nonUsata)
+@AIList(fields = {@PROPERTIES@})
 @AIForm(fields = {@PROPERTIES@})
 @AIScript(sovrascrivibile = true)
 public class @ENTITY@ extends @SUPERCLASSENTITY@ {
@@ -67,6 +67,7 @@ public class @ENTITY@ extends @SUPERCLASSENTITY@ {
      * versione della classe per la serializzazione
      */
     private final static long serialVersionUID = 1L;
+
     @ORDINE@
     @CODE@
     @DESCRIZIONE@

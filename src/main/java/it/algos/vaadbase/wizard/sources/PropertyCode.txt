@@ -1,9 +1,9 @@
     /**
      * codice di riferimento (obbligatorio, unico) <br>
      */
-    @NotEmpty
-    @Size()
+    @NotNull
     @Indexed()
-    @AIField(type = EAFieldType.text, required = true, focus = true, widthEM = 12, dev = EAFieldAccessibility.allways)
+    @Size(min = 3)
+    @AIField(type = EAFieldType.text, required = true, focus = true, widthEM = 12)
     @AIColumn(width = 210)
     private String code;

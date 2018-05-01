@@ -23,13 +23,18 @@ import com.vaadin.flow.component.html.H2;
 import com.vaadin.flow.component.notification.Notification;
 import com.vaadin.flow.component.notification.Notification.Position;
 import com.vaadin.flow.component.orderedlayout.HorizontalLayout;
+import com.vaadin.flow.component.textfield.TextField;
 import com.vaadin.flow.data.binder.Binder;
 import com.vaadin.flow.data.binder.BinderValidationStatus;
 import com.vaadin.flow.data.binder.ValidationResult;
+import com.vaadin.flow.data.converter.StringToIntegerConverter;
+import com.vaadin.flow.data.validator.StringLengthValidator;
 import com.vaadin.flow.shared.Registration;
 import it.algos.vaadbase.backend.service.IAService;
+import it.algos.vaadbase.ui.enumeration.EAFieldType;
 
 import java.io.Serializable;
+import java.util.List;
 import java.util.function.BiConsumer;
 import java.util.function.Consumer;
 import java.util.stream.Collectors;
@@ -52,9 +57,9 @@ import java.util.stream.Collectors;
 public abstract class AForm<T extends Serializable> extends Dialog {
 
     private final H2 titleField = new H2();
-    private final Button saveButton = new Button("Save");
-    private final Button cancelButton = new Button("Cancel");
-    private final Button deleteButton = new Button("Delete");
+    private final Button saveButton = new Button("Registra");
+    private final Button cancelButton = new Button("Annulla");
+    private final Button deleteButton = new Button("Elimina");
     private final FormLayout formLayout = new FormLayout();
     private final HorizontalLayout buttonBar = new HorizontalLayout(saveButton, cancelButton, deleteButton);
     private final ConfirmationDialog<T> confirmationDialog = new ConfirmationDialog<>();
@@ -62,8 +67,9 @@ public abstract class AForm<T extends Serializable> extends Dialog {
     private final BiConsumer<T, Operation> itemSaver;
     private final Consumer<T> itemDeleter;
     protected IAService service;
+    protected Binder<T> binder;
+    protected Class binderClass;
     private Registration registrationForSave;
-    private Binder<T> binder = new Binder<>();
     private T currentItem;
 
     /**
@@ -73,15 +79,18 @@ public abstract class AForm<T extends Serializable> extends Dialog {
      * @param itemSaver   Callback to save the edited item
      * @param itemDeleter Callback to delete the edited item
      */
-    protected AForm(String itemType, BiConsumer<T, Operation> itemSaver, Consumer<T> itemDeleter, IAService service) {
+    protected AForm(String itemType, BiConsumer<T, Operation> itemSaver, Consumer<T> itemDeleter, IAService service, Class binderClass) {
         this.itemType = itemType;
         this.itemSaver = itemSaver;
         this.itemDeleter = itemDeleter;
         this.service = service;
+        this.binderClass = binderClass;
 
         initTitle();
         initFormLayout();
         initButtonBar();
+        initFields();
+
         setCloseOnEsc(true);
         setCloseOnOutsideClick(false);
         addOpenedChangeListener(event -> {
@@ -114,6 +123,41 @@ public abstract class AForm<T extends Serializable> extends Dialog {
         buttonBar.setSpacing(true);
         add(buttonBar);
     }
+
+    protected void initFields() {
+        TextField field;
+        EAFieldType type;
+        String stringMessage = "Code must contain at least 3 printable characters";
+        String intMessage = "Must enter a number";
+        StringLengthValidator stringConverter = new StringLengthValidator(stringMessage, 3, null);
+        StringToIntegerConverter integerConverter = new StringToIntegerConverter(0, intMessage);
+        binder = new Binder(binderClass);
+
+        if (service != null) {
+            List<String> properties = service.getFormPropertiesName();
+
+            for (String fieldName : properties) {
+                type = service.getAnnotation().getFormType(binderClass, fieldName);
+                field = new TextField(fieldName);
+                getFormLayout().add(field);
+                switch (type) {
+                    case text:
+                        binder.forField(field)
+                                .withValidator(stringConverter)
+                                .bind(fieldName);
+                        break;
+                    case integer:
+                        binder.forField(field)
+                                .withConverter(integerConverter)
+                                .bind(fieldName);
+                        break;
+                    default:
+                        break;
+                } // end of switch statement
+            }// end of for cycle
+        }// end of if cycle
+
+    }// end of method
 
     /**
      * Gets the form layout, where additional components can be added for
@@ -200,15 +244,15 @@ public abstract class AForm<T extends Serializable> extends Dialog {
      * @param message           Detail message (optional, may be empty)
      * @param additionalMessage Additional message (optional, may be empty)
      */
-    protected final void openConfirmationDialog(String title, String message,
-                                                String additionalMessage) {
+    protected final void openConfirmationDialog(String title, String message, String additionalMessage) {
         close();
-        confirmationDialog.open(title, message, additionalMessage, "Delete",
+        confirmationDialog.open(title, message, additionalMessage, "Elimina",
                 true, getCurrentItem(), this::deleteConfirmed,
                 this::open);
     }
 
     protected void confirmDelete() {
+        openConfirmationDialog("Vuoi veramente eliminare “" + getCurrentItem() + "” ?", "L'operazione non è reversibile.", "");
     }// end of method
 
     private void deleteConfirmed(T item) {

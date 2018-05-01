@@ -4,6 +4,7 @@ import it.algos.vaadbase.backend.entity.AEntity;
 import it.algos.vaadbase.modules.role.Role;
 import it.algos.vaadbase.modules.role.RoleView;
 import it.algos.vaadbase.ui.IAView;
+import it.algos.vaadbase.ui.enumeration.EAFieldType;
 import lombok.extern.slf4j.Slf4j;
 
 import java.lang.reflect.Field;
@@ -52,8 +53,8 @@ public class ATest {
     protected List<String> ottenutoList;
     protected List<Field> previstoFieldList;
     protected List<Field> ottenutoFieldList;
-//    protected EAFieldType previstoType;
-//    protected EAFieldType ottenutoType;
+    protected EAFieldType previstoType;
+    protected EAFieldType ottenutoType;
 //    protected EAFieldAccessibility previstaAccessibilità;
 //    protected EAFieldAccessibility ottenutaAccessibilità;
 //    protected EACompanyRequired previstoCompany;

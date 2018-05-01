@@ -1,13 +1,14 @@
 package it.algos.vaadbase;
 
 import it.algos.vaadbase.application.BaseCost;
+import it.algos.vaadbase.backend.entity.AEntity;
 import it.algos.vaadbase.modules.role.Role;
 import it.algos.vaadbase.service.AAnnotationService;
 import it.algos.vaadbase.service.AArrayService;
 import it.algos.vaadbase.service.AReflectionService;
 import it.algos.vaadbase.service.ATextService;
-import it.algos.vaadbase.ui.IAView;
 import it.algos.vaadbase.ui.annotation.*;
+import it.algos.vaadbase.ui.enumeration.EAFieldType;
 import name.falgout.jeffrey.testing.junit5.MockitoExtension;
 import org.junit.jupiter.api.*;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -15,10 +16,10 @@ import org.mockito.InjectMocks;
 import org.mockito.MockitoAnnotations;
 
 import java.util.Arrays;
+import java.util.List;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
-import static org.junit.jupiter.api.Assertions.assertNull;
 
 /**
  * Project springvaadin
@@ -35,20 +36,16 @@ public class AAnnotationServiceTest extends ATest {
 
 
     @InjectMocks
+    public AArrayService array;
+    @InjectMocks
+    public ATextService text;
+    @InjectMocks
     private AAnnotationService service;
-
     @InjectMocks
     private AReflectionService reflection;
 
-    @InjectMocks
-    public AArrayService array;
-
-    @InjectMocks
-    public ATextService text;
-
 //    @InjectMocks
 //    public ASessionService session;
-
 
     @BeforeAll
     public void setUp() {
@@ -190,6 +187,21 @@ public class AAnnotationServiceTest extends ATest {
 
     @SuppressWarnings("javadoc")
     /**
+     * Get the specific annotation of the field.
+     *
+     * @param entityClazz the entity class
+     * @param fieldName   the property name
+     *
+     * @return the Annotation for the specific field
+     */
+    @Test
+    public void getAIField2() {
+        AIField ottenuto = service.getAIField(ROLE_ENTITY_CLASS, FIELD_NAME_CODE);
+        assertNotNull(ottenuto);
+    }// end of method
+
+    @SuppressWarnings("javadoc")
+    /**
      * Get the name of the spring-view.
      *
      * @param clazz the entity class
@@ -201,7 +213,7 @@ public class AAnnotationServiceTest extends ATest {
         previsto = BaseCost.VIEW_ROL;
         ottenuto = service.getViewName(ROLE_VIEW_CLASS);
 //        assertEquals(previsto, ottenuto);
-        }// end of single test
+    }// end of single test
 
 
 //    @SuppressWarnings("javadoc")
@@ -238,9 +250,25 @@ public class AAnnotationServiceTest extends ATest {
 
         ottenutoList = service.getGridPropertiesName(ROLE_ENTITY_CLASS);
         assertEquals(previstoList, ottenutoList);
+    }// end of single test
 
-//        ottenutoList = service.getListFieldsName(USER_ENTITY_CLASS);
-//        assertNull(ottenutoList);
+    @SuppressWarnings("javadoc")
+    /**
+     * Nomi delle properties del, estratti dalle @Annotation della Entity
+     * Se la classe AEntity->@AIForm prevede una lista specifica, usa quella lista (con o senza ID)
+     * Se l'annotation @AIForm non esiste od è vuota,
+     * restituisce tutti i campi (properties della classe e superclasse)
+     * Sovrascrivibile
+     *
+     * @return lista di nomi di property, oppure null se non esiste l'Annotation specifica @AIForm() nella Entity
+     */
+    @Test
+    public void getFormPropertiesName() {
+        String[] stringArray = {"ordine", "code"};
+        previstoList = Arrays.asList(stringArray);
+
+        ottenutoList = service.getFormPropertiesName(ROLE_ENTITY_CLASS);
+        assertEquals(previstoList, ottenutoList);
     }// end of single test
 
 
@@ -353,13 +381,13 @@ public class AAnnotationServiceTest extends ATest {
      */
     @Test
     public void getFormType() {
-//        previstoType = EAFieldType.integer;
-//        ottenutoType = service.getFormType(FIELD_ORDINE);
-//        assertEquals(previstoType, ottenutoType);
-//
-//        previstoType = EAFieldType.text;
-//        ottenutoType = service.getFormType(FIELD_CODE);
-//        assertEquals(previstoType, ottenutoType);
+        previstoType = EAFieldType.integer;
+        ottenutoType = service.getFormType(ROLE_ENTITY_CLASS, FIELD_NAME_ORDINE);
+        assertEquals(previstoType, ottenutoType);
+
+        previstoType = EAFieldType.text;
+        ottenutoType = service.getFormType(ROLE_ENTITY_CLASS, FIELD_NAME_CODE);
+        assertEquals(previstoType, ottenutoType);
     }// end of single test
 
 
