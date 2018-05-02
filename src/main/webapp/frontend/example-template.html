@@ -1,0 +1,29 @@
+
+<!-- Dependency resources -->
+<link rel="import" href="bower_components/polymer/polymer-element.html">
+
+<!-- Defines the example-template element -->
+<dom-module id="example-template">
+    <template>
+        <!-- TODO HTML content here -->
+
+        <div>What's the best UI framework? 
+            <vaadin-button on-click="handleClick"> Search</vaadin-button>
+        </div>
+        <div>[[value]]</div>
+    </template>
+
+    <!-- Polymer boilerplate to register the example-template element -->
+    <script>
+        class ExampleTemplate extends Polymer.Element {
+            static get is() {
+                return 'example-template'
+            }
+
+            handleClick(){
+                this.value = "searching...";
+            }
+        }
+        customElements.define(ExampleTemplate.is, ExampleTemplate);
+    </script>
+</dom-module>

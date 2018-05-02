@@ -4,6 +4,7 @@ package it.algos.vaadbase.modules.role;
 import com.vaadin.flow.component.button.Button;
 import com.vaadin.flow.component.icon.Icon;
 import com.vaadin.flow.component.icon.VaadinIcons;
+import com.vaadin.flow.data.renderer.ComponentRenderer;
 import com.vaadin.flow.router.PageTitle;
 import com.vaadin.flow.router.Route;
 import com.vaadin.flow.spring.annotation.SpringComponent;
@@ -61,13 +62,13 @@ public class RoleList extends AView {
      * Se manca il MENU_NAME, di default usa il 'name' della view
      */
     public static final VaadinIcons VIEW_ICON = VaadinIcons.ACADEMY_CAP;
-    private final RoleForm form;
-    /**
-     * Il service viene regolato nel costruttore recuperandolo del presenter
-     * in modo che sia disponibile nella superclasse, dove viene usata l'interfaccia IAService
-     * Qui si una una sottoclasse locale (col casting nel costruttore) per usare i metodi specifici
-     */
-    private RoleService service;
+
+//    /**
+//     * Il service viene regolato nel costruttore recuperandolo del presenter
+//     * in modo che sia disponibile nella superclasse, dove viene usata l'interfaccia IAService
+//     * Qui si una una sottoclasse locale (col casting nel costruttore) per usare i metodi specifici
+//     */
+//    private RoleService service;
 
     /**
      * Costruttore @Autowired
@@ -83,8 +84,7 @@ public class RoleList extends AView {
      */
     public RoleList(@Lazy @Qualifier(TAG_ROL) IAPresenter presenter) {
         super(presenter);
-        this.service = (RoleService) service;
-        form = new RoleForm(this::saveRole, this::deleteRole, service);
+        form = new RoleForm(this::saveUpdate, this::deleteUpdate, service);
     }// end of Spring constructor
 
 
@@ -103,21 +103,28 @@ public class RoleList extends AView {
 //    }// end of method
 
 
-    protected Button createEditButton(Role role) {
-        Button edit = new Button("Edit", event -> form.open(role, AForm.Operation.EDIT));
+    /**
+     * Crea il corpo centrale della view
+     * Componente grafico obbligatorio
+     * Sovrascritto nella sottoclasse della view specifica (AList, AForm, ...)
+     */
+    protected void addGrid() {
+        super.addGrid();
+        ComponentRenderer renderer = new ComponentRenderer<>(this::createEditButton);
+        grid.addColumn(renderer);
+        this.setFlexGrow(0);
+    }// end of method
+
+
+
+    private Button createEditButton(Role entityBean) {
+        Button edit = new Button("Modifica", event -> form.open(entityBean, AForm.Operation.EDIT));
         edit.setIcon(new Icon("lumo", "edit"));
         edit.addClassName("review__edit");
         edit.getElement().setAttribute("theme", "tertiary");
         return edit;
     }// end of method
 
-
-    private void saveRole(Role role, AForm.Operation operation) {
-    }// end of method
-
-
-    private void deleteRole(Role role) {
-    }// end of method
 
 
 }// end of class

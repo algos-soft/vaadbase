@@ -1,6 +1,7 @@
 package it.algos.vaadbase.ui;
 
 import com.vaadin.flow.component.button.Button;
+import com.vaadin.flow.component.dependency.HtmlImport;
 import com.vaadin.flow.component.grid.Grid;
 import com.vaadin.flow.component.html.Div;
 import com.vaadin.flow.component.html.Label;
@@ -36,6 +37,7 @@ import java.util.List;
 @Slf4j
 @SpringComponent
 //@Theme(Lumo.class)
+@HtmlImport("frontend://styles/shared-styles.html")
 @Scope(ConfigurableBeanFactory.SCOPE_SINGLETON)
 public class AView extends VerticalLayout implements IAView, BeforeEnterObserver {
 
@@ -124,10 +126,10 @@ public class AView extends VerticalLayout implements IAView, BeforeEnterObserver
         searchField.addClassName("view-toolbar__search-field");
         searchField.addValueChangeListener(e -> updateView());
 
-        Button newButton = new Button("New prova", new Icon("lumo", "plus"));
+        Button newButton = new Button("New entity", new Icon("lumo", "plus"));
         newButton.getElement().setAttribute("theme", "primary");
         newButton.addClassName("view-toolbar__button");
-        newButton.addClickListener(e -> form.open((Prova) service.newEntity(), AForm.Operation.ADD));
+        newButton.addClickListener(e -> form.open(service.newEntity(), AForm.Operation.ADD));
 
         viewToolbar.add(searchField, newButton);
         add(viewToolbar);

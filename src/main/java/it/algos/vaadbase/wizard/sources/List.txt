@@ -79,10 +79,6 @@ public class @ENTITY@List extends AView {
     public static final VaadinIcons VIEW_ICON = VaadinIcons.ASTERISK;
 
 
-    private TextField searchField;
-    private @ENTITY@Form form;
-
-
     /**
      * Costruttore @Autowired <br>
      * In the newest Spring release, it’s constructor does not need to be annotated with @Autowired annotation <br>
@@ -115,7 +111,7 @@ public class @ENTITY@List extends AView {
 
 
    private Button createEditButton(@ENTITY@ entityBean) {
-        Button edit = new Button("Edit", event -> form.open(entityBean, AForm.Operation.EDIT));
+        Button edit = new Button("Modifica", event -> form.open(entityBean, AForm.Operation.EDIT));
         edit.setIcon(new Icon("lumo", "edit"));
         edit.addClassName("review__edit");
         edit.getElement().setAttribute("theme", "tertiary");

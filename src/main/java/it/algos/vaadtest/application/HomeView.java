@@ -1,9 +1,13 @@
 package it.algos.vaadtest.application;
 
+import com.vaadin.flow.component.button.Button;
 import com.vaadin.flow.component.html.Label;
+import com.vaadin.flow.component.html.Paragraph;
 import com.vaadin.flow.component.icon.VaadinIcons;
 import com.vaadin.flow.router.*;
 import it.algos.vaadbase.ui.AView;
+import it.algos.vaadtest.training.ExampleTemplate;
+import it.algos.vaadtest.training.VaadinWelcome;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.context.annotation.Scope;
 import org.springframework.beans.factory.config.ConfigurableBeanFactory;
@@ -53,27 +57,19 @@ public class HomeView extends AView {
      * The injected bean will only be fully created when it’s first needed.
      */
     public HomeView() {
-//        super(null);
-    }// end of Spring constructor
+    }// end of constructor
 
 
-//    public HomeView() {
-//        super();
-//    }
 
 
     @Override
     public void beforeEnter(BeforeEnterEvent event) {
-        this.removeAll();
-
-        this.add(new Label("Home house"));
+        removeAll();
+        add(new VaadinWelcome());
+        add(new ExampleTemplate());
+        add(new Button("Click me",evt-> {add(new Label("added from button"));}));
     }// end of method
 
 
-//    @Override
-//    public void beforeEnter(BeforeEnterEvent event) {
-//int a=87;
-//        UI.getCurrent().navigate("role");
-//    }// end of method
 
 }// end of class

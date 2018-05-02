@@ -15,6 +15,7 @@ import lombok.*;
 import com.vaadin.flow.spring.annotation.SpringComponent;
 import it.algos.vaadbase.ui.enumeration.EARoleType;
 import it.algos.vaadbase.backend.entity.AEntity;
+import it.algos.vaadbase.backend.entity.ACEntity;
 import it.algos.vaadbase.ui.annotation.AIColumn;
 import it.algos.vaadbase.ui.annotation.AIField;
 import it.algos.vaadbase.ui.enumeration.EAFieldAccessibility;

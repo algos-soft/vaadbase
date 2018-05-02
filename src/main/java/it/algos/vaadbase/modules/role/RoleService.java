@@ -64,7 +64,8 @@ public class RoleService extends AService {
 
 
     //private constructor to avoid client applications to use constructor
-    private RoleService(){}
+    private RoleService() {
+    }
 
 
     /**
@@ -94,19 +95,19 @@ public class RoleService extends AService {
         return entity;
     }// end of method
 
-//    /**
-//     * Creazione in memoria di una nuova entity che NON viene salvata
-//     * Eventuali regolazioni iniziali delle property
-//     * Senza properties per compatibilità con la superclasse
-//     *
-//     * @return la nuova entity appena creata (non salvata)
-//     */
-//    @Override
-//    public Prova newEntity() {
-//        return newEntity("");
-//    }// end of method
-//
-//
+    /**
+     * Creazione in memoria di una nuova entity che NON viene salvata
+     * Eventuali regolazioni iniziali delle property
+     * Senza properties per compatibilità con la superclasse
+     *
+     * @return la nuova entity appena creata (non salvata)
+     */
+    @Override
+    public Role newEntity() {
+        return newEntity(0, "");
+    }// end of method
+
+
 //    /**
 //     * Creazione in memoria di una nuova entity che NON viene salvata
 //     * Eventuali regolazioni iniziali delle property
@@ -169,7 +170,7 @@ public class RoleService extends AService {
      */
     @Override
     public List<Role> findAll() {
-        return repository.findAllByOrderByCodeAsc();
+        return repository.findAllByOrderByOrdineAsc();
     }// end of method
 
 
