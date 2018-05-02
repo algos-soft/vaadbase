@@ -2,21 +2,23 @@ package it.algos.vaadbase.ui;
 
 import com.vaadin.flow.component.button.Button;
 import com.vaadin.flow.component.grid.Grid;
+import com.vaadin.flow.component.html.Div;
 import com.vaadin.flow.component.html.Label;
 import com.vaadin.flow.component.icon.Icon;
+import com.vaadin.flow.component.notification.Notification;
 import com.vaadin.flow.component.orderedlayout.VerticalLayout;
-import com.vaadin.flow.data.renderer.ComponentRenderer;
+import com.vaadin.flow.component.textfield.TextField;
 import com.vaadin.flow.router.BeforeEnterEvent;
 import com.vaadin.flow.router.BeforeEnterObserver;
 import com.vaadin.flow.spring.annotation.SpringComponent;
 import it.algos.vaadbase.backend.entity.AEntity;
 import it.algos.vaadbase.backend.service.IAService;
-import it.algos.vaadbase.modules.role.Role;
-import it.algos.vaadbase.modules.role.RoleEditorDialog;
 import it.algos.vaadbase.presenter.IAPresenter;
 import it.algos.vaadbase.service.ATextService;
-import it.algos.vaadbase.ui.dialog.AbstractEditorDialog;
+import it.algos.vaadbase.ui.dialog.AForm;
 import it.algos.vaadbase.ui.menu.AMenu;
+import it.algos.vaadtest.modules.prova.Prova;
+import it.algos.vaadtest.modules.prova.ProvaForm;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.config.ConfigurableBeanFactory;
@@ -38,7 +40,7 @@ import java.util.List;
 public class AView extends VerticalLayout implements IAView, BeforeEnterObserver {
 
 
-
+    protected final TextField searchField = new TextField("", "Search");
     /**
      * Service iniettato da Spring (@Scope = 'singleton'). Unica per tutta l'applicazione. Usata come libreria.
      */
@@ -72,7 +74,7 @@ public class AView extends VerticalLayout implements IAView, BeforeEnterObserver
      * Componente grafico facoltativo. Normalmente presente (Grid), ma non obbligatorio.
      */
     protected String caption;
-
+    protected AForm form;
 
     /**
      * Costruttore vuoto di default
@@ -98,12 +100,11 @@ public class AView extends VerticalLayout implements IAView, BeforeEnterObserver
     }// end of Spring constructor
 
 
-
     protected void initView() {
-        this.setSpacing(true);
-        this.setMargin(true);
-        this.setWidth("100%");
-        this.setHeight("100%");
+//        this.setSpacing(true);
+//        this.setMargin(true);
+//        this.setWidth("100%");
+//        this.setHeight("100%");
 
 //        addClassName("categories-list");
         setDefaultHorizontalComponentAlignment(Alignment.STRETCH);
@@ -116,6 +117,20 @@ public class AView extends VerticalLayout implements IAView, BeforeEnterObserver
 
 
     protected void addSearchBar() {
+        Div viewToolbar = new Div();
+        viewToolbar.addClassName("view-toolbar");
+
+        searchField.setPrefixComponent(new Icon("lumo", "search"));
+        searchField.addClassName("view-toolbar__search-field");
+        searchField.addValueChangeListener(e -> updateView());
+
+        Button newButton = new Button("New prova", new Icon("lumo", "plus"));
+        newButton.getElement().setAttribute("theme", "primary");
+        newButton.addClassName("view-toolbar__button");
+        newButton.addClickListener(e -> form.open((Prova) service.newEntity(), AForm.Operation.ADD));
+
+        viewToolbar.add(searchField, newButton);
+        add(viewToolbar);
     }// end of method
 
 
@@ -155,13 +170,30 @@ public class AView extends VerticalLayout implements IAView, BeforeEnterObserver
     }// end of method
 
 
-//    protected Button createEditButton(Role role) {
+//    protected Button createEditButton(AEntity entityBean) {
+//        Button edit = new Button("Edit", event -> form.open(entityBean, AForm.Operation.EDIT));
+//        edit.setIcon(new Icon("lumo", "edit"));
+//        edit.addClassName("review__edit");
+//        edit.getElement().setAttribute("theme", "tertiary");
+//        return edit;
 //        return null;
 //    }// end of method
 
+    protected void saveUpdate(AEntity entityBean, AForm.Operation operation) {
+        service.save(entityBean);
+        updateView();
+        Notification.show(entityBean + " successfully " + operation.getNameInText() + "ed.", 3000, Notification.Position.BOTTOM_START);
+    }// end of method
+
+    protected void deleteUpdate(AEntity entityBean) {
+        service.delete(entityBean);
+        Notification.show(entityBean+" successfully deleted.", 3000, Notification.Position.BOTTOM_START);
+        updateView();
+    }// end of method
+
 
     protected void updateView() {
-        List items = service.findAll();
+        List items = service.findFilter(searchField.getValue());
         grid.setItems(items);
     }// end of method
 
@@ -289,7 +321,6 @@ public class AView extends VerticalLayout implements IAView, BeforeEnterObserver
             caption += "Elenco di " + items.size() + " schede ";
         }// end of if/else cycle
     }// end of method
-
 
 
 }// end of class

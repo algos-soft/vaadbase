@@ -76,6 +76,7 @@ public class MainLayout extends Div implements RouterLayout, AfterNavigationObse
         if (arrayRouterLink.size() > 0) {
             navigation = new Div();
             for (RouterLink link : arrayRouterLink) {
+                link.addClassName("main-layout__nav-item");
                 navigation.add(link);
             }// end of for cycle
         }// end of if cycle
