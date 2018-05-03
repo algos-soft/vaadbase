@@ -5,10 +5,13 @@ import com.vaadin.flow.component.html.Label;
 import com.vaadin.flow.component.html.Paragraph;
 import com.vaadin.flow.component.icon.VaadinIcons;
 import com.vaadin.flow.router.*;
+import com.vaadin.flow.spring.annotation.SpringComponent;
 import it.algos.vaadbase.ui.AView;
+import it.algos.vaadtest.modules.prova.ProvaForm;
 import it.algos.vaadtest.training.ExampleTemplate;
 import it.algos.vaadtest.training.VaadinWelcome;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Scope;
 import org.springframework.beans.factory.config.ConfigurableBeanFactory;
 
@@ -25,6 +28,7 @@ import static it.algos.vaadbase.application.BaseCost.TAG_HOM;
 //@Tag("storefront-view")
 //@HtmlImport("src/views/storefront-view.html")
 //@PageTitle("Pippoz")
+@SpringComponent()
 @Route(value = "", layout = VaadtestLayout.class)
 @Scope(ConfigurableBeanFactory.SCOPE_SINGLETON)
 public class HomeView extends AView {

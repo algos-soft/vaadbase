@@ -1,11 +1,13 @@
 package it.algos.vaadbase.ui;
 
+
 import com.vaadin.flow.component.button.Button;
 import com.vaadin.flow.component.dependency.HtmlImport;
 import com.vaadin.flow.component.grid.Grid;
 import com.vaadin.flow.component.html.Div;
 import com.vaadin.flow.component.html.Label;
 import com.vaadin.flow.component.icon.Icon;
+import com.vaadin.flow.component.icon.VaadinIcons;
 import com.vaadin.flow.component.notification.Notification;
 import com.vaadin.flow.component.orderedlayout.VerticalLayout;
 import com.vaadin.flow.component.textfield.TextField;
@@ -19,8 +21,6 @@ import it.algos.vaadbase.presenter.IAPresenter;
 import it.algos.vaadbase.service.ATextService;
 import it.algos.vaadbase.ui.dialog.AForm;
 import it.algos.vaadbase.ui.menu.AMenu;
-import it.algos.vaadtest.modules.prova.Prova;
-import it.algos.vaadtest.modules.prova.ProvaForm;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.config.ConfigurableBeanFactory;
@@ -128,12 +128,15 @@ public class AView extends VerticalLayout implements IAView, BeforeEnterObserver
         searchField.setValueChangeMode(ValueChangeMode.EAGER);
         searchField.addValueChangeListener(e -> updateView());
 
+        Button clearFilterTextBtn = new Button(new Icon(VaadinIcons.CLOSE_CIRCLE));
+        clearFilterTextBtn.addClickListener(e -> searchField.clear());
+
         Button newButton = new Button("New entity", new Icon("lumo", "plus"));
         newButton.getElement().setAttribute("theme", "primary");
         newButton.addClassName("view-toolbar__button");
         newButton.addClickListener(e -> form.open(service.newEntity(), AForm.Operation.ADD));
 
-        viewToolbar.add(searchField, newButton);
+        viewToolbar.add(searchField,clearFilterTextBtn, newButton);
         add(viewToolbar);
     }// end of method
 
@@ -191,7 +194,7 @@ public class AView extends VerticalLayout implements IAView, BeforeEnterObserver
 
     protected void deleteUpdate(AEntity entityBean) {
         service.delete(entityBean);
-        Notification.show(entityBean+" successfully deleted.", 3000, Notification.Position.BOTTOM_START);
+        Notification.show(entityBean + " successfully deleted.", 3000, Notification.Position.BOTTOM_START);
         updateView();
     }// end of method
 

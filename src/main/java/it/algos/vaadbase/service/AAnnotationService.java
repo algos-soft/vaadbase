@@ -5,6 +5,7 @@ import it.algos.vaadbase.backend.entity.AEntity;
 import it.algos.vaadbase.ui.IAView;
 import it.algos.vaadbase.ui.annotation.*;
 import it.algos.vaadbase.ui.enumeration.EAFieldType;
+import it.algos.vaadtest.modules.prova.ProvaForm;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.config.ConfigurableBeanFactory;
