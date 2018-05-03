@@ -9,6 +9,7 @@ import com.vaadin.flow.component.icon.Icon;
 import com.vaadin.flow.component.notification.Notification;
 import com.vaadin.flow.component.orderedlayout.VerticalLayout;
 import com.vaadin.flow.component.textfield.TextField;
+import com.vaadin.flow.data.value.ValueChangeMode;
 import com.vaadin.flow.router.BeforeEnterEvent;
 import com.vaadin.flow.router.BeforeEnterObserver;
 import com.vaadin.flow.spring.annotation.SpringComponent;
@@ -124,6 +125,7 @@ public class AView extends VerticalLayout implements IAView, BeforeEnterObserver
 
         searchField.setPrefixComponent(new Icon("lumo", "search"));
         searchField.addClassName("view-toolbar__search-field");
+        searchField.setValueChangeMode(ValueChangeMode.EAGER);
         searchField.addValueChangeListener(e -> updateView());
 
         Button newButton = new Button("New entity", new Icon("lumo", "plus"));
