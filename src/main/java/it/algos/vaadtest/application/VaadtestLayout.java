@@ -7,7 +7,6 @@ import org.springframework.beans.factory.config.ConfigurableBeanFactory;
 import org.springframework.context.annotation.Scope;
 
 import static it.algos.vaadbase.application.BaseCost.TAG_WIZ;
-import it.algos.vaadtest.modules.bolla.BollaList;
 import it.algos.vaadtest.modules.prova.ProvaList;
 
 /**
@@ -50,7 +49,6 @@ public class VaadtestLayout extends MainLayout {
      */
     protected void addVisteSpecifiche() {
 		addView(ProvaList.class, ProvaList.VIEW_ICON, ProvaList.MENU_NAME);
-		addView(BollaList.class, BollaList.VIEW_ICON, BollaList.MENU_NAME);
         addView(WizardView.class, WizardView.VIEW_ICON, TAG_WIZ);
     }// end of method
 

@@ -1,4 +1,4 @@
-package it.algos.@MODULELOWER@.modules.@PACKAGE@;
+package it.algos.vaadtest.modules.prova;
 
 import java.util.function.BiConsumer;
 import java.util.function.Consumer;
@@ -15,30 +15,29 @@ import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.beans.factory.config.ConfigurableBeanFactory;
 import org.springframework.context.annotation.Lazy;
 import org.springframework.context.annotation.Scope;
-import static it.algos.@MODULELOWER@.application.@APPCOST@.@QUALIFIER@;
+import static it.algos.vaadtest.application.AppCost.TAG_PRO;
 
 /**
- * Project @PROJECT@ <br>
+ * Project vaadbase <br>
  * Created by Algos
- * User: @USER@
- * Date: @TODAY@
+ * User: Gac
+ * Date: 3-mag-2018 10.41.40
  * Estende la Entity astratta AForm di tipo AView per visualizzare i fields
  * Annotated with @Scope (obbligatorio = 'prototype')
  * Annotated with @Qualifier (obbligatorio) per permettere a Spring di istanziare la sottoclasse specifica
  * Annotated with @AIScript (facoltativo) per controllare la ri-creazione di questo file nello script del framework
  */
 @Scope(ConfigurableBeanFactory.SCOPE_SINGLETON)
-@Qualifier(@QUALIFIER@)
+@Qualifier(TAG_PRO)
 @AIScript(sovrascrivibile = true)
-public class @ENTITY@Form extends AForm<@ENTITY@> {
+public class ProvaForm extends AForm<Prova> {
 
     /**
      * Costruttore
      */
-    public @ENTITY@Form(BiConsumer<@ENTITY@, AForm.Operation> itemSaver, Consumer<@ENTITY@> itemDeleter, IAService service) {
-        super("@ENTITY@", itemSaver, itemDeleter, service, @ENTITY@.class);
+    public ProvaForm(BiConsumer<Prova, AForm.Operation> itemSaver, Consumer<Prova> itemDeleter, IAService service) {
+        super("Prova", itemSaver, itemDeleter, service, Prova.class);
     }// end of constructor
 
 
 }// end of class
-

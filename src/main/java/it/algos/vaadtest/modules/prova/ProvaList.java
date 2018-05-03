@@ -1,4 +1,4 @@
-package it.algos.@MODULELOWER@.modules.@PACKAGE@;
+package it.algos.vaadtest.modules.prova;
 
 import com.vaadin.flow.component.button.Button;
 import com.vaadin.flow.component.grid.Grid;
@@ -30,14 +30,14 @@ import it.algos.vaadbase.ui.enumeration.EARoleType;
 import it.algos.vaadbase.annotation.AIScript;
 import it.algos.vaadbase.ui.annotation.AIView;
 import it.algos.vaadbase.ui.MainLayout;
-import it.algos.@MODULELOWER@.application.@MODULEUPPER@Layout;
-import static it.algos.@MODULELOWER@.application.@APPCOST@.@QUALIFIER@;
+import it.algos.vaadtest.application.VaadtestLayout;
+import static it.algos.vaadtest.application.AppCost.TAG_PRO;
 
 /**
- * Project @PROJECT@ <br>
+ * Project vaadbase <br>
  * Created by Algos <br>
- * User: @USER@ <br>
- * Date: @TODAY@ <br>
+ * User: Gac <br>
+ * Date: 3-mag-2018 10.41.40 <br>
  * <br>
  * Estende la classe astratta AView per visualizzare la Grid e il Detail<br>
  * <p>
@@ -52,10 +52,10 @@ import static it.algos.@MODULELOWER@.application.@APPCOST@.@QUALIFIER@;
  */
 @SpringComponent
 @Scope(ConfigurableBeanFactory.SCOPE_SINGLETON)
-@Qualifier(@QUALIFIER@)
-@Route(value = @QUALIFIER@, layout = @MODULEUPPER@Layout.class)
+@Qualifier(TAG_PRO)
+@Route(value = TAG_PRO, layout = VaadtestLayout.class)
 @AIScript(sovrascrivibile = true)
-public class @ENTITY@List extends AView {
+public class ProvaList extends AView {
 
 
     /**
@@ -64,7 +64,7 @@ public class @ENTITY@List extends AView {
      * Nella menuBar appare invece visibile il MENU_NAME, indicato qui <br>
      * Se manca il MENU_NAME, di default usa il 'name' della view <br>
      */
-    public static final String MENU_NAME = @QUALIFIER@;
+    public static final String MENU_NAME = TAG_PRO;
 
 
     /**
@@ -87,9 +87,9 @@ public class @ENTITY@List extends AView {
      *
      * @param presenter iniettato da Spring come sottoclasse concreta specificata dal @Qualifier
      */
-     public @ENTITY@List(@Lazy @Qualifier(@QUALIFIER@) IAPresenter presenter) {
+     public ProvaList(@Lazy @Qualifier(TAG_PRO) IAPresenter presenter) {
         super(presenter);
-        form = new @ENTITY@Form(this::saveUpdate, this::deleteUpdate, service);
+        form = new ProvaForm(this::saveUpdate, this::deleteUpdate, service);
    }// end of Spring constructor
 
 
@@ -106,7 +106,7 @@ public class @ENTITY@List extends AView {
      }// end of method
 
 
-   private Button createEditButton(@ENTITY@ entityBean) {
+   private Button createEditButton(Prova entityBean) {
         Button edit = new Button("Modifica", event -> form.open(entityBean, AForm.Operation.EDIT));
         edit.setIcon(new Icon("lumo", "edit"));
         edit.addClassName("review__edit");
