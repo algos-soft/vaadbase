@@ -7,23 +7,17 @@ import com.vaadin.flow.component.combobox.ComboBox;
 import com.vaadin.flow.component.html.Label;
 import com.vaadin.flow.component.html.NativeButton;
 import com.vaadin.flow.component.icon.VaadinIcons;
-import com.vaadin.flow.component.notification.Notification;
 import com.vaadin.flow.component.orderedlayout.HorizontalLayout;
 import com.vaadin.flow.component.textfield.TextField;
 import com.vaadin.flow.router.BeforeEnterEvent;
 import com.vaadin.flow.router.Route;
 import com.vaadin.flow.spring.annotation.SpringComponent;
-import com.vaadin.flow.theme.Theme;
-import com.vaadin.flow.theme.lumo.Lumo;
-import it.algos.vaadbase.application.BaseCost;
 import it.algos.vaadbase.service.ATextService;
 import it.algos.vaadbase.ui.AView;
 import it.algos.vaadbase.ui.MainLayout;
 import it.algos.vaadbase.wizard.enumeration.Chiave;
 import it.algos.vaadbase.wizard.enumeration.Progetto;
-import it.algos.vaadbase.wizard.scripts.TDialogo;
-import it.algos.vaadbase.wizard.scripts.TElabora;
-import it.algos.vaadbase.wizard.scripts.TRecipient;
+import it.algos.vaadbase.wizard.scripts.*;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
@@ -33,8 +27,6 @@ import org.springframework.context.annotation.Scope;
 import java.util.HashMap;
 import java.util.Map;
 
-import static it.algos.vaadbase.application.BaseCost.PAGE_WIZARD;
-import static it.algos.vaadbase.application.BaseCost.TAG_COM;
 import static it.algos.vaadbase.application.BaseCost.TAG_WIZ;
 
 /**
@@ -47,7 +39,7 @@ import static it.algos.vaadbase.application.BaseCost.TAG_WIZ;
  * Annotated with @Theme (facoltativo)
  */
 @Slf4j
-@SpringComponent
+//@SpringComponent
 @Scope(ConfigurableBeanFactory.SCOPE_SINGLETON)
 @Route(value = TAG_WIZ, layout = MainLayout.class)
 @Qualifier(TAG_WIZ)
@@ -56,19 +48,23 @@ public class WizardView extends AView {
 
     public final static String NORMAL_WIDTH = "9em";
     public final static String NORMAL_HEIGHT = "3em";
+    /**
+     * Icona visibile nel menu (facoltativa)
+     * Nella menuBar appare invece visibile il MENU_NAME, indicato qui
+     * Se manca il MENU_NAME, di default usa il 'name' della view
+     */
+    public static final VaadinIcons VIEW_ICON = VaadinIcons.MAGIC;
     private static Progetto PROGETTO_STANDARD_SUGGERITO = Progetto.test;
     private static String NOME_PACKAGE_STANDARD_SUGGERITO = "prova";
     private static String LABEL_A = "Creazione di un nuovo project";
     private static String LABEL_B = "Update di un project esistente";
     private static String LABEL_C = "Creazione di un nuovo package";
     private static String LABEL_D = "Modifica di un package esistente";
-
     /**
      * Libreria di servizio. Inietta da Spring nel costruttore come 'singleton'
      */
     @Autowired
     private ATextService text;
-
     private Label labelUno;
     private Label labelDue;
     private Label labelTre;
@@ -79,30 +75,22 @@ public class WizardView extends AView {
     private Button buttonQuattro;
     private NativeButton confirmButton;
     private NativeButton cancelButton;
-
     @Autowired
-    private TDialogo dialog;
-
+    private TDialogoPackage dialogPackage;
+    @Autowired
+    private TDialogoNewProject newProject;
+    @Autowired
+    private TDialogoUpdateProject updateProject;
     @Autowired
     private TElabora elabora;
-
     private TRecipient recipient;
-
     private ComboBox fieldComboProgetti;
     private TextField fieldTextPackage;
     private TextField fieldTextEntity; // suggerito
     private TextField fieldTextTag; // suggerito
     private Checkbox fieldCheckBoxCompany;
     private Checkbox fieldCheckBoxSovrascrive;
-
     private Map<Chiave, Object> mappaInput = new HashMap<>();
-
-    /**
-     * Icona visibile nel menu (facoltativa)
-     * Nella menuBar appare invece visibile il MENU_NAME, indicato qui
-     * Se manca il MENU_NAME, di default usa il 'name' della view
-     */
-    public static final VaadinIcons VIEW_ICON = VaadinIcons.MAGIC;
 
     public WizardView() {
     }// end of Spring constructor
@@ -141,24 +129,59 @@ public class WizardView extends AView {
         layout.setMargin(false);
         layout.setSpacing(true);
 
-        buttonUno = new Button("Crea project", event -> Notification.show("Non ancora funzionante", 3000, Notification.Position.MIDDLE));
-        layout.add(buttonUno);
-
-        buttonDue = new Button("Package");
-        buttonDue.addClickListener(event -> dialog.open(new TRecipient() {
+        buttonUno = new Button("New project");
+        buttonUno.addClickListener(event -> newProject.open(new TRecipient() {
             @Override
             public void gotInput(Map<Chiave, Object> mappaInput) {
-                elabora(mappaInput);
+                elaboraNewProject(mappaInput);
+            }// end of inner method
+        }));// end of lambda expressions and anonymous inner class
+        layout.add(buttonUno);
+
+        buttonDue = new Button("Update project");
+        buttonDue.addClickListener(event -> updateProject.open(new TRecipient() {
+            @Override
+            public void gotInput(Map<Chiave, Object> mappaInput) {
+                elaboraUpdateProject(mappaInput);
+            }// end of inner method
+        }));// end of lambda expressions and anonymous inner class
+        layout.add(buttonDue);
+
+        buttonTre = new Button("Package");
+        buttonTre.addClickListener(event -> dialogPackage.open(new TRecipient() {
+            @Override
+            public void gotInput(Map<Chiave, Object> mappaInput) {
+                elaboraPackage(mappaInput);
             }// end of inner method
         }, false, PROGETTO_STANDARD_SUGGERITO, NOME_PACKAGE_STANDARD_SUGGERITO));// end of lambda expressions and anonymous inner class
-        layout.add(buttonDue);
+        layout.add(buttonTre);
 
         return layout;
     }// end of method
 
 
-    private void elabora(Map<Chiave, Object> mappaInput) {
-        dialog.close();
+    private void elaboraNewProject(Map<Chiave, Object> mappaInput) {
+        newProject.close();
+
+        if (mappaInput != null) {
+            elabora.newProject(mappaInput);
+        }// end of if cycle
+
+    }// end of method
+
+
+    private void elaboraUpdateProject(Map<Chiave, Object> mappaInput) {
+        updateProject.close();
+
+        if (mappaInput != null) {
+            elabora.updateProject(mappaInput);
+        }// end of if cycle
+
+    }// end of method
+
+
+    private void elaboraPackage(Map<Chiave, Object> mappaInput) {
+        dialogPackage.close();
 
         if (mappaInput != null) {
             elabora.newPackage(mappaInput);

@@ -9,6 +9,7 @@ import it.algos.vaadbase.modules.company.CompanyService;
 import com.vaadin.flow.component.html.Label;
 import com.vaadin.flow.component.textfield.TextField;
 import com.vaadin.flow.data.renderer.ComponentRenderer;
+import it.algos.vaadbase.ui.MainLayout2;
 import it.algos.vaadbase.ui.dialog.AForm;
 import com.vaadin.flow.component.icon.VaadinIcons;
 import com.vaadin.flow.component.notification.Notification;
@@ -50,10 +51,9 @@ import static it.algos.vaadtest.application.AppCost.TAG_PRO;
  * Annotated with @AIScript (facoltativo) per controllare la ri-creazione di questo file nello script del framework
  * Costruttore con un link @Autowired al IAPresenter, di tipo @Lazy per evitare un loop nella injection
  */
-@SpringComponent
 @Scope(ConfigurableBeanFactory.SCOPE_SINGLETON)
 @Qualifier(TAG_PRO)
-@Route(value = TAG_PRO, layout = VaadtestLayout.class)
+@Route(value = TAG_PRO, layout = MainLayout2.class)
 @AIScript(sovrascrivibile = true)
 public class ProvaList extends AView {
 

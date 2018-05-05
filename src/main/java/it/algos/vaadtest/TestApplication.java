@@ -19,7 +19,8 @@ import org.springframework.data.mongodb.repository.config.EnableMongoRepositorie
  * Time: 18:43
  */
 @Slf4j
-@SpringBootApplication(scanBasePackageClasses = {MainLayout.class, TestApplication.class})
+//@SpringBootApplication(scanBasePackageClasses = {MainLayout.class, TestApplication.class})
+@SpringBootApplication(scanBasePackages = {"it.algos"})
 @ComponentScan({"it.algos"})
 @EntityScan({"it.algos"})
 @EnableMongoRepositories({"it.algos"})

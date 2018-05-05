@@ -144,6 +144,19 @@ public class TElabora {
 
 
     /**
+     * Creazione di un nuovo project
+     */
+    public void newProject(Map<Chiave, Object> mappaInput) {
+    }// end of method
+
+    /**
+     * Update di un project esistente
+     */
+    public void updateProject(Map<Chiave, Object> mappaInput) {
+    }// end of method
+    
+
+    /**
      * Creazione completa del package
      * Crea una directory
      * Crea i files previsti nella enumeration

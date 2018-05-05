@@ -37,7 +37,7 @@ import static it.algos.vaadbase.application.BaseCost.TAG_COM;
  * Costruttore con un link @Autowired al IAPresenter, di tipo @Lazy per evitare un loop nella injection
  */
 @Slf4j
-@SpringComponent
+//@SpringComponent
 @Scope(ConfigurableBeanFactory.SCOPE_SINGLETON)
 @Qualifier(TAG_COM)
 @Route(value = TAG_COM, layout = MainLayout.class)

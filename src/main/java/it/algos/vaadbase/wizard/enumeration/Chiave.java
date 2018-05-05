@@ -9,6 +9,7 @@ package it.algos.vaadbase.wizard.enumeration;
  */
 public enum Chiave {
     targetProjectName,
+    newProjectName,
     newPackageName,
     newEntityName,
     newEntityTag,
@@ -17,6 +18,5 @@ public enum Chiave {
     flagDescrizione,
     flagKeyCode,
     flagCompany,
-    flagSovrascrive,
-    newProjectName
+    flagSovrascrive
 }// end of enumeration

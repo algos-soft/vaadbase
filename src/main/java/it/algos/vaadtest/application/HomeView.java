@@ -28,7 +28,7 @@ import static it.algos.vaadbase.application.BaseCost.TAG_HOM;
 //@Tag("storefront-view")
 //@HtmlImport("src/views/storefront-view.html")
 //@PageTitle("Pippoz")
-@SpringComponent()
+//@SpringComponent()
 @Route(value = "", layout = VaadtestLayout.class)
 @Scope(ConfigurableBeanFactory.SCOPE_SINGLETON)
 public class HomeView extends AView {

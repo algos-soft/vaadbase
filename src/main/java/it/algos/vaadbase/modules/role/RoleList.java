@@ -12,6 +12,7 @@ import it.algos.vaadbase.annotation.AIScript;
 import it.algos.vaadbase.presenter.IAPresenter;
 import it.algos.vaadbase.ui.AView;
 import it.algos.vaadbase.ui.MainLayout;
+import it.algos.vaadbase.ui.MainLayout2;
 import it.algos.vaadbase.ui.annotation.AIView;
 import it.algos.vaadbase.ui.dialog.AForm;
 import it.algos.vaadbase.ui.enumeration.EARoleType;
@@ -38,10 +39,10 @@ import static it.algos.vaadbase.application.BaseCost.TAG_ROL;
  * Costruttore con un link @Autowired al IAPresenter, di tipo @Lazy per evitare un loop nella injection
  */
 @Slf4j
-@SpringComponent
+//@SpringComponent
 @Scope(ConfigurableBeanFactory.SCOPE_SINGLETON)
 @Qualifier(TAG_ROL)
-@Route(value = TAG_ROL, layout = MainLayout.class)
+@Route(value = TAG_ROL, layout = MainLayout2.class)
 @PageTitle("Role List")
 @AIView(roleTypeVisibility = EARoleType.user)
 @AIScript(sovrascrivibile = true)
