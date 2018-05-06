@@ -194,7 +194,7 @@ public abstract class AForm<T extends Serializable> extends Dialog {
      *                  instance
      * @param operation The operation being performed on the item
      */
-    public final void open(T item, Operation operation) {
+    public  void open(T item, Operation operation) {
         if (item == null) {
             Notification.show("Qualcosa non ha funzionato in AForm.open()", 3000, Notification.Position.BOTTOM_START);
             return;

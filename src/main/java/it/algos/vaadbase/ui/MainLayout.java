@@ -14,18 +14,24 @@ import com.vaadin.flow.router.RouterLayout;
 import com.vaadin.flow.router.RouterLink;
 import com.vaadin.flow.server.InitialPageSettings;
 import com.vaadin.flow.server.PageConfigurator;
+import com.vaadin.flow.spring.annotation.SpringComponent;
 import com.vaadin.flow.theme.Theme;
 import com.vaadin.flow.theme.lumo.Lumo;
 import it.algos.vaadbase.modules.company.CompanyView;
 import it.algos.vaadbase.modules.role.RoleList;
 import it.algos.vaadbase.service.ATextService;
+import it.algos.vaadbase.wizard.ui.WizardView;
 import it.algos.vaadtest.application.HomeView;
+import it.algos.vaadtest.modules.bolla.BollaList;
+import it.algos.vaadtest.modules.prova.ProvaList;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.config.ConfigurableBeanFactory;
 import org.springframework.context.annotation.Scope;
 
 import java.util.ArrayList;
 import java.util.List;
+
+import static it.algos.vaadbase.application.BaseCost.TAG_WIZ;
 
 /**
  * Project vaadbase
@@ -39,11 +45,10 @@ import java.util.List;
  * Annotated with @Theme (obbligatorio)
  * Questa classe NON va annotata con @SpringComponent
  * Questa classe viene 'invocata' dalle views annotate con @Route(value = xxx, layout = MainLayout.class)
- * Anche le view NON vanno annotate con @SpringComponent (?)
- * Si possono usare delle views che non richiamano questo layout ed hanno un proprio layout java che non usa html (?)
+ * Anche le view NON vanno annotate con @SpringComponent
+ * Si possono usare delle views che non richiamano questo layout ed hanno un proprio layout java che non usa html
  */
 @Slf4j
-@Scope(ConfigurableBeanFactory.SCOPE_SINGLETON)
 @Theme(Lumo.class)
 @HtmlImport("frontend://styles/shared-styles.html")
 //@HtmlImport("src/main-view.html")
@@ -62,7 +67,7 @@ public class MainLayout extends Div implements RouterLayout, AfterNavigationObse
     }// end of constructor
 
 
-    protected void inizia() {
+    public void inizia() {
         Div navigation = null;
         Div header = null;
 
@@ -125,6 +130,9 @@ public class MainLayout extends Div implements RouterLayout, AfterNavigationObse
      * La vista viene aggiunta alla barra di menu principale (di partenza)
      */
     protected void addVisteSpecifiche() {
+        addView(BollaList.class, BollaList.VIEW_ICON, BollaList.MENU_NAME);
+        addView(ProvaList.class, ProvaList.VIEW_ICON, ProvaList.MENU_NAME);
+        addView(WizardView.class, WizardView.VIEW_ICON, TAG_WIZ);
     }// end of method
 
 

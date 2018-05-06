@@ -7,6 +7,7 @@ import com.vaadin.flow.component.icon.VaadinIcons;
 import com.vaadin.flow.router.*;
 import com.vaadin.flow.spring.annotation.SpringComponent;
 import it.algos.vaadbase.ui.AView;
+import it.algos.vaadbase.ui.MainLayout;
 import it.algos.vaadtest.modules.prova.ProvaForm;
 import it.algos.vaadtest.training.ExampleTemplate;
 import it.algos.vaadtest.training.VaadinWelcome;
@@ -29,7 +30,7 @@ import static it.algos.vaadbase.application.BaseCost.TAG_HOM;
 //@HtmlImport("src/views/storefront-view.html")
 //@PageTitle("Pippoz")
 //@SpringComponent()
-@Route(value = "", layout = VaadtestLayout.class)
+@Route(value = "", layout = MainLayout.class)
 @Scope(ConfigurableBeanFactory.SCOPE_SINGLETON)
 public class HomeView extends AView {
 

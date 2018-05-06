@@ -4,6 +4,7 @@ package it.algos.vaadbase.modules.role;
 import com.vaadin.flow.component.grid.Grid;
 import com.vaadin.flow.component.icon.VaadinIcons;
 import com.vaadin.flow.component.orderedlayout.VerticalLayout;
+import com.vaadin.flow.router.BeforeEnterEvent;
 import com.vaadin.flow.router.PageTitle;
 import com.vaadin.flow.router.Route;
 import com.vaadin.flow.spring.annotation.SpringComponent;
@@ -139,5 +140,7 @@ public class RoleView extends AView {
         bodyLayout.add(grid);
         return bodyLayout;
     }// end of method
+
+
 
 }// end of class

@@ -1,18 +1,27 @@
 package it.algos.vaadbase.ui.menu;
 
+import com.vaadin.flow.component.Component;
 import com.vaadin.flow.component.UI;
 import com.vaadin.flow.component.button.Button;
+import com.vaadin.flow.component.html.Div;
 import com.vaadin.flow.component.html.NativeButton;
+import com.vaadin.flow.component.icon.VaadinIcons;
 import com.vaadin.flow.component.orderedlayout.HorizontalLayout;
 import com.vaadin.flow.component.orderedlayout.VerticalLayout;
+import com.vaadin.flow.router.RouterLink;
+import it.algos.vaadbase.ui.AView;
 import lombok.extern.slf4j.Slf4j;
 import com.vaadin.flow.spring.annotation.SpringComponent;
+import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.context.annotation.Scope;
 import org.springframework.beans.factory.config.ConfigurableBeanFactory;
 
 import javax.annotation.PostConstruct;
 import java.awt.*;
 import java.util.ArrayList;
+
+import static it.algos.vaadtest.application.AppCost.MENU_VERT;
+import static it.algos.vaadtest.application.AppCost.TAG_BOL;
 
 /**
  * Project vaadbase
@@ -23,14 +32,19 @@ import java.util.ArrayList;
  */
 @Slf4j
 @SpringComponent
-@Scope(ConfigurableBeanFactory.SCOPE_SINGLETON)
-public class AMenu extends HorizontalLayout {
+@Qualifier(MENU_VERT)
+//@Scope(ConfigurableBeanFactory.SCOPE_SINGLETON)
+public class AMenu extends VerticalLayout implements IAMenu {
 
 
     public AMenu() {
         super();
     }// end of costructor
 
+    @Override
+    public Component getComponent() {
+        return this;
+    }
 
     /**
      * Initializes this layout.
@@ -54,6 +68,17 @@ public class AMenu extends HorizontalLayout {
         this.start();
     }// end of method
 
+    /**
+     * Adds a view to the UI
+     *
+     * @param viewClazz the view class to instantiate
+     * @param icon
+     * @param tagMenu
+     */
+    @Override
+    public RouterLink addView(Class<? extends AView> viewClazz, VaadinIcons icon, String tagMenu) {
+        return null;
+    }// end of method
 
     /**
      * Aggiunge tutte le Views standard e specifiche

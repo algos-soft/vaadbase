@@ -8,6 +8,7 @@ import org.springframework.context.annotation.Scope;
 
 import static it.algos.vaadbase.application.BaseCost.TAG_WIZ;
 import it.algos.vaadtest.modules.prova.ProvaList;
+import it.algos.vaadtest.modules.bolla.BollaList;
 
 /**
  * Project vaadbase
@@ -31,7 +32,7 @@ public class VaadtestLayout extends MainLayout {
     }// end of constructor
 
 
-    protected void inizia() {
+    public void inizia() {
         super.inizia();
         title.setText("VaadTest");
     }// end of method
@@ -48,6 +49,7 @@ public class VaadtestLayout extends MainLayout {
      * La vista viene aggiunta alla barra di menu principale (di partenza)
      */
     protected void addVisteSpecifiche() {
+		addView(BollaList.class, BollaList.VIEW_ICON, BollaList.MENU_NAME);
 		addView(ProvaList.class, ProvaList.VIEW_ICON, ProvaList.MENU_NAME);
         addView(WizardView.class, WizardView.VIEW_ICON, TAG_WIZ);
     }// end of method

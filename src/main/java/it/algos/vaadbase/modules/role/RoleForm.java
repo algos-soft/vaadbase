@@ -25,7 +25,6 @@ import java.util.function.Consumer;
 @Scope(ConfigurableBeanFactory.SCOPE_SINGLETON)
 public class RoleForm extends AForm<Role> {
 
-
     /**
      * Costruttore
      */

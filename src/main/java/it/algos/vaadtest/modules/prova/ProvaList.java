@@ -40,7 +40,7 @@ import static it.algos.vaadtest.application.AppCost.TAG_PRO;
  * User: Gac <br>
  * Date: 3-mag-2018 10.41.40 <br>
  * <br>
- * Estende la classe astratta AView per visualizzare la Grid e il Detail<br>
+ * Estende la classe astratta AViewList per visualizzare la Grid e il Form/Dialog <br>
  * <p>
  * Annotated with @SpringComponent (obbligatorio per le injections)
  * Annotated with @Scope (obbligatorio = 'singleton')
@@ -53,7 +53,7 @@ import static it.algos.vaadtest.application.AppCost.TAG_PRO;
  */
 @Scope(ConfigurableBeanFactory.SCOPE_SINGLETON)
 @Qualifier(TAG_PRO)
-@Route(value = TAG_PRO, layout = MainLayout2.class)
+@Route(value = TAG_PRO, layout = MainLayout.class)
 @AIScript(sovrascrivibile = true)
 public class ProvaList extends AView {
 
@@ -114,5 +114,9 @@ public class ProvaList extends AView {
         return edit;
     }// end of method
 
+    @Override
+    public void beforeEnter(BeforeEnterEvent event) {
+        super.beforeEnter(event);
+    }// end of method
 
 }// end of class

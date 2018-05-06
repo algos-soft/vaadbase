@@ -2,6 +2,7 @@ package it.algos.vaadbase.modules.company;
 
 
 import com.vaadin.flow.component.icon.VaadinIcons;
+import com.vaadin.flow.router.BeforeEnterEvent;
 import com.vaadin.flow.router.Route;
 import com.vaadin.flow.spring.annotation.SpringComponent;
 import it.algos.vaadbase.annotation.AIScript;
@@ -103,4 +104,9 @@ public class CompanyView extends AView {
 //        }// end of if cycle
 //    }// end of method
 
+
+    @Override
+    public void beforeEnter(BeforeEnterEvent event) {
+        super.beforeEnter(event);
+    }
 }// end of class
