@@ -17,7 +17,6 @@ import org.springframework.context.annotation.Scope;
 import java.util.ArrayList;
 import java.util.List;
 
-import static it.algos.vaadtest.application.AppCost.MENU_DIV;
 
 /**
  * Project vaadbase
@@ -28,7 +27,6 @@ import static it.algos.vaadtest.application.AppCost.MENU_DIV;
  */
 @Slf4j
 @SpringComponent
-@Qualifier(MENU_DIV)
 @Scope(ConfigurableBeanFactory.SCOPE_SINGLETON)
 public class AMenuDiv extends Div implements IAMenu {
 

@@ -13,7 +13,6 @@ import it.algos.vaadtest.application.HomeView;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Qualifier;
 
-import static it.algos.vaadtest.application.AppCost.MENU_DIV;
 
 /**
  * Project vaadbase
@@ -34,8 +33,7 @@ public class AUI extends UI {
     protected IAMenu menuLayout;
 
 
-    public AUI(@Qualifier(MENU_DIV) IAMenu menuLayout) {
-        this.menuLayout = menuLayout;
+    public AUI() {
         inizia();
     }// end of constructor
 
@@ -65,9 +63,9 @@ public class AUI extends UI {
      * Vengono usati come da relativo flag: AlgosApp.USE_LOG, AlgosApp.USE_VERS, AlgosApp.USE_PREF
      */
     protected void addRoutesStandard() {
-        menuLayout.addView(HomeView.class, HomeView.VIEW_ICON, HomeView.MENU_NAME);
-        menuLayout.addView(RoleList.class, RoleList.VIEW_ICON, RoleList.MENU_NAME);
-        menuLayout.addView(CompanyView.class, CompanyView.VIEW_ICON, CompanyView.MENU_NAME);
+//        menuLayout.addView(HomeView.class, HomeView.VIEW_ICON, HomeView.MENU_NAME);
+//        menuLayout.addView(RoleList.class, RoleList.VIEW_ICON, RoleList.MENU_NAME);
+//        menuLayout.addView(CompanyView.class, CompanyView.VIEW_ICON, CompanyView.MENU_NAME);
     }// end of method
 
 

@@ -1,18 +1,27 @@
 package it.algos.vaadbase.ui;
 
+import com.vaadin.flow.component.button.Button;
 import com.vaadin.flow.component.grid.Grid;
 import com.vaadin.flow.component.html.Div;
-import com.vaadin.flow.component.html.H2;
+import com.vaadin.flow.component.icon.Icon;
+import com.vaadin.flow.component.icon.VaadinIcons;
 import com.vaadin.flow.component.notification.Notification;
+import com.vaadin.flow.component.orderedlayout.FlexComponent;
+import com.vaadin.flow.component.orderedlayout.VerticalLayout;
+import com.vaadin.flow.component.textfield.TextField;
+import com.vaadin.flow.data.value.ValueChangeMode;
+import com.vaadin.flow.router.BeforeEnterEvent;
+import com.vaadin.flow.router.BeforeEnterObserver;
 import it.algos.vaadbase.backend.entity.AEntity;
 import it.algos.vaadbase.backend.service.IAService;
 import it.algos.vaadbase.presenter.IAPresenter;
+import it.algos.vaadbase.service.ATextService;
 import it.algos.vaadbase.ui.dialog.AForm;
 import it.algos.vaadbase.ui.dialog.IADialog;
-import it.algos.vaadbase.ui.menu.AMenuDiv;
-import it.algos.vaadbase.ui.menu.IAMenu;
+import it.algos.vaadbase.ui.menu.AMenu;
 import it.algos.vaadtest.modules.prova.Prova;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.beans.factory.annotation.Autowired;
 
 import java.util.List;
 
@@ -35,129 +44,108 @@ import java.util.List;
  * Annotated with @Slf4j (facoltativo) per i logs automatici <br>
  */
 @Slf4j
-public abstract class AViewList extends Div {
+public abstract class AViewList extends VerticalLayout implements IAView, BeforeEnterObserver {
 
-    protected IAPresenter presenter;
-    protected IAService service;
-    protected Grid<AEntity> grid;
-    protected IADialog dialog;
-    protected IAMenu menu;
-
-    //    protected List<RouterLink> arrayRouterLink;
-    protected H2 title;
-
-
-    public AViewList(IAPresenter presenter, IAMenu menu) {
-        this.presenter = presenter;
-        this.menu = menu;
-        this.service = presenter.getService();
-//        this.entityClazz = (Prova)presenter.getEntityClazz();
-    }// end of constructor
+    protected final TextField searchField = new TextField("", "Search");
 
     /**
-     * Creazione di una view (AViewList) contenente una Grid
-     * <p>
-     * 1) Menu: Contenitore grafico per la barra di menu principale e per il menu/bottone del Login
-     * 2) Top: Contenitore grafico per la caption
-     * 3) Body: Corpo centrale della view. Utilizzando una Grid dentro un Panel, si ottine l'effetto scorrevole
-     * 4) Footer - Barra inferiore (eventuale) per info, copyright, ecc.
+     * Service iniettato da Spring (@Scope = 'singleton'). Unica per tutta l'applicazione. Usata come libreria.
      */
-    protected void inizia2() {
-        this.creaBody();
+    @Autowired
+    protected ATextService text;
+
+    /**
+     * Il presenter viene iniettato dal costruttore della sottoclasse concreta
+     */
+    protected IAPresenter presenter;
+
+    /**
+     * Il service viene recuperato dal presenter,
+     * La repository è gestita direttamente dal service
+     */
+    protected IAService service;
+
+    /**
+     * Il modello-dati specifico viene recuperato dal presenter
+     */
+    protected Class<? extends AEntity> entityClazz;
+
+
+
+    protected Grid<AEntity> grid;
+
+    /**
+     * Caption sovrastante il body della view
+     * Valore che può essere regolato nella classe specifica
+     * Componente grafico facoltativo. Normalmente presente (Grid), ma non obbligatorio.
+     */
+    protected String caption;
+
+    protected IADialog dialog;
+    protected AForm form;
+
+
+    public AViewList(IAPresenter presenter) {
+        this.presenter = presenter;
+        this.service = presenter.getService();
+        this.entityClazz = presenter.getEntityClazz();
+        initView();
+    }// end of constructor
+
+    protected void initView() {
+//        addClassName("categories-list");
+        setDefaultHorizontalComponentAlignment(FlexComponent.Alignment.STRETCH);
+
+        addSearchBar();
+        addGrid();
+
         updateView();
     }// end of method
 
 
-    protected void inizia() {
-//        Div navigation = null;
-//        Div header = null;
-//
-//        arrayRouterLink = new ArrayList<>();
-//        title = new H2();
-//        title.addClassName("main-layout__title");
-//
-//        //--Crea i menu per la gestione delle @routes (standard e specifiche)
-//        this.addAllRoutes();
-//
-//        if (arrayRouterLink.size() > 0) {
-//            navigation = new Div();
-//            for (RouterLink link : arrayRouterLink) {
-//                link.addClassName("main-layout__nav-item");
-//                navigation.add(link);
-//            }// end of for cycle
-//        }// end of if cycle
-//
-//        if (navigation != null) {
-//            navigation.addClassName("main-layout__nav");
-//
-//            header = new Div(title, navigation);
-//            header.addClassName("main-layout__header");
-//            add(header);
-//        }// end of if cycle
-//
-//        addClassName("main-layout");
-        this.add(menu.getComponent());
-        this.creaBody();
-        updateView();
-    }// end of Spring constructor
+    protected void addSearchBar() {
+        Div viewToolbar = new Div();
+        viewToolbar.addClassName("view-toolbar");
+
+        searchField.setPrefixComponent(new Icon("lumo", "search"));
+        searchField.addClassName("view-toolbar__search-field");
+        searchField.setValueChangeMode(ValueChangeMode.EAGER);
+        searchField.addValueChangeListener(e -> updateView());
+
+        Button clearFilterTextBtn = new Button(new Icon(VaadinIcons.CLOSE_CIRCLE));
+        clearFilterTextBtn.addClickListener(e -> searchField.clear());
+
+        Button newButton = new Button("New entity", new Icon("lumo", "plus"));
+        newButton.getElement().setAttribute("theme", "primary");
+        newButton.addClassName("view-toolbar__button");
+        newButton.addClickListener(e -> form.open(service.newEntity(), AForm.Operation.ADD));
+
+        viewToolbar.add(searchField,clearFilterTextBtn, newButton);
+        add(viewToolbar);
+    }// end of method
 
 
-//    /**
-//     * Aggiunge tutte le @routes (standard e specifiche)
-//     */
-//    protected void addAllRoutes() {
-//        this.addRoutesStandard();
-//        this.addRoutesSpecifiche();
-//    }// end of method
-
-
-//    /**
-//     * Aggiunge le @routes (moduli/package) standard
-//     * Alcuni moduli sono specifici di un collegamento come programmatore
-//     * Alcuni moduli sono già definiti per tutte le applicazioni (LogMod, VersMod, PrefMod)
-//     * Vengono usati come da relativo flag: AlgosApp.USE_LOG, AlgosApp.USE_VERS, AlgosApp.USE_PREF
-//     */
-//    protected void addRoutesStandard() {
-//        addView(HomeView.class, HomeView.VIEW_ICON, HomeView.MENU_NAME);
-//        addView(RoleList.class, RoleList.VIEW_ICON, RoleList.MENU_NAME);
-//        addView(CompanyView.class, CompanyView.VIEW_ICON, CompanyView.MENU_NAME);
-//    }// end of method
-
-
-//    /**
-//     * Creazione delle @routes (moduli/package) specifiche dell'applicazione.
-//     * <p>
-//     * Aggiunge al menu generale, le @routes (moduli/package) disponibili alla partenza dell'applicazione
-//     * Ogni modulo può eventualmente modificare il proprio menu
-//     * <p>
-//     * Deve (DEVE) essere sovrascritto dalla sottoclasse
-//     * Chiama il metodo  addView(...) della superclasse per ogni vista (modulo/package)
-//     * La vista viene aggiunta alla barra di menu principale (di partenza)
-//     */
-//    protected void addRoutesSpecifiche() {
-//    }// end of method
 
 
     /**
-     * Crea il corpo centrale della view list
+     * Crea il corpo centrale della view
      * Componente grafico obbligatorio
-     * Sovrascritto nella sottoclasse della view specifica
+     * Sovrascritto nella sottoclasse della view specifica (AList, AForm, ...)
      */
-    protected void creaBody() {
+    protected void addGrid() {
         List<String> gridPropertiesName = service.getGridPropertiesName();
 
-        if (AEntity.class.isAssignableFrom(Prova.class)) {
+        if (AEntity.class.isAssignableFrom(entityClazz)) {
             try { // prova ad eseguire il codice
-                grid = new Grid(Prova.class);
+                grid = new Grid(entityClazz);
             } catch (Exception unErrore) { // intercetta l'errore
                 log.error(unErrore.toString());
                 return;
             }// fine del blocco try-catch
         }// end of if cycle
 
-        List colonne = grid.getColumns();
-        for (Object colonna : colonne) {
-            grid.removeColumn((Grid.Column) colonna);
+        for (Grid.Column column : grid.getColumns()) {
+            grid.removeColumn(column);
         }// end of for cycle
         for (String property : gridPropertiesName) {
             grid.addColumn(property);
@@ -170,29 +158,6 @@ public abstract class AViewList extends Div {
         add(grid);
     }// end of method
 
-
-//    /**
-//     * Adds a view to the UI
-//     *
-//     * @param viewClazz the view class to instantiate
-//     */
-//    protected RouterLink addView(Class<? extends AView> viewClazz, VaadinIcons icon, String tagMenu) {
-//        RouterLink routerLink = null;
-//        try { // prova ad eseguire il codice
-//            routerLink = new RouterLink("", viewClazz);
-//
-//        } catch (Exception unErrore) { // intercetta l'errore
-//            log.error(unErrore.toString());
-//        }// fine del blocco try-catch
-//
-//        if (routerLink != null) {
-//            routerLink.add(new Icon(icon), new Text(tagMenu));
-//            routerLink.addClassName("main-layout__nav-item");
-//            arrayRouterLink.add(routerLink);
-//        }// end of if cycle
-//
-//        return routerLink;
-//    }// end of method
 
 
     protected void saveUpdate(AEntity entityBean, AForm.Operation operation) {
@@ -213,6 +178,10 @@ public abstract class AViewList extends Div {
 //        List items = service.findFilter(searchField.getValue());
         List items = service.findAll();
         grid.setItems(items);
+    }// end of method
+
+    @Override
+    public void beforeEnter(BeforeEnterEvent beforeEnterEvent) {
     }// end of method
 
 }// end of class

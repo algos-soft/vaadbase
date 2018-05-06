@@ -12,7 +12,6 @@ import it.algos.vaadbase.annotation.AIScript;
 import it.algos.vaadbase.presenter.IAPresenter;
 import it.algos.vaadbase.ui.AView;
 import it.algos.vaadbase.ui.MainLayout;
-import it.algos.vaadbase.ui.MainLayout2;
 import it.algos.vaadbase.ui.annotation.AIView;
 import it.algos.vaadbase.ui.dialog.AForm;
 import it.algos.vaadbase.ui.enumeration.EARoleType;

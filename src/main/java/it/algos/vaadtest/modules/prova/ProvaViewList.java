@@ -1,4 +1,4 @@
-package it.algos.@MODULELOWER@.modules.@PACKAGE@;
+package it.algos.vaadtest.modules.prova;
 
 import com.vaadin.flow.component.button.Button;
 import com.vaadin.flow.component.grid.Grid;
@@ -15,7 +15,7 @@ import com.vaadin.flow.component.notification.Notification;
 import com.vaadin.flow.router.BeforeEnterEvent;
 import it.algos.vaadbase.presenter.IAPresenter;
 import it.algos.vaadbase.backend.service.IAService;
-import it.algos.vaadbase.ui.AView;
+import it.algos.vaadbase.ui.AViewList;
 import com.vaadin.flow.router.Route;
 import com.vaadin.flow.spring.annotation.SpringComponent;
 import com.vaadin.flow.component.orderedlayout.VerticalLayout;
@@ -30,14 +30,13 @@ import it.algos.vaadbase.ui.enumeration.EARoleType;
 import it.algos.vaadbase.annotation.AIScript;
 import it.algos.vaadbase.ui.annotation.AIView;
 import it.algos.vaadbase.ui.MainLayout;
-import it.algos.@MODULELOWER@.application.@MODULEUPPER@Layout;
-import static it.algos.@MODULELOWER@.application.@APPCOST@.@QUALIFIER@;
+import static it.algos.vaadtest.application.AppCost.TAG_PRO;
 
 /**
- * Project @PROJECT@ <br>
+ * Project vaadbase <br>
  * Created by Algos <br>
- * User: @USER@ <br>
- * Date: @TODAY@ <br>
+ * User: Gac <br>
+ * Date: 6-mag-2018 14.40.06 <br>
  * <br>
  * Estende la classe astratta AView per visualizzare la Grid e il Detail<br>
  * <p>
@@ -52,25 +51,14 @@ import static it.algos.@MODULELOWER@.application.@APPCOST@.@QUALIFIER@;
  */
 @SpringComponent
 @Scope(ConfigurableBeanFactory.SCOPE_SINGLETON)
-@Qualifier(@QUALIFIER@)
-@Route(value = @QUALIFIER@, layout = @MODULEUPPER@Layout.class)
+@Qualifier(TAG_PRO)
+@Route(value = TAG_PRO, layout = MainLayout.class)
 @AIScript(sovrascrivibile = true)
-public class @ENTITY@List extends AView {
-
-
-    /**
-     * Label del menu (facoltativa) <br>
-     * SpringNavigator usa il 'name' della Annotation @SpringView per identificare (internamente) e recuperare la view <br>
-     * Nella menuBar appare invece visibile il MENU_NAME, indicato qui <br>
-     * Se manca il MENU_NAME, di default usa il 'name' della view <br>
-     */
-    public static final String MENU_NAME = @QUALIFIER@;
+public class ProvaViewList extends AViewList {
 
 
     /**
      * Icona visibile nel menu (facoltativa)
-     * Nella menuBar appare invece visibile il MENU_NAME, indicato qui
-     * Se manca il MENU_NAME, di default usa il 'name' della view
      */
     public static final VaadinIcons VIEW_ICON = VaadinIcons.ASTERISK;
 
@@ -80,16 +68,12 @@ public class @ENTITY@List extends AView {
      * In the newest Spring release, it’s constructor does not need to be annotated with @Autowired annotation <br>
      * Si usa un @Qualifier(), per avere la sottoclasse specifica <br>
      * Si usa una costante statica, per essere sicuri di scrivere sempre uguali i riferimenti <br>
-     * Use @Lazy to avoid the Circular Dependency <br>
-     * A simple way to break the cycle is saying Spring to initialize one of the beans lazily. <br>
-     * That is: instead of fully initializing the bean, it will create a proxy to inject it into the other bean. <br>
-     * The injected bean will only be fully created when it’s first needed. <br>
      *
      * @param presenter iniettato da Spring come sottoclasse concreta specificata dal @Qualifier
      */
-     public @ENTITY@List(@Lazy @Qualifier(@QUALIFIER@) IAPresenter presenter) {
+     public ProvaViewList(@Qualifier(TAG_PRO) IAPresenter presenter) {
         super(presenter);
-        form = new @ENTITY@Form(this::saveUpdate, this::deleteUpdate, service);
+        form = new ProvaForm(this::saveUpdate, this::deleteUpdate, service);
    }// end of Spring constructor
 
 
@@ -106,7 +90,7 @@ public class @ENTITY@List extends AView {
      }// end of method
 
 
-   private Button createEditButton(@ENTITY@ entityBean) {
+   private Button createEditButton(Prova entityBean) {
         Button edit = new Button("Modifica", event -> form.open(entityBean, AForm.Operation.EDIT));
         edit.setIcon(new Icon("lumo", "edit"));
         edit.addClassName("review__edit");

@@ -6,10 +6,12 @@
         <sourceOutputDir name="target/generated-sources/annotations" />
         <sourceTestOutputDir name="target/generated-test-sources/test-annotations" />
         <outputRelativeToContentRoot value="true" />
+        <module name="beveragebuddy" />
         <module name="vaadbase" />
       </profile>
     </annotationProcessing>
     <bytecodeTargetLevel target="1.7">
+      <module name="beveragebuddy" target="1.8" />
       <module name="vaadbase" target="1.8" />
     </bytecodeTargetLevel>
   </component>

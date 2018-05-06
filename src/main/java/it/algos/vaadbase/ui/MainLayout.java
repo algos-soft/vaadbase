@@ -14,24 +14,22 @@ import com.vaadin.flow.router.RouterLayout;
 import com.vaadin.flow.router.RouterLink;
 import com.vaadin.flow.server.InitialPageSettings;
 import com.vaadin.flow.server.PageConfigurator;
-import com.vaadin.flow.spring.annotation.SpringComponent;
 import com.vaadin.flow.theme.Theme;
 import com.vaadin.flow.theme.lumo.Lumo;
 import it.algos.vaadbase.modules.company.CompanyView;
 import it.algos.vaadbase.modules.role.RoleList;
+import it.algos.vaadbase.service.AAnnotationService;
 import it.algos.vaadbase.service.ATextService;
 import it.algos.vaadbase.wizard.ui.WizardView;
 import it.algos.vaadtest.application.HomeView;
 import it.algos.vaadtest.modules.bolla.BollaList;
-import it.algos.vaadtest.modules.prova.ProvaList;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.beans.factory.config.ConfigurableBeanFactory;
-import org.springframework.context.annotation.Scope;
+import org.springframework.beans.factory.annotation.Autowired;
 
 import java.util.ArrayList;
 import java.util.List;
 
-import static it.algos.vaadbase.application.BaseCost.TAG_WIZ;
+import static it.algos.vaadtest.application.AppCost.TAG_HOME_MENU;
 
 /**
  * Project vaadbase
@@ -59,10 +57,12 @@ public class MainLayout extends Div implements RouterLayout, AfterNavigationObse
     protected static final String ACTIVE_ITEM_STYLE = "main-layout__nav-item--selected";
     protected List<RouterLink> arrayRouterLink;
     protected H2 title;
+    protected AAnnotationService annotation;
     private ATextService text = ATextService.getInstance();
 
-
-    public MainLayout() {
+    @Autowired
+    public MainLayout(AAnnotationService annotation) {
+        this.annotation = annotation;
         inizia();
     }// end of constructor
 
@@ -113,9 +113,9 @@ public class MainLayout extends Div implements RouterLayout, AfterNavigationObse
      * Vengono usati come da relativo flag: AlgosApp.USE_LOG, AlgosApp.USE_VERS, AlgosApp.USE_PREF
      */
     protected void addVisteStandard() {
-        addView(HomeView.class, HomeView.VIEW_ICON, HomeView.MENU_NAME);
-        addView(RoleList.class, RoleList.VIEW_ICON, RoleList.MENU_NAME);
-        addView(CompanyView.class, CompanyView.VIEW_ICON, CompanyView.MENU_NAME);
+        addView(HomeView.class, HomeView.VIEW_ICON);
+        addView(RoleList.class, RoleList.VIEW_ICON);
+        addView(CompanyView.class, CompanyView.VIEW_ICON);
     }// end of method
 
 
@@ -130,9 +130,8 @@ public class MainLayout extends Div implements RouterLayout, AfterNavigationObse
      * La vista viene aggiunta alla barra di menu principale (di partenza)
      */
     protected void addVisteSpecifiche() {
-        addView(BollaList.class, BollaList.VIEW_ICON, BollaList.MENU_NAME);
-        addView(ProvaList.class, ProvaList.VIEW_ICON, ProvaList.MENU_NAME);
-        addView(WizardView.class, WizardView.VIEW_ICON, TAG_WIZ);
+        addView(BollaList.class, BollaList.VIEW_ICON);
+        addView(WizardView.class, WizardView.VIEW_ICON);
     }// end of method
 
 
@@ -141,8 +140,10 @@ public class MainLayout extends Div implements RouterLayout, AfterNavigationObse
      *
      * @param viewClazz the view class to instantiate
      */
-    protected RouterLink addView(Class<? extends AView> viewClazz, VaadinIcons icon, String tagMenu) {
+    protected RouterLink addView(Class<? extends AView> viewClazz, VaadinIcons icon) {
         RouterLink routerLink = null;
+        String tagMenu = annotation.getViewName(viewClazz);
+
         try { // prova ad eseguire il codice
             routerLink = new RouterLink("", viewClazz);
 

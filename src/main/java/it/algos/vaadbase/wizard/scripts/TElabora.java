@@ -71,7 +71,7 @@ public class TElabora {
     private static final String METHOD_NEW_ORDINE = METHOD + "NewOrdine" + SOURCE_SUFFIX;
     private static final String METHOD_ID_KEY_SPECIFICA = METHOD + "IdKeySpecifica" + SOURCE_SUFFIX;
     //    private static String LIST_VIEW_SUFFIX = "List";
-    private static String VIEW_SUFFIX = "List";
+    private static String VIEW_SUFFIX = "ViewList";
     /**
      * Libreria di servizio. Inietta da Spring come 'singleton'
      */

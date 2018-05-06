@@ -18,8 +18,6 @@ import org.springframework.beans.factory.config.ConfigurableBeanFactory;
 public class AppCost {
 	public static final String TAG_BOL ="bolla";
 	public static final String TAG_PRO ="prova";
+	public static final String TAG_HOME_MENU ="home";
 
-
-	public static final String MENU_VERT ="menuVerticale";
-	public static final String MENU_DIV ="menuDiv";
 }// end of class

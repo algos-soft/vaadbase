@@ -1,11 +1,12 @@
 package it.algos.vaadbase.service;
 
+import com.vaadin.flow.router.Route;
 import com.vaadin.flow.spring.annotation.SpringComponent;
 import it.algos.vaadbase.backend.entity.AEntity;
 import it.algos.vaadbase.ui.IAView;
 import it.algos.vaadbase.ui.annotation.*;
 import it.algos.vaadbase.ui.enumeration.EAFieldType;
-import it.algos.vaadtest.modules.prova.ProvaForm;
+import it.algos.vaadtest.application.AppCost;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.config.ConfigurableBeanFactory;
@@ -129,6 +130,18 @@ public class AAnnotationService {
 
 
     /**
+     * Get the specific annotation of the class.
+     * View class
+     *
+     * @param entityClazz the entity class
+     *
+     * @return the Annotation for the specific class
+     */
+    public Route getRoute(final Class<? extends IAView> entityClazz) {
+        return entityClazz.getAnnotation(Route.class);
+    }// end of method
+
+    /**
      * Get the specific annotation of the field.
      *
      * @param reflectionJavaField di riferimento per estrarre la Annotation
@@ -142,7 +155,6 @@ public class AAnnotationService {
             return null;
         }// end of if/else cycle
     }// end of method
-
 
 
     /**
@@ -175,7 +187,7 @@ public class AAnnotationService {
 
         try { // prova ad eseguire il codice
             reflectionJavaField = entityClazz.getDeclaredField(fieldName);
-            annotation= getAIField(reflectionJavaField);
+            annotation = getAIField(reflectionJavaField);
         } catch (Exception unErrore) { // intercetta l'errore
             log.error(unErrore.toString());
         }// fine del blocco try-catch
@@ -193,17 +205,15 @@ public class AAnnotationService {
      */
     public String getViewName(final Class<? extends IAView> clazz) {
         String name = "";
-        AIView annotation = this.getAIView(clazz);
+        Route annotation = this.getRoute(clazz);
 
         if (annotation != null) {
-//            name = annotation.name();
+            name = annotation.value();
         }// end of if cycle
 
+        name = text.isValid(name) ? name : AppCost.TAG_HOME_MENU;
         return name;
     }// end of method
-
-
-
 
 
     /**
@@ -564,7 +574,7 @@ public class AAnnotationService {
      */
     public EAFieldType getFormType(Class<? extends AEntity> entityClazz, String fieldName) {
         EAFieldType type = null;
-        AIField annotation = this.getAIField(entityClazz,fieldName);
+        AIField annotation = this.getAIField(entityClazz, fieldName);
 
         if (annotation != null) {
             type = annotation.type();

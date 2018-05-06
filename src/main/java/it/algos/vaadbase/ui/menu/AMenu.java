@@ -20,7 +20,6 @@ import javax.annotation.PostConstruct;
 import java.awt.*;
 import java.util.ArrayList;
 
-import static it.algos.vaadtest.application.AppCost.MENU_VERT;
 import static it.algos.vaadtest.application.AppCost.TAG_BOL;
 
 /**
@@ -32,7 +31,6 @@ import static it.algos.vaadtest.application.AppCost.TAG_BOL;
  */
 @Slf4j
 @SpringComponent
-@Qualifier(MENU_VERT)
 //@Scope(ConfigurableBeanFactory.SCOPE_SINGLETON)
 public class AMenu extends VerticalLayout implements IAMenu {
 

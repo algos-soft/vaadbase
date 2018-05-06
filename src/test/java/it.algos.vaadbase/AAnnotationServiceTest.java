@@ -1,8 +1,11 @@
 package it.algos.vaadbase;
 
+import com.vaadin.flow.router.Route;
 import it.algos.vaadbase.application.BaseCost;
 import it.algos.vaadbase.backend.entity.AEntity;
 import it.algos.vaadbase.modules.role.Role;
+import it.algos.vaadbase.modules.role.RoleList;
+import it.algos.vaadbase.modules.role.RoleView;
 import it.algos.vaadbase.service.AAnnotationService;
 import it.algos.vaadbase.service.AArrayService;
 import it.algos.vaadbase.service.AReflectionService;
@@ -157,6 +160,22 @@ public class AAnnotationServiceTest extends ATest {
 
     @SuppressWarnings("javadoc")
     /**
+     * Get the specific annotation of the class.
+     * View class
+     *
+     * @param entityClazz the entity class
+     *
+     * @return the Annotation for the specific class
+     */
+    @Test
+    public void getRoute() {
+        Route ottenuto = service.getRoute(RoleList.class);
+        assertNotNull(ottenuto);
+    }// end of single test
+
+
+    @SuppressWarnings("javadoc")
+    /**
      * Get the specific annotation of the field.
      *
      * @param reflectionJavaField di riferimento per estrarre la Annotation
@@ -210,9 +229,9 @@ public class AAnnotationServiceTest extends ATest {
      */
     @Test
     public void getViewName() {
-        previsto = BaseCost.VIEW_ROL;
-        ottenuto = service.getViewName(ROLE_VIEW_CLASS);
-//        assertEquals(previsto, ottenuto);
+        previsto = "role";
+        ottenuto = service.getViewName(RoleList.class);
+        assertEquals(previsto, ottenuto);
     }// end of single test
 
 
