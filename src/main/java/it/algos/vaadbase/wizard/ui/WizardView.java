@@ -11,7 +11,6 @@ import com.vaadin.flow.component.orderedlayout.HorizontalLayout;
 import com.vaadin.flow.component.textfield.TextField;
 import com.vaadin.flow.router.BeforeEnterEvent;
 import com.vaadin.flow.router.Route;
-import com.vaadin.flow.spring.annotation.SpringComponent;
 import it.algos.vaadbase.service.ATextService;
 import it.algos.vaadbase.ui.AView;
 import it.algos.vaadbase.ui.MainLayout;
@@ -24,6 +23,7 @@ import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.beans.factory.config.ConfigurableBeanFactory;
 import org.springframework.context.annotation.Scope;
 
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -39,7 +39,6 @@ import static it.algos.vaadbase.application.BaseCost.TAG_WIZ;
  * Annotated with @Theme (facoltativo)
  */
 @Slf4j
-//@SpringComponent
 @Scope(ConfigurableBeanFactory.SCOPE_SINGLETON)
 @Route(value = TAG_WIZ, layout = MainLayout.class)
 @Qualifier(TAG_WIZ)
@@ -54,6 +53,7 @@ public class WizardView extends AView {
      * Se manca il MENU_NAME, di default usa il 'name' della view
      */
     public static final VaadinIcons VIEW_ICON = VaadinIcons.MAGIC;
+    private static final String PROJECT_BASE_NAME = "vaadbase";
     private static Progetto PROGETTO_STANDARD_SUGGERITO = Progetto.test;
     private static String NOME_PACKAGE_STANDARD_SUGGERITO = "prova";
     private static String LABEL_A = "Creazione di un nuovo project";
@@ -96,11 +96,31 @@ public class WizardView extends AView {
     }// end of Spring constructor
 
 
-    //    @PostConstruct
-    public void inizia() {
+    @Override
+    public void beforeEnter(BeforeEnterEvent event) {
+        this.removeAll();
+        checkIniziale();
+    }// end of method
+
+    public void checkIniziale() {
         this.setMargin(true);
         this.setSpacing(true);
 
+        String currentProject = System.getProperty("user.dir");
+        currentProject = currentProject.substring(currentProject.lastIndexOf("/")+1);
+
+        if (currentProject.equals(PROJECT_BASE_NAME)) {
+            iniziaBase();
+            this.add(creaMenuBase());
+        } else {
+            iniziaProject();
+            this.add(creaMenuProject());
+        }// end of if/else cycle
+
+    }// end of method
+
+
+    public void iniziaBase() {
         labelUno = new Label("Creazione di un nuovo project, tramite dialogo wizard");
         this.add(labelUno);
         labelDue = new Label("Aggiornamento di un project esistente, tramite dialogo wizard");
@@ -109,22 +129,18 @@ public class WizardView extends AView {
         this.add(labelTre);
         labelQuattro = new Label("Modifica di un package (modulo) esistente, tramite dialogo wizard");
         this.add(labelQuattro);
-
     }// end of method
 
-    @Override
-    public void beforeEnter(BeforeEnterEvent event) {
-        this.removeAll();
-
-        //--componente grafico facoltativo
-//        this.regolaMenu();
-//        this.add(menu);
-        this.add(creaMenu());
-
-        inizia();
+    public void iniziaProject() {
+        labelUno = new Label("Update di questo project");
+        this.add(labelUno);
+        labelDue = new Label("Creazione di un nuovo package (modulo), tramite dialogo wizard");
+        this.add(labelDue);
+        labelTre = new Label("Modifica di un package (modulo) esistente, tramite dialogo wizard");
+        this.add(labelTre);
     }// end of method
 
-    private Component creaMenu() {
+    private Component creaMenuBase() {
         HorizontalLayout layout = new HorizontalLayout();
         layout.setMargin(false);
         layout.setSpacing(true);
@@ -155,6 +171,32 @@ public class WizardView extends AView {
             }// end of inner method
         }, false, PROGETTO_STANDARD_SUGGERITO, NOME_PACKAGE_STANDARD_SUGGERITO));// end of lambda expressions and anonymous inner class
         layout.add(buttonTre);
+
+        return layout;
+    }// end of method
+
+
+    private Component creaMenuProject() {
+        HorizontalLayout layout = new HorizontalLayout();
+        layout.setMargin(false);
+        layout.setSpacing(true);
+
+        String currentProject = System.getProperty("user.dir");
+        currentProject = currentProject.substring(currentProject.lastIndexOf("/")+1);
+        mappaInput.put(Chiave.newProjectName, currentProject);
+
+        buttonUno = new Button("Update project");
+        buttonUno.addClickListener(event -> elaboraUpdateProject(mappaInput));
+        layout.add(buttonUno);
+
+        buttonDue = new Button("Package");
+        buttonDue.addClickListener(event -> dialogPackage.open(new TRecipient() {
+            @Override
+            public void gotInput(Map<Chiave, Object> mappaInput) {
+                elaboraPackage(mappaInput);
+            }// end of inner method
+        }, false, PROGETTO_STANDARD_SUGGERITO, NOME_PACKAGE_STANDARD_SUGGERITO));// end of lambda expressions and anonymous inner class
+        layout.add(buttonDue);
 
         return layout;
     }// end of method

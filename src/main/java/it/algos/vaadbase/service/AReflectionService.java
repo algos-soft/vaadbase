@@ -1,9 +1,11 @@
 package it.algos.vaadbase.service;
 
+import com.vaadin.flow.component.icon.VaadinIcons;
 import com.vaadin.flow.spring.annotation.SpringComponent;
 import it.algos.vaadbase.application.BaseCost;
 import it.algos.vaadbase.backend.entity.AEntity;
 import it.algos.vaadbase.modules.role.Role;
+import it.algos.vaadbase.ui.IAView;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.config.ConfigurableBeanFactory;
@@ -124,6 +126,24 @@ public class AReflectionService {
     }// end of method
 
 
+    /**
+     * Valore della VaadinIcons di una view
+     *
+     * @param viewClazz classe view su cui operare la riflessione
+     */
+    public VaadinIcons getIconView(final Class<?> viewClazz) {
+        VaadinIcons icon = null;
+        String iconNameProperty = "VIEW_ICON";
+        Object genericValue = getPropertyValue(viewClazz, iconNameProperty);
+
+        if (genericValue != null && genericValue instanceof VaadinIcons) {
+            icon = (VaadinIcons) genericValue;
+        }// end of if cycle
+
+        return icon;
+    }// end of method
+
+
 //    /**
 //     * Valore della property statica di una classe
 //     *
@@ -211,6 +231,33 @@ public class AReflectionService {
             }// fine del blocco try-catch
             clazz = clazz.getSuperclass();
         }// end of while cycle
+
+        return listaFields;
+    }// end of method
+
+
+    /**
+     * Fields dichiarati nella View
+     * Non ordinati
+     *
+     * @param viewClazz da cui estrarre i fields
+     *
+     * @return lista di fields della View
+     */
+    public List<Field> getAllFieldsView(Class<? extends IAView> viewClazz) {
+        List<Field> listaFields = new ArrayList<>();
+        Class<?> clazz = viewClazz;
+        Field[] fieldsArray = null;
+
+        //--recupera tutti i fields della view
+        try { // prova ad eseguire il codice
+            fieldsArray = clazz.getDeclaredFields();
+            for (Field field : fieldsArray) {
+                listaFields.add(field);
+            }// end of for cycle
+        } catch (Exception unErrore) { // intercetta l'errore
+            log.error(unErrore.toString());
+        }// fine del blocco try-catch
 
         return listaFields;
     }// end of method
@@ -322,7 +369,7 @@ public class AReflectionService {
      * Fields dichiarati nella Entity, da usare come columns della Grid (List)
      * Se listaNomi è nulla, usa tutti i campi (senza ID, senza note, senza creazione, senza modifica)
      * Comprende la entity e tutte le superclassi (fino a ACEntity e AEntity)
-     * Se la company è prevista (AlgosApp.USE_MULTI_COMPANY, login.isDeveloper() e entityClazz derivata da ACEntity),
+     * Se la company2 è prevista (AlgosApp.USE_MULTI_COMPANY, login.isDeveloper() e entityClazz derivata da ACEntity),
      * la posiziona come prima colonna a sinistra
      *
      * @param entityClazz da cui estrarre i fields
@@ -395,7 +442,7 @@ public class AReflectionService {
 //     * user = senza ID, senza note, senza creazione, senza modifica
 //     * developer = con ID, con note, con creazione, con modifica
 //     * Comprende la entity e tutte le superclassi (fino a ACEntity e AEntity)
-//     * Se la company è prevista (AlgosApp.USE_MULTI_COMPANY, login.isDeveloper() e entityClazz derivata da ACEntity),
+//     * Se la company2 è prevista (AlgosApp.USE_MULTI_COMPANY, login.isDeveloper() e entityClazz derivata da ACEntity),
 //     * la posiziona come secondo campo in alto, dopo la keyID
 //     *
 //     * @param entityClazz da cui estrarre i fields

@@ -55,7 +55,7 @@ import static it.algos.vaadbase.application.BaseCost.TAG_ADD;
 @Builder
 @EqualsAndHashCode(callSuper = false)
 @Qualifier(TAG_ADD)
-//@AIEntity(roleTypeVisibility = EARoleType.user, company = EACompanyRequired.nonUsata)
+//@AIEntity(roleTypeVisibility = EARoleType.user, company2 = EACompanyRequired.nonUsata)
 //@AIList(fields = {"code", "descrizione"}, dev = EAListButton.standard, admin = EAListButton.noSearch, user = EAListButton.show)
 //@AIForm(fields = {"code", "descrizione"})
 @AIScript(sovrascrivibile = false)

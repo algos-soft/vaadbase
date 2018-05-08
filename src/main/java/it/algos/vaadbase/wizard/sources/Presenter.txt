@@ -14,7 +14,7 @@ import it.algos.vaadbase.ui.IAView;
 import static it.algos.@MODULELOWER@.application.@APPCOST@.@QUALIFIER@;
 
 /**
- * Project @PROJECT@ <br>
+ * Project @MODULELOWER@ <br>
  * Created by Algos <br>
  * User: @USER@ <br>
  * Date: @TODAY@ <br>

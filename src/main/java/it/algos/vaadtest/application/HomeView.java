@@ -6,12 +6,11 @@ import com.vaadin.flow.component.html.Paragraph;
 import com.vaadin.flow.component.icon.VaadinIcons;
 import com.vaadin.flow.router.*;
 import com.vaadin.flow.spring.annotation.SpringComponent;
+import it.algos.vaadbase.annotation.AIScript;
 import it.algos.vaadbase.ui.AView;
 import it.algos.vaadbase.ui.MainLayout;
-import it.algos.vaadtest.modules.prova.ProvaForm;
 import it.algos.vaadtest.training.ExampleTemplate;
 import it.algos.vaadtest.training.VaadinWelcome;
-import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Scope;
 import org.springframework.beans.factory.config.ConfigurableBeanFactory;
@@ -24,14 +23,17 @@ import static it.algos.vaadbase.application.BaseCost.TAG_HOM;
  * User: gac
  * Date: sab, 24-mar-2018
  * Time: 15:58
+ * Vista di partenza iniziale di questa applicazione <br>
+ * <p>
+ * Non annotated with @SpringComponent (sbagliato) <br>
+ * Non annotated with @Scope (inutile) <br>
+ * Non annotated with @SpringView (sbagliato) perché usa la @Route di VaadinFlow
+ * Annotated with @Route (obbligatorio) per la selezione della vista. @Route(value = "") per la vista iniziale
+ * Annotated with @AIScript (facoltativo) per controllare la ri-creazione di questo file nello script di algos <br>
  */
-@Slf4j
-//@Tag("storefront-view")
-//@HtmlImport("src/views/storefront-view.html")
-//@PageTitle("Pippoz")
-//@SpringComponent()
 @Route(value = "", layout = MainLayout.class)
-@Scope(ConfigurableBeanFactory.SCOPE_SINGLETON)
+//@Scope(ConfigurableBeanFactory.SCOPE_SINGLETON)
+@AIScript(sovrascrivibile = false)
 public class HomeView extends AView {
 
 
@@ -71,8 +73,8 @@ public class HomeView extends AView {
     public void beforeEnter(BeforeEnterEvent event) {
         removeAll();
         add(new VaadinWelcome());
-        add(new ExampleTemplate());
-        add(new Button("Click me",evt-> {add(new Label("added from button"));}));
+//        add(new ExampleTemplate());
+//        add(new Button("Click me",evt-> {add(new Label("added from button"));}));
     }// end of method
 
 

@@ -20,7 +20,7 @@ import static it.algos.vaadtest.application.AppCost.TAG_PRO;
  * Project vaadbase <br>
  * Created by Algos <br>
  * User: Gac <br>
- * Date: 6-mag-2018 14.40.06 <br>
+ * Date: 8-mag-2018 11.39.38 <br>
  * <br>
  * Estende la classe astratta AService. Layer di collegamento tra il Presenter e la Repository. <br>
  * <br>
@@ -207,7 +207,7 @@ public class ProvaService extends AService {
     }// end of method
 
     /**
-     * Ordine di presentazione (obbligatorio, unico per tutte le eventuali company), <br>
+     * Ordine di presentazione (obbligatorio, unico per tutte le eventuali company2), <br>
      * Viene calcolato in automatico alla creazione della entity <br>
      * Recupera dal DB il valore massimo pre-esistente della property <br>
      * Incrementa di uno il risultato <br>

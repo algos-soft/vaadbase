@@ -5,7 +5,6 @@ import com.vaadin.flow.data.binder.Binder;
 import com.vaadin.flow.data.validator.StringLengthValidator;
 import it.algos.vaadbase.backend.service.IAService;
 import it.algos.vaadbase.ui.dialog.AForm;
-import it.algos.vaadtest.modules.prova.Prova;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.config.ConfigurableBeanFactory;
 import org.springframework.context.annotation.Scope;

@@ -1,11 +1,8 @@
 package it.algos.vaadbase;
 
 import com.vaadin.flow.router.Route;
-import it.algos.vaadbase.application.BaseCost;
-import it.algos.vaadbase.backend.entity.AEntity;
 import it.algos.vaadbase.modules.role.Role;
 import it.algos.vaadbase.modules.role.RoleList;
-import it.algos.vaadbase.modules.role.RoleView;
 import it.algos.vaadbase.service.AAnnotationService;
 import it.algos.vaadbase.service.AArrayService;
 import it.algos.vaadbase.service.AReflectionService;
@@ -19,7 +16,6 @@ import org.mockito.InjectMocks;
 import org.mockito.MockitoAnnotations;
 
 import java.util.Arrays;
-import java.util.List;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
@@ -169,7 +165,7 @@ public class AAnnotationServiceTest extends ATest {
      */
     @Test
     public void getRoute() {
-        Route ottenuto = service.getRoute(RoleList.class);
+        Route ottenuto = service.getRoute(ROLE_VIEW_CLASS);
         assertNotNull(ottenuto);
     }// end of single test
 
@@ -230,7 +226,7 @@ public class AAnnotationServiceTest extends ATest {
     @Test
     public void getViewName() {
         previsto = "role";
-        ottenuto = service.getViewName(RoleList.class);
+        ottenuto = service.getViewName(ROLE_VIEW_CLASS);
         assertEquals(previsto, ottenuto);
     }// end of single test
 
@@ -435,8 +431,8 @@ public class AAnnotationServiceTest extends ATest {
     /**
      * Get the status of visibility for the field of ACompanyEntity.
      * <p>
-     * Controlla se l'applicazione usa le company - flag  AlgosApp.USE_MULTI_COMPANY=true
-     * Controlla se la collection (table) usa la company
+     * Controlla se l'applicazione usa le company2 - flag  AlgosApp.USE_MULTI_COMPANY=true
+     * Controlla se la collection (table) usa la company2
      * Controlla se l'buttonUser collegato è un developer
      *
      * @param clazz the entity class

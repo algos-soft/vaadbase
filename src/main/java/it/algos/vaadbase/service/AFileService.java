@@ -2,15 +2,13 @@ package it.algos.vaadbase.service;
 
 import com.vaadin.flow.spring.annotation.SpringComponent;
 import lombok.extern.slf4j.Slf4j;
+import org.apache.commons.io.FileUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.config.ConfigurableBeanFactory;
 import org.springframework.context.annotation.Scope;
 import org.springframework.util.FileSystemUtils;
 
-import java.io.BufferedReader;
-import java.io.File;
-import java.io.FileReader;
-import java.io.FileWriter;
+import java.io.*;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -258,6 +256,26 @@ public class AFileService {
         return creata;
     }// end of method
 
+    /**
+     * Copia una directory
+     *
+     * @param srcPath  nome completo della directory sorgente
+     * @param destPath nome completo della directory destinazione
+     */
+    public boolean copyDirectory(String srcPath, String destPath) {
+        boolean copiata = false;
+        File srcDir = new File(srcPath);
+        File destDir = new File(destPath);
+
+        try {
+            FileUtils.copyDirectory(srcDir, destDir);
+            copiata = true;
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+
+        return copiata;
+    }// end of method
 
     /**
      * Scrive un file
@@ -385,7 +403,7 @@ public class AFileService {
         }// end of if cycle
 
         if (allFiles != null) {
-            subDirectory=new ArrayList<>();
+            subDirectory = new ArrayList<>();
             for (File file : allFiles) {
                 if (file.isDirectory()) {
                     subDirectory.add(file.getName());

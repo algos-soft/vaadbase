@@ -1,7 +1,6 @@
 package it.algos.vaadbase;
 
 import it.algos.vaadbase.ui.MainLayout;
-import it.algos.vaadbase.ui.MainView;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;

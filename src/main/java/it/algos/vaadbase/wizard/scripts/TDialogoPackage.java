@@ -6,7 +6,6 @@ import com.vaadin.flow.component.checkbox.Checkbox;
 import com.vaadin.flow.component.combobox.ComboBox;
 import com.vaadin.flow.component.dialog.Dialog;
 import com.vaadin.flow.component.html.Label;
-import com.vaadin.flow.component.html.NativeButton;
 import com.vaadin.flow.component.notification.Notification;
 import com.vaadin.flow.component.orderedlayout.HorizontalLayout;
 import com.vaadin.flow.component.orderedlayout.VerticalLayout;
@@ -21,11 +20,8 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.config.ConfigurableBeanFactory;
 import org.springframework.context.annotation.Scope;
 
-import javax.annotation.PostConstruct;
 import java.util.Arrays;
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 
 /**
  * Project vbase
@@ -57,7 +53,7 @@ public class TDialogoPackage extends TDialogo {
 
 
     private Button buttonUno;
-//    private NativeButton confirmButton;
+    //    private NativeButton confirmButton;
 //    private NativeButton cancelButton;
     private Dialog dialog = new Dialog();
     private boolean newPackage;
@@ -67,6 +63,7 @@ public class TDialogoPackage extends TDialogo {
 
     private HorizontalLayout packagePlaceHolder;
     private ComboBox<String> fieldComboPackage;
+    private TextField fieldTextProject;
     private TextField fieldTextPackage;
     private TextField fieldTextEntity; // suggerito
     private TextField fieldTextTag; // suggerito
@@ -77,6 +74,7 @@ public class TDialogoPackage extends TDialogo {
     private Checkbox fieldCheckBoxCompany;
     private Checkbox fieldCheckBoxSovrascrive;
 
+    private boolean progettoBase;
 
     /**
      * Costruttore @Autowired
@@ -95,6 +93,10 @@ public class TDialogoPackage extends TDialogo {
         this.removeAll();
         super.open();
 
+        String currentProject = System.getProperty("user.dir");
+        currentProject = currentProject.substring(currentProject.lastIndexOf("/") + 1);
+        progettoBase = currentProject.equals(PROJECT_BASE_NAME);
+
         this.add(new Label());
         this.add(creaRadio());
         this.add(creaBody());
@@ -107,7 +109,9 @@ public class TDialogoPackage extends TDialogo {
 
     private void addListener() {
         groupTitolo.addValueChangeListener(event -> sincroRadio(event.getValue()));//end of lambda expressions
-        fieldComboProgetti.addValueChangeListener(event -> sincroProject(event.getValue()));//end of lambda expressions
+        if (progettoBase) {
+            fieldComboProgetti.addValueChangeListener(event -> sincroProject(event.getValue()));//end of lambda expressions
+        }// end of if cycle
         fieldTextPackage.addValueChangeListener(event -> sincroPackage(event.getValue()));//end of lambda expressions
         fieldComboPackage.addValueChangeListener(event -> sincroPackage(event.getValue()));//end of lambda expressions
     }// end of method
@@ -159,21 +163,31 @@ public class TDialogoPackage extends TDialogo {
 
 
     private Component creaProject() {
-        fieldComboProgetti = new ComboBox<>();
-        fieldComboProgetti.setAllowCustomValue(false);
-        String label = "Progetto";
-        Progetto[] progetti = Progetto.values();
+        if (progettoBase) {
+            fieldComboProgetti = new ComboBox<>();
+            fieldComboProgetti.setAllowCustomValue(false);
+            String label = "Progetto";
+            Progetto[] progetti = Progetto.values();
 
-        fieldComboProgetti.setLabel(label);
-        fieldComboProgetti.setItems(Arrays.asList(progetti));
+            fieldComboProgetti.setLabel(label);
+            fieldComboProgetti.setItems(Arrays.asList(progetti));
 
-        if (Arrays.asList(progetti).contains(project) && isProgettoEsistente()) {
-            fieldComboProgetti.setValue(project);
+            if (Arrays.asList(progetti).contains(project) && isProgettoEsistente()) {
+                fieldComboProgetti.setValue(project);
+            } else {
+                fieldComboProgetti.setValue(null);
+            }// end of if/else cycle
+
+            return fieldComboProgetti;
         } else {
-            fieldComboProgetti.setValue(null);
+            String currentProject = System.getProperty("user.dir");
+            currentProject = currentProject.substring(currentProject.lastIndexOf("/") + 1);
+            fieldTextProject = new TextField();
+            fieldTextProject.setLabel("Progetto");
+            fieldTextProject.setValue(currentProject);
+            fieldTextProject.setEnabled(false);
+            return fieldTextProject;
         }// end of if/else cycle
-
-        return fieldComboProgetti;
     }// end of method
 
 
@@ -302,7 +316,11 @@ public class TDialogoPackage extends TDialogo {
             newPackage = false;
         }// end of if cycle
 
-        sincroProject(fieldComboProgetti.getValue());
+        if (progettoBase) {
+            sincroProject(fieldComboProgetti.getValue());
+        } else {
+            sincroProject(fieldTextProject.getValue());
+        }// end of if/else cycle
     }// end of method
 
 
@@ -310,11 +328,19 @@ public class TDialogoPackage extends TDialogo {
      * Esce dal combo progetti ed regola il package
      */
     private void sincroProject(Progetto progettoSelezionato) {
-        String namePackage;
         project = progettoSelezionato;
+        sincroProject(progettoSelezionato.getNameProject());
+    }// end of method
+
+
+    /**
+     * Esce dal combo progetti ed regola il package
+     */
+    private void sincroProject(String nomeProgettoSelezionato) {
+        String namePackage;
 
         if (!isProgettoEsistente()) {
-            Notification.show("Non esiste il progetto " + progettoSelezionato.getNameProject() + ". Devi modificare il codice: wizard.enumeration.Progetto", DURATA * 4, Notification.Position.MIDDLE);
+            Notification.show("Non esiste il progetto " + nomeProgettoSelezionato + ". Devi modificare il codice: wizard.enumeration.Progetto", DURATA * 4, Notification.Position.MIDDLE);
             project = null;
             fieldTextPackage.setValue("");
             String[] vuota = {""};
@@ -331,15 +357,19 @@ public class TDialogoPackage extends TDialogo {
             sincroPackage(packageName);
         } else {
             packagePlaceHolder.add(fieldComboPackage);
-            if (progettoSelezionato == null) {
+            if (text.isEmpty(nomeProgettoSelezionato)) {
                 invalida(true);
-                fieldComboPackage.setValue(null);
+                if (progettoBase) {
+                    fieldComboPackage.setValue(null);
+                } else {
+                    fieldTextProject.setValue("");
+                }// end of if/else cycle
             } else {
-                packages = recuperaPackageEsistenti(progettoSelezionato.getNameProject());
+                packages = recuperaPackageEsistenti(nomeProgettoSelezionato);
                 if (packages != null && fieldComboPackage != null) {
                     fieldComboPackage.setItems(packages);
                 } else {
-                    Notification.show("Non esistono packages nel progetto " + progettoSelezionato.getNameProject() + ". Puoi crearne uno nuovo", DURATA * 2, Notification.Position.MIDDLE);
+                    Notification.show("Non esistono packages nel progetto " + nomeProgettoSelezionato + ". Puoi crearne uno nuovo", DURATA * 2, Notification.Position.MIDDLE);
                     groupTitolo.setValue(RADIO_NEW);
                 }// end of if/else cycle
 
@@ -478,14 +508,20 @@ public class TDialogoPackage extends TDialogo {
         String path = "";
         String sep = "/";
         String userDir = System.getProperty("user.dir");
-        Progetto project = fieldComboProgetti.getValue();
+        Progetto project = null;
         String projectName = "";
         String moduleName = "";
 
-        if (project != null) {
-            projectName = project.getNameProject();
-            moduleName = project.getNameModule();
-        }// end of if cycle
+        if (progettoBase) {
+            project = fieldComboProgetti.getValue();
+            if (project != null) {
+                projectName = project.getNameProject();
+                moduleName = project.getNameModule();
+            }// end of if cycle
+        } else {
+            projectName = fieldTextProject.getValue();
+            moduleName = projectName;
+        }// end of if/else cycle
 
         String ideaProjectRootPath = text.levaCodaDa(userDir, sep);
         String projectBasePath = ideaProjectRootPath + sep + projectName;
@@ -538,7 +574,11 @@ public class TDialogoPackage extends TDialogo {
 
     protected void setMappa() {
         if (mappaInput != null) {
-            mappaInput.put(Chiave.targetProjectName, fieldComboProgetti.getValue());
+            if (progettoBase) {
+                mappaInput.put(Chiave.targetProjectName, fieldComboProgetti.getValue());
+            } else {
+                mappaInput.put(Chiave.targetProjectName, fieldTextProject.getValue());
+            }// end of if/else cycle
             mappaInput.put(Chiave.newPackageName, getPackage());
             mappaInput.put(Chiave.newEntityName, text.primaMaiuscola(fieldTextEntity.getValue()));
             mappaInput.put(Chiave.newEntityTag, fieldTextTag.getValue());

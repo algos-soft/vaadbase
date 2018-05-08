@@ -40,8 +40,8 @@ import static it.algos.vaadbase.application.BaseCost.TAG_ROL;
 @Slf4j
 //@SpringComponent
 @Scope(ConfigurableBeanFactory.SCOPE_SINGLETON)
-@Qualifier(TAG_ROL)
-@Route(value = TAG_ROL, layout = MainLayout.class)
+//@Qualifier(TAG_ROL)
+//@Route(value = TAG_ROL, layout = MainLayout.class)
 @PageTitle("Role List")
 @AIView(roleTypeVisibility = EARoleType.user)
 @AIScript(sovrascrivibile = true)

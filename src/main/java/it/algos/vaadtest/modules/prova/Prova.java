@@ -27,7 +27,7 @@ import static it.algos.vaadtest.application.AppCost.TAG_PRO;
  * Project vaadbase <br>
  * Created by Algos <br>
  * User: Gac <br>
- * Date: 6-mag-2018 14.40.06 <br>
+ * Date: 8-mag-2018 11.39.38 <br>
  * <br>
  * Estende la entity astratta AEntity che contiene la key property ObjectId <br>
  * <br>

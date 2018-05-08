@@ -17,6 +17,7 @@ public enum Progetto {
 
     vaadin("vaadbase", "vaadbase", "BaseCost"),
     test("vaadbase", "vaadtest", "AppCost"),
+    pippo("pippo", "pippo", "AppCost"),
     bio("vaadbio", "vaadbio", "AppCost"),
     wam("vaadwam", "vaadwam", "AppCost"),;
 

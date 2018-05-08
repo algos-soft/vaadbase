@@ -1,65 +1,68 @@
 package it.algos.vaadbase.modules.company;
 
 import com.vaadin.flow.spring.annotation.SpringComponent;
+import it.algos.vaadbase.annotation.AIScript;
+import it.algos.vaadbase.backend.entity.AEntity;
+import it.algos.vaadbase.backend.service.AService;
 import lombok.extern.slf4j.Slf4j;
-import org.bson.types.ObjectId;
-import java.util.List;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.beans.factory.config.ConfigurableBeanFactory;
+import org.springframework.context.annotation.Scope;
 import org.springframework.data.mongodb.repository.MongoRepository;
 import org.springframework.stereotype.Service;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.context.annotation.Scope;
-import it.algos.vaadbase.annotation.AIScript;
-import it.algos.vaadbase.backend.service.AService;
-import it.algos.vaadbase.backend.entity.AEntity;
+
+import java.util.List;
+import java.util.stream.Collectors;
+
 import static it.algos.vaadbase.application.BaseCost.TAG_COM;
 
 /**
- * Project vaadbase
- * Created by Algos
- * User: Gac
- * Date: 2018-04-02
- * Estende la Entity astratta AService. Layer di collegamento tra il Presenter e la Repository.
- * Annotated with @@Slf4j (facoltativo) per i logs automatici
- * Annotated with @SpringComponent (obbligatorio)
- * Annotated with @Service (ridondante)
- * Annotated with @Scope (obbligatorio = 'singleton')
- * Annotated with @Qualifier (obbligatorio) per permettere a Spring di istanziare la sottoclasse specifica
- * Annotated with @AIScript (facoltativo) per controllare la ri-creazione di questo file nello script del framework
+ * Project vaadbase <br>
+ * Created by Algos <br>
+ * User: Gac <br>
+ * Date: 8-mag-2018 18.52.38 <br>
+ * <br>
+ * Estende la classe astratta AService. Layer di collegamento tra il Presenter e la Repository. <br>
+ * <br>
+ * Annotated with @@Slf4j (facoltativo) per i logs automatici <br>
+ * Annotated with @SpringComponent (obbligatorio) <br>
+ * Annotated with @Service (ridondante) <br>
+ * Annotated with @Scope (obbligatorio = 'singleton') <br>
+ * Annotated with @Qualifier (obbligatorio) per permettere a Spring di istanziare la sottoclasse specifica <br>
+ * Annotated with @AIScript (facoltativo) per controllare la ri-creazione di questo file nello script del framework <br>
  */
 @Slf4j
 @SpringComponent
 @Service
 @Scope(ConfigurableBeanFactory.SCOPE_SINGLETON)
 @Qualifier(TAG_COM)
-@AIScript(sovrascrivibile = true)
+@AIScript(sovrascrivibile = false)
 public class CompanyService extends AService {
 
 
     /**
-     * La repository viene iniettata dal costruttore, in modo che sia disponibile nella superclasse,
+     * La repository viene iniettata dal costruttore, in modo che sia disponibile nella superclasse, <br>
      * dove viene usata l'interfaccia MongoRepository
-     * Spring costruisce al volo, quando serve, una implementazione di RoleRepository (come previsto dal @Qualifier)
-     * Qui si una una interfaccia locale (col casting nel costruttore) per usare i metodi specifici
+     * Spring costruisce al volo, quando serve, una implementazione di RoleRepository (come previsto dal @Qualifier) <br>
+     * Qui si una una interfaccia locale (col casting nel costruttore) per usare i metodi specifici <br>
      */
     private CompanyRepository repository;
 
 
     /**
-     * Costruttore @Autowired (nella superclasse)
-     * In the newest Spring release, it’s constructor does not need to be annotated with @Autowired annotation
-     * Si usa un @Qualifier(), per avere la sottoclasse specifica
-     * Si usa una costante statica, per essere sicuri di scrivere sempre uguali i riferimenti
+     * Costruttore @Autowired (nella superclasse) <br>
+     * In the newest Spring release, it’s constructor does not need to be annotated with @Autowired annotation <br>
+     * Si usa un @Qualifier(), per avere la sottoclasse specifica <br>
+     * Si usa una costante statica, per essere sicuri di scrivere sempre uguali i riferimenti <br>
      */
     public CompanyService(@Qualifier(TAG_COM) MongoRepository repository) {
         super(repository);
         this.repository = (CompanyRepository) repository;
         super.entityClass = Company.class;
-   }// end of Spring constructor
+    }// end of Spring constructor
 
     /**
-     * Ricerca di una entity (la crea se non la trova)
+     * Ricerca di una entity (la crea se non la trova) <br>
      *
      * @param code di riferimento (obbligatorio ed unico)
      *
@@ -76,41 +79,27 @@ public class CompanyService extends AService {
         return entity;
     }// end of method
 
-//    /**
-//     * Creazione in memoria di una nuova entity che NON viene salvata
-//     * Eventuali regolazioni iniziali delle property
-//     * Senza properties per compatibilità con la superclasse
-//     *
-//     * @return la nuova entity appena creata (non salvata)
-//     */
-//    @Override
-//    public Prova newEntity() {
-//        return newEntity("");
-//    }// end of method
-//
-//
-//    /**
-//     * Creazione in memoria di una nuova entity che NON viene salvata
-//     * Eventuali regolazioni iniziali delle property
-//     * Properties obbligatorie
-//     * Gli argomenti (parametri) della new Entity DEVONO essere ordinati come nella Entity (costruttore lombok)
-//     *
-//     * @param code codice di riferimento (obbligatorio)
-//     *
-//     * @return la nuova entity appena creata (non salvata)
-//     */
-//    public Prova newEntity(String code) {
-//        return newEntity(code, "");
-//    }// end of method
-
     /**
      * Creazione in memoria di una nuova entity che NON viene salvata
      * Eventuali regolazioni iniziali delle property
-     * All properties
-     * Gli argomenti (parametri) della new Entity DEVONO essere ordinati come nella Entity (costruttore lombok)
+     * Senza properties per compatibilità con la superclasse
+     *
+     * @return la nuova entity appena creata (non salvata)
+     */
+    @Override
+    public Company newEntity() {
+        return newEntity("", "");
+    }// end of method
+
+
+    /**
+     * Creazione in memoria di una nuova entity che NON viene salvata <br>
+     * Eventuali regolazioni iniziali delle property <br>
+     * All properties <br>
+     * Gli argomenti (parametri) della new Entity DEVONO essere ordinati come nella Entity (costruttore lombok) <br>
      *
      * @param code        codice di riferimento (obbligatorio)
-	* @param descrizione (facoltativa, non unica)
+     * @param descrizione (facoltativa, non unica)
      *
      * @return la nuova entity appena creata (non salvata)
      */
@@ -118,20 +107,20 @@ public class CompanyService extends AService {
         Company entity = null;
 
         entity = findByKeyUnica(code);
-		if (entity != null) {
-			return findByKeyUnica(code);
-		}// end of if cycle
-		
+        if (entity != null) {
+            return findByKeyUnica(code);
+        }// end of if cycle
+
         entity = Company.builder()
-				.code(code)
-				.descrizione(descrizione)
+                .code(code)
+                .descrizione(descrizione)
                 .build();
 
         return entity;
     }// end of method
 
     /**
-     * Recupera una istanza della Entity usando la query della property specifica (obbligatoria ed unica)
+     * Recupera una istanza della Entity usando la query della property specifica (obbligatoria ed unica) <br>
      *
      * @param code di riferimento (obbligatorio)
      *
@@ -143,21 +132,57 @@ public class CompanyService extends AService {
 
 
     /**
-     * Returns all instances of the type
-     * La Entity è EACompanyRequired.nonUsata. Non usa Company.
-     * Lista ordinata
+     * Returns all instances of the type <br>
+     * La Entity è EACompanyRequired.nonUsata. Non usa Company. <br>
+     * Lista ordinata <br>
      *
      * @return lista ordinata di tutte le entities
      */
     @Override
     public List<Company> findAll() {
-        return repository.findAllByOrderByCodeAsc();
+        List<Company> lista = null;
+
+        try { // prova ad eseguire il codice
+            lista = repository.findAllByOrderByCodeAsc();
+        } catch (Exception unErrore2) { // intercetta l'errore
+            log.error(unErrore2.toString());
+            try { // prova ad eseguire il codice
+                lista = repository.findAll();
+            } catch (Exception unErrore3) { // intercetta l'errore
+                log.error(unErrore3.toString());
+            }// fine del blocco try-catch
+        }// fine del blocco try-catch
+
+        return lista;
     }// end of method
 
 
     /**
-     * Opportunità di controllare (per le nuove schede) che la key unica non esista già.
-     * Invocato appena prima del save(), solo per una nuova entity
+     * Fetches the entities whose 'main text property' matches the given filter text.
+     * <p>
+     * The matching is case insensitive. When passed an empty filter text,
+     * the method returns all categories. The returned list is ordered by name.
+     * The 'main text property' is different in each entity class and chosen in the specific subclass
+     *
+     * @param filter the filter text
+     *
+     * @return the list of matching entities
+     */
+    @Override
+    public List<Company> findFilter(String filter) {
+        String normalizedFilter = filter.toLowerCase();
+        List<Company> lista = findAll();
+
+        return lista.stream()
+                .filter(entity -> entity.getCode().toLowerCase().contains(normalizedFilter))
+                .sorted((entity1, entity2) -> entity1.getCode().compareToIgnoreCase(entity2.getCode()))
+                .collect(Collectors.toList());
+    }// end of method
+
+
+    /**
+     * Opportunità di controllare (per le nuove schede) che la key unica non esista già. <br>
+     * Invocato appena prima del save(), solo per una nuova entity <br>
      *
      * @param entityBean nuova da creare
      */
@@ -167,15 +192,14 @@ public class CompanyService extends AService {
     }// end of method
 
     /**
-     * Opportunità di usare una idKey specifica.
-     * Invocato appena prima del save(), solo per una nuova entity
+     * Opportunità di usare una idKey specifica. <br>
+     * Invocato appena prima del save(), solo per una nuova entity <br>
      *
      * @param entityBean da salvare
      */
     protected void creaIdKeySpecifica(AEntity entityBean) {
-        entityBean.id = ((Company)entityBean).getCode();
+        entityBean.id = ((Company) entityBean).getCode();
     }// end of method
 
-    
 
 }// end of class

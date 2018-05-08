@@ -1,14 +1,10 @@
 package it.algos.vaadbase.backend.data;
 
 import com.vaadin.flow.spring.annotation.SpringComponent;
-import it.algos.vaadbase.modules.company.CompanyData;
-import it.algos.vaadbase.modules.role.RoleData;
-import it.algos.vaadbase.modules.role.RoleRepository;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Qualifier;
 
 import javax.annotation.PostConstruct;
-import java.util.Random;
 
 import static it.algos.vaadbase.application.BaseCost.TAG_COM;
 import static it.algos.vaadbase.application.BaseCost.TAG_ROL;
@@ -21,7 +17,7 @@ import static it.algos.vaadbase.application.BaseCost.TAG_ROL;
  * Time: 19:02
  */
 @Slf4j
-@SpringComponent
+//@SpringComponent
 public class ADataGenerator {
 
 

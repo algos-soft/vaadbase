@@ -1,9 +1,9 @@
 package it.algos.vaadtest.application;
 
-import lombok.extern.slf4j.Slf4j;
 import com.vaadin.flow.spring.annotation.SpringComponent;
-import org.springframework.context.annotation.Scope;
+import it.algos.vaadbase.annotation.AIScript;
 import org.springframework.beans.factory.config.ConfigurableBeanFactory;
+import org.springframework.context.annotation.Scope;
 
 /**
  * Project vaadbase
@@ -11,13 +11,18 @@ import org.springframework.beans.factory.config.ConfigurableBeanFactory;
  * User: gac
  * Date: ven, 06-apr-2018
  * Time: 14:43
+ * Completa la classe BaseCost con le costanti statiche specifiche di questa applicazione <br>
+ * <p>
+ * Non annotated with @SpringComponent (inutile) <br>
+ * Non annotated with @Scope (inutile) <br>
+ * Annotated with @AIScript (facoltativo) per controllare la ri-creazione di questo file nello script di algos <br>
  */
-@Slf4j
-@SpringComponent
-@Scope(ConfigurableBeanFactory.SCOPE_SINGLETON)
+@AIScript(sovrascrivibile = false)
 public class AppCost {
+	public static final String TAG_COM ="company";
 	public static final String TAG_BOL ="bolla";
-	public static final String TAG_PRO ="prova";
-	public static final String TAG_HOME_MENU ="home";
-
-}// end of class
+    public static final String TAG_MAG = "magazzino";
+    public static final String TAG_FAT = "fattura";
+    public static final String TAG_PRO = "prova";
+    public static final String TAG_HOME_MENU = "home";
+}// end of static class

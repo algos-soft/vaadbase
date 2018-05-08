@@ -20,7 +20,6 @@ import javax.annotation.PostConstruct;
 import java.awt.*;
 import java.util.ArrayList;
 
-import static it.algos.vaadtest.application.AppCost.TAG_BOL;
 
 /**
  * Project vaadbase
@@ -177,7 +176,7 @@ public class AMenu extends VerticalLayout implements IAMenu {
         this.add(addressButton);
 
         Button  companyButton = new Button("Company", event -> {
-            UI.getCurrent().navigate("company");
+            UI.getCurrent().navigate("company2");
         });//end of lambda expressions
         this.add(companyButton);
 

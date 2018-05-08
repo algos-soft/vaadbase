@@ -16,20 +16,15 @@ import com.vaadin.flow.server.InitialPageSettings;
 import com.vaadin.flow.server.PageConfigurator;
 import com.vaadin.flow.theme.Theme;
 import com.vaadin.flow.theme.lumo.Lumo;
-import it.algos.vaadbase.modules.company.CompanyView;
-import it.algos.vaadbase.modules.role.RoleList;
+import it.algos.vaadbase.application.BaseCost;
 import it.algos.vaadbase.service.AAnnotationService;
+import it.algos.vaadbase.service.AReflectionService;
 import it.algos.vaadbase.service.ATextService;
-import it.algos.vaadbase.wizard.ui.WizardView;
-import it.algos.vaadtest.application.HomeView;
-import it.algos.vaadtest.modules.bolla.BollaList;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 
 import java.util.ArrayList;
 import java.util.List;
-
-import static it.algos.vaadtest.application.AppCost.TAG_HOME_MENU;
 
 /**
  * Project vaadbase
@@ -58,11 +53,13 @@ public class MainLayout extends Div implements RouterLayout, AfterNavigationObse
     protected List<RouterLink> arrayRouterLink;
     protected H2 title;
     protected AAnnotationService annotation;
+    protected AReflectionService reflection;
     private ATextService text = ATextService.getInstance();
 
     @Autowired
-    public MainLayout(AAnnotationService annotation) {
+    public MainLayout(AAnnotationService annotation, AReflectionService reflection) {
         this.annotation = annotation;
+        this.reflection = reflection;
         inizia();
     }// end of constructor
 
@@ -75,8 +72,8 @@ public class MainLayout extends Div implements RouterLayout, AfterNavigationObse
         title = new H2();
         title.addClassName("main-layout__title");
 
-        //--Crea i menu per la gestione delle SpringView (standard e specifiche)
-        this.addAllViste();
+        //--Crea i menu per la gestione delle @Route (views) standard e specifiche
+        this.addAllRouteView();
 
         if (arrayRouterLink.size() > 0) {
             navigation = new Div();
@@ -97,42 +94,67 @@ public class MainLayout extends Div implements RouterLayout, AfterNavigationObse
         addClassName("main-layout");
     }// end of Spring constructor
 
-    /**
-     * Aggiunge tutte le viste (SpringView) standard e specifiche
-     */
-    protected void addAllViste() {
-        this.addVisteStandard();
-        this.addVisteSpecifiche();
-    }// end of method
+
+
 
 
     /**
-     * Aggiunge le viste (moduli/package) standard
-     * Alcuni moduli sono specifici di un collegamento come programmatore
-     * Alcuni moduli sono già definiti per tutte le applicazioni (LogMod, VersMod, PrefMod)
-     * Vengono usati come da relativo flag: AlgosApp.USE_LOG, AlgosApp.USE_VERS, AlgosApp.USE_PREF
+     * Aggiunge tutte le @Route (views) standard e specifiche
+     * Le @Route vengono lette da una Lista statica mantenuta in BaseCost
+     * La lista è stata costruita alla partenza (boot) dell'applicazione, PRIMA del browser
      */
-    protected void addVisteStandard() {
-        addView(HomeView.class, HomeView.VIEW_ICON);
-        addView(RoleList.class, RoleList.VIEW_ICON);
-        addView(CompanyView.class, CompanyView.VIEW_ICON);
-    }// end of method
+    private void addAllRouteView() {
+         List<Class> listaStatica =BaseCost.MENU_CLAZZ_LIST;
 
+        for (Class viewClazz : listaStatica) {
+            addView(viewClazz);
+        }// end of for cycle
+
+    }// end of method
 
     /**
-     * Creazione delle viste (moduli/package) specifiche dell'applicazione.
-     * <p>
-     * Aggiunge al menu generale, le viste (moduli/package) disponibili alla partenza dell'applicazione
-     * Ogni modulo può eventualmente modificare il proprio menu
-     * <p>
-     * Deve (DEVE) essere sovrascritto dalla sottoclasse
-     * Chiama il metodo  addView(...) della superclasse per ogni vista (modulo/package)
-     * La vista viene aggiunta alla barra di menu principale (di partenza)
-     */
-    protected void addVisteSpecifiche() {
-        addView(BollaList.class, BollaList.VIEW_ICON);
-        addView(WizardView.class, WizardView.VIEW_ICON);
-    }// end of method
+     * Aggiunge le @Route (view) specifiche di questa applicazione
+     * Le @Route vengono aggiunte ad una Lista statica mantenuta in BaseCost
+     * Vengonoi aggiunte dopo quelle standard
+     * Verranno lette da MainLayout la prima volta che il browser 'chiama' una view
+
+     //    /**
+//     * Aggiunge tutte le viste (SpringView) standard e specifiche
+//     */
+//    protected void addAllViste() {
+//        this.addVisteStandard();
+//        this.addVisteSpecifiche();
+//    }// end of method
+
+
+//    /**
+//     * Aggiunge le viste (moduli/package) standard
+//     * Alcuni moduli sono specifici di un collegamento come programmatore
+//     * Alcuni moduli sono già definiti per tutte le applicazioni (LogMod, VersMod, PrefMod)
+//     * Vengono usati come da relativo flag: AlgosApp.USE_LOG, AlgosApp.USE_VERS, AlgosApp.USE_PREF
+//     */
+//    protected void addVisteStandard() {
+//        BaseCost.MENU_CLAZZ_LIST.add(HomeView.class);
+//        BaseCost.MENU_CLAZZ_LIST.add(RoleList.class);
+//        BaseCost.MENU_CLAZZ_LIST.add(CompanyView.class);
+//    }// end of method
+
+
+//    /**
+//     * Creazione delle viste (moduli/package) specifiche dell'applicazione.
+//     * <p>
+//     * Aggiunge al menu generale, le viste (moduli/package) disponibili alla partenza dell'applicazione
+//     * Ogni modulo può eventualmente modificare il proprio menu
+//     * <p>
+//     * Deve (DEVE) essere sovrascritto dalla sottoclasse
+//     * Chiama il metodo  addView(...) della superclasse per ogni vista (modulo/package)
+//     * La vista viene aggiunta alla barra di menu principale (di partenza)
+//     */
+//    protected void addVisteSpecifiche() {
+//        addView(ProvaViewList.class);
+//        addViewOld(BollaList.class, BollaList.VIEW_ICON);
+//        addViewOld(WizardView.class, WizardView.VIEW_ICON);
+//    }// end of method
 
 
     /**
@@ -140,7 +162,33 @@ public class MainLayout extends Div implements RouterLayout, AfterNavigationObse
      *
      * @param viewClazz the view class to instantiate
      */
-    protected RouterLink addView(Class<? extends AView> viewClazz, VaadinIcons icon) {
+    protected RouterLink addView(Class<? extends AViewList> viewClazz) {
+        RouterLink routerLink = null;
+        String tagMenu = annotation.getViewName(viewClazz);
+        VaadinIcons icon = reflection.getIconView(viewClazz);
+
+        try { // prova ad eseguire il codice
+            routerLink = new RouterLink("", viewClazz);
+
+        } catch (Exception unErrore) { // intercetta l'errore
+            log.error(unErrore.toString());
+        }// fine del blocco try-catch
+
+        if (routerLink != null) {
+            routerLink.add(new Icon(icon), new Text(text.primaMaiuscola(tagMenu)));
+            routerLink.addClassName("main-layout__nav-item");
+            arrayRouterLink.add(routerLink);
+        }// end of if cycle
+
+        return routerLink;
+    }// end of method
+
+    /**
+     * Adds a view to the UI
+     *
+     * @param viewClazz the view class to instantiate
+     */
+    protected RouterLink addViewOld(Class<? extends AView> viewClazz, VaadinIcons icon) {
         RouterLink routerLink = null;
         String tagMenu = annotation.getViewName(viewClazz);
 
@@ -159,6 +207,7 @@ public class MainLayout extends Div implements RouterLayout, AfterNavigationObse
 
         return routerLink;
     }// end of method
+
 
     @Override
     public void afterNavigation(AfterNavigationEvent afterNavigationEvent) {

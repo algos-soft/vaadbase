@@ -11,22 +11,23 @@ import java.util.List;
 import static it.algos.vaadbase.application.BaseCost.TAG_COM;
 
 /**
- * Project vaadbase
- * Created by Algos
- * User: Gac
- * Date: 2018-04-02
- * Estende la l'interaccia MongoRepository col casting alla Entity relativa di questa repository
- * Annotated with @SpringComponent (obbligatorio)
- * Annotated with @Scope (obbligatorio = 'singleton')
- * Annotated with @Qualifier (obbligatorio) per permettere a Spring di istanziare la sottoclasse specifica
- * Annotated with @AIScript (facoltativo) per controllare la ri-creazione di questo file nello script del framework
+ * Project vaadbase <br>
+ * Created by Algos <br>
+ * User: Gac <br>
+ * Date: 8-mag-2018 18.52.38 <br>
+ * <br>
+ * Estende la l'interaccia MongoRepository col casting alla Entity relativa di questa repository <br>
+ * <br>
+ * Annotated with @SpringComponent (obbligatorio) <br>
+ * Annotated with @Scope (obbligatorio = 'singleton') <br>
+ * Annotated with @Qualifier (obbligatorio) per permettere a Spring di istanziare la sottoclasse specifica <br>
+ * Annotated with @AIScript (facoltativo) per controllare la ri-creazione di questo file nello script del framework <br>
  */
 @SpringComponent
 @Scope(ConfigurableBeanFactory.SCOPE_SINGLETON)
 @Qualifier(TAG_COM)
-@AIScript(sovrascrivibile = true)
+@AIScript(sovrascrivibile = false)
 public interface CompanyRepository extends MongoRepository<Company, String> {
-
 
     //@TODO
     // Le query riportate sono INDICATIVE e possono essere sostituite

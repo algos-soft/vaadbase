@@ -11,7 +11,7 @@ import java.util.List;
 import static it.algos.@MODULELOWER@.application.@APPCOST@.@QUALIFIER@;
 
 /**
- * Project @PROJECT@ <br>
+ * Project @MODULELOWER@ <br>
  * Created by Algos <br>
  * User: @USER@ <br>
  * Date: @TODAY@ <br>
@@ -26,7 +26,7 @@ import static it.algos.@MODULELOWER@.application.@APPCOST@.@QUALIFIER@;
 @SpringComponent
 @Scope(ConfigurableBeanFactory.SCOPE_SINGLETON)
 @Qualifier(@QUALIFIER@)
-@AIScript(sovrascrivibile = true)
+@AIScript(sovrascrivibile = false)
 public interface @ENTITY@Repository extends MongoRepository<@ENTITY@, String> {
 
     //@TODO

@@ -4,6 +4,7 @@ import com.vaadin.flow.router.RouterLayout;
 import it.algos.vaadbase.ui.MainLayout;
 import org.springframework.data.domain.Sort;
 
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 import java.util.Locale;
@@ -82,7 +83,7 @@ public class BaseCost {
     public final static String BUTTON_ICON_WIDTH = "3em";
 
     public final static String PROPERTY_ID = "id";
-    public final static String PROPERTY_COMPANY = "company";
+    public final static String PROPERTY_COMPANY = "company2";
     public final static String PROPERTY_SERIAL = "serialVersionUID";
     public final static String PROPERTY_ORDINE = "ordine";
     public final static String PROPERTY_NOTE = "note";
@@ -101,6 +102,7 @@ public class BaseCost {
     public final static List<String> ESCLUSI = Arrays.asList(esclusiMatrice);
     private final static String[] companyMatrice = {COMPANY_CODE, COMPANY_UNICO};
     public final static List<String> COMPANY_OPTIONAL = Arrays.asList(companyMatrice);
+    public static List<Class> MENU_CLAZZ_LIST = new ArrayList<>();
 
 
 }// end of static class

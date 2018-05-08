@@ -6,7 +6,6 @@ import it.algos.vaadbase.backend.entity.AEntity;
 import it.algos.vaadbase.ui.IAView;
 import it.algos.vaadbase.ui.annotation.*;
 import it.algos.vaadbase.ui.enumeration.EAFieldType;
-import it.algos.vaadtest.application.AppCost;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.config.ConfigurableBeanFactory;
@@ -211,7 +210,7 @@ public class AAnnotationService {
             name = annotation.value();
         }// end of if cycle
 
-        name = text.isValid(name) ? name : AppCost.TAG_HOME_MENU;
+        name = text.isValid(name) ? name : "home";
         return name;
     }// end of method
 
@@ -304,7 +303,7 @@ public class AAnnotationService {
 //        AIEntity annotation = getAIEntity(clazz);
 //
 //        if (annotation != null) {
-//            companyRequired = annotation.company();
+//            companyRequired = annotation.company2();
 //        }// end of if cycle
 //
 //        return companyRequired;
@@ -958,8 +957,8 @@ public class AAnnotationService {
 //    /**
 //     * Get the status of visibility for the field of ACompanyEntity.
 //     * <p>
-//     * Controlla se l'applicazione usa le company - flag  AlgosApp.USE_MULTI_COMPANY=true
-//     * Controlla se la collection (table) usa la company
+//     * Controlla se l'applicazione usa le company2 - flag  AlgosApp.USE_MULTI_COMPANY=true
+//     * Controlla se la collection (table) usa la company2
 //     * Controlla se l'buttonUser collegato è un developer
 //     *
 //     * @param clazz the entity class

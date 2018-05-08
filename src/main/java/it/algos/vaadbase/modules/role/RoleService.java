@@ -196,7 +196,7 @@ public class RoleService extends AService {
     }// end of method
 
     /**
-     * Ordine di presentazione (obbligatorio, unico per tutte le eventuali company),
+     * Ordine di presentazione (obbligatorio, unico per tutte le eventuali company2),
      * Viene calcolato in automatico alla creazione della entity
      * Recupera dal DB il valore massimo pre-esistente della property
      * Incrementa di uno il risultato

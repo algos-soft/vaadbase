@@ -24,7 +24,7 @@ public class VaadinWelcome extends Composite<Div> implements HasComponents {
 
     public VaadinWelcome() {
         add(immagine);
-        add(new Paragraph("Hello Vaadin 10"));
+//        add(new Paragraph("Hello Vaadin 10"));
 //        add(new Paragraph("Framework di prova con Vaadin 10"));
     }// end of method
 

@@ -1,12 +1,11 @@
 package it.algos.vaadbase;
 
+import com.vaadin.flow.component.icon.VaadinIcons;
 import it.algos.vaadbase.modules.role.Role;
 import it.algos.vaadbase.modules.role.RoleService;
 import it.algos.vaadbase.service.AArrayService;
 import it.algos.vaadbase.service.AReflectionService;
 import it.algos.vaadbase.service.ATextService;
-import it.algos.vaadbase.ui.enumeration.EARoleType;
-import lombok.extern.slf4j.Slf4j;
 import name.falgout.jeffrey.testing.junit5.MockitoExtension;
 import org.junit.jupiter.api.*;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -16,9 +15,7 @@ import org.mockito.MockitoAnnotations;
 import java.util.Arrays;
 import java.util.Map;
 
-import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.junit.jupiter.api.Assertions.assertNotNull;
-import static org.junit.jupiter.api.Assertions.assertTrue;
+import static org.junit.jupiter.api.Assertions.*;
 
 /**
  * Project springvaadin
@@ -35,32 +32,23 @@ public class AReflectionServiceTest extends ATest {
 
 
     @InjectMocks
-    private AReflectionService service;
-
-
-//    @InjectMocks
-//    public AAnnotationService annotation;
-
-
-    @InjectMocks
     public ATextService text;
 
 
+    //    @InjectMocks
+//    public AAnnotationService annotation;
     @InjectMocks
     public AArrayService array;
-
-
-//    @InjectMocks
-//    public ALogin login;
-
-
     @InjectMocks
     public Role role;
 
 
+    //    @InjectMocks
+//    public ALogin login;
     @InjectMocks
     public RoleService roleService;
-
+    @InjectMocks
+    private AReflectionService service;
 
     @BeforeAll
     public void setUp() {
@@ -245,6 +233,26 @@ public class AReflectionServiceTest extends ATest {
 
     @SuppressWarnings("javadoc")
     /**
+     * Fields dichiarati nella View
+     * Non ordinati
+     *
+     * @param viewClazz da cui estrarre i fields
+     *
+     * @return lista di fields della View
+     */
+    @Test
+    public void getAllStatic() {
+        int ottenutoSize;
+        int previstoSize = 3;
+
+        ottenutoFieldList = service.getAllFieldsView(ROLE_VIEW_CLASS);
+        assertNotNull(ottenutoFieldList);
+        ottenutoSize = ottenutoFieldList.size();
+        assertEquals(previstoSize, ottenutoSize);
+    }// end of single test
+
+    @SuppressWarnings("javadoc")
+    /**
      * Valore della property statica di una classe
      *
      * @param clazz           classe su cui operare la riflessione
@@ -253,6 +261,21 @@ public class AReflectionServiceTest extends ATest {
     @Test
     public void getPropertyRes() {
         //@todo IMPLEMENTARE
+    }// end of single test
+
+
+    @SuppressWarnings("javadoc")
+    /**
+     * Valore della VaadinIcons di una view
+     *
+     * @param viewClazz classe view su cui operare la riflessione
+     */
+    @Test
+    public void getIconView() {
+        VaadinIcons iconaPrevista = VaadinIcons.ACADEMY_CAP;
+        VaadinIcons iconaOttenuta = service.getIconView(ROLE_VIEW_CLASS);
+        assertNotNull(iconaOttenuta);
+        assertEquals(iconaPrevista, iconaOttenuta);
     }// end of single test
 
 
@@ -299,7 +322,7 @@ public class AReflectionServiceTest extends ATest {
      * Fields dichiarati nella Entity, da usare come columns della Grid (List)
      * Se listaNomi è nulla, usa tutti i campi (senza ID, senza note, senza creazione, senza modifica)
      * Comprende la entity e tutte le superclassi (fino a ACEntity e AEntity)
-     * Se la company è prevista (AlgosApp.USE_MULTI_COMPANY, login.isDeveloper() e entityClazz derivata da ACEntity),
+     * Se la company2 è prevista (AlgosApp.USE_MULTI_COMPANY, login.isDeveloper() e entityClazz derivata da ACEntity),
      * la posiziona come prima colonna a sinistra
      *
      * @param entityClazz da cui estrarre i fields

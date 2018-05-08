@@ -162,7 +162,7 @@ public  class AService implements IAService {
 //     * 2) Se la classe AEntity->@AIList(columns = ...) prevede una lista specifica, usa quella lista (con o senza ID)
 //     * 3) Se non trova AEntity->@AIList, usa tutti i campi della AEntity (senza ID)
 //     * 5) Vengono visualizzati anche i campi delle superclassi della classe AEntity
-//     * Ad esempio: company della classe ACompanyEntity (se è previsto e se è un developer)
+//     * Ad esempio: company2 della classe ACompanyEntity (se è previsto e se è un developer)
 //     *
 //     * @return lista di fields visibili nella Grid
 //     */
@@ -214,7 +214,7 @@ public  class AService implements IAService {
 //     * Fields dichiarati nella Entity, da usare come columns della Grid (List)
 //     * Se listaNomi è nulla, usa tutti i campi (senza ID, senza note, senza creazione, senza modifica)
 //     * Comprende la entity e tutte le superclassi (fino a ACEntity e AEntity)
-//     * Se la company è prevista (AlgosApp.USE_MULTI_COMPANY, login.isDeveloper() e entityClazz derivata da ACEntity),
+//     * Se la company2 è prevista (AlgosApp.USE_MULTI_COMPANY, login.isDeveloper() e entityClazz derivata da ACEntity),
 //     * la posiziona come prima colonna a sinistra
 //     *
 //     * @param listaNomi dei fields da considerare. Tutti, se listaNomi=null
@@ -234,7 +234,7 @@ public  class AService implements IAService {
 //     * 2) Se la classe AEntity->@AIForm(fields = ...) prevede una lista specifica, usa quella lista (con o senza ID)
 //     * 3) Se non trova AEntity->@AIForm, usa tutti i campi della AEntity (senza ID)
 //     * 5) Vengono visualizzati anche i campi delle superclassi della classe AEntity
-//     * Ad esempio: company della classe ACompanyEntity (se è previsto e se è un developer)
+//     * Ad esempio: company2 della classe ACompanyEntity (se è previsto e se è un developer)
 //     *
 //     * @return lista di fields visibili nel Form
 //     */
@@ -275,7 +275,7 @@ public  class AService implements IAService {
 //     * user = senza ID, senza note, senza creazione, senza modifica
 //     * developer = con ID, con note, con creazione, con modifica
 //     * Comprende la entity e tutte le superclassi (fino a ACEntity e AEntity)
-//     * Se la company è prevista (AlgosApp.USE_MULTI_COMPANY, login.isDeveloper() e entityClazz derivata da ACEntity),
+//     * Se la company2 è prevista (AlgosApp.USE_MULTI_COMPANY, login.isDeveloper() e entityClazz derivata da ACEntity),
 //     * la posiziona come secondo campo in alto, dopo la keyID
 //     *
 //     * @param listaNomi dei fields da considerare. Tutti, se listaNomi=null
@@ -371,13 +371,13 @@ public  class AService implements IAService {
 
 
 //    /**
-//     * Se la nuova entity usa la company, la recupera dal login
+//     * Se la nuova entity usa la company2, la recupera dal login
 //     * Se la campany manca, lancia l'eccezione
 //     *
 //     * @param entityBean da creare
 //     */
 //    protected AEntity addCompany(AEntity entityBean) {
-//        Company company;
+//        Company company2;
 //        EACompanyRequired tableCompanyRequired = annotation.getCompanyRequired(entityBean.getClass());
 //
 //        //--se la EntityClass non estende ACCompany, nopn deve fare nulla
@@ -393,17 +393,17 @@ public  class AService implements IAService {
 //                    log.error("C'è una discrepanza tra 'extends ACEntity' della classe " + entityBean.getClass().getSimpleName() + " e l'annotation @AIEntity della classe stessa");
 //                    break;
 //                case facoltativa:
-//                    company = login.getCompany();
-//                    if (company != null) {
-//                        ((ACEntity) entityBean).company = company;
+//                    company2 = login.getCompany();
+//                    if (company2 != null) {
+//                        ((ACEntity) entityBean).company2 = company2;
 //                    } else {
-//                        log.info("Nuova scheda senza company (facoltativa)");
+//                        log.info("Nuova scheda senza company2 (facoltativa)");
 //                    }// end of if/else cycle
 //                    break;
 //                case obbligatoria:
-//                    company = login.getCompany();
-//                    if (company != null) {
-//                        ((ACEntity) entityBean).company = company;
+//                    company2 = login.getCompany();
+//                    if (company2 != null) {
+//                        ((ACEntity) entityBean).company2 = company2;
 //                    } else {
 //                        entityBean = null;
 //                        log.error(NullCompanyException.MESSAGE);
@@ -423,8 +423,8 @@ public  class AService implements IAService {
      * Use the returned instance for further operations
      * as the save operation might have changed the entity instance completely.
      * <p>
-     * Controlla se l'applicazione usa le company - flag  AlgosApp.USE_MULTI_COMPANY=true
-     * Controlla se la collection (table) usa la company: può essere
+     * Controlla se l'applicazione usa le company2 - flag  AlgosApp.USE_MULTI_COMPANY=true
+     * Controlla se la collection (table) usa la company2: può essere
      * a)EACompanyRequired.nonUsata
      * b)EACompanyRequired.facoltativa
      * c)EACompanyRequired.obbligatoria
@@ -478,7 +478,7 @@ public  class AService implements IAService {
 //        // --inserisce il valore della data attuale per la modifica di una scheda
 //        modifiedBean.modifica = LocalDateTime.now();
 //
-//        //--Controlla se l'applicazione usa le company
+//        //--Controlla se l'applicazione usa le company2
 //        if (AlgosApp.USE_MULTI_COMPANY) {
 //            switch (tableCompanyRequired) {
 //                case nonUsata:
@@ -611,7 +611,7 @@ public  class AService implements IAService {
 
 //    /**
 //     * Controlla che la entity estenda ACompanyEntity
-//     * Se manca la company, cerca di usare quella del login (se esiste)
+//     * Se manca la company2, cerca di usare quella del login (se esiste)
 //     * Se la campany manca ancora, lancia l'eccezione
 //     * //     * Controlla che la gestione della chiave unica sia soddisfatta
 //     *
@@ -620,19 +620,19 @@ public  class AService implements IAService {
 //    @Deprecated
 //    private boolean checkCompany(AEntity entity, boolean usaCodeCompanyUnico) throws Exception {
 //        ACEntity companyEntity;
-//        Company company;
+//        Company company2;
 //        String codeCompanyUnico;
 //
 //        if (entity instanceof ACEntity) {
 //            companyEntity = (ACEntity) entity;
-//            company = companyEntity.getCompany();
+//            company2 = companyEntity.getCompany();
 //        } else {
 //            throw new NotCompanyEntityException(entityClass);
 //        }// end of if/else cycle
 //
-//        if (company == null) {
-////            company = LibSession.getCompany();@todo rimettere
-////            companyEntity.setCompany(company);
+//        if (company2 == null) {
+////            company2 = LibSession.getCompany();@todo rimettere
+////            companyEntity.setCompany(company2);
 //        }// end of if cycle
 //
 //        if (companyEntity.getCompany() == null) {
@@ -684,7 +684,7 @@ public  class AService implements IAService {
 
 
 //    /**
-//     * Ordine di presentazione (obbligatorio, unico per tutte le eventuali company),
+//     * Ordine di presentazione (obbligatorio, unico per tutte le eventuali company2),
 //     * Viene calcolato in automatico alla creazione della entity
 //     * Recupera dal DB il valore massimo pre-esistente della property
 //     * Incrementa di uno il risultato

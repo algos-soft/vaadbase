@@ -6,12 +6,8 @@ import com.vaadin.flow.component.icon.Icon;
 import com.vaadin.flow.component.icon.VaadinIcons;
 import com.vaadin.flow.router.RouterLink;
 import com.vaadin.flow.spring.annotation.SpringComponent;
-import it.algos.vaadbase.modules.company.CompanyView;
-import it.algos.vaadbase.modules.role.RoleList;
 import it.algos.vaadbase.ui.menu.IAMenu;
-import it.algos.vaadtest.application.HomeView;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.beans.factory.annotation.Qualifier;
 
 
 /**

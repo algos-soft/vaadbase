@@ -8,7 +8,7 @@ import com.vaadin.flow.data.validator.IntegerRangeValidator;
 import com.vaadin.flow.data.validator.StringLengthValidator;
 import it.algos.vaadbase.annotation.AIScript;
 import it.algos.vaadbase.presenter.IAPresenter;
-import it.algos.vaadbase.ui.dialog.AForm;
+import it.algos.vaadbase.ui.dialog.ADialog;
 import it.algos.vaadbase.backend.service.IAService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
@@ -21,7 +21,7 @@ import static it.algos.vaadtest.application.AppCost.TAG_PRO;
  * Project vaadbase <br>
  * Created by Algos
  * User: Gac
- * Date: 6-mag-2018 14.40.06
+ * Date: 8-mag-2018 11.39.38
  * Estende la Entity astratta AForm di tipo AView per visualizzare i fields
  * Annotated with @Scope (obbligatorio = 'prototype')
  * Annotated with @Qualifier (obbligatorio) per permettere a Spring di istanziare la sottoclasse specifica
@@ -30,12 +30,12 @@ import static it.algos.vaadtest.application.AppCost.TAG_PRO;
 @Scope(ConfigurableBeanFactory.SCOPE_SINGLETON)
 @Qualifier(TAG_PRO)
 @AIScript(sovrascrivibile = true)
-public class ProvaForm extends AForm<Prova> {
+public class ProvaViewDialog extends ADialog<Prova> {
 
     /**
      * Costruttore
      */
-    public ProvaForm(BiConsumer<Prova, AForm.Operation> itemSaver, Consumer<Prova> itemDeleter, IAService service) {
+    public ProvaViewDialog(BiConsumer<Prova, ADialog.Operation> itemSaver, Consumer<Prova> itemDeleter, IAService service) {
         super("Prova", itemSaver, itemDeleter, service, Prova.class);
     }// end of constructor
 

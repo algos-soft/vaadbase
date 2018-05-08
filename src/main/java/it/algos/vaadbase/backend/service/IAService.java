@@ -104,7 +104,7 @@ public interface IAService {
 //     * 3) Se non trova AEntity->@AIList, usa tutti i campi della AEntity (senza ID)
 //     * 4) Se trova AEntity->@AIList(showsID = true), questo viene aggiunto, indipendentemente dalla lista
 //     * 5) Vengono visualizzati anche i campi delle superclassi della classe AEntity
-//     * Ad esempio: company della classe ACompanyEntity
+//     * Ad esempio: company2 della classe ACompanyEntity
 //     *
 //     * @return lista di fields visibili nella Grid
 //     */
@@ -142,7 +142,7 @@ public interface IAService {
 //     * 3) Se non trova AEntity->@AIForm, usa tutti i campi della AEntity (senza ID)
 //     * 4) Se trova AEntity->@AIForm(showsID = true), questo viene aggiunto, indipendentemente dalla lista
 //     * 5) Vengono visualizzati anche i campi delle superclassi della classe AEntity
-//     * Ad esempio: company della classe ACompanyEntity
+//     * Ad esempio: company2 della classe ACompanyEntity
 //     *
 //     * @return lista di fields visibili nel Form
 //     */

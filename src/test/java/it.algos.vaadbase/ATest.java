@@ -2,10 +2,9 @@ package it.algos.vaadbase;
 
 import it.algos.vaadbase.backend.entity.AEntity;
 import it.algos.vaadbase.modules.role.Role;
-import it.algos.vaadbase.modules.role.RoleView;
+import it.algos.vaadbase.modules.role.RoleViewList;
 import it.algos.vaadbase.ui.IAView;
 import it.algos.vaadbase.ui.enumeration.EAFieldType;
-import lombok.extern.slf4j.Slf4j;
 
 import java.lang.reflect.Field;
 import java.util.List;
@@ -22,7 +21,7 @@ public class ATest {
     protected final static String FIELD_NAME_KEY = "id";
     protected final static String FIELD_NAME_ORDINE = "ordine";
     protected final static String FIELD_NAME_CODE = "code";
-    protected final static String FIELD_NAME_COMPANY = "company";
+    protected final static String FIELD_NAME_COMPANY = "company2";
     protected final static String FIELD_NAME_NICKNAME = "nickname";
     protected final static String FIELD_NAME_PASSWORD = "password";
     protected final static String FIELD_NAME_ROLE = "role";
@@ -39,7 +38,7 @@ public class ATest {
     protected static Field FIELD_ORDINE;
     protected static Field FIELD_CODE;
     protected static Field FIELD_ROLE;
-    protected static Class<? extends IAView> ROLE_VIEW_CLASS = RoleView.class;
+    protected static Class<? extends IAView> ROLE_VIEW_CLASS = RoleViewList.class;
     protected static Class<? extends AEntity> ROLE_ENTITY_CLASS = Role.class;
 
     protected Field reflectionJavaField;

@@ -32,6 +32,7 @@ import java.util.Map;
 @Scope(ConfigurableBeanFactory.SCOPE_SINGLETON)
 public abstract class TDialogo extends Dialog {
 
+    protected static final String PROJECT_BASE_NAME = "vaadbase";
     protected final static String NORMAL_WIDTH = "9em";
     protected final static String NORMAL_HEIGHT = "3em";
     protected static final String DIR_MAIN = "/src/main";
@@ -63,6 +64,7 @@ public abstract class TDialogo extends Dialog {
         this.setCloseOnEsc(false);
         this.setCloseOnOutsideClick(false);
     }// end of method
+
 
 
     protected Component creaFooter() {
