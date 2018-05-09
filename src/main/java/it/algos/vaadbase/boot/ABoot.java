@@ -2,8 +2,9 @@ package it.algos.vaadbase.boot;
 
 import it.algos.vaadbase.application.BaseCost;
 import it.algos.vaadbase.modules.company.CompanyViewList;
+import it.algos.vaadbase.modules.role.RoleData;
 import it.algos.vaadbase.modules.role.RoleViewList;
-import lombok.extern.slf4j.Slf4j;
+import org.springframework.beans.factory.annotation.Autowired;
 
 /**
  * Project vaadbase
@@ -11,13 +12,28 @@ import lombok.extern.slf4j.Slf4j;
  * User: gac
  * Date: dom, 06-mag-2018
  * Time: 18:43
+ * <p>
  * Running logic after the Spring context has been initialized
- * Any class that use this @EventListener annotation,
- * will be executed before the application is up and its onApplicationEvent method will be called
+ * The method onApplicationEvent() will be executed nella sottoclasse before the application is up and <br>
+ * <p>
+ * Aggiunge tutte le @Route (views) standard e specifiche di questa applicazione <br>
+ * <p>
+ * Not annotated with @SpringComponent (SpringBoot crea la sottoclasse concreta) <br>
+ * Not annotated with @Scope (inutile) <br>
  */
-@Slf4j
 public abstract class ABoot {
 
+//    /**
+//     * Inietta da Spring come 'singleton'
+//     */
+//    @Autowired
+//    public RoleData role;
+
+//    /**
+//     * Inietta da Spring come 'singleton'
+//     */
+//    @Autowired
+//    public StatoData stato;
 
     /**
      * Inizializzazione dei dati standard di alcune collections sul DB Mongo
@@ -31,6 +47,7 @@ public abstract class ABoot {
 
     /**
      * Aggiunge le @Route (view) standard
+     * Nella sottoclasse concreta che invoca questo metodo, aggiunge le @Route (view) specifiche dell'applicazione
      * Le @Route vengono aggiunte ad una Lista statica mantenuta in BaseCost
      * Verranno lette da MainLayout la prima volta che il browser 'chiama' una view
      */

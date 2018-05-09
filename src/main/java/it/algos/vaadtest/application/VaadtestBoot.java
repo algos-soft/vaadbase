@@ -5,12 +5,12 @@ import it.algos.vaadbase.annotation.AIScript;
 import it.algos.vaadbase.application.BaseCost;
 import it.algos.vaadbase.boot.ABoot;
 import it.algos.vaadbase.wizard.ui.WizardView;
+import it.algos.vaadtest.modules.bolla.BollaViewList;
 import it.algos.vaadtest.modules.prova.ProvaViewList;
 import org.springframework.beans.factory.config.ConfigurableBeanFactory;
 import org.springframework.context.annotation.Scope;
 import org.springframework.context.event.ContextRefreshedEvent;
 import org.springframework.context.event.EventListener;
-import it.algos.vaadtest.modules.bolla.BollaViewList;
 
 /**
  * Project vaadbase
@@ -18,6 +18,7 @@ import it.algos.vaadtest.modules.bolla.BollaViewList;
  * User: gac
  * Date: dom, 06-mag-2018
  * Time: 18:45
+ * <p>
  * Estende la classe ABoot per le regolazioni iniziali di questa applicazione <br>
  * Running logic after the Spring context has been initialized
  * The method onApplicationEvent() will be executed before the application is up and <br>
@@ -77,7 +78,7 @@ public class VaadtestBoot extends ABoot {
      * Verranno lette da MainLayout la prima volta che il browser 'chiama' una view
      */
     private void addRouteSpecifiche() {
-		BaseCost.MENU_CLAZZ_LIST.add(BollaViewList.class);
+        BaseCost.MENU_CLAZZ_LIST.add(BollaViewList.class);
         BaseCost.MENU_CLAZZ_LIST.add(HomeView.class);
         BaseCost.MENU_CLAZZ_LIST.add(ProvaViewList.class);
         BaseCost.MENU_CLAZZ_LIST.add(WizardView.class);

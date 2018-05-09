@@ -18,7 +18,7 @@ import static it.algos.vaadbase.application.BaseCost.TAG_ROL;
  * Created by Algos
  * User: Gac
  * Date: 2018-04-02
- * Estende la Entity astratta APresenter che gestisce la business logic
+ * Estende la classe astratta APresenter che gestisce la business logic
  * Annotated with @SpringComponent (obbligatorio)
  * Annotated with @Scope (obbligatorio = 'session')
  * Annotated with @Qualifier (obbligatorio) per permettere a Spring di istanziare la sottoclasse specifica

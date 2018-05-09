@@ -22,36 +22,34 @@ import static it.algos.vaadbase.application.BaseCost.TAG_COM;
  * User: Gac <br>
  * Date: 8-mag-2018 18.52.38 <br>
  * <br>
- * Estende la classe astratta AService. Layer di collegamento tra il Presenter e la Repository. <br>
+ * Estende la classe astratta AService. Layer di collegamento per la Repository. <br>
  * <br>
- * Annotated with @@Slf4j (facoltativo) per i logs automatici <br>
  * Annotated with @SpringComponent (obbligatorio) <br>
  * Annotated with @Service (ridondante) <br>
  * Annotated with @Scope (obbligatorio = 'singleton') <br>
- * Annotated with @Qualifier (obbligatorio) per permettere a Spring di istanziare la sottoclasse specifica <br>
- * Annotated with @AIScript (facoltativo) per controllare la ri-creazione di questo file nello script del framework <br>
+ * Annotated with @Qualifier (obbligatorio) per permettere a Spring di istanziare la classe specifica <br>
+ * Annotated with @@Slf4j (facoltativo) per i logs automatici <br>
+ * Annotated with @AIScript (facoltativo Algos) per controllare la ri-creazione di questo file dal Wizard <br>
  */
-@Slf4j
 @SpringComponent
 @Service
 @Scope(ConfigurableBeanFactory.SCOPE_SINGLETON)
 @Qualifier(TAG_COM)
+@Slf4j
 @AIScript(sovrascrivibile = false)
 public class CompanyService extends AService {
 
 
     /**
-     * La repository viene iniettata dal costruttore, in modo che sia disponibile nella superclasse, <br>
-     * dove viene usata l'interfaccia MongoRepository
-     * Spring costruisce al volo, quando serve, una implementazione di RoleRepository (come previsto dal @Qualifier) <br>
+     * La repository viene iniettata dal costruttore e passata al costruttore della superclasse, <br>
+     * Spring costruisce una implementazione concreta dell'interfaccia MongoRepository (come previsto dal @Qualifier) <br>
      * Qui si una una interfaccia locale (col casting nel costruttore) per usare i metodi specifici <br>
      */
     private CompanyRepository repository;
 
 
     /**
-     * Costruttore @Autowired (nella superclasse) <br>
-     * In the newest Spring release, it’s constructor does not need to be annotated with @Autowired annotation <br>
+     * Costruttore @Autowired <br>
      * Si usa un @Qualifier(), per avere la sottoclasse specifica <br>
      * Si usa una costante statica, per essere sicuri di scrivere sempre uguali i riferimenti <br>
      */
