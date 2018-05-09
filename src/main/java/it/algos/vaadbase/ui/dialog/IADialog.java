@@ -19,6 +19,6 @@ public interface IADialog<T> {
      *                  instance
      * @param operation The operation being performed on the item
      */
-    public void open(Object item, ADialog.Operation operation);
+    public void open(Object item, AViewDialog.Operation operation);
 
 }// end of interface

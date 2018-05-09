@@ -33,7 +33,7 @@ import java.util.stream.Collectors;
  * Time: 19:10
  */
 @Slf4j
-public abstract class ADialog<T extends Serializable> extends Dialog implements IADialog {
+public abstract class AViewDialog<T extends Serializable> extends Dialog implements IADialog {
 
 
     private final H2 titleField = new H2();
@@ -44,7 +44,7 @@ public abstract class ADialog<T extends Serializable> extends Dialog implements 
     private final HorizontalLayout buttonBar = new HorizontalLayout(saveButton, cancelButton, deleteButton);
     private final ConfirmationDialog<T> confirmationDialog = new ConfirmationDialog<>();
     private final String itemType;
-    private final BiConsumer<T, ADialog.Operation> itemSaver;
+    private final BiConsumer<T, AViewDialog.Operation> itemSaver;
     private final Consumer<T> itemDeleter;
     protected IAService service;
     protected Binder<T> binder;
@@ -59,7 +59,7 @@ public abstract class ADialog<T extends Serializable> extends Dialog implements 
      * @param itemSaver   funzione associata al bottone 'registra'
      * @param itemDeleter funzione associata al bottone 'annulla'
      */
-    public ADialog(IAPresenter presenter, BiConsumer<T, ADialog.Operation> itemSaver, Consumer<T> itemDeleter) {
+    public AViewDialog(IAPresenter presenter, BiConsumer<T, AViewDialog.Operation> itemSaver, Consumer<T> itemDeleter) {
         this.service = presenter.getService();
         this.itemType = "prova";//@todo levare
         this.itemSaver = itemSaver;
@@ -81,33 +81,6 @@ public abstract class ADialog<T extends Serializable> extends Dialog implements 
     }// end of constructor
 
 
-    /**
-     * Constructs a new instance.
-     *
-     * @param itemType    The readable name of the item type
-     * @param itemSaver   Callback to save the edited item
-     * @param itemDeleter Callback to delete the edited item
-     */
-    protected ADialog(String itemType, BiConsumer<T, ADialog.Operation> itemSaver, Consumer<T> itemDeleter, IAService service, Class binderClass) {
-        this.itemType = itemType;
-        this.itemSaver = itemSaver;
-        this.itemDeleter = itemDeleter;
-        this.service = service;
-        this.binderClass = binderClass;
-
-        initTitle();
-        initFormLayout();
-        initButtonBar();
-        initFields();
-
-        setCloseOnEsc(true);
-        setCloseOnOutsideClick(false);
-        addOpenedChangeListener(event -> {
-            if (!isOpened()) {
-                getElement().removeFromParent();
-            }
-        });
-    }// end of constructor
 
     private void initTitle() {
         add(titleField);
@@ -176,7 +149,8 @@ public abstract class ADialog<T extends Serializable> extends Dialog implements 
      *                  instance
      * @param operation The operation being performed on the item
      */
-    public void open(Object item, ADialog.Operation operation) {
+    @Override
+    public void open(Object item, AViewDialog.Operation operation) {
         if (item == null) {
             Notification.show("Qualcosa non ha funzionato in AForm.open()", 3000, Notification.Position.BOTTOM_START);
             return;
@@ -197,7 +171,7 @@ public abstract class ADialog<T extends Serializable> extends Dialog implements 
     }// end of method
 
 
-    private void saveClicked(ADialog.Operation operation) {
+    private void saveClicked(AViewDialog.Operation operation) {
         boolean isValid = binder.writeBeanIfValid(currentItem);
 
         if (isValid) {

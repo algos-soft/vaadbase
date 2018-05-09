@@ -11,6 +11,7 @@ import it.algos.vaadbase.presenter.IAPresenter;
 import it.algos.vaadbase.ui.AViewList;
 import it.algos.vaadbase.ui.MainLayout;
 import it.algos.vaadbase.ui.dialog.ADialog;
+import it.algos.vaadbase.ui.dialog.AViewDialog;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.beans.factory.config.ConfigurableBeanFactory;
 import org.springframework.context.annotation.Scope;
@@ -55,7 +56,7 @@ public class CompanyViewList extends AViewList {
      */
     public CompanyViewList(@Qualifier(TAG_COM) IAPresenter presenter) {
         super(presenter);
-        dialog = new CompanyViewDialog(this::saveUpdate, this::deleteUpdate, service);
+        dialog = new CompanyViewDialog(presenter,this::saveUpdate, this::deleteUpdate);
     }// end of Spring constructor
 
 
@@ -72,7 +73,7 @@ public class CompanyViewList extends AViewList {
 
 
     private Button createEditButton(Company entityBean) {
-        Button edit = new Button("Modifica", event -> dialog.open(entityBean, ADialog.Operation.EDIT));
+        Button edit = new Button("Modifica", event -> dialog.open(entityBean, AViewDialog.Operation.EDIT));
         edit.setIcon(new Icon("lumo", "edit"));
         edit.addClassName("review__edit");
         edit.getElement().setAttribute("theme", "tertiary");

@@ -18,6 +18,7 @@ import it.algos.vaadbase.presenter.IAPresenter;
 import it.algos.vaadbase.service.ATextService;
 import it.algos.vaadbase.ui.dialog.ADialog;
 import it.algos.vaadbase.ui.dialog.AForm;
+import it.algos.vaadbase.ui.dialog.AViewDialog;
 import it.algos.vaadbase.ui.dialog.IADialog;
 import it.algos.vaadbase.ui.menu.AMenu;
 import lombok.extern.slf4j.Slf4j;
@@ -118,7 +119,7 @@ public abstract class AViewList extends VerticalLayout implements IAView, Before
         Button newButton = new Button("New entity", new Icon("lumo", "plus"));
         newButton.getElement().setAttribute("theme", "primary");
         newButton.addClassName("view-toolbar__button");
-        newButton.addClickListener(e -> dialog.open(service.newEntity(), ADialog.Operation.ADD));
+        newButton.addClickListener(e -> dialog.open(service.newEntity(), AViewDialog.Operation.ADD));
 
         viewToolbar.add(searchField,clearFilterTextBtn, newButton);
         add(viewToolbar);
@@ -160,7 +161,7 @@ public abstract class AViewList extends VerticalLayout implements IAView, Before
 
 
 
-    protected void saveUpdate(AEntity entityBean, ADialog.Operation operation) {
+    protected void saveUpdate(AEntity entityBean, AViewDialog.Operation operation) {
         service.save(entityBean);
         updateView();
         Notification.show(entityBean + " successfully " + operation.getNameInText() + "ed.", 3000, Notification.Position.BOTTOM_START);
