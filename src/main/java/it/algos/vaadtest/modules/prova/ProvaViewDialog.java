@@ -18,14 +18,17 @@ import org.springframework.context.annotation.Scope;
 import static it.algos.vaadtest.application.AppCost.TAG_PRO;
 
 /**
- * Project vaadbase <br>
+ * Project vaadtest <br>
  * Created by Algos
  * User: Gac
- * Date: 8-mag-2018 11.39.38
- * Estende la Entity astratta AForm di tipo AView per visualizzare i fields
+ * Date: 9-mag-2018 18.06.10
+ * <p>
+ * Estende la classe astratta ADialog per visualizzare i fields <br>
+ * <p>
+ * Not annotated with @SpringComponent (sbagliato)
  * Annotated with @Scope (obbligatorio = 'prototype')
- * Annotated with @Qualifier (obbligatorio) per permettere a Spring di istanziare la sottoclasse specifica
- * Annotated with @AIScript (facoltativo) per controllare la ri-creazione di questo file nello script del framework
+ * Annotated with @Qualifier (obbligatorio) per permettere a Spring di istanziare la classe specifica <br>
+ * Annotated with @AIScript (facoltativo Algos) per controllare la ri-creazione di questo file dal Wizard <br>
  */
 @Scope(ConfigurableBeanFactory.SCOPE_SINGLETON)
 @Qualifier(TAG_PRO)
@@ -34,6 +37,10 @@ public class ProvaViewDialog extends ADialog<Prova> {
 
     /**
      * Costruttore
+     *
+     * @param itemSaver   funzione associata al bottone 'registra'
+     * @param itemDeleter funzione associata al bottone 'annulla'
+     * @param service     layer di collegamento per la Repository
      */
     public ProvaViewDialog(BiConsumer<Prova, ADialog.Operation> itemSaver, Consumer<Prova> itemDeleter, IAService service) {
         super("Prova", itemSaver, itemDeleter, service, Prova.class);

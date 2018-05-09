@@ -4,8 +4,6 @@ import com.vaadin.flow.component.button.Button;
 import com.vaadin.flow.component.grid.Grid;
 import com.vaadin.flow.component.html.Div;
 import com.vaadin.flow.component.icon.Icon;
-import it.algos.vaadbase.modules.company2.Company;
-import it.algos.vaadbase.modules.company2.CompanyService;
 import com.vaadin.flow.component.html.Label;
 import com.vaadin.flow.component.textfield.TextField;
 import com.vaadin.flow.data.renderer.ComponentRenderer;
@@ -38,16 +36,14 @@ import static it.algos.@MODULELOWER@.application.@APPCOST@.@QUALIFIER@;
  * User: @USER@ <br>
  * Date: @TODAY@ <br>
  * <br>
- * Estende la classe astratta AView per visualizzare la Grid e il Detail<br>
+ * Estende la classe astratta AViewList per visualizzare la Grid <br>
  * <p>
  * Annotated with @SpringComponent (obbligatorio per le injections)
  * Annotated with @Scope (obbligatorio = 'singleton')
- * Annotated with @Qualifier (obbligatorio) per permettere a Spring di istanziare la sottoclasse specifica
- * NON annotated with @SpringView (escluso) perché usa la Route di VaadinFlow
+ * Not annotated with @SpringView (sbagliato) perché usa la @Route di VaadinFlow
  * Annotated with @Route (obbligatorio) per la selezione della vista. @Route(value = "") per la vista iniziale
- * Annotated with @AIView (facoltativo) per selezionarne la 'visibilità' secondo il ruolo dell'User collegato
- * Annotated with @AIScript (facoltativo) per controllare la ri-creazione di questo file nello script del framework
- * Costruttore con un link @Autowired al IAPresenter, di tipo @Lazy per evitare un loop nella injection
+ * Annotated with @Qualifier (obbligatorio) per permettere a Spring di istanziare la sottoclasse specifica
+ * Annotated with @AIScript (facoltativo Algos) per controllare la ri-creazione di questo file dal Wizard <br>
  */
 @SpringComponent
 @Scope(ConfigurableBeanFactory.SCOPE_SINGLETON)
@@ -65,11 +61,10 @@ public class @ENTITY@ViewList extends AViewList {
 
     /**
      * Costruttore @Autowired <br>
-     * In the newest Spring release, it’s constructor does not need to be annotated with @Autowired annotation <br>
      * Si usa un @Qualifier(), per avere la sottoclasse specifica <br>
      * Si usa una costante statica, per essere sicuri di scrivere sempre uguali i riferimenti <br>
      *
-     * @param presenter iniettato da Spring come sottoclasse concreta specificata dal @Qualifier
+     * @param presenter per gestire la business logic del package
      */
      public @ENTITY@ViewList(@Qualifier(@QUALIFIER@) IAPresenter presenter) {
         super(presenter);
@@ -80,7 +75,6 @@ public class @ENTITY@ViewList extends AViewList {
      /**
       * Crea il corpo centrale della view
       * Componente grafico obbligatorio
-      * Sovrascritto nella sottoclasse della view specifica (AList, AForm, ...)
       */
      protected void addGrid() {
          super.addGrid();

@@ -2,6 +2,7 @@ package it.algos.vaadbase.presenter;
 
 import com.vaadin.flow.spring.annotation.SpringComponent;
 import it.algos.vaadbase.backend.entity.AEntity;
+import it.algos.vaadbase.backend.service.AService;
 import it.algos.vaadbase.backend.service.IAService;
 import it.algos.vaadbase.service.ATextService;
 import it.algos.vaadbase.ui.IAView;
@@ -22,7 +23,7 @@ import java.util.List;
 @Slf4j
 @SpringComponent
 @Scope("session")
-public abstract class APresenter  implements IAPresenter{
+public abstract class APresenter implements IAPresenter {
 
 
     /**
@@ -80,7 +81,6 @@ public abstract class APresenter  implements IAPresenter{
     protected IAView view;
 
 
-
     /**
      * Costruttore @Autowired (nella sottoclasse concreta)
      * In the newest Spring release, it’s constructor does not need to be annotated with @Autowired annotation.
@@ -95,6 +95,7 @@ public abstract class APresenter  implements IAPresenter{
      * @param view        iniettato da Spring come sottoclasse concreta specificata dal @Qualifier
      */
     public APresenter(Class<? extends AEntity> entityClazz, IAService service, IAView view) {
+        ((AService) service).entityClass = entityClazz;
         this.entityClazz = entityClazz;
         this.service = service;
         this.view = view;
@@ -120,8 +121,6 @@ public abstract class APresenter  implements IAPresenter{
 //        Class clazz = list.getViewComponent().getClass();
 //        params.getNavigator().navigateTo(annotation.getViewName(clazz));
 //    }// end of method
-
-
 
 
     /**
@@ -155,7 +154,6 @@ public abstract class APresenter  implements IAPresenter{
 //
 //        list.start(entityClass, columns, items, typeButtons);
     }// end of method
-
 
 
 //    /**

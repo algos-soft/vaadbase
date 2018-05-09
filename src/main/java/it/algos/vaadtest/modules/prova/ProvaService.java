@@ -17,49 +17,49 @@ import it.algos.vaadbase.backend.entity.AEntity;
 import static it.algos.vaadtest.application.AppCost.TAG_PRO;
 
 /**
- * Project vaadbase <br>
+ * Project vaadtest <br>
  * Created by Algos <br>
  * User: Gac <br>
- * Date: 8-mag-2018 11.39.38 <br>
+ * Date: 9-mag-2018 18.04.25 <br>
  * <br>
- * Estende la classe astratta AService. Layer di collegamento tra il Presenter e la Repository. <br>
+ * Estende la classe astratta AService. Layer di collegamento per la Repository. <br>
  * <br>
- * Annotated with @@Slf4j (facoltativo) per i logs automatici <br>
  * Annotated with @SpringComponent (obbligatorio) <br>
  * Annotated with @Service (ridondante) <br>
  * Annotated with @Scope (obbligatorio = 'singleton') <br>
- * Annotated with @Qualifier (obbligatorio) per permettere a Spring di istanziare la sottoclasse specifica <br>
- * Annotated with @AIScript (facoltativo) per controllare la ri-creazione di questo file nello script del framework <br>
+ * Annotated with @Qualifier (obbligatorio) per permettere a Spring di istanziare la classe specifica <br>
+ * Annotated with @@Slf4j (facoltativo) per i logs automatici <br>
+ * Annotated with @AIScript (facoltativo Algos) per controllare la ri-creazione di questo file dal Wizard <br>
  */
-@Slf4j
 @SpringComponent
 @Service
 @Scope(ConfigurableBeanFactory.SCOPE_SINGLETON)
 @Qualifier(TAG_PRO)
-@AIScript(sovrascrivibile = true)
+@Slf4j
+@AIScript(sovrascrivibile = false)
 public class ProvaService extends AService {
 
 
     /**
-     * La repository viene iniettata dal costruttore, in modo che sia disponibile nella superclasse, <br>
-     * dove viene usata l'interfaccia MongoRepository
-     * Spring costruisce al volo, quando serve, una implementazione di RoleRepository (come previsto dal @Qualifier) <br>
+     * La repository viene iniettata dal costruttore e passata al costruttore della superclasse, <br>
+     * Spring costruisce una implementazione concreta dell'interfaccia MongoRepository (come previsto dal @Qualifier) <br>
      * Qui si una una interfaccia locale (col casting nel costruttore) per usare i metodi specifici <br>
      */
     private ProvaRepository repository;
 
 
     /**
-     * Costruttore @Autowired (nella superclasse) <br>
-     * In the newest Spring release, it’s constructor does not need to be annotated with @Autowired annotation <br>
+     * Costruttore @Autowired <br>
      * Si usa un @Qualifier(), per avere la sottoclasse specifica <br>
      * Si usa una costante statica, per essere sicuri di scrivere sempre uguali i riferimenti <br>
+     *
+     * @param repository per la persistenza dei dati
      */
     public ProvaService(@Qualifier(TAG_PRO) MongoRepository repository) {
         super(repository);
         this.repository = (ProvaRepository) repository;
-        super.entityClass = Prova.class;
    }// end of Spring constructor
+
 
     /**
      * Ricerca di una entity (la crea se non la trova) <br>
@@ -207,7 +207,7 @@ public class ProvaService extends AService {
     }// end of method
 
     /**
-     * Ordine di presentazione (obbligatorio, unico per tutte le eventuali company2), <br>
+     * Ordine di presentazione (obbligatorio, unico per tutte le eventuali company), <br>
      * Viene calcolato in automatico alla creazione della entity <br>
      * Recupera dal DB il valore massimo pre-esistente della property <br>
      * Incrementa di uno il risultato <br>

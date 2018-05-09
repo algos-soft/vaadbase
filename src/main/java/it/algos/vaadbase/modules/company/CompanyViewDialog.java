@@ -1,20 +1,15 @@
 package it.algos.vaadbase.modules.company;
 
-import java.util.function.BiConsumer;
-import java.util.function.Consumer;
-import com.vaadin.flow.component.textfield.TextField;
-import com.vaadin.flow.data.converter.StringToIntegerConverter;
-import com.vaadin.flow.data.validator.IntegerRangeValidator;
-import com.vaadin.flow.data.validator.StringLengthValidator;
 import it.algos.vaadbase.annotation.AIScript;
-import it.algos.vaadbase.presenter.IAPresenter;
-import it.algos.vaadbase.ui.dialog.ADialog;
 import it.algos.vaadbase.backend.service.IAService;
-import org.springframework.beans.factory.annotation.Autowired;
+import it.algos.vaadbase.ui.dialog.ADialog;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.beans.factory.config.ConfigurableBeanFactory;
-import org.springframework.context.annotation.Lazy;
 import org.springframework.context.annotation.Scope;
+
+import java.util.function.BiConsumer;
+import java.util.function.Consumer;
+
 import static it.algos.vaadbase.application.BaseCost.TAG_COM;
 
 /**
@@ -22,18 +17,25 @@ import static it.algos.vaadbase.application.BaseCost.TAG_COM;
  * Created by Algos
  * User: Gac
  * Date: 8-mag-2018 18.52.38
- * Estende la Entity astratta AForm di tipo AView per visualizzare i fields
+ * <p>
+ * Estende la classe astratta ADialog per visualizzare i fields <br>
+ * <p>
+ * Not annotated with @SpringComponent (sbagliato)
  * Annotated with @Scope (obbligatorio = 'prototype')
- * Annotated with @Qualifier (obbligatorio) per permettere a Spring di istanziare la sottoclasse specifica
- * Annotated with @AIScript (facoltativo) per controllare la ri-creazione di questo file nello script del framework
+ * Annotated with @Qualifier (obbligatorio) per permettere a Spring di istanziare la classe specifica <br>
+ * Annotated with @AIScript (facoltativo Algos) per controllare la ri-creazione di questo file dal Wizard <br>
  */
-@Scope(ConfigurableBeanFactory.SCOPE_SINGLETON)
+@Scope(ConfigurableBeanFactory.SCOPE_PROTOTYPE)
 @Qualifier(TAG_COM)
 @AIScript(sovrascrivibile = true)
 public class CompanyViewDialog extends ADialog<Company> {
 
     /**
      * Costruttore
+     *
+     * @param itemSaver   funzione associata al bottone 'registra'
+     * @param itemDeleter funzione associata al bottone 'annulla'
+     * @param service     layer di collegamento per la Repository
      */
     public CompanyViewDialog(BiConsumer<Company, ADialog.Operation> itemSaver, Consumer<Company> itemDeleter, IAService service) {
         super("Company", itemSaver, itemDeleter, service, Company.class);

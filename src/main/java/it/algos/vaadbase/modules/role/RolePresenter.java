@@ -37,7 +37,7 @@ public class RolePresenter extends APresenter {
      * Si usa una costante statica, per essere sicuri di scrivere sempre uguali i riferimenti
      * Regola il modello-dati specifico
      */
-    public RolePresenter(@Lazy @Qualifier(TAG_ROL) IAService service, @Lazy @Qualifier(TAG_ROL) IAView view) {
+    public RolePresenter( @Qualifier(TAG_ROL) IAService service, @Lazy @Qualifier(TAG_ROL) IAView view) {
         super(Role.class, service, view);
      }// end of Spring constructor
 

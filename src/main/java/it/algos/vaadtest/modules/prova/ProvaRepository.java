@@ -11,22 +11,22 @@ import java.util.List;
 import static it.algos.vaadtest.application.AppCost.TAG_PRO;
 
 /**
- * Project vaadbase <br>
+ * Project vaadtest <br>
  * Created by Algos <br>
  * User: Gac <br>
- * Date: 8-mag-2018 11.39.38 <br>
+ * Date: 9-mag-2018 18.04.25 <br>
  * <br>
  * Estende la l'interaccia MongoRepository col casting alla Entity relativa di questa repository <br>
  * <br>
  * Annotated with @SpringComponent (obbligatorio) <br>
  * Annotated with @Scope (obbligatorio = 'singleton') <br>
- * Annotated with @Qualifier (obbligatorio) per permettere a Spring di istanziare la sottoclasse specifica <br>
- * Annotated with @AIScript (facoltativo) per controllare la ri-creazione di questo file nello script del framework <br>
+ * Annotated with @Qualifier (obbligatorio) per permettere a Spring di istanziare la classe specifica <br>
+ * Annotated with @AIScript (facoltativo Algos) per controllare la ri-creazione di questo file dal Wizard <br>
  */
 @SpringComponent
 @Scope(ConfigurableBeanFactory.SCOPE_SINGLETON)
 @Qualifier(TAG_PRO)
-@AIScript(sovrascrivibile = true)
+@AIScript(sovrascrivibile = false)
 public interface ProvaRepository extends MongoRepository<Prova, String> {
 
     //@TODO
