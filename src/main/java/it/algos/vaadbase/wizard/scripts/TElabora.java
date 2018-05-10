@@ -433,6 +433,7 @@ public class TElabora {
         mappa.put(Token.methodNewOrdine, creaNewOrdine());
         mappa.put(Token.methodIdKeySpecifica, creaIdKeySpecifica());
         mappa.put(Token.query, creaQuery());
+        mappa.put(Token.findAll, creaFindAll());
         mappa.put(Token.properties, creaProperties());
         mappa.put(Token.propertyOrdine, creaPropertyOrdine());
         mappa.put(Token.propertyCode, creaPropertyCode());
@@ -487,7 +488,7 @@ public class TElabora {
     private String creaIdKeySpecifica() {
         methodIdKeySpecificaText = "";
 
-        if (flagCode) {
+        if (flagCode && flagKeyCode) {
             methodIdKeySpecificaText += leggeFile(METHOD_ID_KEY_SPECIFICA);
             methodIdKeySpecificaText = Token.replace(Token.entity, methodIdKeySpecificaText, newEntityName);
         }// end of if cycle
@@ -520,6 +521,19 @@ public class TElabora {
         }// end of if cycle
 
         return queryText;
+    }// end of method
+
+
+    private String creaFindAll() {
+        String findAll = "";
+
+        if (flagOrdine) {
+            findAll += "lista = repository.findAllByOrderBy" + PROPERTY_ORDINE_NAME + "Asc();";
+        } else {
+            findAll += "lista = repository.findAll();";
+        }// end of if/else cycle
+
+        return findAll;
     }// end of method
 
 
@@ -715,10 +729,10 @@ public class TElabora {
         String entityPropertyText = "return super.toString();";
 
         if (flagCode) {
-            entityPropertyText = "return getCode();";
+            entityPropertyText = "return code;";
         } else {
             if (flagDescrizione) {
-                entityPropertyText = "return getDescrizione();";
+                entityPropertyText = "return descrizione;";
             }// end of if/else cycle
         }// end of if/else cycle
 
@@ -792,7 +806,7 @@ public class TElabora {
         String textCostClass;
         String path = applicationPath + SEP + nameClassCost + JAVA_SUFFIX;
         String tagOld = "public class " + nameClassCost + " {";
-        String tagRif = "public static final String " + qualifier + " =\"" + newPackageName + "\";";
+        String tagRif = "public final static String " + qualifier + " = \"" + newPackageName + "\";";
         String tagNew = tagOld + A_CAPO + TAB + tagRif;
 
         textCostClass = file.leggeFile(path);

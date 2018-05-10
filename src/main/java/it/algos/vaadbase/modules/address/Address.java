@@ -1,63 +1,67 @@
 package it.algos.vaadbase.modules.address;
 
+import it.algos.vaadbase.backend.annotation.EACompanyRequired;
+import it.algos.vaadbase.ui.annotation.*;
+import it.algos.vaadbase.ui.enumeration.EAListButton;
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Size;
-
-import it.algos.vaadbase.application.BaseCost;
 import org.hibernate.validator.constraints.NotEmpty;
 import org.springframework.beans.factory.annotation.Qualifier;
+import org.springframework.beans.factory.config.ConfigurableBeanFactory;
 import org.springframework.data.mongodb.core.index.Indexed;
+import org.springframework.data.mongodb.core.mapping.DBRef;
 import org.springframework.data.mongodb.core.mapping.Document;
 import org.springframework.context.annotation.Scope;
 import lombok.*;
 import com.vaadin.flow.spring.annotation.SpringComponent;
+import it.algos.vaadbase.ui.enumeration.EARoleType;
 import it.algos.vaadbase.backend.entity.AEntity;
-//import it.algos.vaadbase.enumeration.EARoleType;
-//import it.algos.vaadbase.enumeration.EAListButton;
-//import it.algos.vaadbase.enumeration.EACompanyRequired;
-//import it.algos.vaadbase.enumeration.EAFieldAccessibility;
-//import it.algos.vaadbase.enumeration.EAFieldType;
+import it.algos.vaadbase.backend.entity.ACEntity;
+import it.algos.vaadbase.ui.annotation.AIColumn;
+import it.algos.vaadbase.ui.annotation.AIField;
+import it.algos.vaadbase.ui.enumeration.EAFieldAccessibility;
+import it.algos.vaadbase.ui.enumeration.EAFieldType;
 import it.algos.vaadbase.annotation.*;
-
 import static it.algos.vaadbase.application.BaseCost.TAG_ADD;
-//import it.algos.vaadbase.entity.AEntity;
-
 
 /**
- * Project vaadbase
- * Created by Algos
- * User: Gac
- * Date: 2018-03-22
- * Estende la Entity astratta AEntity che contiene la key property ObjectId
- * Annotated with @SpringComponent (obbligatorio)
- * Annotated with @Document (facoltativo) per avere un nome della collection (DB Mongo) diverso dal nome della Entity
- * Annotated with @Scope (obbligatorio = 'session')
- * Annotated with @Data (Lombok) for automatic use of Getter and Setter
- * Annotated with @NoArgsConstructor (Lombok) for JavaBean specifications
- * Annotated with @AllArgsConstructor (Lombok) per usare il costruttore completo nel Service
+ * Project vaadbase <br>
+ * Created by Algos <br>
+ * User: Gac <br>
+ * Date: 9-mag-2018 21.12.07 <br>
+ * <p>
+ * Estende la entity astratta AEntity che contiene la key property ObjectId <br>
+ * <p>
+ * Annotated with @SpringComponent (obbligatorio) <br>
+ * Annotated with @Document (facoltativo) per avere un nome della collection (DB Mongo) diverso dal nome della Entity <br>
+ * Annotated with @Scope (obbligatorio = 'singleton') <br>
+ * Annotated with @Data (Lombok) for automatic use of Getter and Setter <br>
+ * Annotated with @NoArgsConstructor (Lombok) for JavaBean specifications <br>
+ * Annotated with @AllArgsConstructor (Lombok) per usare il costruttore completo nel Service <br>
  * Annotated with @Builder (Lombok) lets you automatically produce the code required to have your class
- * be instantiable with code such as: Person.builder().name("Adam Savage").city("San Francisco").build();
- * Annotated with @EqualsAndHashCode (facoltativo) per ???
- * Annotated with @Qualifier (obbligatorio) per permettere a Spring di istanziare la sottoclasse specifica
- * Annotated with @AIEntity (facoltativo) per alcuni parametri generali del modulo
- * Annotated with @AIList (facoltativo) per le colonne della Lista e loro visibilità/accessibilità relativa all'utente
- * Annotated with @AIForm (facoltativo) per i fields del Form e loro visibilità/accessibilità relativa all'utente
- * Annotated with @AIScript (facoltativo) per controllare la ri-creazione di questo file nello script del framework
- * Inserisce SEMPRE la versione di serializzazione che viene poi filtrata per non mostrarla in List e Form
- * Le singole property sono annotate con @AIField (obbligatorio per il tipo di Field) e @AIColumn (facoltativo)
+ * be instantiable with code such as: Person.builder().name("Adam Savage").city("San Francisco").build(); <br>
+ * Annotated with @EqualsAndHashCode (Lombok) per l'uguaglianza di due istanze dellaq classe <br>
+ * Annotated with @Qualifier (obbligatorio) per permettere a Spring di istanziare la sottoclasse specifica <br>
+ * Annotated with @AIEntity (facoltativo Algos) per alcuni parametri generali del modulo <br>
+ * Annotated with @AIList (facoltativo Algos) per le colonne automatiche della Lista  <br>
+ * Annotated with @AIForm (facoltativo Algos) per i fields automatici del Dialog e del Form <br>
+ * Annotated with @AIScript (facoltativo Algos) per controllare la ri-creazione di questo file dal Wizard <br>
+ * Inserisce SEMPRE la versione di serializzazione <br>
+ * Le singole property sono annotate con @AIField (obbligatorio Algos) per il tipo di Field nel Dialog e nel Form <br>
+ * Le singole property sono annotate con @AIColumn (facoltativo Algos) per il tipo di Column nella Grid <br>
  */
 @SpringComponent
 @Document(collection = "address")
-@Scope("session")
+@Scope(ConfigurableBeanFactory.SCOPE_SINGLETON)
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
 @Builder
 @EqualsAndHashCode(callSuper = false)
 @Qualifier(TAG_ADD)
-//@AIEntity(roleTypeVisibility = EARoleType.user, company2 = EACompanyRequired.nonUsata)
-//@AIList(fields = {"code", "descrizione"}, dev = EAListButton.standard, admin = EAListButton.noSearch, user = EAListButton.show)
-//@AIForm(fields = {"code", "descrizione"})
+@AIEntity(company = EACompanyRequired.nonUsata)
+@AIList(fields = {"indirizzo", "localita", "cap"})
+@AIForm(fields = {"indirizzo", "localita", "cap"})
 @AIScript(sovrascrivibile = false)
 public class Address extends AEntity {
 
@@ -67,49 +71,59 @@ public class Address extends AEntity {
      */
     private final static long serialVersionUID = 1L;
 
-    //@TODO
-    // Le properties riportate sono INDICATIVE e possono/debbono essere sostituite
-    //@TODO
-
-    /**
-     * codice di riferimento (obbligatorio)
+    
+	/**
+     * indirizzo: via, nome e numero (obbligatoria, non unica)
      */
-    @NotEmpty
-    @Size(min = 2, max = 20)
-    @Indexed()
-//    @AIField(
-//            type = EAFieldType.text,
-//            required = true,
-//            focus = true,
-//            name = "Codice",
-//            widthEM = 9,
-//            admin = EAFieldAccessibility.allways,
-//            user = EAFieldAccessibility.showOnly)
-//    @AIColumn(name = "Code", width = 120)
-    private String code;
-
+    @NotNull(message = "L'indirizzo è obbligatorio")
+    @Size(min = 2, max = 50)
+    @AIField(type = EAFieldType.text, required = true, focus = true, widthEM = 12)
+    @AIColumn(width = 210)
+    private String indirizzo;
 
 
     /**
-     * descrizione (facoltativa)
+     * località (obbligatoria, non unica)
      */
-//    @AIField(
-//            type = EAFieldType.text,
-//            required = true,
-//            name = "Descrizione completa",
-//            widthEM = 26,
-//            admin = EAFieldAccessibility.allways,
-//            user = EAFieldAccessibility.showOnly)
-//    @AIColumn(name = "Descrizione", width = 500)
-    private String descrizione;
+    @NotNull(message = "La località è obbligatoria")
+    @Size(min = 2, max = 50)
+    @AIField(type = EAFieldType.text, firstCapital = true, widthEM = 24)
+    @AIColumn(width = 370)
+    private String localita;
 
+
+    /**
+     * codice di avviamento postale (facoltativo, non unica)
+     */
+    @Size(min = 5, max = 5, message = "Il codice postale deve essere di 5 cifre")
+    @AIField(type = EAFieldType.text, widthEM = 5)
+    @AIColumn(width = 370)
+    private String cap;
+
+//    /**
+//     * stato (obbligatoria, non unica)
+//     * riferimento dinamico con @DBRef (obbligatorio per il ComboBox)
+//     */
+//    @DBRef
+//    @NotNull
+//    @AIField(type = EAFieldType.combo, clazz = StatoService.class)
+//    @AIColumn(width = 140)
+//    private Stato stato;
 
     /**
      * @return a string representation of the object.
      */
     @Override
     public String toString() {
-        return getCode();
+        String value = "";
+        String spazio = " ";
+        String sep = " - ";
+
+        value += indirizzo;
+        value += (cap != null && !cap.equals("")) ? sep + cap : sep;
+        value += spazio + localita;
+
+        return value;
     }// end of method
 
 

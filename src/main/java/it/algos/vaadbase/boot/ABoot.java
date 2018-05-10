@@ -1,6 +1,7 @@
 package it.algos.vaadbase.boot;
 
 import it.algos.vaadbase.application.BaseCost;
+import it.algos.vaadbase.modules.address.AddressViewList;
 import it.algos.vaadbase.modules.company.CompanyViewList;
 import it.algos.vaadbase.modules.role.RoleData;
 import it.algos.vaadbase.modules.role.RoleViewList;
@@ -54,6 +55,7 @@ public abstract class ABoot {
     protected void addRouteStandard() {
         BaseCost.MENU_CLAZZ_LIST.add(RoleViewList.class);
         BaseCost.MENU_CLAZZ_LIST.add(CompanyViewList.class);
+        BaseCost.MENU_CLAZZ_LIST.add(AddressViewList.class); //@todo da levare per il deploy finale
     }// end of method
 
 }// end of class

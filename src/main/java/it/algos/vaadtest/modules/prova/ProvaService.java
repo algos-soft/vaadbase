@@ -20,7 +20,7 @@ import static it.algos.vaadtest.application.AppCost.TAG_PRO;
  * Project vaadtest <br>
  * Created by Algos <br>
  * User: Gac <br>
- * Date: 9-mag-2018 18.04.25 <br>
+ * Date: 9-mag-2018 20.30.33 <br>
  * <br>
  * Estende la classe astratta AService. Layer di collegamento per la Repository. <br>
  * <br>
@@ -72,7 +72,7 @@ public class ProvaService extends AService {
         Prova entity = findByKeyUnica(code);
 
         if (entity == null) {
-            entity = newEntity(0, code);
+            entity = newEntity(0, code, "");
             save(entity);
         }// end of if cycle
 
@@ -88,7 +88,7 @@ public class ProvaService extends AService {
      */
     @Override
     public Prova newEntity() {
-        return newEntity(0, "");
+        return newEntity(0, "", "");
     }// end of method
 
 
@@ -100,10 +100,11 @@ public class ProvaService extends AService {
      *
      * @param ordine      di presentazione (obbligatorio con inserimento automatico se è zero)
 	* @param code        codice di riferimento (obbligatorio)
+	* @param descrizione (facoltativa, non unica)
      *
      * @return la nuova entity appena creata (non salvata)
      */
-    public Prova newEntity(int ordine, String code) {
+    public Prova newEntity(int ordine, String code, String descrizione) {
         Prova entity = null;
 
         entity = findByKeyUnica(code);
@@ -114,6 +115,7 @@ public class ProvaService extends AService {
         entity = Prova.builder()
 				.ordine(ordine != 0 ? ordine : this.getNewOrdine())
 				.code(code)
+				.descrizione(descrizione)
                 .build();
 
         return entity;
@@ -142,21 +144,7 @@ public class ProvaService extends AService {
     public List<Prova> findAll() {
         List<Prova> lista = null;
 
-        try { // prova ad eseguire il codice
-            lista = repository.findAllByOrderByOrdineAsc();
-        } catch (Exception unErrore) { // intercetta l'errore
-            log.error(unErrore.toString());
-            try { // prova ad eseguire il codice
-                lista = repository.findAllByOrderByCodeAsc();
-            } catch (Exception unErrore2) { // intercetta l'errore
-                log.error(unErrore2.toString());
-                try { // prova ad eseguire il codice
-                    lista = repository.findAll();
-                } catch (Exception unErrore3) { // intercetta l'errore
-                    log.error(unErrore3.toString());
-                }// fine del blocco try-catch
-            }// fine del blocco try-catch
-        }// fine del blocco try-catch
+        lista = repository.findAllByOrderByOrdineAsc();
 
         return lista;
     }// end of method
@@ -196,15 +184,7 @@ public class ProvaService extends AService {
         return findByKeyUnica(((Prova) entityBean).getCode()) != null;
     }// end of method
 
-    /**
-     * Opportunità di usare una idKey specifica. <br>
-     * Invocato appena prima del save(), solo per una nuova entity <br>
-     *
-     * @param entityBean da salvare
-     */
-    protected void creaIdKeySpecifica(AEntity entityBean) {
-        entityBean.id = ((Prova)entityBean).getCode();
-    }// end of method
+    
 
     /**
      * Ordine di presentazione (obbligatorio, unico per tutte le eventuali company), <br>

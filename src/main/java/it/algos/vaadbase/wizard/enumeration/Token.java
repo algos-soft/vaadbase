@@ -34,6 +34,7 @@ public enum Token {
     keyUnica("KEYUNICA"),
     builder("BUILDER"),
     query("QUERY"),
+    findAll("FINDALL"),
     properties("PROPERTIES"),
     propertyOrdine("ORDINE"),
     propertyCode("CODE"),

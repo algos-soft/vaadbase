@@ -19,10 +19,6 @@ import org.springframework.context.annotation.Scope;
  */
 @AIScript(sovrascrivibile = false)
 public class AppCost {
-	public static final String TAG_PRO ="prova";
-	public static final String TAG_COM ="company";
-	public static final String TAG_BOL ="bolla";
-    public static final String TAG_MAG = "magazzino";
-    public static final String TAG_FAT = "fattura";
+	public final static String TAG_PRO = "prova";
     public static final String TAG_HOME_MENU = "home";
 }// end of static class

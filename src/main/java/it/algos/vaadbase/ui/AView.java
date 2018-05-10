@@ -329,5 +329,8 @@ public class AView extends VerticalLayout implements IAView, BeforeEnterObserver
         }// end of if/else cycle
     }// end of method
 
-
+    @Override
+    public String getName() {
+        return null;
+    }
 }// end of class

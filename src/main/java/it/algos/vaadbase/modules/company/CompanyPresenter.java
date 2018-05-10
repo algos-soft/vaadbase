@@ -2,28 +2,29 @@ package it.algos.vaadbase.modules.company;
 
 import com.vaadin.flow.spring.annotation.SpringComponent;
 import it.algos.vaadbase.annotation.AIScript;
-import it.algos.vaadbase.backend.service.IAService;
 import it.algos.vaadbase.presenter.APresenter;
-import it.algos.vaadbase.ui.IAView;
 import org.springframework.beans.factory.annotation.Qualifier;
-import org.springframework.beans.factory.config.ConfigurableBeanFactory;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.context.annotation.Lazy;
 import org.springframework.context.annotation.Scope;
-
+import org.springframework.beans.factory.config.ConfigurableBeanFactory;
+import it.algos.vaadbase.backend.service.IAService;
+import it.algos.vaadbase.ui.IAView;
 import static it.algos.vaadbase.application.BaseCost.TAG_COM;
 
 /**
  * Project vaadbase <br>
  * Created by Algos <br>
  * User: Gac <br>
- * Date: 8-mag-2018 18.52.38 <br>
+ * Date: 9-mag-2018 19.52.23 <br>
  * <br>
  * Estende la classe astratta APresenter che gestisce la business logic del package <br>
  * <br>
  * Annotated with @SpringComponent (obbligatorio) <br>
  * Annotated with @Scope (obbligatorio = 'singleton') <br>
- * Annotated with @Qualifier (obbligatorio) per permettere a Spring di istanziare la classe specifica <br>
- * Annotated with @AIScript (facoltativo) per controllare la ri-creazione di questo file nello script del framework <br>
+ * Annotated with @Qualifier (obbligatorio) per permettere a Spring di istanziare la sottoclasse specifica <br>
+ * Annotated with @AIScript (facoltativo Algos) per controllare la ri-creazione di questo file dal Wizard <br>
  * <p>
  * Constructor use @Lazy to avoid the Circular Dependency
  * A simple way to break the cycle is saying Spring to initialize one of the beans lazily.
@@ -47,7 +48,7 @@ public class CompanyPresenter extends APresenter {
      */
     public CompanyPresenter(@Qualifier(TAG_COM) IAService service, @Lazy @Qualifier(TAG_COM) IAView view) {
         super(Company.class, service, view);
-    }// end of Spring constructor
+     }// end of Spring constructor
 
 
 }// end of class

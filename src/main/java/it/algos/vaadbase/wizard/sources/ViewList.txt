@@ -68,7 +68,7 @@ public class @ENTITY@ViewList extends AViewList {
      */
      public @ENTITY@ViewList(@Qualifier(@QUALIFIER@) IAPresenter presenter) {
         super(presenter);
-        dialog = new @ENTITY@ViewDialog(this::saveUpdate, this::deleteUpdate, service);
+        dialog = new @ENTITY@ViewDialog(presenter, this::saveUpdate, this::deleteUpdate);
    }// end of Spring constructor
 
 

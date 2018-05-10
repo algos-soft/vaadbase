@@ -1,4 +1,4 @@
-package it.algos.vaadtest.modules.prova;
+package it.algos.vaadbase.modules.address;
 
 import com.vaadin.flow.spring.annotation.SpringComponent;
 import it.algos.vaadbase.annotation.AIScript;
@@ -11,13 +11,13 @@ import org.springframework.context.annotation.Scope;
 import org.springframework.beans.factory.config.ConfigurableBeanFactory;
 import it.algos.vaadbase.backend.service.IAService;
 import it.algos.vaadbase.ui.IAView;
-import static it.algos.vaadtest.application.AppCost.TAG_PRO;
+import static it.algos.vaadbase.application.BaseCost.TAG_ADD;
 
 /**
- * Project vaadtest <br>
+ * Project vaadbase <br>
  * Created by Algos <br>
  * User: Gac <br>
- * Date: 9-mag-2018 20.30.33 <br>
+ * Date: 9-mag-2018 21.12.07 <br>
  * <br>
  * Estende la classe astratta APresenter che gestisce la business logic del package <br>
  * <br>
@@ -33,9 +33,9 @@ import static it.algos.vaadtest.application.AppCost.TAG_PRO;
  */
 @SpringComponent
 @Scope(ConfigurableBeanFactory.SCOPE_SINGLETON)
-@Qualifier(TAG_PRO)
+@Qualifier(TAG_ADD)
 @AIScript(sovrascrivibile = true)
-public class ProvaPresenter extends APresenter {
+public class AddressPresenter extends APresenter {
 
     /**
      * Costruttore @Autowired <br>
@@ -46,8 +46,8 @@ public class ProvaPresenter extends APresenter {
      * @param service layer di collegamento per la Repository
      * @param view    principale gestita da Flow
      */
-    public ProvaPresenter(@Qualifier(TAG_PRO) IAService service, @Lazy @Qualifier(TAG_PRO) IAView view) {
-        super(Prova.class, service, view);
+    public AddressPresenter(@Qualifier(TAG_ADD) IAService service, @Lazy @Qualifier(TAG_ADD) IAView view) {
+        super(Address.class, service, view);
      }// end of Spring constructor
 
 

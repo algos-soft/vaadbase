@@ -1,84 +1,54 @@
 package it.algos.vaadbase.modules.address;
 
 import com.vaadin.flow.spring.annotation.SpringComponent;
-import it.algos.vaadbase.application.BaseCost;
-import lombok.extern.slf4j.Slf4j;
-import org.bson.types.ObjectId;
-import java.util.List;
-import org.springframework.beans.factory.annotation.Qualifier;
-import org.springframework.data.mongodb.repository.MongoRepository;
-import org.springframework.stereotype.Service;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.context.annotation.Scope;
 import it.algos.vaadbase.annotation.AIScript;
 import it.algos.vaadbase.backend.service.AService;
-import it.algos.vaadbase.backend.entity.AEntity;
+import lombok.extern.slf4j.Slf4j;
+import org.springframework.beans.factory.annotation.Qualifier;
+import org.springframework.beans.factory.config.ConfigurableBeanFactory;
+import org.springframework.context.annotation.Scope;
+import org.springframework.data.mongodb.repository.MongoRepository;
+import org.springframework.stereotype.Service;
+
+import java.util.List;
+import java.util.stream.Collectors;
 
 import static it.algos.vaadbase.application.BaseCost.TAG_ADD;
 
-
 /**
- * Project vaadbase
- * Created by Algos
- * User: Gac
- * Date: 2018-03-22
- * Estende la Entity astratta AService. Layer di collegamento tra il Presenter e la Repository.
- * Annotated with @@Slf4j (facoltativo) per i logs automatici
- * Annotated with @SpringComponent (obbligatorio)
- * Annotated with @Service (ridondante)
- * Annotated with @Scope (obbligatorio = 'singleton')
- * Annotated with @Qualifier (obbligatorio) per permettere a Spring di istanziare la sottoclasse specifica
- * Annotated with @AIScript (facoltativo) per controllare la ri-creazione di questo file nello script del framework
+ * Project vaadbase <br>
+ * Created by Algos <br>
+ * User: Gac <br>
+ * Date: 9-mag-2018 21.12.07 <br>
+ * <br>
+ * Estende la classe astratta AService. Layer di collegamento per la Repository. <br>
+ * <br>
+ * Annotated with @SpringComponent (obbligatorio) <br>
+ * Annotated with @Service (ridondante) <br>
+ * Annotated with @Scope (obbligatorio = 'singleton') <br>
+ * Annotated with @Qualifier (obbligatorio) per permettere a Spring di istanziare la classe specifica <br>
+ * Annotated with @@Slf4j (facoltativo) per i logs automatici <br>
+ * Annotated with @AIScript (facoltativo Algos) per controllare la ri-creazione di questo file dal Wizard <br>
  */
-@Slf4j
 @SpringComponent
 @Service
-@Scope("singleton")
+@Scope(ConfigurableBeanFactory.SCOPE_SINGLETON)
 @Qualifier(TAG_ADD)
+@Slf4j
 @AIScript(sovrascrivibile = false)
 public class AddressService extends AService {
 
 
     /**
-     * La repository viene iniettata dal costruttore, in modo che sia disponibile nella superclasse,
-     * dove viene usata l'interfaccia MongoRepository
-     * Spring costruisce al volo, quando serve, una implementazione di RoleRepository (come previsto dal @Qualifier)
-     * Qui si una una interfaccia locale (col casting nel costruttore) per usare i metodi specifici
-     */
-    private AddressRepository repository;
-
-
-    /**
-     * Costruttore @Autowired (nella superclasse)
-     * In the newest Spring release, it’s constructor does not need to be annotated with @Autowired annotation
-     * Si usa un @Qualifier(), per avere la sottoclasse specifica
-     * Si usa una costante statica, per essere sicuri di scrivere sempre uguali i riferimenti
+     * Costruttore @Autowired <br>
+     * Si usa un @Qualifier(), per avere la sottoclasse specifica <br>
+     * Si usa una costante statica, per essere sicuri di scrivere sempre uguali i riferimenti <br>
+     *
+     * @param repository per la persistenza dei dati
      */
     public AddressService(@Qualifier(TAG_ADD) MongoRepository repository) {
         super(repository);
-        this.repository = (AddressRepository) repository;
-        super.entityClass = Address.class;
-   }// end of Spring constructor
-
-
-    /**
-     * Ricerca di una entity (la crea se non la trova)
-     * All properties
-     *
-     * @param code di riferimento interno (obbligatorio ed unico)
-     *
-     * @return la entity trovata o appena creata
-     */
-    public Address findOrCrea(String code) {
-        Address entity = findByKeyUnica(code);
-
-        if (entity == null) {
-            entity = newEntity(code);
-            save(entity);
-        }// end of if cycle
-
-        return entity;
-    }// end of method
+    }// end of Spring constructor
 
 
     /**
@@ -90,85 +60,53 @@ public class AddressService extends AService {
      */
     @Override
     public Address newEntity() {
-        return newEntity("");
+        return newEntity("", "", "");
     }// end of method
 
 
     /**
-     * Creazione in memoria di una nuova entity che NON viene salvata
-     * Eventuali regolazioni iniziali delle property
-     * Properties obbligatorie
-     * Gli argomenti (parametri) della new Entity DEVONO essere ordinati come nella Entity (costruttore lombok)
+     * Creazione in memoria di una nuova entity che NON viene salvata <br>
+     * Eventuali regolazioni iniziali delle property <br>
+     * All properties <br>
+     * Gli argomenti (parametri) della new Entity DEVONO essere ordinati come nella Entity (costruttore lombok) <br>
      *
-     * @param code codice di riferimento (obbligatorio)
+     * @param indirizzo: via, nome e numero (obbligatoria, non unica)
+     * @param localita:  località (obbligatoria, non unica)
+     * @param cap:       codice di avviamento postale (obbligatoria, non unica)
      *
      * @return la nuova entity appena creata (non salvata)
      */
-    public Address newEntity(String code) {
-        return newEntity(code, "");
-    }// end of method
-
-
-    /**
-     * Creazione in memoria di una nuova entity che NON viene salvata
-     * Eventuali regolazioni iniziali delle property
-     * All properties
-     * Gli argomenti (parametri) della new Entity DEVONO essere ordinati come nella Entity (costruttore lombok)
-     *
-     * @param code        codice di riferimento (obbligatorio)
-     * @param descrizione (facoltativa, non unica)
-     *
-     * @return la nuova entity appena creata (non salvata)
-     */
-    public Address newEntity(String code, String descrizione) {
-        Address entity = findByKeyUnica(code);
-
-        if (entity == null) {
-            entity = Address.builder()
-                    .code(code)
-                    .descrizione(descrizione)
-                    .build();
-        }// end of if cycle
-
-        return entity;
-    }// end of method
-
-
-    /**
-     * Recupera una istanza della Entity usando la query della property specifica (obbligatoria ed unica)
-     *
-     * @param code di riferimento (obbligatorio)
-     *
-     * @return istanza della Entity, null se non trovata
-     */
-    public Address findByKeyUnica(String code) {
-        return repository.findByCode(code);
+    public Address newEntity(String indirizzo, String localita, String cap) {
+        return Address.builder()
+                .indirizzo(indirizzo)
+                .localita(localita)
+                .cap(cap)
+                .build();
     }// end of method
 
 
 
     /**
-     * Returns all instances of the type
-     * La Entity è EACompanyRequired.nonUsata. Non usa Company.
-     * Lista ordinata
+     * Fetches the entities whose 'main text property' matches the given filter text.
+     * <p>
+     * The matching is case insensitive. When passed an empty filter text,
+     * the method returns all categories. The returned list is ordered by name.
+     * The 'main text property' is different in each entity class and chosen in the specific subclass
      *
-     * @return lista ordinata di tutte le entities
+     * @param filter the filter text
+     *
+     * @return the list of matching entities
      */
     @Override
-    public List findAll() {
-        return repository.findAllByOrderByCodeAsc();
+    public List<Address> findFilter(String filter) {
+        String normalizedFilter = filter.toLowerCase();
+        List<Address> lista = repository.findAll();
+
+        return lista.stream()
+                .filter(entity -> entity.getIndirizzo().toLowerCase().contains(normalizedFilter))
+                .sorted((entity1, entity2) -> entity1.getIndirizzo().compareToIgnoreCase(entity2.getIndirizzo()))
+                .collect(Collectors.toList());
     }// end of method
 
-
-    /**
-     * Opportunità di controllare (per le nuove schede) che la key unica non esista già.
-     * Invocato appena prima del save(), solo per una nuova entity
-     *
-     * @param entityBean nuova da creare
-     */
-    @Override
-    protected boolean isEsisteEntityKeyUnica(AEntity entityBean) {
-        return findByKeyUnica(((Address) entityBean).getCode()) != null;
-    }// end of method
 
 }// end of class

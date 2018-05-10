@@ -43,10 +43,11 @@ public abstract class AViewDialog<T extends Serializable> extends Dialog impleme
     private final FormLayout formLayout = new FormLayout();
     private final HorizontalLayout buttonBar = new HorizontalLayout(saveButton, cancelButton, deleteButton);
     private final ConfirmationDialog<T> confirmationDialog = new ConfirmationDialog<>();
-    private final String itemType;
+    private  String itemType;
     private final BiConsumer<T, AViewDialog.Operation> itemSaver;
     private final Consumer<T> itemDeleter;
     protected IAService service;
+    protected IAPresenter presenter;
     protected Binder<T> binder;
     protected Class binderClass;
     private Registration registrationForSave;
@@ -55,13 +56,13 @@ public abstract class AViewDialog<T extends Serializable> extends Dialog impleme
     /**
      * Constructs a new instance.
      *
-     * @param presenter per gestire la business logic del package
+     * @param presenter   per gestire la business logic del package
      * @param itemSaver   funzione associata al bottone 'registra'
      * @param itemDeleter funzione associata al bottone 'annulla'
      */
     public AViewDialog(IAPresenter presenter, BiConsumer<T, AViewDialog.Operation> itemSaver, Consumer<T> itemDeleter) {
+        this.presenter = presenter;
         this.service = presenter.getService();
-        this.itemType = "prova";//@todo levare
         this.itemSaver = itemSaver;
         this.itemDeleter = itemDeleter;
         this.binderClass = presenter.getEntityClazz();
@@ -79,7 +80,6 @@ public abstract class AViewDialog<T extends Serializable> extends Dialog impleme
             }
         });
     }// end of constructor
-
 
 
     private void initTitle() {
@@ -156,6 +156,7 @@ public abstract class AViewDialog<T extends Serializable> extends Dialog impleme
             return;
         }// end of if cycle
 
+        this.itemType = presenter.getView().getName();
         currentItem = (T) item;
         titleField.setText(operation.getNameInTitle() + " " + itemType);
         if (registrationForSave != null) {

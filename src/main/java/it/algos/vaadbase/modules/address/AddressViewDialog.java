@@ -1,4 +1,4 @@
-package it.algos.vaadtest.modules.prova;
+package it.algos.vaadbase.modules.address;
 
 import java.util.function.BiConsumer;
 import java.util.function.Consumer;
@@ -15,13 +15,13 @@ import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.beans.factory.config.ConfigurableBeanFactory;
 import org.springframework.context.annotation.Lazy;
 import org.springframework.context.annotation.Scope;
-import static it.algos.vaadtest.application.AppCost.TAG_PRO;
+import static it.algos.vaadbase.application.BaseCost.TAG_ADD;
 
 /**
- * Project vaadtest <br>
+ * Project vaadbase <br>
  * Created by Algos
  * User: Gac
- * Date: 9-mag-2018 20.30.33
+ * Date: 9-mag-2018 21.12.07
  * <p>
  * Estende la classe astratta ADialog per visualizzare i fields <br>
  * <p>
@@ -31,9 +31,9 @@ import static it.algos.vaadtest.application.AppCost.TAG_PRO;
  * Annotated with @AIScript (facoltativo Algos) per controllare la ri-creazione di questo file dal Wizard <br>
  */
 @Scope(ConfigurableBeanFactory.SCOPE_PROTOTYPE)
-@Qualifier(TAG_PRO)
+@Qualifier(TAG_ADD)
 @AIScript(sovrascrivibile = true)
-public class ProvaViewDialog extends AViewDialog<Prova> {
+public class AddressViewDialog extends AViewDialog<Address> {
 
     /**
      * Costruttore
@@ -42,7 +42,7 @@ public class ProvaViewDialog extends AViewDialog<Prova> {
      * @param itemSaver   funzione associata al bottone 'registra'
      * @param itemDeleter funzione associata al bottone 'annulla'
      */
-    public ProvaViewDialog(IAPresenter presenter, BiConsumer<Prova, AViewDialog.Operation> itemSaver, Consumer<Prova> itemDeleter) {
+    public AddressViewDialog(IAPresenter presenter, BiConsumer<Address, AViewDialog.Operation> itemSaver, Consumer<Address> itemDeleter) {
         super(presenter, itemSaver, itemDeleter);
     }// end of constructor
 

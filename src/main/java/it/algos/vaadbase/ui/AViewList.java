@@ -15,12 +15,11 @@ import com.vaadin.flow.router.BeforeEnterObserver;
 import it.algos.vaadbase.backend.entity.AEntity;
 import it.algos.vaadbase.backend.service.IAService;
 import it.algos.vaadbase.presenter.IAPresenter;
+import it.algos.vaadbase.service.AAnnotationService;
 import it.algos.vaadbase.service.ATextService;
-import it.algos.vaadbase.ui.dialog.ADialog;
 import it.algos.vaadbase.ui.dialog.AForm;
 import it.algos.vaadbase.ui.dialog.AViewDialog;
 import it.algos.vaadbase.ui.dialog.IADialog;
-import it.algos.vaadbase.ui.menu.AMenu;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 
@@ -48,13 +47,16 @@ import java.util.List;
 public abstract class AViewList extends VerticalLayout implements IAView, BeforeEnterObserver {
 
     protected final TextField searchField = new TextField("", "Search");
-
+    /**
+     * Service iniettato da Spring (@Scope = 'singleton'). Unica per tutta l'applicazione. Usata come libreria.
+     */
+    @Autowired
+    public AAnnotationService annotation;
     /**
      * Service iniettato da Spring (@Scope = 'singleton'). Unica per tutta l'applicazione. Usata come libreria.
      */
     @Autowired
     protected ATextService text;
-
     /**
      * Il presenter viene iniettato dal costruttore della sottoclasse concreta
      */
@@ -70,7 +72,6 @@ public abstract class AViewList extends VerticalLayout implements IAView, Before
      * Il modello-dati specifico viene recuperato dal presenter
      */
     protected Class<? extends AEntity> entityClazz;
-
 
 
     protected Grid<AEntity> grid;
@@ -97,12 +98,15 @@ public abstract class AViewList extends VerticalLayout implements IAView, Before
 //        addClassName("categories-list");
         setDefaultHorizontalComponentAlignment(FlexComponent.Alignment.STRETCH);
 
+        addDeveloperAlert();
         addSearchBar();
         addGrid();
 
         updateView();
     }// end of method
 
+    protected void addDeveloperAlert() {
+    }// end of method
 
     protected void addSearchBar() {
         Div viewToolbar = new Div();
@@ -121,11 +125,9 @@ public abstract class AViewList extends VerticalLayout implements IAView, Before
         newButton.addClassName("view-toolbar__button");
         newButton.addClickListener(e -> dialog.open(service.newEntity(), AViewDialog.Operation.ADD));
 
-        viewToolbar.add(searchField,clearFilterTextBtn, newButton);
+        viewToolbar.add(searchField, clearFilterTextBtn, newButton);
         add(viewToolbar);
     }// end of method
-
-
 
 
     /**
@@ -160,7 +162,6 @@ public abstract class AViewList extends VerticalLayout implements IAView, Before
     }// end of method
 
 
-
     protected void saveUpdate(AEntity entityBean, AViewDialog.Operation operation) {
         service.save(entityBean);
         updateView();
@@ -182,6 +183,12 @@ public abstract class AViewList extends VerticalLayout implements IAView, Before
 
     @Override
     public void beforeEnter(BeforeEnterEvent beforeEnterEvent) {
+    }// end of method
+
+
+    @Override
+    public String getName() {
+        return annotation.getViewName(this.getClass());
     }// end of method
 
 }// end of class
