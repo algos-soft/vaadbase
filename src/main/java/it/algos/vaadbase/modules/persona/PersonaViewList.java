@@ -1,29 +1,40 @@
-package it.algos.vaadbase.modules.address;
+package it.algos.vaadbase.modules.persona;
 
 import com.vaadin.flow.component.button.Button;
-import com.vaadin.flow.component.html.Label;
+import com.vaadin.flow.component.grid.Grid;
+import com.vaadin.flow.component.html.Div;
 import com.vaadin.flow.component.icon.Icon;
-import com.vaadin.flow.component.icon.VaadinIcons;
-import com.vaadin.flow.component.orderedlayout.VerticalLayout;
+import com.vaadin.flow.component.html.Label;
+import com.vaadin.flow.component.textfield.TextField;
 import com.vaadin.flow.data.renderer.ComponentRenderer;
+import it.algos.vaadbase.ui.dialog.AViewDialog;
+import com.vaadin.flow.component.icon.VaadinIcons;
+import com.vaadin.flow.component.notification.Notification;
+import com.vaadin.flow.router.BeforeEnterEvent;
+import it.algos.vaadbase.presenter.IAPresenter;
+import it.algos.vaadbase.backend.service.IAService;
+import it.algos.vaadbase.ui.AViewList;
 import com.vaadin.flow.router.Route;
 import com.vaadin.flow.spring.annotation.SpringComponent;
-import it.algos.vaadbase.annotation.AIScript;
-import it.algos.vaadbase.presenter.IAPresenter;
-import it.algos.vaadbase.ui.AViewList;
-import it.algos.vaadbase.ui.MainLayout;
-import it.algos.vaadbase.ui.dialog.AViewDialog;
-import org.springframework.beans.factory.annotation.Qualifier;
+import com.vaadin.flow.component.orderedlayout.VerticalLayout;
+import javax.annotation.PostConstruct;
+import java.util.List;
 import org.springframework.beans.factory.config.ConfigurableBeanFactory;
+import org.springframework.beans.factory.annotation.Qualifier;
+import org.springframework.context.annotation.Lazy;
 import org.springframework.context.annotation.Scope;
-
-import static it.algos.vaadbase.application.BaseCost.TAG_ADD;
+import it.algos.vaadbase.backend.entity.AEntity;
+import it.algos.vaadbase.ui.enumeration.EARoleType;
+import it.algos.vaadbase.annotation.AIScript;
+import it.algos.vaadbase.ui.annotation.AIView;
+import it.algos.vaadbase.ui.MainLayout;
+import static it.algos.vaadbase.application.BaseCost.TAG_PER;
 
 /**
  * Project vaadbase <br>
  * Created by Algos <br>
  * User: Gac <br>
- * Date: 9-mag-2018 21.12.07 <br>
+ * Date: 10-mag-2018 6.41.22 <br>
  * <br>
  * Estende la classe astratta AViewList per visualizzare la Grid <br>
  * <p>
@@ -36,10 +47,10 @@ import static it.algos.vaadbase.application.BaseCost.TAG_ADD;
  */
 @SpringComponent
 @Scope(ConfigurableBeanFactory.SCOPE_SINGLETON)
-@Qualifier(TAG_ADD)
-@Route(value = TAG_ADD, layout = MainLayout.class)
+@Qualifier(TAG_PER)
+@Route(value = TAG_PER, layout = MainLayout.class)
 @AIScript(sovrascrivibile = true)
-public class AddressViewList extends AViewList {
+public class PersonaViewList extends AViewList {
 
 
     /**
@@ -55,25 +66,25 @@ public class AddressViewList extends AViewList {
      *
      * @param presenter per gestire la business logic del package
      */
-    public AddressViewList(@Qualifier(TAG_ADD) IAPresenter presenter) {
+     public PersonaViewList(@Qualifier(TAG_PER) IAPresenter presenter) {
         super(presenter);
-        dialog = new AddressViewDialog(presenter, this::saveUpdate, this::deleteUpdate);
-    }// end of Spring constructor
+        dialog = new PersonaViewDialog(presenter, this::saveUpdate, this::deleteUpdate);
+   }// end of Spring constructor
 
 
-    /**
-     * Crea il corpo centrale della view
-     * Componente grafico obbligatorio
-     */
-    protected void addGrid() {
-        super.addGrid();
-        ComponentRenderer renderer = new ComponentRenderer<>(this::createEditButton);
-        grid.addColumn(renderer);
-        this.setFlexGrow(0);
-    }// end of method
+     /**
+      * Crea il corpo centrale della view
+      * Componente grafico obbligatorio
+      */
+     protected void addGrid() {
+         super.addGrid();
+         ComponentRenderer renderer = new ComponentRenderer<>(this::createEditButton);
+         grid.addColumn(renderer);
+         this.setFlexGrow(0);
+     }// end of method
 
 
-    private Button createEditButton(Address entityBean) {
+   private Button createEditButton(Persona entityBean) {
         Button edit = new Button("Modifica", event -> dialog.open(entityBean, AViewDialog.Operation.EDIT));
         edit.setIcon(new Icon("lumo", "edit"));
         edit.addClassName("review__edit");
