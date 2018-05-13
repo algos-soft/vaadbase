@@ -20,7 +20,7 @@ import static it.algos.vaadtest.application.AppCost.TAG_PRO;
  * Project vaadtest <br>
  * Created by Algos <br>
  * User: Gac <br>
- * Date: 9-mag-2018 20.30.33 <br>
+ * Date: 10-mag-2018 15.40.24 <br>
  * <br>
  * Estende la classe astratta AService. Layer di collegamento per la Repository. <br>
  * <br>
@@ -184,7 +184,15 @@ public class ProvaService extends AService {
         return findByKeyUnica(((Prova) entityBean).getCode()) != null;
     }// end of method
 
-    
+    /**
+     * Opportunità di usare una idKey specifica. <br>
+     * Invocato appena prima del save(), solo per una nuova entity <br>
+     *
+     * @param entityBean da salvare
+     */
+    protected void creaIdKeySpecifica(AEntity entityBean) {
+        entityBean.id = ((Prova)entityBean).getCode();
+    }// end of method
 
     /**
      * Ordine di presentazione (obbligatorio, unico per tutte le eventuali company), <br>

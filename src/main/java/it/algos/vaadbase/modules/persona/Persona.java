@@ -57,7 +57,7 @@ import static it.algos.vaadbase.application.BaseCost.TAG_PER;
 @Qualifier(TAG_PER)
 @AIEntity(company = EACompanyRequired.nonUsata)
 @AIList(fields = {"nome", "cognome"})
-@AIForm(fields = {"nome", "cognome", "telefono", "email", "indirizzo"})
+@AIForm(fields = {"nome", "cognome", "telefono", "email"})
 @AIScript(sovrascrivibile = false)
 public class Persona extends AEntity {
 
@@ -113,13 +113,13 @@ public class Persona extends AEntity {
     private Address indirizzo;
 
 
-//    /**
-//     * @return a string representation of the object.
-//     */
-//    @Override
-//    public String toString() {
-//        return getNome() + " " + getCognome();
-//    }// end of method
-//
+    /**
+     * @return a string representation of the object.
+     */
+    @Override
+    public String toString() {
+        return nome + " " + cognome;
+    }// end of method
+
 
 }// end of entity class

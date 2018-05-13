@@ -4,6 +4,8 @@ import com.vaadin.flow.spring.annotation.SpringComponent;
 import it.algos.vaadbase.annotation.AIScript;
 import it.algos.vaadbase.backend.entity.AEntity;
 import it.algos.vaadbase.backend.service.AService;
+import it.algos.vaadbase.modules.address.Address;
+import it.algos.vaadbase.modules.persona.Persona;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.beans.factory.config.ConfigurableBeanFactory;
@@ -93,17 +95,36 @@ public class CompanyService extends AService {
 
 
     /**
+     * Creazione in memoria di una nuova entity che NON viene salvata
+     * Eventuali regolazioni iniziali delle property
+     * Properties obbligatorie
+     *
+     * @param code        di riferimento interno (obbligatorio ed unico)
+     * @param descrizione ragione sociale o descrizione della company (visibile - obbligatoria)
+     *
+     * @return la nuova entity appena creata (non salvata)
+     */
+    public Company newEntity(String code, String descrizione) {
+        return newEntity(code, descrizione, (Persona) null, "", "", (Address) null);
+    }// end of method
+
+
+    /**
      * Creazione in memoria di una nuova entity che NON viene salvata <br>
      * Eventuali regolazioni iniziali delle property <br>
      * All properties <br>
      * Gli argomenti (parametri) della new Entity DEVONO essere ordinati come nella Entity (costruttore lombok) <br>
      *
-     * @param code        codice di riferimento (obbligatorio)
-     * @param descrizione (facoltativa, non unica)
+     * @param code        di riferimento interno (obbligatorio ed unico)
+     * @param descrizione ragione sociale o descrizione della company (visibile - obbligatoria)
+     * @param contatto    persona di riferimento (facoltativo)
+     * @param telefono    della company (facoltativo)
+     * @param email       della company (facoltativo)
+     * @param indirizzo   della company (facoltativo)
      *
      * @return la nuova entity appena creata (non salvata)
      */
-    public Company newEntity(String code, String descrizione) {
+    public Company newEntity(String code, String descrizione, Persona contatto, String telefono, String email, Address indirizzo) {
         Company entity = null;
 
         entity = findByKeyUnica(code);
@@ -114,6 +135,10 @@ public class CompanyService extends AService {
         entity = Company.builder()
                 .code(code)
                 .descrizione(descrizione)
+                .contatto(contatto)
+                .telefono(telefono)
+                .email(email)
+                .indirizzo(indirizzo)
                 .build();
 
         return entity;
@@ -190,6 +215,7 @@ public class CompanyService extends AService {
     protected boolean isEsisteEntityKeyUnica(AEntity entityBean) {
         return findByKeyUnica(((Company) entityBean).getCode()) != null;
     }// end of method
+
 
     /**
      * Opportunità di usare una idKey specifica. <br>

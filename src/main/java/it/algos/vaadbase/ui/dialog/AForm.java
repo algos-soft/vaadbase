@@ -137,7 +137,7 @@ public abstract class AForm<T extends Serializable> extends Dialog {
             List<String> properties = service.getFormPropertiesName();
 
             for (String fieldName : properties) {
-                type = service.getAnnotation().getFormType(binderClass, fieldName);
+                type = service.getAnnotationService().getFormType(binderClass, fieldName);
                 field = new TextField(fieldName);
                 getFormLayout().add(field);
                 switch (type) {

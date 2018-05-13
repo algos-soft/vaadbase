@@ -2,7 +2,6 @@ package it.algos.vaadbase;
 
 import com.vaadin.flow.router.Route;
 import it.algos.vaadbase.modules.role.Role;
-import it.algos.vaadbase.modules.role.RoleList;
 import it.algos.vaadbase.service.AAnnotationService;
 import it.algos.vaadbase.service.AArrayService;
 import it.algos.vaadbase.service.AReflectionService;
@@ -18,6 +17,7 @@ import org.mockito.MockitoAnnotations;
 import java.util.Arrays;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertNotEquals;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
 
 /**
@@ -418,11 +418,48 @@ public class AAnnotationServiceTest extends ATest {
     @Test
     public void getFormFieldName() {
         previsto = text.primaMaiuscola(NAME_ORDINE);
-        ottenuto = service.getFormFieldName(FIELD_ORDINE);
+        ottenuto = service.getFormFieldNameCapital(FIELD_ORDINE);
         assertEquals(previsto, ottenuto);
 
         previsto = text.primaMaiuscola(NAME_CODE);
-        ottenuto = service.getFormFieldName(FIELD_CODE);
+        ottenuto = service.getFormFieldNameCapital(FIELD_CODE);
+        assertEquals(previsto, ottenuto);
+    }// end of single test
+
+
+    @SuppressWarnings("javadoc")
+    /**
+     * Get the alert message from @NotNull or from @Size
+     *
+     * @param reflectionJavaField di riferimento per estrarre la Annotation
+     *
+     * @return the alert message
+     */
+    @Test
+    public void getMessage() {
+        previsto = "Deve contenere un numero";
+
+        ottenuto = service.getMessage(FIELD_ORDINE);
+        assertEquals(previsto, ottenuto);
+
+        ottenuto = service.getMessageNull(FIELD_ORDINE);
+        assertEquals(previsto, ottenuto);
+
+        previsto = "";
+        ottenuto = service.getMessageSize(FIELD_ORDINE);
+        assertEquals(previsto, ottenuto);
+
+
+        previsto = "Il codice è obbligatorio";
+        ottenuto = service.getMessage(FIELD_CODE);
+        assertEquals(previsto, ottenuto);
+        ottenuto = service.getMessageNull(FIELD_CODE);
+        assertEquals(previsto, ottenuto);
+
+        previsto = "Deve contenere almeno 3 caratteri";
+        ottenuto = service.getMessage(FIELD_CODE);
+        assertNotEquals(previsto, ottenuto);
+        ottenuto = service.getMessageSize(FIELD_CODE);
         assertEquals(previsto, ottenuto);
     }// end of single test
 

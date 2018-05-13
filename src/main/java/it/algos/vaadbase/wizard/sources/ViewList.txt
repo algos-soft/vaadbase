@@ -66,10 +66,11 @@ public class @ENTITY@ViewList extends AViewList {
      *
      * @param presenter per gestire la business logic del package
      */
-     public @ENTITY@ViewList(@Qualifier(@QUALIFIER@) IAPresenter presenter) {
+    @Autowired
+    public @ENTITY@ViewList(@Qualifier(@QUALIFIER@) IAPresenter presenter) {
         super(presenter);
         dialog = new @ENTITY@ViewDialog(presenter, this::saveUpdate, this::deleteUpdate);
-   }// end of Spring constructor
+    }// end of Spring constructor
 
 
      /**

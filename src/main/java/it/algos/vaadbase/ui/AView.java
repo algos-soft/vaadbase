@@ -199,7 +199,7 @@ public class AView extends VerticalLayout implements IAView, BeforeEnterObserver
     }// end of method
 
 
-    protected void updateView() {
+    public void updateView() {
         List items = service.findFilter(searchField.getValue());
         grid.setItems(items);
     }// end of method

@@ -1,9 +1,14 @@
 package it.algos.vaadbase.backend.service;
 
 import com.vaadin.flow.spring.annotation.SpringComponent;
+import it.algos.vaadbase.backend.annotation.EACompanyRequired;
+import it.algos.vaadbase.backend.entity.ACEntity;
 import it.algos.vaadbase.backend.entity.AEntity;
+import it.algos.vaadbase.backend.login.ALogin;
+import it.algos.vaadbase.modules.company.Company;
 import it.algos.vaadbase.service.AAnnotationService;
 import it.algos.vaadbase.service.ATextService;
+import it.algos.vaadbase.ui.AFieldService;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Scope;
@@ -31,10 +36,19 @@ public  class AService implements IAService {
     @Autowired
     public AAnnotationService annotation;
     @Override
-    public AAnnotationService getAnnotation() {
+    public AAnnotationService getAnnotationService() {
         return annotation;
     }// end of method
 
+    /**
+     * Service iniettato da Spring (@Scope = 'singleton'). Unica per tutta l'applicazione. Usata come libreria.
+     */
+    @Autowired
+    public AFieldService field;
+//    @Override
+    public AFieldService getFieldService() {
+        return field;
+    }// end of method
 
 //    @Autowired
 //    public AReflectionService reflection;
@@ -55,8 +69,8 @@ public  class AService implements IAService {
     /**
      * Inietta da Spring come 'session'
      */
-//    @Autowired
-//    public ALogin login;
+    @Autowired
+    public ALogin login;
 
 //    @Autowired
 //    private LogService logger;
@@ -370,53 +384,49 @@ public  class AService implements IAService {
     }// end of method
 
 
-//    /**
-//     * Se la nuova entity usa la company2, la recupera dal login
-//     * Se la campany manca, lancia l'eccezione
-//     *
-//     * @param entityBean da creare
-//     */
-//    protected AEntity addCompany(AEntity entityBean) {
-//        Company company2;
-//        EACompanyRequired tableCompanyRequired = annotation.getCompanyRequired(entityBean.getClass());
-//
-//        //--se la EntityClass non estende ACCompany, nopn deve fare nulla
-//        if (!(entityBean instanceof ACEntity)) {
-//            return entityBean;
-//        }// end of if cycle
-//
-//        //--controlla l'obbligatorietà della Company
-//        if (AlgosApp.USE_MULTI_COMPANY) {
+    /**
+     * Se la nuova entity usa la company2, la recupera dal login
+     * Se la campany manca, lancia l'eccezione
+     *
+     * @param entityBean da creare
+     */
+    protected AEntity addCompany(AEntity entityBean) {
+        Company company;
+        EACompanyRequired tableCompanyRequired = EACompanyRequired.obbligatoria;//@todo provvisorio - va letto dall'annotation della Entity
+
+        //--se la EntityClass non estende ACCompany, nopn deve fare nulla
+        if (!(entityBean instanceof ACEntity)) {
+            return entityBean;
+        }// end of if cycle
+
+        //--controlla l'obbligatorietà della Company
 //            tableCompanyRequired = annotation.getCompanyRequired(entityBean.getClass());
-//            switch (tableCompanyRequired) {
-//                case nonUsata:
-//                    log.error("C'è una discrepanza tra 'extends ACEntity' della classe " + entityBean.getClass().getSimpleName() + " e l'annotation @AIEntity della classe stessa");
-//                    break;
-//                case facoltativa:
-//                    company2 = login.getCompany();
-//                    if (company2 != null) {
-//                        ((ACEntity) entityBean).company2 = company2;
-//                    } else {
-//                        log.info("Nuova scheda senza company2 (facoltativa)");
-//                    }// end of if/else cycle
-//                    break;
-//                case obbligatoria:
-//                    company2 = login.getCompany();
-//                    if (company2 != null) {
-//                        ((ACEntity) entityBean).company2 = company2;
-//                    } else {
-//                        entityBean = null;
-//                        log.error(NullCompanyException.MESSAGE);
-//                        Notification.show("Nuova scheda", NullCompanyException.MESSAGE, Notification.Type.ERROR_MESSAGE);
-//                    }// end of if/else cycle
-//                    break;
-//                default:
-//                    break;
-//            } // end of switch statement
-//        }// end of if cycle
-//
-//        return entityBean;
-//    }// end of method
+            switch (tableCompanyRequired) {
+                case nonUsata:
+                    log.error("C'è una discrepanza tra 'extends ACEntity' della classe " + entityBean.getClass().getSimpleName() + " e l'annotation @AIEntity della classe stessa");
+                    break;
+                case facoltativa:
+                    company = login.getCompany();
+                    if (company != null) {
+                        ((ACEntity) entityBean).company = company;
+                    } else {
+                        log.info("Nuova scheda senza company2 (facoltativa)");
+                    }// end of if/else cycle
+                    break;
+                case obbligatoria:
+                    company = login.getCompany();
+                    if (company != null) {
+                        ((ACEntity) entityBean).company = company;
+                    } else {
+                        entityBean = null;
+                    }// end of if/else cycle
+                    break;
+                default:
+                    break;
+            } // end of switch statement
+
+        return entityBean;
+    }// end of method
 
     /**
      * Saves a given entity.

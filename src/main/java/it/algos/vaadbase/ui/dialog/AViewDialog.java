@@ -1,5 +1,6 @@
 package it.algos.vaadbase.ui.dialog;
 
+import com.vaadin.flow.component.AbstractField;
 import com.vaadin.flow.component.button.Button;
 import com.vaadin.flow.component.dialog.Dialog;
 import com.vaadin.flow.component.formlayout.FormLayout;
@@ -7,20 +8,19 @@ import com.vaadin.flow.component.html.Div;
 import com.vaadin.flow.component.html.H2;
 import com.vaadin.flow.component.notification.Notification;
 import com.vaadin.flow.component.orderedlayout.HorizontalLayout;
-import com.vaadin.flow.component.textfield.TextField;
 import com.vaadin.flow.data.binder.Binder;
 import com.vaadin.flow.data.binder.BinderValidationStatus;
 import com.vaadin.flow.data.binder.ValidationResult;
-import com.vaadin.flow.data.converter.StringToIntegerConverter;
-import com.vaadin.flow.data.validator.StringLengthValidator;
 import com.vaadin.flow.shared.Registration;
 import it.algos.vaadbase.backend.service.IAService;
 import it.algos.vaadbase.presenter.IAPresenter;
-import it.algos.vaadbase.ui.enumeration.EAFieldType;
+import it.algos.vaadbase.ui.AFieldService;
 import lombok.extern.slf4j.Slf4j;
 
 import java.io.Serializable;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 import java.util.function.BiConsumer;
 import java.util.function.Consumer;
 import java.util.stream.Collectors;
@@ -43,13 +43,16 @@ public abstract class AViewDialog<T extends Serializable> extends Dialog impleme
     private final FormLayout formLayout = new FormLayout();
     private final HorizontalLayout buttonBar = new HorizontalLayout(saveButton, cancelButton, deleteButton);
     private final ConfirmationDialog<T> confirmationDialog = new ConfirmationDialog<>();
-    private  String itemType;
     private final BiConsumer<T, AViewDialog.Operation> itemSaver;
     private final Consumer<T> itemDeleter;
     protected IAService service;
     protected IAPresenter presenter;
+    //--collegamento tra i fields e la entityBean
     protected Binder<T> binder;
     protected Class binderClass;
+    protected Map<String, AbstractField> fieldMap;
+    protected AFieldService fieldService;
+    private String itemType;
     private Registration registrationForSave;
     private T currentItem;
 
@@ -66,6 +69,7 @@ public abstract class AViewDialog<T extends Serializable> extends Dialog impleme
         this.itemSaver = itemSaver;
         this.itemDeleter = itemDeleter;
         this.binderClass = presenter.getEntityClazz();
+        this.fieldService = presenter.getService().getFieldService();
 
         initTitle();
         initFormLayout();
@@ -106,39 +110,93 @@ public abstract class AViewDialog<T extends Serializable> extends Dialog impleme
         add(buttonBar);
     }
 
+    /**
+     * Prepara i fields
+     * Costruisce una fieldList interna
+     * Crea un nuovo binder per questo Dialog e questa Entity
+     * Costruisce i componenti grafici AFields (di tipo AbstractField), in base ai reflectedFields ricevuti dal service
+     * --e regola le varie properties grafiche (caption, visible, editable, width, ecc)
+     * Aggiunge i componenti grafici AField al binder
+     * Aggiunge i componenti grafici AField ad una fieldList interna,
+     * --necessaria per ''recuperare'' un singolo algosField dal nome
+     * Inizializza i componenti grafici AField
+     * Aggiunge al binder eventuali fields specifici, prima di trascrivere la entityBean nel bind
+     * Legge la entityBean, ed inserisce nel binder i valori nei fields grafici AFields
+     * Aggiunge i componenti grafici AField al layout
+     * Eventuali regolazioni specifiche per i fields, dopo la trascrizione della entityBean nel binder
+     *
+     * @param layout              in cui inserire i campi (window o panel)
+     * @param reflectedJavaFields previsti nel modello dati della Entity più eventuali aggiunte della sottoclasse
+     */
     protected void initFields() {
-        TextField field;
-        EAFieldType type;
-        String stringMessage = "Code must contain at least 3 printable characters";
-        String intMessage = "Must enter a number";
-        StringLengthValidator stringConverter = new StringLengthValidator(stringMessage, 3, null);
-        StringToIntegerConverter integerConverter = new StringToIntegerConverter(0, intMessage);
-        binder = new Binder(binderClass);
+        AbstractField newField = null;
 
-        if (service != null) {
-            List<String> properties = service.getFormPropertiesName();
-
-            for (String fieldName : properties) {
-                type = service.getAnnotation().getFormType(binderClass, fieldName);
-                field = new TextField(fieldName);
-                getFormLayout().add(field);
-                switch (type) {
-                    case text:
-                        binder.forField(field)
-                                .withValidator(stringConverter)
-                                .bind(fieldName);
-                        break;
-                    case integer:
-                        binder.forField(field)
-                                .withConverter(integerConverter)
-                                .bind(fieldName);
-                        break;
-                    default:
-                        break;
-                } // end of switch statement
-            }// end of for cycle
+        if (service == null) {
+            return;
         }// end of if cycle
 
+        binder = new Binder(binderClass);
+        fieldMap = new HashMap<>();
+
+        //--Costruisce una lista di nomi delle properties
+        List<String> properties = getFieldsList();
+
+        //--Costruisce ogni singolo field
+        //--Aggiunge il field al binder, nel metodo create() del fieldService
+        //--Aggiunge il field una fieldList protected di questa classe (serve per recuperare il field dal nome)
+        for (String fieldName : properties) {
+            newField = fieldService.create(binder, binderClass, fieldName);
+            if (newField != null) {
+                fieldMap.put(fieldName, newField);
+            }// end of if cycle
+        }// end of for cycle
+
+        //--Aggiunge al binder eventuali fields specifici, prima di trascrivere la entityBean nel binder
+        //--rimanda ad un metodo separato per poterlo sovrascrivere
+        //--Costruisce eventuali fields specifici, prima di trascrivere la entityBean nel binder
+        //--Aggiunge il field al binder, nel metodo sovrascritto della sottoclasse specifica
+        //--Aggiunge il field una fieldList protected di questa classe (serve per recuperare il field dal nome)
+        addSpecificAlgosFields();
+
+        //--Aggiunge ogni singolo field al layout grafico
+        for (String name : fieldMap.keySet()) {
+            getFormLayout().add(fieldMap.get(name));
+        }// end of for cycle
+
+    }// end of method
+
+
+    /**
+     * Costruisce una lista di nomi delle properties nell'ordine:
+     * 1) Cerca nell'annotation @AIForm della Entity
+     * 2) Utilizza tutte le properties della Entity (e delle sue superclassi)
+     * 3) Sovrascrive la lista nel metodo getSpecificFieldsList() della sottoclasse specifica
+     */
+    protected List<String> getFieldsList() {
+        List<String> properties = null;
+
+        if (service != null) {
+            properties = service.getFormPropertiesName();
+        }// end of if cycle
+
+        return getSpecificFieldsList(properties);
+    }// end of method
+
+    /**
+     * Costruisce una lista di nomi delle properties nella sottoclasse specifica
+     */
+    protected List<String> getSpecificFieldsList(List<String> properties) {
+        return properties;
+    }// end of method
+
+
+    /**
+     * Aggiunge al binder eventuali fields specifici, prima di trascrivere la entityBean nel binder
+     * Sovrascritto
+     * Aggiunge il field al binder
+     * Aggiunge il field alla fieldList interna
+     */
+    protected void addSpecificAlgosFields() {
     }// end of method
 
 
@@ -164,11 +222,21 @@ public abstract class AViewDialog<T extends Serializable> extends Dialog impleme
         }
         registrationForSave = saveButton
                 .addClickListener(e -> saveClicked(operation));
+
         binder.readBean(currentItem);
+        readSpecificFields();
 
         deleteButton.setEnabled(operation.isDeleteEnabled());
         open();
 
+    }// end of method
+
+
+    /**
+     * Regola in lettura eventuali valori NON associati al binder
+     * Sovrascritto
+     */
+    protected void readSpecificFields() {
     }// end of method
 
 
@@ -192,6 +260,11 @@ public abstract class AViewDialog<T extends Serializable> extends Dialog impleme
         }
         confirmDelete();
     }
+
+    public void close() {
+        super.close();
+        presenter.getView().updateView();
+    }// end of method
 
     /**
      * Opens the confirmation dialog before deleting the current item.
@@ -247,6 +320,20 @@ public abstract class AViewDialog<T extends Serializable> extends Dialog impleme
     protected final T getCurrentItem() {
         return currentItem;
     }
+
+    /**
+     * Recupera il field dal nome
+     */
+    protected AbstractField getField(String publicFieldName) {
+
+        if (fieldMap != null) {
+            return fieldMap.get(publicFieldName);
+        } else {
+            return null;
+        }// end of if/else cycle
+
+    }// end of method
+
 
     /**
      * The operations supported by this dialog. Delete is enabled when editing

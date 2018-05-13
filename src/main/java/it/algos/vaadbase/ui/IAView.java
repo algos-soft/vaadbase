@@ -16,5 +16,6 @@ import org.springframework.context.annotation.Scope;
 public interface IAView {
 
     public String getName();
+    public void updateView() ;
 
 }// end of interface

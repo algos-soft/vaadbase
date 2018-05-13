@@ -95,16 +95,13 @@ public class MainLayout extends Div implements RouterLayout, AfterNavigationObse
     }// end of Spring constructor
 
 
-
-
-
     /**
      * Aggiunge tutte le @Route (views) standard e specifiche
      * Le @Route vengono lette da una Lista statica mantenuta in BaseCost
      * La lista è stata costruita alla partenza (boot) dell'applicazione, PRIMA del browser
      */
     private void addAllRouteView() {
-         List<Class> listaStatica =BaseCost.MENU_CLAZZ_LIST;
+        List<Class> listaStatica = BaseCost.MENU_CLAZZ_LIST;
 
         for (Class viewClazz : listaStatica) {
             addView(viewClazz);
@@ -119,8 +116,8 @@ public class MainLayout extends Div implements RouterLayout, AfterNavigationObse
      * Verranno lette da MainLayout la prima volta che il browser 'chiama' una view
 
      //    /**
-//     * Aggiunge tutte le viste (SpringView) standard e specifiche
-//     */
+     //     * Aggiunge tutte le viste (SpringView) standard e specifiche
+     //     */
 //    protected void addAllViste() {
 //        this.addVisteStandard();
 //        this.addVisteSpecifiche();
@@ -165,7 +162,8 @@ public class MainLayout extends Div implements RouterLayout, AfterNavigationObse
     protected RouterLink addView(Class<? extends AViewList> viewClazz) {
         RouterLink routerLink = null;
         String tagMenu = annotation.getViewName(viewClazz);
-        VaadinIcons icon = reflection.getIconView(viewClazz);
+        VaadinIcons vaadIcon = reflection.getIconView(viewClazz);
+        Icon icona = vaadIcon != null ? new Icon(vaadIcon) : new Icon(VaadinIcons.ASTERISK);
 
         try { // prova ad eseguire il codice
             routerLink = new RouterLink("", viewClazz);
@@ -175,7 +173,7 @@ public class MainLayout extends Div implements RouterLayout, AfterNavigationObse
         }// fine del blocco try-catch
 
         if (routerLink != null) {
-            routerLink.add(new Icon(icon), new Text(text.primaMaiuscola(tagMenu)));
+            routerLink.add(icona, new Text(text.primaMaiuscola(tagMenu)));
             routerLink.addClassName("main-layout__nav-item");
             arrayRouterLink.add(routerLink);
         }// end of if cycle

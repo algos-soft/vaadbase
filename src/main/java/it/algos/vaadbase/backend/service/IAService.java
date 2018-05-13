@@ -2,6 +2,7 @@ package it.algos.vaadbase.backend.service;
 
 import it.algos.vaadbase.backend.entity.AEntity;
 import it.algos.vaadbase.service.AAnnotationService;
+import it.algos.vaadbase.ui.AFieldService;
 
 import java.util.List;
 
@@ -18,7 +19,13 @@ public interface IAService {
     /**
      * Service iniettato da Spring (@Scope = 'singleton'). Unica per tutta l'applicazione. Usata come libreria.
      */
-    public AAnnotationService getAnnotation();
+    public AAnnotationService getAnnotationService();
+
+
+    /**
+     * Service iniettato da Spring (@Scope = 'singleton'). Unica per tutta l'applicazione. Usata come libreria.
+     */
+    public AFieldService getFieldService();
 
 
     /**

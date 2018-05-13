@@ -10,7 +10,10 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.config.ConfigurableBeanFactory;
 import org.springframework.context.annotation.Scope;
+import org.springframework.core.env.Environment;
 
+import javax.validation.constraints.NotNull;
+import javax.validation.constraints.Size;
 import java.lang.reflect.Field;
 import java.util.Arrays;
 import java.util.List;
@@ -22,6 +25,7 @@ import java.util.List;
  * Date: gio, 07-dic-2017
  * Time: 21:58
  * Classe di Libreria
+ * NON deve essere astratta, altrimenti Spring non la costruisce
  * Gestisce le interfacce @Annotation standard di Springs
  * Gestisce le interfacce specifiche di Springvaadin: AIColumn, AIField, AIEntity, AIForm, AIList
  */
@@ -30,26 +34,23 @@ import java.util.List;
 @Scope(ConfigurableBeanFactory.SCOPE_SINGLETON)
 public class AAnnotationService {
 
-
     /**
      * Service iniettato da Spring (@Scope = 'singleton'). Unica per tutta l'applicazione. Usata come libreria.
      */
     @Autowired
     public AReflectionService reflection;
-
-
     /**
      * Service iniettato da Spring (@Scope = 'singleton'). Unica per tutta l'applicazione. Usata come libreria.
      */
     @Autowired
     public ATextService text;
-
-
     /**
      * Service iniettato da Spring (@Scope = 'singleton'). Unica per tutta l'applicazione. Usata come libreria.
      */
     @Autowired
     public AArrayService array;
+    @Autowired
+    Environment env;
 
 
 //    /**
@@ -74,7 +75,6 @@ public class AAnnotationService {
 //    public IAView getSpringView(final Class<? extends IAView> viewClazz) {
 //        return viewClazz.getAnnotation(IAView.class);
 //    }// end of method
-
 
     /**
      * Get the specific annotation of the class.
@@ -196,6 +196,57 @@ public class AAnnotationService {
 
 
     /**
+     * Get the specific annotation of the field.
+     *
+     * @param reflectionJavaField di riferimento per estrarre la Annotation
+     *
+     * @return the Annotation for the specific field
+     */
+    public NotNull getNotNull(final Field reflectionJavaField) {
+        if (reflectionJavaField != null) {
+            return reflectionJavaField.getAnnotation(NotNull.class);
+        } else {
+            return null;
+        }// end of if/else cycle
+    }// end of method
+
+
+    /**
+     * Get the specific annotation of the field.
+     *
+     * @param reflectionJavaField di riferimento per estrarre la Annotation
+     *
+     * @return the Annotation for the specific field
+     */
+    public Size getSize(final Field reflectionJavaField) {
+        if (reflectionJavaField != null) {
+            return reflectionJavaField.getAnnotation(Size.class);
+        } else {
+            return null;
+        }// end of if/else cycle
+    }// end of method
+
+
+    /**
+     * Get the specific annotation of the field.
+     *
+     * @param reflectionJavaField di riferimento per estrarre la Annotation
+     *
+     * @return the Annotation for the specific field
+     */
+    public int getSizeMin(final Field reflectionJavaField) {
+        int min = 0;
+        Size annotation = this.getSize(reflectionJavaField);
+
+        if (annotation != null) {
+            min = annotation.min();
+        }// end of if cycle
+
+        return min;
+    }// end of method
+
+
+    /**
      * Get the name of the spring-view.
      *
      * @param clazz the entity class
@@ -262,6 +313,10 @@ public class AAnnotationService {
 
         if (array.isValid(properties)) {
             lista = Arrays.asList(properties);
+        }// end of if cycle
+
+        if (array.isEmpty(lista)) {
+            lista = reflection.getAllFieldsNameNoCrono(entityClazz);
         }// end of if cycle
 
         return lista;
@@ -442,7 +497,7 @@ public class AAnnotationService {
         }// end of if cycle
 
         if (text.isEmpty(name)) {
-            name = this.getFormFieldName(reflectionJavaField);
+            name = this.getFormFieldNameCapital(reflectionJavaField);
         }// end of if cycle
 
         return name;
@@ -573,11 +628,9 @@ public class AAnnotationService {
      */
     public EAFieldType getFormType(Class<? extends AEntity> entityClazz, String fieldName) {
         EAFieldType type = null;
-        AIField annotation = this.getAIField(entityClazz, fieldName);
 
-        if (annotation != null) {
-            type = annotation.type();
-        }// end of if cycle
+        Field field = reflection.getField(entityClazz, fieldName);
+        type = getFormType(field);
 
         return type;
     }// end of method
@@ -603,7 +656,21 @@ public class AAnnotationService {
             name = reflectionJavaField.getName();
         }// end of if cycle
 
-        return text.primaMaiuscola(name);
+//        return text.primaMaiuscola(name);
+        return name;
+    }// end of method
+
+
+    /**
+     * Get the name (field) of the property.
+     * Se manca, usa il nome della property
+     *
+     * @param reflectionJavaField di riferimento per estrarre la Annotation
+     *
+     * @return the capitalized name (rows) of the field
+     */
+    public String getFormFieldNameCapital(final Field reflectionJavaField) {
+        return text.primaMaiuscola(getFormFieldName(reflectionJavaField));
     }// end of method
 
 
@@ -682,6 +749,98 @@ public class AAnnotationService {
         }// end of if cycle
 
         return width;
+    }// end of method
+
+    /**
+     * Get the alert message from @NotNull
+     *
+     * @param reflectionJavaField di riferimento per estrarre la Annotation
+     *
+     * @return the alert message
+     */
+    public String getMessageNull(Field reflectionJavaField) {
+        String message = "";
+        NotNull annotation = this.getNotNull(reflectionJavaField);
+        EAFieldType type;
+
+        if (annotation != null) {
+            message = annotation.message();
+        }// end of if cycle
+
+        if (message.equals("{javax.validation.constraints.NotNull.message}")) {
+            message = "";
+
+//            type = getFormType(reflectionJavaField);
+//            switch (type) {
+//                case text:
+//                    message = env.getProperty("javax.validation.constraints.NotNull.message.string");
+//                    break;
+//                case integer:
+//                    message = env.getProperty("javax.validation.constraints.NotNull.message.integer");
+//                    break;
+//                default:
+//                    message = env.getProperty("javax.validation.constraints.NotNull.message.string");
+//                    break;
+//            } // end of switch statement
+
+        }// end of if cycle
+
+        return message;
+    }// end of method
+
+    /**
+     * Get the alert message from @Size
+     *
+     * @param reflectionJavaField di riferimento per estrarre la Annotation
+     *
+     * @return the alert message
+     */
+    public String getMessageSize(Field reflectionJavaField) {
+        String message = "";
+        Size annotation = this.getSize(reflectionJavaField);
+
+        if (annotation != null) {
+            message = annotation.message();
+        }// end of if cycle
+
+        if (message.equals("{javax.validation.constraints.Size.message}")) {
+            message = "";
+
+//            type = getFormType(reflectionJavaField);
+//            switch (type) {
+//                case text:
+//                    message = env.getProperty("javax.validation.constraints.NotNull.message.string");
+//                    break;
+//                case integer:
+//                    message = env.getProperty("javax.validation.constraints.NotNull.message.integer");
+//                    break;
+//                default:
+//                    message = env.getProperty("javax.validation.constraints.NotNull.message.string");
+//                    break;
+//            } // end of switch statement
+
+        }// end of if cycle
+
+        return message;
+    }// end of method
+
+    /**
+     * Get the alert message from @NotNull or from @Size
+     *
+     * @param reflectionJavaField di riferimento per estrarre la Annotation
+     *
+     * @return the alert message
+     */
+    public String getMessage(Field reflectionJavaField) {
+        String message = "";
+
+        message = getMessageNull(reflectionJavaField);
+
+        if (text.isEmpty(message)) {
+            message = getMessageSize(reflectionJavaField);
+        }// end of if cycle
+
+        return message;
     }// end of method
 
 

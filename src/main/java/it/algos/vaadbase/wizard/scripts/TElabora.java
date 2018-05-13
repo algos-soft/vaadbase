@@ -45,6 +45,8 @@ public class TElabora {
     private static final String DIR_PROJECT_BASE = DIR_JAVA + "/" + PROJECT_BASE_NAME;
     private static final String SOURCES_NAME = "wizard/sources";
     private static final String APP_NAME = "application";
+    private static final String RESOURCES_NAME = "/resources";
+    private static final String WEB_NAME = "/webapp";
     private static final String UI_NAME = "ui";
     private static final String ENTITIES_NAME = "modules";
     private static final String LIB_NAME = "lib";
@@ -190,15 +192,6 @@ public class TElabora {
 
         this.projectBasePath = ideaProjectRootPath + SEP + PROJECT_BASE_NAME;
         this.sourcePath = projectBasePath + DIR_SOURCES;
-
-        log.info("");
-        log.info("PROJECT_BASE: " + PROJECT_BASE_NAME);
-        log.info("DIR_PROJECT_BASE: " + DIR_PROJECT_BASE);
-        log.info("DIR_SOURCES: " + DIR_SOURCES);
-        log.info("userDir: " + userDir);
-        log.info("ideaProjectRootPath: " + ideaProjectRootPath);
-        log.info("projectBasePath: " + projectBasePath);
-        log.info("sourcePath: " + sourcePath);
     }// end of method
 
 
@@ -241,16 +234,6 @@ public class TElabora {
             this.uiPath = projectJavaPath + SEP + UI_NAME;
             this.entityPath = projectJavaPath + SEP + ENTITIES_NAME;
         }// end of if cycle
-
-        log.info("");
-        log.info("newProjectName: " + newProjectName);
-        log.info("targetProjectName: " + targetProjectName);
-        log.info("targetModuleName: " + targetModuleName);
-        log.info("projectPath: " + projectPath);
-        log.info("projectJavaPath: " + projectJavaPath);
-        log.info("applicationPath: " + applicationPath);
-        log.info("uiPath: " + uiPath);
-        log.info("entityPath: " + entityPath);
     }// end of method
 
 
@@ -302,17 +285,6 @@ public class TElabora {
         if (mappaInput.containsKey(Chiave.flagSovrascrive)) {
             this.flagSovrascrive = (boolean) mappaInput.get(Chiave.flagSovrascrive);
         }// end of if cycle
-
-        log.info("");
-        log.info("newPackageName: " + newPackageName);
-        log.info("newEntityTag: " + newEntityTag);
-        log.info("packagePath: " + packagePath);
-        log.info("flagOrdine: " + flagOrdine);
-        log.info("flagCode: " + flagCode);
-        log.info("flagDescrizione: " + flagDescrizione);
-        log.info("flagKeyCode: " + flagKeyCode);
-        log.info("flagCompany: " + flagCompany);
-        log.info("flagSovrascrive: " + flagSovrascrive);
     }// end of method
 
 
@@ -389,7 +361,7 @@ public class TElabora {
         boolean sovrascrivibile = true;
         String fileNameJava = "";
         String pathFileJava;
-        String tagUno = "@AIScript(sovrascrivibile";
+        String tagUno = "AIScript(sovrascrivibile";
         String tagDue = "=";
         String tagTre = ")";
         int posIni;
@@ -835,13 +807,25 @@ public class TElabora {
 
         testoPom = Token.replace(Token.moduleNameMinuscolo, testoPom, newProjectName);
 
-        file.scriveFile(destPath, testoPom, true);
+        boolean copiato = file.scriveFile(destPath, testoPom, true);
     }// end of method
 
     private void copiaResources() {
+        String destPath = projectPath + DIR_MAIN + RESOURCES_NAME + "/application.properties";
+        String testoProperties = leggeFile("properties" + SOURCE_SUFFIX);
+
+        testoProperties = Token.replace(Token.moduleNameMinuscolo, testoProperties, newProjectName);
+        file.scriveFile(destPath, testoProperties, true);
     }// end of method
 
     private void copiaWebapp() {
+        boolean webCopiato = false;
+        String srcPath = projectBasePath + DIR_MAIN + WEB_NAME;
+        String destPath = projectPath + DIR_MAIN + WEB_NAME;
+
+        if (text.isValid(newProjectName)) {
+            webCopiato = file.copyDirectory(srcPath, destPath);
+        }// end of if cycle
     }// end of method
 
     private void creaProjectModule() {

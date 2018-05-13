@@ -24,6 +24,7 @@ import java.util.Map;
  * Date: gio, 07-dic-2017
  * Time: 22:11
  * Classe di Libreria
+ * NON deve essere astratta, altrimenti Spring non la costruisce
  * Utility per recuperare property e metodi da altre classi
  */
 @Slf4j
@@ -65,7 +66,7 @@ public class AReflectionService {
      *
      * @param entityBean oggetto su cui operare la riflessione
      */
-    public Map<String, Object> getPropertyMap(final Role entityBean) {
+    public Map<String, Object> getPropertyMap(final AEntity entityBean) {
         Map<String, Object> mappa = null;
         List<String> listaNomi = getAllFieldsName(entityBean.getClass());
         Object value;
@@ -188,15 +189,16 @@ public class AReflectionService {
      * @param entityClazz     classe su cui operare la riflessione
      * @param publicFieldName property statica e pubblica
      */
-    @Deprecated
     public Field getField(final Class<? extends AEntity> entityClazz, final String publicFieldName) {
         Field field = null;
+        List<Field> listaFields = getAllFields(entityClazz);
 
-        try { // prova ad eseguire il codice
-            field = entityClazz.getDeclaredField(publicFieldName);
-        } catch (Exception unErrore) { // intercetta l'errore
-            log.warn(unErrore.toString() + " getField()");
-        }// fine del blocco try-catch
+        for (Field fieldTmp : listaFields) {
+            if (fieldTmp.getName().equals(publicFieldName)) {
+                field = fieldTmp;
+                break;
+            }// end of if cycle
+        }// end of for cycle
 
         return field;
     }// end of method
@@ -351,7 +353,7 @@ public class AReflectionService {
             try { // prova ad eseguire il codice
                 fieldsArray = clazz.getDeclaredFields();
                 for (Field field : fieldsArray) {
-                    if (!BaseCost.ESCLUSI_ALL.contains(field.getName())) {
+                    if (!BaseCost.ESCLUSI_FORM.contains(field.getName())) {
                         listaNomi.add(field.getName());
                     }// end of if cycle
                 }// end of for cycle

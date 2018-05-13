@@ -1,5 +1,7 @@
 package it.algos.vaadtest.modules.prova;
 
+import java.util.ArrayList;
+import java.util.List;
 import java.util.function.BiConsumer;
 import java.util.function.Consumer;
 import com.vaadin.flow.component.textfield.TextField;
@@ -21,7 +23,7 @@ import static it.algos.vaadtest.application.AppCost.TAG_PRO;
  * Project vaadtest <br>
  * Created by Algos
  * User: Gac
- * Date: 9-mag-2018 20.30.33
+ * Date: 10-mag-2018 15.40.24
  * <p>
  * Estende la classe astratta ADialog per visualizzare i fields <br>
  * <p>

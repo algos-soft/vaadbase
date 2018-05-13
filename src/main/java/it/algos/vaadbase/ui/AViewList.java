@@ -105,6 +105,7 @@ public abstract class AViewList extends VerticalLayout implements IAView, Before
         updateView();
     }// end of method
 
+
     protected void addDeveloperAlert() {
     }// end of method
 
@@ -176,7 +177,7 @@ public abstract class AViewList extends VerticalLayout implements IAView, Before
     }// end of method
 
 
-    protected void updateView() {
+    public void updateView() {
         List items = service.findFilter(searchField.getValue());
         grid.setItems(items);
     }// end of method

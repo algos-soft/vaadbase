@@ -1,25 +1,24 @@
 package it.algos.vaadbase.modules.role;
 
-import it.algos.vaadbase.backend.annotation.EACompanyRequired;
-import it.algos.vaadbase.ui.annotation.*;
-import it.algos.vaadbase.ui.enumeration.EAListButton;
-import javax.validation.constraints.NotNull;
-import javax.validation.constraints.Size;
-import org.hibernate.validator.constraints.NotEmpty;
-import org.springframework.beans.factory.annotation.Qualifier;
-import org.springframework.beans.factory.config.ConfigurableBeanFactory;
-import org.springframework.data.mongodb.core.index.Indexed;
-import org.springframework.data.mongodb.core.mapping.Document;
-import org.springframework.context.annotation.Scope;
-import lombok.*;
 import com.vaadin.flow.spring.annotation.SpringComponent;
-import it.algos.vaadbase.ui.enumeration.EARoleType;
+import it.algos.vaadbase.annotation.AIScript;
+import it.algos.vaadbase.backend.annotation.EACompanyRequired;
 import it.algos.vaadbase.backend.entity.AEntity;
-import it.algos.vaadbase.ui.annotation.AIColumn;
-import it.algos.vaadbase.ui.annotation.AIField;
+import it.algos.vaadbase.ui.annotation.*;
 import it.algos.vaadbase.ui.enumeration.EAFieldAccessibility;
 import it.algos.vaadbase.ui.enumeration.EAFieldType;
-import it.algos.vaadbase.annotation.*;
+import it.algos.vaadbase.ui.enumeration.EAListButton;
+import it.algos.vaadbase.ui.enumeration.EARoleType;
+import lombok.*;
+import org.springframework.beans.factory.annotation.Qualifier;
+import org.springframework.beans.factory.config.ConfigurableBeanFactory;
+import org.springframework.context.annotation.Scope;
+import org.springframework.data.mongodb.core.index.Indexed;
+import org.springframework.data.mongodb.core.mapping.Document;
+
+import javax.validation.constraints.NotNull;
+import javax.validation.constraints.Size;
+
 import static it.algos.vaadbase.application.BaseCost.TAG_ROL;
 
 /**
@@ -71,7 +70,7 @@ public class Role extends AEntity {
      * ordine di presentazione (obbligatorio, unico)
      * il più importante per primo
      */
-    @NotNull
+    @NotNull(message = "Deve contenere un numero")
     @Indexed()
     @AIField(type = EAFieldType.integer, widthEM = 3, dev = EAFieldAccessibility.showOnly, admin = EAFieldAccessibility.never)
     @AIColumn(name = "#", width = 55)
@@ -80,14 +79,13 @@ public class Role extends AEntity {
     /**
      * codice di riferimento (obbligatorio, unico)
      */
-    @NotEmpty
-    @Size()
+    @NotNull(message = "Il codice è obbligatorio")
+    @Size(min = 3, message = "Deve contenere almeno 3 caratteri")
     @Indexed()
     @AIField(type = EAFieldType.text, required = true, focus = true, widthEM = 12, dev = EAFieldAccessibility.allways)
     @AIColumn(width = 210)
     private String code;
 
-    
 
     /**
      * @return a string representation of the object.
@@ -96,7 +94,6 @@ public class Role extends AEntity {
     public String toString() {
         return getCode();
     }// end of method
-
 
 
 }// end of entity class

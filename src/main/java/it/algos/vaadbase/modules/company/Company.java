@@ -4,6 +4,10 @@ import com.vaadin.flow.spring.annotation.SpringComponent;
 import it.algos.vaadbase.annotation.AIScript;
 import it.algos.vaadbase.backend.annotation.EACompanyRequired;
 import it.algos.vaadbase.backend.entity.AEntity;
+import it.algos.vaadbase.modules.address.Address;
+import it.algos.vaadbase.modules.address.AddressPresenter;
+import it.algos.vaadbase.modules.persona.Persona;
+import it.algos.vaadbase.modules.persona.PersonaPresenter;
 import it.algos.vaadbase.ui.annotation.*;
 import it.algos.vaadbase.ui.enumeration.EAFieldType;
 import lombok.*;
@@ -55,7 +59,7 @@ import static it.algos.vaadbase.application.BaseCost.TAG_COM;
 @Qualifier(TAG_COM)
 @AIEntity(company = EACompanyRequired.nonUsata)
 @AIList(fields = {"code", "descrizione", "telefono", "email"})
-@AIForm(fields = {"code", "descrizione", "telefono", "email"})
+@AIForm(fields = {"code", "descrizione",  "telefono", "email"})
 @AIScript(sovrascrivibile = false)
 public class Company extends AEntity {
 
@@ -87,13 +91,13 @@ public class Company extends AEntity {
     private String descrizione;
 
 
-//    /**
-//     * persona di riferimento (facoltativo)
-//     * riferimento statico SENZA @DBRef
-//     */
-//    @AIField(type = EAFieldType.link, clazz = PersonaPresenter.class, help = "Riferimento")
-//    @AIColumn(width = 220, name = "Riferimento")
-//    private Persona contatto;
+    /**
+     * persona di riferimento (facoltativo)
+     * riferimento statico SENZA @DBRef
+     */
+    @AIField(type = EAFieldType.link, clazz = PersonaPresenter.class, help = "Riferimento")
+    @AIColumn(width = 220, name = "Riferimento")
+    private Persona contatto;
 
 
     /**
@@ -112,13 +116,13 @@ public class Company extends AEntity {
     private String email;
 
 
-//    /**
-//     * indirizzo (facoltativo)
-//     * riferimento statico SENZA @DBRef
-//     */
-//    @AIField(type = EAFieldType.link, clazz = AddressPresenter.class, help = "Indirizzo")
-//    @AIColumn(width = 400, name = "Indirizzo")
-//    private Address indirizzo;
+    /**
+     * indirizzo (facoltativo)
+     * riferimento statico SENZA @DBRef
+     */
+    @AIField(type = EAFieldType.link, clazz = AddressPresenter.class, help = "Indirizzo")
+    @AIColumn(width = 400, name = "Indirizzo")
+    private Address indirizzo;
 
 
     /**
