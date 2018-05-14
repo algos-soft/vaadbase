@@ -93,7 +93,7 @@ public class PersonaViewDialog extends AViewDialog<Persona> {
      * Sovrascritto
      */
     protected void readSpecificFields() {
-        indirizzoField.setValue(getIndirizzoCorrente() != null ? getIndirizzoCorrente().toString() : "");
+        indirizzoField.setValue(getIndirizzoCorrenteValue());
     }// end of method
 
 
@@ -134,6 +134,17 @@ public class PersonaViewDialog extends AViewDialog<Persona> {
         }// end of if cycle
 
         return indirizzo;
+    }// end of method
+
+    private String getIndirizzoCorrenteValue() {
+        String value = "";
+        Address indirizzo = getIndirizzoCorrente();
+
+        if (indirizzo != null) {
+            value = indirizzo.toString();
+        }// end of if cycle
+
+        return value;
     }// end of method
 
 

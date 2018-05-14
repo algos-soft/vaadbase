@@ -20,6 +20,7 @@ import lombok.extern.slf4j.Slf4j;
 
 import java.io.Serializable;
 import java.util.HashMap;
+import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.function.BiConsumer;
@@ -52,7 +53,7 @@ public abstract class AViewDialog<T extends Serializable> extends Dialog impleme
     //--collegamento tra i fields e la entityBean
     protected Binder<T> binder;
     protected Class binderClass;
-    protected Map<String, AbstractField> fieldMap;
+    protected LinkedHashMap<String, AbstractField> fieldMap;
     protected AFieldService fieldService;
     private String itemType;
     private Registration registrationForSave;
@@ -154,7 +155,7 @@ public abstract class AViewDialog<T extends Serializable> extends Dialog impleme
         }// end of if cycle
 
         binder = new Binder(binderClass);
-        fieldMap = new HashMap<>();
+        fieldMap = new LinkedHashMap<>();
 
         //--Costruisce una lista di nomi delle properties
         List<String> properties = getFieldsList();
