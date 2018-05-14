@@ -3,7 +3,6 @@ package it.algos.vaadbase.modules.persona;
 import com.vaadin.flow.component.notification.Notification;
 import it.algos.vaadbase.annotation.AIScript;
 import it.algos.vaadbase.application.StaticContextAccessor;
-import it.algos.vaadbase.backend.entity.AEntity;
 import it.algos.vaadbase.modules.address.Address;
 import it.algos.vaadbase.modules.address.AddressPresenter;
 import it.algos.vaadbase.modules.address.AddressService;
@@ -38,18 +37,34 @@ import static it.algos.vaadbase.application.BaseCost.TAG_PER;
 @AIScript(sovrascrivibile = true)
 public class PersonaViewDialog extends AViewDialog<Persona> {
 
+    private final static String INDIRIZZO = "indirizzo";
+    private AddressPresenter addressPresenter;
     private AddressService addressService;
+    private AddressViewDialog addressDialog;
     private Address indirizzoTemporaneo;
+    private ATextField indirizzoField;
 
     /**
-     * Costruttore
+     * Constructs a new instance.
      *
      * @param presenter   per gestire la business logic del package
      * @param itemSaver   funzione associata al bottone 'registra'
      * @param itemDeleter funzione associata al bottone 'annulla'
      */
     public PersonaViewDialog(IAPresenter presenter, BiConsumer<Persona, AViewDialog.Operation> itemSaver, Consumer<Persona> itemDeleter) {
-        super(presenter, itemSaver, itemDeleter);
+        this(presenter, itemSaver, itemDeleter, false);
+    }// end of constructor
+
+    /**
+     * Constructs a new instance.
+     *
+     * @param presenter               per gestire la business logic del package
+     * @param itemSaver               funzione associata al bottone 'registra'
+     * @param itemDeleter             funzione associata al bottone 'annulla'
+     * @param confermaSenzaRegistrare cambia il testo del bottone 'Registra' in 'Conferma'
+     */
+    public PersonaViewDialog(IAPresenter presenter, BiConsumer<Persona, AViewDialog.Operation> itemSaver, Consumer<Persona> itemDeleter, boolean confermaSenzaRegistrare) {
+        super(presenter, itemSaver, itemDeleter, confermaSenzaRegistrare);
     }// end of constructor
 
 
@@ -61,16 +76,15 @@ public class PersonaViewDialog extends AViewDialog<Persona> {
      */
     @Override
     protected void addSpecificAlgosFields() {
-        AddressPresenter addressPresenter = StaticContextAccessor.getBean(AddressPresenter.class);
-        final AddressViewDialog dialog = new AddressViewDialog(addressPresenter, this::saveUpdate, this::deleteUpdate);
+        addressPresenter = StaticContextAccessor.getBean(AddressPresenter.class);
+        addressDialog = new AddressViewDialog(addressPresenter, this::saveUpdate, this::deleteUpdate, true);
         addressService = (AddressService) addressPresenter.getService();
 
-        ATextField indirizzoField = (ATextField) fieldService.create(null, binderClass, "indirizzo");
+        indirizzoField = (ATextField) fieldService.create(null, binderClass, INDIRIZZO);
         if (indirizzoField != null) {
-            indirizzoField.addFocusListener(e -> dialog.open(getCurrentItem().getIndirizzo(), Operation.EDIT));
-            fieldMap.put("indirizzo", indirizzoField);
+            fieldMap.put(INDIRIZZO, indirizzoField);
+            indirizzoField.addFocusListener(e -> addressDialog.open(getIndirizzo(), Operation.EDIT));
         }// end of if cycle
-
     }// end of method
 
     /**
@@ -79,8 +93,7 @@ public class PersonaViewDialog extends AViewDialog<Persona> {
      * Sovrascritto
      */
     protected void readSpecificFields() {
-        ATextField indirizzoField = (ATextField) getField("indirizzo");
-        indirizzoField.setValue(getCurrentItem().getIndirizzo().toString());
+        indirizzoField.setValue(getIndirizzoCorrente() != null ? getIndirizzoCorrente().toString() : "");
     }// end of method
 
 
@@ -90,29 +103,48 @@ public class PersonaViewDialog extends AViewDialog<Persona> {
      * Sovrascritto
      */
     protected void writeSpecificFields() {
-        ATextField indirizzoField = (ATextField) getField("indirizzo");
+        Persona persona = super.getCurrentItem();
+        persona.setIndirizzo(indirizzoTemporaneo);
+        service.save(persona);
     }// end of method
 
 
-    protected void saveUpdate(Address entityBean, AViewDialog.Operation operation) {
+    private void saveUpdate(Address entityBean, AViewDialog.Operation operation) {
         indirizzoTemporaneo = entityBean;
-        ATextField indirizzoField = (ATextField) getField("indirizzo");
         indirizzoField.setValue(entityBean.toString());
 
-//        Persona persona = super.getCurrentItem();
-//        persona.setIndirizzo(entityBean);
-//        service.save(persona);
-
-        Notification.show("L'indirizzo che vedi è stato cambiato ma Persona NON è stata ancora registrata", 3000, Notification.Position.BOTTOM_START);
+        Notification.show("La modifica di indirizzo è stata confermata ma devi registrare questa persona per renderla definitiva", 3000, Notification.Position.BOTTOM_START);
     }// end of method
 
 
-    protected void deleteUpdate(AEntity entityBean) {
-        Persona persona = super.getCurrentItem();
-        persona.setIndirizzo(null);
-        service.save(persona);
-//        Notification.show(entityBean + " successfully deleted.", 3000, Notification.Position.BOTTOM_START);
-//        updateView();
+    private void deleteUpdate(Address entityBean) {
+        indirizzoTemporaneo = null;
+        indirizzoField.setValue("");
+
+        Notification.show("La cancellazione di indirizzo è stata confermata ma devi registrare questa persona per renderla definitiva", 3000, Notification.Position.BOTTOM_START);
+    }// end of method
+
+
+    private Address getIndirizzoCorrente() {
+        Address indirizzo = null;
+        Persona persona = getCurrentItem();
+
+        if (persona != null) {
+            indirizzo = persona.getIndirizzo();
+        }// end of if cycle
+
+        return indirizzo;
+    }// end of method
+
+
+    private Address getIndirizzo() {
+        Address indirizzo = getIndirizzoCorrente();
+
+        if (indirizzo == null) {
+            indirizzo = addressService.newEntity();
+        }// end of if cycle
+
+        return indirizzo;
     }// end of method
 
 }// end of class

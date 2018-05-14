@@ -15,6 +15,7 @@ import com.vaadin.flow.shared.Registration;
 import it.algos.vaadbase.backend.service.IAService;
 import it.algos.vaadbase.presenter.IAPresenter;
 import it.algos.vaadbase.ui.AFieldService;
+import it.algos.vaadbase.ui.fields.ATextField;
 import lombok.extern.slf4j.Slf4j;
 
 import java.io.Serializable;
@@ -38,6 +39,7 @@ public abstract class AViewDialog<T extends Serializable> extends Dialog impleme
 
     private final H2 titleField = new H2();
     private final Button saveButton = new Button("Registra");
+    private final String confirmText = "Conferma";
     private final Button cancelButton = new Button("Annulla");
     private final Button deleteButton = new Button("Elimina");
     private final FormLayout formLayout = new FormLayout();
@@ -64,12 +66,28 @@ public abstract class AViewDialog<T extends Serializable> extends Dialog impleme
      * @param itemDeleter funzione associata al bottone 'annulla'
      */
     public AViewDialog(IAPresenter presenter, BiConsumer<T, AViewDialog.Operation> itemSaver, Consumer<T> itemDeleter) {
+        this(presenter, itemSaver, itemDeleter, false);
+    }// end of constructor
+
+    /**
+     * Constructs a new instance.
+     *
+     * @param presenter   per gestire la business logic del package
+     * @param itemSaver   funzione associata al bottone 'registra'
+     * @param itemDeleter funzione associata al bottone 'annulla'
+     * @param confermaSenzaRegistrare cambia il testo del bottone 'Registra' in 'Conferma'
+     */
+    public AViewDialog(IAPresenter presenter, BiConsumer<T, AViewDialog.Operation> itemSaver, Consumer<T> itemDeleter, boolean confermaSenzaRegistrare) {
         this.presenter = presenter;
         this.service = presenter.getService();
         this.itemSaver = itemSaver;
         this.itemDeleter = itemDeleter;
         this.binderClass = presenter.getEntityClazz();
         this.fieldService = presenter.getService().getFieldService();
+
+        if (confermaSenzaRegistrare) {
+            this.saveButton.setText(confirmText);
+        }// end of if cycle
 
         initTitle();
         initFormLayout();
@@ -210,7 +228,7 @@ public abstract class AViewDialog<T extends Serializable> extends Dialog impleme
     @Override
     public void open(Object item, AViewDialog.Operation operation) {
         if (item == null) {
-            Notification.show("Qualcosa non ha funzionato in AForm.open()", 3000, Notification.Position.BOTTOM_START);
+            Notification.show("Qualcosa non ha funzionato in AViewDialog.open()", 3000, Notification.Position.BOTTOM_START);
             return;
         }// end of if cycle
 
@@ -220,8 +238,7 @@ public abstract class AViewDialog<T extends Serializable> extends Dialog impleme
         if (registrationForSave != null) {
             registrationForSave.remove();
         }
-        registrationForSave = saveButton
-                .addClickListener(e -> saveClicked(operation));
+        registrationForSave = saveButton.addClickListener(e -> saveClicked(operation));
 
         binder.readBean(currentItem);
         readSpecificFields();
@@ -245,6 +262,7 @@ public abstract class AViewDialog<T extends Serializable> extends Dialog impleme
 
         if (isValid) {
             itemSaver.accept(currentItem, operation);
+            writeSpecificFields();
             close();
         } else {
             BinderValidationStatus<T> status = binder.validate();
@@ -253,6 +271,14 @@ public abstract class AViewDialog<T extends Serializable> extends Dialog impleme
                     .collect(Collectors.joining("; ")), 3000, Notification.Position.BOTTOM_START);
         }
     }
+
+    /**
+     * Regola in scrittura eventuali valori NON associati al binder
+     * Dallla  UI al DB
+     * Sovrascritto
+     */
+    protected void writeSpecificFields() {
+    }// end of method
 
     private void deleteClicked() {
         if (confirmationDialog.getElement().getParent() == null) {
