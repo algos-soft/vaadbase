@@ -43,28 +43,30 @@ public class PersonaViewDialog extends AViewDialog<Persona> {
     private AddressViewDialog addressDialog;
     private Address indirizzoTemporaneo;
     private ATextField indirizzoField;
+    private Consumer<Persona> itemAnnulla;
 
     /**
      * Constructs a new instance.
      *
      * @param presenter   per gestire la business logic del package
      * @param itemSaver   funzione associata al bottone 'registra'
-     * @param itemDeleter funzione associata al bottone 'annulla'
+     * @param itemDeleter funzione associata al bottone 'cancella'
      */
     public PersonaViewDialog(IAPresenter presenter, BiConsumer<Persona, AViewDialog.Operation> itemSaver, Consumer<Persona> itemDeleter) {
-        this(presenter, itemSaver, itemDeleter, false);
+        super(presenter, itemSaver, itemDeleter, false);
     }// end of constructor
 
     /**
      * Constructs a new instance.
      *
-     * @param presenter               per gestire la business logic del package
-     * @param itemSaver               funzione associata al bottone 'registra'
-     * @param itemDeleter             funzione associata al bottone 'annulla'
-     * @param confermaSenzaRegistrare cambia il testo del bottone 'Registra' in 'Conferma'
+     * @param presenter   per gestire la business logic del package
+     * @param itemSaver   funzione associata al bottone 'registra'
+     * @param itemDeleter funzione associata al bottone 'cancella'
+     * @param itemAnnulla funzione associata al bottone 'annulla'
      */
-    public PersonaViewDialog(IAPresenter presenter, BiConsumer<Persona, AViewDialog.Operation> itemSaver, Consumer<Persona> itemDeleter, boolean confermaSenzaRegistrare) {
-        super(presenter, itemSaver, itemDeleter, confermaSenzaRegistrare);
+    public PersonaViewDialog(IAPresenter presenter, BiConsumer<Persona, AViewDialog.Operation> itemSaver, Consumer<Persona> itemDeleter,Consumer<Persona> itemAnnulla) {
+        super(presenter, itemSaver, itemDeleter, true);
+        this.itemAnnulla = itemAnnulla;
     }// end of constructor
 
 
@@ -77,7 +79,7 @@ public class PersonaViewDialog extends AViewDialog<Persona> {
     @Override
     protected void addSpecificAlgosFields() {
         addressPresenter = StaticContextAccessor.getBean(AddressPresenter.class);
-        addressDialog = new AddressViewDialog(addressPresenter, this::saveUpdate, this::deleteUpdate, true);
+        addressDialog = new AddressViewDialog(addressPresenter, this::saveUpdate, this::deleteUpdate, this::annullaInd);
         addressService = (AddressService) addressPresenter.getService();
 
         indirizzoField = (ATextField) fieldService.create(null, binderClass, INDIRIZZO);
@@ -125,6 +127,10 @@ public class PersonaViewDialog extends AViewDialog<Persona> {
     }// end of method
 
 
+    protected void annullaInd(Address entityBean) {
+        cancelButton.focus();
+    }// end of method
+
     private Address getIndirizzoCorrente() {
         Address indirizzo = null;
         Persona persona = getCurrentItem();
@@ -156,6 +162,11 @@ public class PersonaViewDialog extends AViewDialog<Persona> {
         }// end of if cycle
 
         return indirizzo;
+    }// end of method
+
+    public void close() {
+        super.close();
+        itemAnnulla.accept(null);
     }// end of method
 
 }// end of class

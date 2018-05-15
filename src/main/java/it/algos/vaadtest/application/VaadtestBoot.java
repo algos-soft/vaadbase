@@ -6,6 +6,7 @@ import it.algos.vaadbase.application.BaseCost;
 import it.algos.vaadbase.boot.ABoot;
 import it.algos.vaadbase.wizard.ui.WizardView;
 import it.algos.vaadtest.modules.prova.ProvaViewList;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.config.ConfigurableBeanFactory;
 import org.springframework.context.annotation.Scope;
 import org.springframework.context.event.ContextRefreshedEvent;
@@ -32,6 +33,9 @@ import org.springframework.context.event.EventListener;
 @AIScript(sovrascrivibile = false)
 public class VaadtestBoot extends ABoot {
 
+    @Autowired
+    protected CompanyData company;
+
     /**
      * Running logic after the Spring context has been initialized
      * Any class that use this @EventListener annotation,
@@ -56,7 +60,7 @@ public class VaadtestBoot extends ABoot {
      */
     protected void iniziaData() {
         super.iniziaDataStandard();
-//        this.company2.findOrCrea();
+        this.company.findOrCrea();
 //        this.utente.findOrCrea();
     }// end of method
 

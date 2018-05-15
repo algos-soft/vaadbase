@@ -1,6 +1,10 @@
 package it.algos.vaadbase.modules.company;
 
+import com.vaadin.flow.component.AbstractField;
+import com.vaadin.flow.component.ComponentEventListener;
+import com.vaadin.flow.component.FocusNotifier;
 import com.vaadin.flow.component.notification.Notification;
+import com.vaadin.flow.component.textfield.TextField;
 import com.vaadin.flow.spring.annotation.SpringComponent;
 import it.algos.vaadbase.annotation.AIScript;
 import it.algos.vaadbase.application.StaticContextAccessor;
@@ -81,7 +85,7 @@ public class CompanyViewDialog extends AViewDialog<Company> {
     @Override
     protected void addSpecificAlgosFields() {
         addressPresenter = StaticContextAccessor.getBean(AddressPresenter.class);
-        addressDialog = new AddressViewDialog(addressPresenter, this::saveUpdateInd, this::deleteUpdateInd, true);
+        addressDialog = new AddressViewDialog(addressPresenter, this::saveUpdateInd, this::deleteUpdateInd, this::annullaInd);
         addressService = (AddressService) addressPresenter.getService();
         indirizzoField = (ATextField) fieldService.create(null, binderClass, INDIRIZZO);
         if (indirizzoField != null) {
@@ -90,7 +94,7 @@ public class CompanyViewDialog extends AViewDialog<Company> {
         }// end of if cycle
 
         personaPresenter = StaticContextAccessor.getBean(PersonaPresenter.class);
-        personaDialog = new PersonaViewDialog(personaPresenter, this::saveUpdatePer, this::deleteUpdatePer, true);
+        personaDialog = new PersonaViewDialog(personaPresenter, this::saveUpdatePer, this::deleteUpdatePer,this::annullaPer);
         personaService = (PersonaService) personaPresenter.getService();
         personaField = (ATextField) fieldService.create(null, binderClass, PERSONA);
         if (personaField != null) {
@@ -98,7 +102,6 @@ public class CompanyViewDialog extends AViewDialog<Company> {
             personaField.addFocusListener(e -> personaDialog.open(getPersona(), Operation.EDIT));
         }// end of if cycle
     }// end of method
-
 
     /**
      * Regola in lettura eventuali valori NON associati al binder
@@ -124,9 +127,11 @@ public class CompanyViewDialog extends AViewDialog<Company> {
     }// end of method
 
 
+
     protected void saveUpdateInd(Address entityBean, AViewDialog.Operation operation) {
         indirizzoTemporaneo = entityBean;
         indirizzoField.setValue(entityBean.toString());
+        personaField.focus();
         Notification.show("La modifica di indirizzo è stata confermata ma devi registrare questa company per renderla definitiva", 3000, Notification.Position.BOTTOM_START);
     }// end of method
 
@@ -151,6 +156,13 @@ public class CompanyViewDialog extends AViewDialog<Company> {
         Notification.show("La cancellazione di persona è stata confermata ma devi registrare questa company per renderla definitiva", 3000, Notification.Position.BOTTOM_START);
     }// end of method
 
+    protected void annullaInd(Address entityBean) {
+        ((ATextField)getField("contatto")).focus();
+    }// end of method
+
+    protected void annullaPer(Persona entityBean) {
+        cancelButton.focus();
+    }// end of method
 
     private Address getIndirizzoCorrente() {
         Address indirizzo = null;

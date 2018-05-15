@@ -30,28 +30,36 @@ import static it.algos.vaadbase.application.BaseCost.TAG_ADD;
 @AIScript(sovrascrivibile = true)
 public class AddressViewDialog extends AViewDialog<Address> {
 
+    private Consumer<Address> itemAnnulla;
 
     /**
      * Constructs a new instance.
      *
      * @param presenter   per gestire la business logic del package
      * @param itemSaver   funzione associata al bottone 'registra'
-     * @param itemDeleter funzione associata al bottone 'annulla'
+     * @param itemDeleter funzione associata al bottone 'cancella'
      */
     public AddressViewDialog(IAPresenter presenter, BiConsumer<Address, AViewDialog.Operation> itemSaver, Consumer<Address> itemDeleter) {
-        this(presenter, itemSaver, itemDeleter, false);
+        super(presenter, itemSaver, itemDeleter, false);
     }// end of constructor
 
     /**
      * Constructs a new instance.
      *
-     * @param presenter               per gestire la business logic del package
-     * @param itemSaver               funzione associata al bottone 'registra'
-     * @param itemDeleter             funzione associata al bottone 'annulla'
-     * @param confermaSenzaRegistrare cambia il testo del bottone 'Registra' in 'Conferma'
+     * @param presenter   per gestire la business logic del package
+     * @param itemSaver   funzione associata al bottone 'registra'
+     * @param itemDeleter funzione associata al bottone 'cancella'
+     * @param itemAnnulla funzione associata al bottone 'annulla'
      */
-    public AddressViewDialog(IAPresenter presenter, BiConsumer<Address, AViewDialog.Operation> itemSaver, Consumer<Address> itemDeleter, boolean confermaSenzaRegistrare) {
-        super(presenter, itemSaver, itemDeleter, confermaSenzaRegistrare);
+    public AddressViewDialog(IAPresenter presenter, BiConsumer<Address, AViewDialog.Operation> itemSaver, Consumer<Address> itemDeleter, Consumer<Address> itemAnnulla) {
+        super(presenter, itemSaver, itemDeleter, true);
+        this.itemAnnulla = itemAnnulla;
     }// end of constructor
+
+
+    public void close() {
+        super.close();
+        itemAnnulla.accept(null);
+    }// end of method
 
 }// end of class

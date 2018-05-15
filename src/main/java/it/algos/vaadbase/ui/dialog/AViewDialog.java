@@ -39,10 +39,10 @@ public abstract class AViewDialog<T extends Serializable> extends Dialog impleme
 
 
     private final H2 titleField = new H2();
-    private final Button saveButton = new Button("Registra");
+    protected final Button saveButton = new Button("Registra");
     private final String confirmText = "Conferma";
-    private final Button cancelButton = new Button("Annulla");
-    private final Button deleteButton = new Button("Elimina");
+    protected final Button cancelButton = new Button("Annulla");
+    protected final Button deleteButton = new Button("Elimina");
     private final FormLayout formLayout = new FormLayout();
     private final HorizontalLayout buttonBar = new HorizontalLayout(saveButton, cancelButton, deleteButton);
     private final ConfirmationDialog<T> confirmationDialog = new ConfirmationDialog<>();

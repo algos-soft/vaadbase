@@ -66,15 +66,27 @@ public class CompanyService extends AService {
     /**
      * Ricerca di una entity (la crea se non la trova) <br>
      *
-     * @param code di riferimento (obbligatorio ed unico)
+     * @param code di riferimento interno (obbligatorio ed unico)
      *
      * @return la entity trovata o appena creata
      */
     public Company findOrCrea(String code) {
+        return findOrCrea(code, "");
+    }// end of method
+
+    /**
+     * Ricerca di una entity (la crea se non la trova) <br>
+     *
+     * @param code        di riferimento interno (obbligatorio ed unico)
+     * @param descrizione ragione sociale o descrizione della company (visibile - obbligatoria)
+     *
+     * @return la entity trovata o appena creata
+     */
+    public Company findOrCrea(String code, String descrizione) {
         Company entity = findByKeyUnica(code);
 
         if (entity == null) {
-            entity = newEntity(code, "");
+            entity = newEntity(code, descrizione);
             save(entity);
         }// end of if cycle
 
