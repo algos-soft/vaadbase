@@ -1,7 +1,6 @@
 package it.algos.vaadbase.ui;
 
 import com.vaadin.flow.component.AbstractField;
-import com.vaadin.flow.component.textfield.TextField;
 import com.vaadin.flow.data.binder.Binder;
 import com.vaadin.flow.data.converter.StringToIntegerConverter;
 import com.vaadin.flow.data.validator.StringLengthValidator;
@@ -12,8 +11,8 @@ import it.algos.vaadbase.service.ATextService;
 import it.algos.vaadbase.ui.annotation.AIField;
 import it.algos.vaadbase.ui.enumeration.EAFieldType;
 import it.algos.vaadbase.ui.fields.AIntegerField;
+import it.algos.vaadbase.ui.fields.ATextArea;
 import it.algos.vaadbase.ui.fields.ATextField;
-import it.algos.vaadbase.ui.fields.IAField;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.config.ConfigurableBeanFactory;
@@ -110,38 +109,24 @@ public class AFieldService {
                 message = text.isValid(message) ? message : mess;
                 stringConverter = new StringLengthValidator(message, min, null);
                 field = new ATextField(caption);
-                if (binder != null) {
-                    binder.forField(field)
-                            .withValidator(stringConverter)
-                            .bind(fieldName);
-                }// end of if cycle
+                    binder.forField(field).withValidator(stringConverter).bind(fieldName);
                 break;
             case textarea:
-//                field = new ATextField(caption);
-//                binder.forField(field)
-//                        .bind(caption);
-//                ((ATextArea) field).setInvalid(false);
-//                ((ATextArea) field).setVisible(true);
-//                ((ATextArea) field).setEnabled(true);
-//                ((ATextArea) field).setSuffixComponent(new Icon(VaadinIcons.HOME));
+                field = new ATextArea(caption);
+//                    binder.forField(field).bind(fieldName);
                 break;
             case integer:
                 mess = fieldName + intMessage;
                 message = text.isValid(message) ? message : mess;
                 integerConverter = new StringToIntegerConverter(0, message);
                 field = new AIntegerField(caption);
-                if (binder != null) {
-                    binder.forField(field)
-                            .withConverter(integerConverter)
-                            .bind(fieldName);
-                }// end of if cycle
+                    binder.forField(field).withConverter(integerConverter).bind(fieldName);
                 break;
             case link:
                 field = new ATextField(caption);
-                if (binder != null) {
-                    binder.forField(field)
-                            .bind(fieldName);
-                }// end of if cycle
+//                if (binder != null) {
+//                    binder.forField(field).bind(fieldName);
+//                }// end of if cycle
                 break;
             default:
                 field = new ATextField(caption);

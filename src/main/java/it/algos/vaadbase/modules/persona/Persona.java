@@ -57,7 +57,7 @@ import static it.algos.vaadbase.application.BaseCost.TAG_PER;
 @Qualifier(TAG_PER)
 @AIEntity(company = EACompanyRequired.nonUsata)
 @AIList(fields = {"nome", "cognome"})
-@AIForm(fields = {"nome", "cognome", "telefono", "email"})
+@AIForm(fields = {"nome", "cognome", "telefono", "email", "indirizzo"})
 @AIScript(sovrascrivibile = false)
 public class Persona extends AEntity {
 

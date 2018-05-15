@@ -59,7 +59,7 @@ import static it.algos.vaadbase.application.BaseCost.TAG_COM;
 @Qualifier(TAG_COM)
 @AIEntity(company = EACompanyRequired.nonUsata)
 @AIList(fields = {"code", "descrizione", "telefono", "email"})
-@AIForm(fields = {"code", "descrizione",  "telefono", "email"})
+@AIForm(fields = {"code", "descrizione", "contatto", "telefono", "email", "indirizzo", "note"})
 @AIScript(sovrascrivibile = false)
 public class Company extends AEntity {
 

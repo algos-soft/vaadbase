@@ -59,7 +59,9 @@ public class AddressViewDialog extends AViewDialog<Address> {
 
     public void close() {
         super.close();
-        itemAnnulla.accept(null);
+        if (itemAnnulla != null) {
+            itemAnnulla.accept(null);
+        }// end of if cycle
     }// end of method
 
 }// end of class

@@ -82,9 +82,8 @@ public class PersonaViewDialog extends AViewDialog<Persona> {
         addressDialog = new AddressViewDialog(addressPresenter, this::saveUpdate, this::deleteUpdate, this::annullaInd);
         addressService = (AddressService) addressPresenter.getService();
 
-        indirizzoField = (ATextField) fieldService.create(null, binderClass, INDIRIZZO);
+        indirizzoField=(ATextField) getField(INDIRIZZO);
         if (indirizzoField != null) {
-            fieldMap.put(INDIRIZZO, indirizzoField);
             indirizzoField.addFocusListener(e -> addressDialog.open(getIndirizzo(), Operation.EDIT));
         }// end of if cycle
     }// end of method
@@ -166,7 +165,9 @@ public class PersonaViewDialog extends AViewDialog<Persona> {
 
     public void close() {
         super.close();
-        itemAnnulla.accept(null);
+        if (itemAnnulla != null) {
+            itemAnnulla.accept(null);
+        }// end of if cycle
     }// end of method
 
 }// end of class
