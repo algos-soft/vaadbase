@@ -21,4 +21,15 @@ public interface IADialog<T> {
      */
     public void open(Object item, AViewDialog.Operation operation);
 
+
+    /**
+     * Opens the given item for editing in the dialog.
+     *
+     * @param item      The item to edit; it may be an existing or a newly created
+     *                  instance
+     * @param operation The operation being performed on the item
+     * @param title of the window dialog
+     */
+    public void open(Object item, AViewDialog.Operation operation, String title);
+
 }// end of interface

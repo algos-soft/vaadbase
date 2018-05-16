@@ -3,10 +3,13 @@ package it.algos.vaadbase.service;
 import com.vaadin.flow.spring.annotation.SpringComponent;
 import it.algos.vaadbase.enumeration.EAFirstChar;
 import it.algos.vaadbase.enumeration.EAPrefType;
-import it.algos.vaadbase.modules.role.RoleService;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.config.ConfigurableBeanFactory;
 import org.springframework.context.annotation.Scope;
+
+import java.util.ArrayList;
+import java.util.List;
 
 /**
  * Project springvaadin
@@ -23,6 +26,11 @@ import org.springframework.context.annotation.Scope;
 public class ATextService {
 
     private static final ATextService INSTANCE = new ATextService();
+    /**
+     * Service iniettato da Spring (@Scope = 'singleton'). Unica per tutta l'applicazione. Usata come libreria.
+     */
+    @Autowired
+    public AArrayService array;
 
     /**
      * Gets the unique instance of this Singleton.
@@ -214,7 +222,42 @@ public class ATextService {
         }// fine del blocco if
 
         return testoOut.trim();
-    }// end of methodlevaCodaDa
+    }// end of method
+
+    /**
+     * Controlla se il testo contiene uno elemento di una lista di tag
+     *
+     * @param testoIn   ingresso
+     * @param listaTags lista di tag da controllare
+     *
+     * @return vero se ne contiene uno o più di uno
+     */
+    public boolean isContiene(final String testoIn, List<String> listaTags) {
+        boolean neContieneAlmenoUno = false;
+
+        if (array.isValid(listaTags)) {
+            for (String singleTag : listaTags) {
+                if (testoIn.contains(singleTag)) {
+                    neContieneAlmenoUno = true;
+                }// end of if cycle
+            }// end of for cycle
+        }// end of if cycle
+
+        return neContieneAlmenoUno;
+    }// end of method
+
+    /**
+     * Controlla che il testo non contenga nessun elemento di una lista di tag
+     *
+     * @param testoIn   ingresso
+     * @param listaTags lista di tag da controllare
+     *
+     * @return vero se ne contiene nessuno
+     */
+    public boolean nonContiene(final String testoIn, List<String> listaTags) {
+        return !isContiene(testoIn,listaTags);
+    }// end of method
+
 
     /**
      * Sostituisce nel testo tutte le occorrenze di oldTag con newTag.

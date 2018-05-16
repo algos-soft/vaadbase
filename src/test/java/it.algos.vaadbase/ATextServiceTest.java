@@ -2,12 +2,16 @@ package it.algos.vaadbase;
 
 
 import com.vaadin.flow.component.html.Label;
+import it.algos.vaadbase.service.AArrayService;
 import it.algos.vaadbase.service.ATextService;
 import name.falgout.jeffrey.testing.junit5.MockitoExtension;
 import org.junit.jupiter.api.*;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
 import org.mockito.MockitoAnnotations;
+
+import java.util.ArrayList;
+import java.util.List;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 
@@ -25,6 +29,8 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 public class ATextServiceTest extends ATest {
 
 
+    @InjectMocks
+    public AArrayService array;
     private String sorgente = "";
     private String previsto = "";
     private String ottenuto = "";
@@ -34,15 +40,16 @@ public class ATextServiceTest extends ATest {
     private String oldTag = "";
     private String newTag = "";
     private int pos;
-
     @InjectMocks
-    private ATextService SERVICE;
-
+    private ATextService service;
 
     @BeforeAll
     public void setUp() {
         MockitoAnnotations.initMocks(this);
-        MockitoAnnotations.initMocks(SERVICE);
+        MockitoAnnotations.initMocks(service);
+        MockitoAnnotations.initMocks(array);
+        service.array = array;
+        service.array.text = service;
     }// end of method
 
 
@@ -62,19 +69,19 @@ public class ATextServiceTest extends ATest {
 
         sorgente = "Modifica scheda";
         previstoBooleano = false;
-        ottenutoBooleano = SERVICE.isEmpty(sorgente);
+        ottenutoBooleano = service.isEmpty(sorgente);
         assertEquals(previstoBooleano, ottenutoBooleano);
         print("Stringa vuota", sorgente, ottenutoBooleano);
 
         sorgente = "";
         previstoBooleano = true;
-        ottenutoBooleano = SERVICE.isEmpty(sorgente);
+        ottenutoBooleano = service.isEmpty(sorgente);
         assertEquals(previstoBooleano, ottenutoBooleano);
         print("Stringa vuota", sorgente, ottenutoBooleano);
 
         sorgente = null;
         previstoBooleano = true;
-        ottenutoBooleano = SERVICE.isEmpty(sorgente);
+        ottenutoBooleano = service.isEmpty(sorgente);
         assertEquals(previstoBooleano, ottenutoBooleano);
         print("Stringa vuota", sorgente, ottenutoBooleano);
     }// end of single test
@@ -96,19 +103,19 @@ public class ATextServiceTest extends ATest {
 
         sorgente = "Modifica scheda";
         previstoBooleano = true;
-        ottenutoBooleano = SERVICE.isValid(sorgente);
+        ottenutoBooleano = service.isValid(sorgente);
         assertEquals(previstoBooleano, ottenutoBooleano);
         print("Stringa valida", sorgente, ottenutoBooleano);
 
         sorgente = "";
         previstoBooleano = false;
-        ottenutoBooleano = SERVICE.isValid(sorgente);
+        ottenutoBooleano = service.isValid(sorgente);
         assertEquals(previstoBooleano, ottenutoBooleano);
         print("Stringa valida", sorgente, ottenutoBooleano);
 
         sorgente = null;
         previstoBooleano = false;
-        ottenutoBooleano = SERVICE.isValid(sorgente);
+        ottenutoBooleano = service.isValid(sorgente);
         assertEquals(previstoBooleano, ottenutoBooleano);
         print("Stringa valida", sorgente, ottenutoBooleano);
     }// end of single test
@@ -130,19 +137,19 @@ public class ATextServiceTest extends ATest {
 
         Label label = new Label();
         previstoBooleano = false;
-        ottenutoBooleano = SERVICE.isValid(label);
+        ottenutoBooleano = service.isValid(label);
         assertEquals(previstoBooleano, ottenutoBooleano);
         print("Oggetto valido", label.getText(), ottenutoBooleano);
 
         Object objString = "";
         previstoBooleano = false;
-        ottenutoBooleano = SERVICE.isValid(label);
+        ottenutoBooleano = service.isValid(label);
         assertEquals(previstoBooleano, ottenutoBooleano);
         print("Oggetto valido", objString.toString(), ottenutoBooleano);
 
         Object objStringFull = "a";
         previstoBooleano = true;
-        ottenutoBooleano = SERVICE.isValid(objStringFull);
+        ottenutoBooleano = service.isValid(objStringFull);
         assertEquals(previstoBooleano, ottenutoBooleano);
         print("Oggetto valido", objStringFull.toString(), ottenutoBooleano);
     }// end of single test
@@ -168,24 +175,24 @@ public class ATextServiceTest extends ATest {
 
         sorgente = "TUTTO MAIUSCOLO ";
         previsto = "TUTTO MAIUSCOLO";
-        ottenuto = SERVICE.primaMaiuscola(sorgente);
+        ottenuto = service.primaMaiuscola(sorgente);
         assertEquals(previsto, ottenuto);
         print("Prima maiuscola", sorgente, ottenuto);
 
         sorgente = " tutto minuscolo";
         previsto = "Tutto minuscolo";
-        ottenuto = SERVICE.primaMaiuscola(sorgente);
+        ottenuto = service.primaMaiuscola(sorgente);
         assertEquals(previsto, ottenuto);
         print("Prima maiuscola", sorgente, ottenuto);
 
         sorgente = " afRodiSiacHo ";
         previsto = "AfRodiSiacHo";
-        ottenuto = SERVICE.primaMaiuscola(sorgente);
+        ottenuto = service.primaMaiuscola(sorgente);
         assertEquals(previsto, ottenuto);
         print("Prima maiuscola", sorgente, ottenuto);
 
         previsto = "";
-        ottenuto = SERVICE.primaMaiuscola(null);
+        ottenuto = service.primaMaiuscola(null);
         assertEquals(previsto, ottenuto);
         print("Prima maiuscola", sorgente, ottenuto);
     }// end of single test
@@ -211,19 +218,19 @@ public class ATextServiceTest extends ATest {
 
         sorgente = "tutto minuscolo ";
         previsto = "tutto minuscolo";
-        ottenuto = SERVICE.primaMinuscola(sorgente);
+        ottenuto = service.primaMinuscola(sorgente);
         assertEquals(previsto, ottenuto);
         print("Prima minuscola", sorgente, ottenuto);
 
         sorgente = " TUTTO MAIUSCOLO";
         previsto = "tUTTO MAIUSCOLO";
-        ottenuto = SERVICE.primaMinuscola(sorgente);
+        ottenuto = service.primaMinuscola(sorgente);
         assertEquals(previsto, ottenuto);
         print("Prima minuscola", sorgente, ottenuto);
 
         sorgente = " AfRodiSiacHo ";
         previsto = "afRodiSiacHo";
-        ottenuto = SERVICE.primaMinuscola(sorgente);
+        ottenuto = service.primaMinuscola(sorgente);
         assertEquals(previsto, ottenuto);
         print("Prima minuscola", sorgente, ottenuto);
     }// end of single test
@@ -251,21 +258,21 @@ public class ATextServiceTest extends ATest {
         sorgente = "Non Levare questo inizio ";
         tag = "Non";
         previsto = "Levare questo inizio";
-        ottenuto = SERVICE.levaTesta(sorgente, tag);
+        ottenuto = service.levaTesta(sorgente, tag);
         assertEquals(previsto, ottenuto);
         print("Leva tag", sorgente + SEP3 + tag, ottenuto);
 
         sorgente = "Non Levare questo inizio ";
         tag = "";
         previsto = "Non Levare questo inizio";
-        ottenuto = SERVICE.levaTesta(sorgente, tag);
+        ottenuto = service.levaTesta(sorgente, tag);
         assertEquals(previsto, ottenuto);
         print("Leva tag", sorgente + SEP3 + tag, ottenuto);
 
         sorgente = "Non Levare questo inizio ";
         tag = "NonEsisteQuestoTag";
         previsto = "Non Levare questo inizio";
-        ottenuto = SERVICE.levaTesta(sorgente, tag);
+        ottenuto = service.levaTesta(sorgente, tag);
         assertEquals(previsto, ottenuto);
         print("Leva tag", sorgente + SEP3 + tag, ottenuto);
     }// end of single test
@@ -293,21 +300,21 @@ public class ATextServiceTest extends ATest {
         sorgente = " Levare questa fine Non ";
         tag = "Non";
         previsto = "Levare questa fine";
-        ottenuto = SERVICE.levaCoda(sorgente, tag);
+        ottenuto = service.levaCoda(sorgente, tag);
         assertEquals(previsto, ottenuto);
         print("Leva tag", sorgente + SEP3 + tag, ottenuto);
 
         sorgente = "Non Levare questa fine ";
         tag = "";
         previsto = "Non Levare questa fine";
-        ottenuto = SERVICE.levaCoda(sorgente, tag);
+        ottenuto = service.levaCoda(sorgente, tag);
         assertEquals(previsto, ottenuto);
         print("Leva tag", sorgente + SEP3 + tag, ottenuto);
 
         sorgente = "Non Levare questa fine ";
         tag = "NonEsisteQuestoTag";
         previsto = "Non Levare questa fine";
-        ottenuto = SERVICE.levaCoda(sorgente, tag);
+        ottenuto = service.levaCoda(sorgente, tag);
         assertEquals(previsto, ottenuto);
         print("Leva tag", sorgente + SEP3 + tag, ottenuto);
     }// end of single test
@@ -335,28 +342,28 @@ public class ATextServiceTest extends ATest {
         sorgente = " Levare questa fine Non ";
         tag = "N";
         previsto = "Levare questa fine";
-        ottenuto = SERVICE.levaCodaDa(sorgente, tag);
+        ottenuto = service.levaCodaDa(sorgente, tag);
         assertEquals(previsto, ottenuto);
         print("Leva da tag", sorgente + SEP3 + tag, ottenuto);
 
         sorgente = "Non Levare questa fine ";
         tag = "";
         previsto = "Non Levare questa fine";
-        ottenuto = SERVICE.levaCodaDa(sorgente, tag);
+        ottenuto = service.levaCodaDa(sorgente, tag);
         assertEquals(previsto, ottenuto);
         print("Leva da tag", sorgente + SEP3 + tag, ottenuto);
 
         sorgente = "Non Levare questa fine ";
         tag = "questa";
         previsto = "Non Levare";
-        ottenuto = SERVICE.levaCodaDa(sorgente, tag);
+        ottenuto = service.levaCodaDa(sorgente, tag);
         assertEquals(previsto, ottenuto);
         print("Leva da tag", sorgente + SEP3 + tag, ottenuto);
 
         sorgente = "Non Levare questa fine ";
         tag = "NonEsisteQuestoTag";
         previsto = "Non Levare questa fine";
-        ottenuto = SERVICE.levaCodaDa(sorgente, tag);
+        ottenuto = service.levaCodaDa(sorgente, tag);
         assertEquals(previsto, ottenuto);
         print("Leva da tag", sorgente + SEP3 + tag, ottenuto);
     }// end of single test
@@ -386,7 +393,7 @@ public class ATextServiceTest extends ATest {
         oldTag = "t";
         newTag = "p";
         previsto = "Devo sospipuire puppe le p con p";
-        ottenuto = SERVICE.sostituisce(sorgente, oldTag, newTag);
+        ottenuto = service.sostituisce(sorgente, oldTag, newTag);
         assertEquals(previsto, ottenuto);
         print("Sostituisce", sorgente + SEP3 + oldTag + SEP3 + newTag, ottenuto);
 
@@ -394,7 +401,7 @@ public class ATextServiceTest extends ATest {
         oldTag = "oldTag";
         newTag = "newTag";
         previsto = "Devo sostituire newTagtutte le newTag con newTag";
-        ottenuto = SERVICE.sostituisce(sorgente, oldTag, newTag);
+        ottenuto = service.sostituisce(sorgente, oldTag, newTag);
         assertEquals(previsto, ottenuto);
         print("Sostituisce", sorgente + SEP3 + oldTag + SEP3 + newTag, ottenuto);
 
@@ -402,7 +409,7 @@ public class ATextServiceTest extends ATest {
         oldTag = "oldTag";
         newTag = "";
         previsto = "Devo cancellare tutte le";
-        ottenuto = SERVICE.sostituisce(sorgente, oldTag, newTag);
+        ottenuto = service.sostituisce(sorgente, oldTag, newTag);
         assertEquals(previsto, ottenuto);
         print("Sostituisce", sorgente + SEP3 + oldTag + SEP3 + newTag, ottenuto);
     }// end of single test
@@ -433,10 +440,52 @@ public class ATextServiceTest extends ATest {
         previsto = "Devo oldTag cancellare " + newTag + "tutte le oldTag";
 
         pos = sorgente.indexOf(tag);
-        ottenuto = SERVICE.inserisce(sorgente, newTag, pos);
+        ottenuto = service.inserisce(sorgente, newTag, pos);
         assertEquals(previsto, ottenuto);
         print("Inserisce tag", sorgente + SEP3 + newTag + SEP3 + tag, ottenuto);
     }// end of single test
 
+    @SuppressWarnings("javadoc")
+    /**
+     * Controlla se il testo contiene uno elemento di una lista di tag
+     *
+     * @param testoIn   ingresso
+     * @param listaTags lista di tag da controllare
+     *
+     * @return vero se ne contiene uno o più di uno
+     */
+    @Test
+    public void isContiene() {
+        List tags = new ArrayList<>();
+        tags.add("@AIScript(sovrascrivibile = false)");
+        tags.add("@AIScript(sovrascrivibile=false)");
+        tags.add("@AIScript(sovrascrivibile= false)");
+        tags.add("@AIScript(sovrascrivibile =false)");
+
+        sorgente = "Non penso si possa fare @AIScript( sovrascrivibile = false) tutto quello previsto";
+        previstoBooleano = false;
+        ottenutoBooleano = service.isContiene(sorgente, tags);
+        assertEquals(previstoBooleano, ottenutoBooleano);
+
+        sorgente = "Non penso si possa fare @AIScript(sovrascrivibile = false) tutto quello previsto";
+        previstoBooleano = true;
+        ottenutoBooleano = service.isContiene(sorgente, tags);
+        assertEquals(previstoBooleano, ottenutoBooleano);
+
+        sorgente = "Non penso si possa fare @AIScript(sovrascrivibile= false) tutto quello previsto";
+        previstoBooleano = true;
+        ottenutoBooleano = service.isContiene(sorgente, tags);
+        assertEquals(previstoBooleano, ottenutoBooleano);
+
+        sorgente = "Non penso si possa fare @AIScript(sovrascrivibile =false) tutto quello previsto";
+        previstoBooleano = true;
+        ottenutoBooleano = service.isContiene(sorgente, tags);
+        assertEquals(previstoBooleano, ottenutoBooleano);
+
+        sorgente = "Non penso si possa fare @AIScript(sovrascrivibile=false) tutto quello previsto";
+        previstoBooleano = true;
+        ottenutoBooleano = service.isContiene(sorgente, tags);
+        assertEquals(previstoBooleano, ottenutoBooleano);
+    }// end of single test
 
 }// end of class

@@ -19,6 +19,7 @@ import com.vaadin.flow.spring.annotation.SpringComponent;
 import com.vaadin.flow.component.orderedlayout.VerticalLayout;
 import javax.annotation.PostConstruct;
 import java.util.List;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.config.ConfigurableBeanFactory;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.context.annotation.Lazy;
@@ -34,7 +35,7 @@ import static it.algos.vaadtest.application.AppCost.TAG_PRO;
  * Project vaadtest <br>
  * Created by Algos <br>
  * User: Gac <br>
- * Date: 10-mag-2018 15.40.24 <br>
+ * Date: 16-mag-2018 8.10.10 <br>
  * <br>
  * Estende la classe astratta AViewList per visualizzare la Grid <br>
  * <p>
@@ -66,10 +67,11 @@ public class ProvaViewList extends AViewList {
      *
      * @param presenter per gestire la business logic del package
      */
-     public ProvaViewList(@Qualifier(TAG_PRO) IAPresenter presenter) {
+    @Autowired
+    public ProvaViewList(@Qualifier(TAG_PRO) IAPresenter presenter) {
         super(presenter);
         dialog = new ProvaViewDialog(presenter, this::saveUpdate, this::deleteUpdate);
-   }// end of Spring constructor
+    }// end of Spring constructor
 
 
      /**

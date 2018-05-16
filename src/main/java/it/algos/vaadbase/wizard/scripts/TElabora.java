@@ -15,7 +15,9 @@ import org.springframework.context.annotation.Scope;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 import java.time.format.FormatStyle;
+import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 /**
@@ -156,13 +158,13 @@ public class TElabora {
         this.regola();
         this.regolaProgetto(mappaInput);
         this.copiaDirectoriesBase();
+        this.copiaResources();
         this.copiaPom();
         this.creaProjectModule();
         this.creaApplicationMain();
         this.creaApplicationDirectory();
         this.creaApplicationFolder();
         this.creaModulesDirectory();
-        this.copiaResources();
         this.copiaWebapp();
     }// end of method
 
@@ -322,14 +324,20 @@ public class TElabora {
         sourceTemplatesText = leggeFile(nomeFileTextSorgente);
         newTaskText = replaceText(sourceTemplatesText);
 
-        this.checkAndWriteFile(task, mappaInput, newTaskText);
+        this.checkAndWriteFileTask(task, newTaskText);
     }// end of method
 
     private String leggeFile(String nomeFileTextSorgente) {
+        String suffix = ".txt";
+
+        if (!nomeFileTextSorgente.endsWith(suffix)) {
+            nomeFileTextSorgente += suffix;
+        }// end of if cycle
+
         return file.leggeFile(sourcePath + SEP + nomeFileTextSorgente);
     }// end of method
 
-    private void checkAndWriteFile(Task task, Map<Chiave, Object> mappaInput, String newTaskText) {
+    private void checkAndWriteFileTask(Task task, String newTaskText) {
         String fileNameJava = "";
         String pathFileJava;
         String oldFileText = "";
@@ -357,31 +365,38 @@ public class TElabora {
     }// end of method
 
 
-    private boolean checkFile(String oldFileText) {
-        boolean sovrascrivibile = true;
+    private void checkAndWriteFile(String pathNewFile, String sourceText) {
         String fileNameJava = "";
-        String pathFileJava;
-        String tagUno = "AIScript(sovrascrivibile";
-        String tagDue = "=";
-        String tagTre = ")";
-        int posIni;
-        int posEnd;
-        String estratto;
+        String oldText = "";
 
-        if (oldFileText.contains(tagUno)) {
-            sovrascrivibile = false;
-            posIni = oldFileText.indexOf(tagUno);
-            posIni = oldFileText.indexOf(tagDue, posIni);
-            posEnd = oldFileText.indexOf(tagTre, posIni);
-            estratto = oldFileText.substring(posIni, posEnd);
-            estratto = text.levaTesta(estratto, tagDue);
+        if (flagSovrascrive) {
+            file.scriveFile(pathNewFile, sourceText, true);
+            System.out.println(fileNameJava + " esisteva già ed è stato modificato");
+        } else {
+            oldText = file.leggeFile(pathNewFile);
+            if (text.isValid(oldText)) {
+                if (checkFile(oldText)) {
+                    file.scriveFile(pathNewFile, sourceText, true);
+                    System.out.println(fileNameJava + " esisteva già ed è stato modificato");
+                } else {
+                    System.out.println(fileNameJava + " esisteva già e NON è stato modificato");
+                }// end of if/else cycle
+            } else {
+                file.scriveFile(pathNewFile, sourceText, true);
+                System.out.println(fileNameJava + " non esisteva ed è stato creato");
+            }// end of if/else cycle
+        }// end of if/else cycle
+    }// end of method
 
-            if (estratto.equals("true")) {
-                sovrascrivibile = true;
-            }// end of if cycle
-        }// end of if cycle
 
-        return sovrascrivibile;
+    private boolean checkFile(String oldFileText) {
+        List<String> tags = new ArrayList<>();
+        tags.add("@AIScript(sovrascrivibile = false)");
+        tags.add("@AIScript(sovrascrivibile=false)");
+        tags.add("@AIScript(sovrascrivibile= false)");
+        tags.add("@AIScript(sovrascrivibile =false)");
+
+        return text.nonContiene(oldFileText, tags);
     }// end of method
 
 
@@ -803,19 +818,19 @@ public class TElabora {
 
     private void copiaPom() {
         String destPath = ideaProjectRootPath + "/" + newProjectName + "/" + POM + ".xml";
-        String testoPom = leggeFile(POM + SOURCE_SUFFIX);
+        String sourceText = leggeFile(POM );
 
-        testoPom = Token.replace(Token.moduleNameMinuscolo, testoPom, newProjectName);
-
-        boolean copiato = file.scriveFile(destPath, testoPom, true);
+        sourceText = Token.replace(Token.moduleNameMinuscolo, sourceText, newProjectName);
+        checkAndWriteFile(destPath, sourceText);
     }// end of method
 
     private void copiaResources() {
         String destPath = projectPath + DIR_MAIN + RESOURCES_NAME + "/application.properties";
-        String testoProperties = leggeFile("properties" + SOURCE_SUFFIX);
 
-        testoProperties = Token.replace(Token.moduleNameMinuscolo, testoProperties, newProjectName);
-        file.scriveFile(destPath, testoProperties, true);
+        String sourceText = leggeFile("properties");
+        sourceText = Token.replace(Token.moduleNameMinuscolo, sourceText, newProjectName);
+
+        checkAndWriteFile(destPath, sourceText);
     }// end of method
 
     private void copiaWebapp() {

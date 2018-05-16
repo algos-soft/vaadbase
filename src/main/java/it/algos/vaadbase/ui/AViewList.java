@@ -38,8 +38,14 @@ import java.util.List;
  * NON annotated with @SpringView - Non funziona perché usa la Route di VaadinFlow
  * NON annotated with @Scope - Viene ricreata ogni volta
  * Annotated with @Route (obbligatorio) per la selezione della vista.
- *
- * @Route(value = "") per la vista iniziale - Ce ne pouò essere solo una per applicazione
+ * <p>
+ * Annotation @Route(value = "") per la vista iniziale - Ce ne pouò essere solo una per applicazione
+ * ATTENZIONE: se rimangono due (o più) classi con @Route(value = ""), in fase di compilazione appare l'errore:
+ * -'org.springframework.context.ApplicationContextException:
+ * -Unable to start web server;
+ * -nested exception is org.springframework.boot.web.server.WebServerException:
+ * -Unable to start embedded Tomcat'
+ * <p>
  * Annotated with @Qualifier (obbligatorio) nel costruttore per permettere a Spring di istanziare la sottoclasse specifica
  * Annotated with @Slf4j (facoltativo) per i logs automatici <br>
  */

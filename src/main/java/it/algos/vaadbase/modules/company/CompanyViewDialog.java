@@ -45,16 +45,16 @@ import static it.algos.vaadbase.application.BaseCost.TAG_COM;
 @AIScript(sovrascrivibile = true)
 public class CompanyViewDialog extends AViewDialog<Company> {
 
-    private final static String PERSONA = "contatto";
-    private final static String INDIRIZZO = "indirizzo";
-    private final static String POST_PERSONA = "telefono";
-    private final static String POST_INDIRIZZO = "note";
+    public static String CONTATTO = "contatto";
+    public static String INDIRIZZO = "indirizzo";
+    public static String POST_CONTATTO = "telefono";
+    public static String POST_INDIRIZZO = "note";
 
-    private PersonaPresenter personaPresenter;
-    private PersonaService personaService;
-    private PersonaViewDialog personaDialog;
-    private Persona personaTemporanea;
-    private ATextField personaField;
+    protected PersonaPresenter personaPresenter;
+    protected PersonaService personaService;
+    protected PersonaViewDialog contattoDialog;
+    protected Persona contattoTemporaneo;
+    protected ATextField contattoField;
 
     private AddressPresenter addressPresenter;
     private AddressService addressService;
@@ -85,21 +85,21 @@ public class CompanyViewDialog extends AViewDialog<Company> {
     @Override
     protected void addSpecificAlgosFields() {
         personaPresenter = StaticContextAccessor.getBean(PersonaPresenter.class);
-        personaDialog = new PersonaViewDialog(personaPresenter, this::saveUpdatePer, this::deleteUpdatePer, this::annullaPer);
         personaService = (PersonaService) personaPresenter.getService();
+        contattoDialog = new PersonaViewDialog(personaPresenter, this::saveUpdateCon, this::deleteUpdateCon, this::annullaCon);
 
-        personaField = (ATextField) getField(PERSONA);
-        if (personaField != null) {
-            personaField.addFocusListener(e -> personaDialog.open(getPersona(), Operation.EDIT));
+        contattoField = (ATextField) getField(CONTATTO);
+        if (contattoField != null) {
+            contattoField.addFocusListener(e -> contattoDialog.open(getPersona(), Operation.EDIT, CONTATTO));
         }// end of if cycle
 
         addressPresenter = StaticContextAccessor.getBean(AddressPresenter.class);
-        addressDialog = new AddressViewDialog(addressPresenter, this::saveUpdateInd, this::deleteUpdateInd, this::annullaInd);
         addressService = (AddressService) addressPresenter.getService();
+        addressDialog = new AddressViewDialog(addressPresenter, this::saveUpdateInd, this::deleteUpdateInd, this::annullaInd);
 
         indirizzoField = (ATextField) getField(INDIRIZZO);
         if (indirizzoField != null) {
-            indirizzoField.addFocusListener(e -> addressDialog.open(getIndirizzo(), Operation.EDIT));
+            indirizzoField.addFocusListener(e -> addressDialog.open(getIndirizzo(), Operation.EDIT, INDIRIZZO));
         }// end of if cycle
     }// end of method
 
@@ -109,7 +109,7 @@ public class CompanyViewDialog extends AViewDialog<Company> {
      * Sovrascritto
      */
     protected void readSpecificFields() {
-        personaField.setValue(getPersonaCorrenteValue());
+        contattoField.setValue(getPersonaCorrenteValue());
         indirizzoField.setValue(getIndirizzoCorrenteValue());
     }// end of method
 
@@ -121,30 +121,30 @@ public class CompanyViewDialog extends AViewDialog<Company> {
      */
     protected void writeSpecificFields() {
         Company company = super.getCurrentItem();
-        company.setContatto(personaTemporanea);
+        company.setContatto(contattoTemporaneo);
         company.setIndirizzo(indirizzoTemporaneo);
         service.save(company);
     }// end of method
 
 
-    protected void saveUpdatePer(Persona entityBean, AViewDialog.Operation operation) {
-        personaTemporanea = entityBean;
-        personaField.setValue(entityBean.toString());
-        ((ATextField) getField(POST_PERSONA)).focus();
+    protected void saveUpdateCon(Persona entityBean, AViewDialog.Operation operation) {
+        contattoTemporaneo = entityBean;
+        contattoField.setValue(entityBean.toString());
+        ((ATextField) getField(POST_CONTATTO)).focus();
         Notification.show("La modifica di persona è stata confermata ma devi registrare questa company per renderla definitiva", 3000, Notification.Position.BOTTOM_START);
     }// end of method
 
 
-    protected void deleteUpdatePer(Persona entityBean) {
-        personaTemporanea = null;
-        personaField.setValue("");
-        ((ATextField) getField(POST_PERSONA)).focus();
+    protected void deleteUpdateCon(Persona entityBean) {
+        contattoTemporaneo = null;
+        contattoField.setValue("");
+        ((ATextField) getField(POST_CONTATTO)).focus();
         Notification.show("La cancellazione di persona è stata confermata ma devi registrare questa company per renderla definitiva", 3000, Notification.Position.BOTTOM_START);
     }// end of method
 
 
-    protected void annullaPer(Persona entityBean) {
-        ((ATextField) getField(POST_PERSONA)).focus();
+    protected void annullaCon(Persona entityBean) {
+        ((ATextField) getField(POST_CONTATTO)).focus();
     }// end of method
 
 

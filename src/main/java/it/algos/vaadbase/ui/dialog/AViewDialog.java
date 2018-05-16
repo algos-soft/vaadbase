@@ -15,14 +15,11 @@ import com.vaadin.flow.shared.Registration;
 import it.algos.vaadbase.backend.service.IAService;
 import it.algos.vaadbase.presenter.IAPresenter;
 import it.algos.vaadbase.ui.AFieldService;
-import it.algos.vaadbase.ui.fields.ATextField;
 import lombok.extern.slf4j.Slf4j;
 
 import java.io.Serializable;
-import java.util.HashMap;
 import java.util.LinkedHashMap;
 import java.util.List;
-import java.util.Map;
 import java.util.function.BiConsumer;
 import java.util.function.Consumer;
 import java.util.stream.Collectors;
@@ -38,11 +35,11 @@ import java.util.stream.Collectors;
 public abstract class AViewDialog<T extends Serializable> extends Dialog implements IADialog {
 
 
-    private final H2 titleField = new H2();
     protected final Button saveButton = new Button("Registra");
-    private final String confirmText = "Conferma";
     protected final Button cancelButton = new Button("Annulla");
     protected final Button deleteButton = new Button("Elimina");
+    private final H2 titleField = new H2();
+    private final String confirmText = "Conferma";
     private final FormLayout formLayout = new FormLayout();
     private final HorizontalLayout buttonBar = new HorizontalLayout(saveButton, cancelButton, deleteButton);
     private final ConfirmationDialog<T> confirmationDialog = new ConfirmationDialog<>();
@@ -73,9 +70,9 @@ public abstract class AViewDialog<T extends Serializable> extends Dialog impleme
     /**
      * Constructs a new instance.
      *
-     * @param presenter   per gestire la business logic del package
-     * @param itemSaver   funzione associata al bottone 'registra'
-     * @param itemDeleter funzione associata al bottone 'annulla'
+     * @param presenter               per gestire la business logic del package
+     * @param itemSaver               funzione associata al bottone 'registra'
+     * @param itemDeleter             funzione associata al bottone 'annulla'
      * @param confermaSenzaRegistrare cambia il testo del bottone 'Registra' in 'Conferma'
      */
     public AViewDialog(IAPresenter presenter, BiConsumer<T, AViewDialog.Operation> itemSaver, Consumer<T> itemDeleter, boolean confermaSenzaRegistrare) {
@@ -228,6 +225,18 @@ public abstract class AViewDialog<T extends Serializable> extends Dialog impleme
      */
     @Override
     public void open(Object item, AViewDialog.Operation operation) {
+        open(item, operation, "");
+    }// end of method
+
+    /**
+     * Opens the given item for editing in the dialog.
+     *
+     * @param item      The item to edit; it may be an existing or a newly created
+     *                  instance
+     * @param operation The operation being performed on the item
+     */
+    @Override
+    public void open(Object item, AViewDialog.Operation operation, String title) {
         if (item == null) {
             Notification.show("Qualcosa non ha funzionato in AViewDialog.open()", 3000, Notification.Position.BOTTOM_START);
             return;
@@ -235,7 +244,8 @@ public abstract class AViewDialog<T extends Serializable> extends Dialog impleme
 
         this.itemType = presenter.getView().getName();
         currentItem = (T) item;
-        titleField.setText(operation.getNameInTitle() + " " + itemType);
+        title = title.equals("") ? itemType : title;
+        titleField.setText(operation.getNameInTitle() + " " + title);
         if (registrationForSave != null) {
             registrationForSave.remove();
         }

@@ -73,6 +73,9 @@ public class TDialogoUpdateProject extends TDialogo {
         this.add(new Label("Update di un project esistente"));
         this.add(creaBody());
         this.add(creaFooter());
+        if (fieldComboProgetti != null && !fieldComboProgetti.getValue().equals("")) {
+            confirmButton.setVisible(true);
+        }// end of if cycle
 
         addListener();
     }// end of method
@@ -108,6 +111,10 @@ public class TDialogoUpdateProject extends TDialogo {
         fieldComboProgetti.setAllowCustomValue(false);
         fieldComboProgetti.setLabel(label);
         fieldComboProgetti.setItems(progetti);
+
+        if (progetti != null && progetti.size() > 0) {
+            fieldComboProgetti.setValue(progetti.get(0));
+        }// end of if cycle
 
         return new VerticalLayout(fieldComboProgetti);
     }// end of method
