@@ -1,5 +1,6 @@
 package it.algos.vaadbase.modules.company;
 
+import com.vaadin.flow.component.AbstractField;
 import com.vaadin.flow.component.notification.Notification;
 import com.vaadin.flow.spring.annotation.SpringComponent;
 import it.algos.vaadbase.annotation.AIScript;
@@ -21,6 +22,8 @@ import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.beans.factory.config.ConfigurableBeanFactory;
 import org.springframework.context.annotation.Scope;
 
+import java.util.ArrayList;
+import java.util.List;
 import java.util.function.BiConsumer;
 import java.util.function.Consumer;
 
@@ -144,7 +147,8 @@ public class CompanyViewDialog extends AViewDialog<Company> {
 
 
     protected void annullaCon(Persona entityBean) {
-        ((ATextField) getField(POST_CONTATTO)).focus();
+        focusOnPost(CONTATTO);
+//        ((ATextField) getField(POST_CONTATTO)).focus();
     }// end of method
 
 
@@ -165,7 +169,34 @@ public class CompanyViewDialog extends AViewDialog<Company> {
 
 
     protected void annullaInd(Address entityBean) {
-        ((ATextArea) getField(POST_INDIRIZZO)).focus();
+        focusOnPost(INDIRIZZO);
+//        ((ATextArea) getField(POST_INDIRIZZO)).focus();
+    }// end of method
+
+
+    protected void focusOnPost(String currentFieldName) {
+        List<String> keys = new ArrayList<>(fieldMap.keySet());
+        String nameFocus = "";
+        String nameTmp;
+        int pos = 0;
+
+        for (int k = 0; k < keys.size(); k++) {
+            nameTmp = keys.get(k);
+            if (nameTmp.equals(currentFieldName)) {
+                pos = keys.indexOf(nameTmp);
+                pos++;
+                pos = pos < keys.size() ? pos  : 0;
+                nameFocus = keys.get(pos);
+            }// end of if cycle
+        }// end of for cycle
+
+        AbstractField field = getField(nameFocus);
+        if (field instanceof ATextField) {
+            ((ATextField) getField(nameFocus)).focus();
+        }// end of if cycle
+        if (field instanceof ATextArea) {
+            ((ATextArea) getField(nameFocus)).focus();
+        }// end of if cycle
     }// end of method
 
 
