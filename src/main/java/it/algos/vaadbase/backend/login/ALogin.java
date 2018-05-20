@@ -22,9 +22,14 @@ public class ALogin {
 
     @Autowired
     private CompanyService service;
+    private Company company;
 
     public Company getCompany() {
-        return service.findOrCrea("demo");
+        return company;
+    }// end of method
+
+    public void setCompany(Company company) {
+        this.company = company;
     }// end of method
 
 }// end of class

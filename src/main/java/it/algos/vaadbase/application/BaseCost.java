@@ -18,6 +18,7 @@ public class BaseCost {
 
     public final static String TAG_HOM = "home";
     public final static String TAG_WIZ = "wizard";
+    public final static String TAG_DEV = "developer";
     public final static String TAG_ADD = "address";
     public final static String TAG_PER = "person";
     public final static String TAG_COM = "company";

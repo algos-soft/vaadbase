@@ -120,10 +120,10 @@ public class Address extends AEntity {
         String sep = " - ";
 
         value += indirizzo;
-        value += (cap != null && !cap.equals("")) ? sep + cap : sep;
-        value += spazio + localita;
+        value += (localita != null && !localita.equals("")) ? sep + localita : "";
+        value += spazio + cap;
 
-        return value;
+        return value.trim();
     }// end of method
 
 

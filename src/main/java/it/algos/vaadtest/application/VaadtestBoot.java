@@ -4,6 +4,7 @@ import com.vaadin.flow.spring.annotation.SpringComponent;
 import it.algos.vaadbase.annotation.AIScript;
 import it.algos.vaadbase.application.BaseCost;
 import it.algos.vaadbase.boot.ABoot;
+import it.algos.vaadbase.developer.DeveloperView;
 import it.algos.vaadbase.wizard.ui.WizardView;
 import it.algos.vaadtest.modules.prova.ProvaViewList;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -84,6 +85,7 @@ public class VaadtestBoot extends ABoot {
         BaseCost.MENU_CLAZZ_LIST.add(HomeView.class);
         BaseCost.MENU_CLAZZ_LIST.add(ProvaViewList.class);
         BaseCost.MENU_CLAZZ_LIST.add(WizardView.class);
+        BaseCost.MENU_CLAZZ_LIST.add(DeveloperView.class);
     }// end of method
 
 

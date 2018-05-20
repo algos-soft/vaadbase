@@ -94,7 +94,8 @@ public class PersonaViewDialog extends AViewDialog<Persona> {
      * Sovrascritto
      */
     protected void readSpecificFields() {
-        indirizzoField.setValue(getIndirizzoCorrenteValue());
+        indirizzoTemporaneo = getIndirizzoCorrente();
+        indirizzoField.setValue(indirizzoTemporaneo != null ? indirizzoTemporaneo.toString() : "");
     }// end of method
 
 
@@ -113,7 +114,7 @@ public class PersonaViewDialog extends AViewDialog<Persona> {
     private void saveUpdate(Address entityBean, AViewDialog.Operation operation) {
         indirizzoTemporaneo = entityBean;
         indirizzoField.setValue(entityBean.toString());
-
+        focusOnPost(INDIRIZZO);
         Notification.show("La modifica di indirizzo è stata confermata ma devi registrare questa persona per renderla definitiva", 3000, Notification.Position.BOTTOM_START);
     }// end of method
 
@@ -121,7 +122,7 @@ public class PersonaViewDialog extends AViewDialog<Persona> {
     private void deleteUpdate(Address entityBean) {
         indirizzoTemporaneo = null;
         indirizzoField.setValue("");
-
+        focusOnPost(INDIRIZZO);
         Notification.show("La cancellazione di indirizzo è stata confermata ma devi registrare questa persona per renderla definitiva", 3000, Notification.Position.BOTTOM_START);
     }// end of method
 
@@ -139,17 +140,6 @@ public class PersonaViewDialog extends AViewDialog<Persona> {
         }// end of if cycle
 
         return indirizzo;
-    }// end of method
-
-    private String getIndirizzoCorrenteValue() {
-        String value = "";
-        Address indirizzo = getIndirizzoCorrente();
-
-        if (indirizzo != null) {
-            value = indirizzo.toString();
-        }// end of if cycle
-
-        return value;
     }// end of method
 
 

@@ -15,9 +15,12 @@ import com.vaadin.flow.shared.Registration;
 import it.algos.vaadbase.backend.service.IAService;
 import it.algos.vaadbase.presenter.IAPresenter;
 import it.algos.vaadbase.ui.AFieldService;
+import it.algos.vaadbase.ui.fields.ATextArea;
+import it.algos.vaadbase.ui.fields.ATextField;
 import lombok.extern.slf4j.Slf4j;
 
 import java.io.Serializable;
+import java.util.ArrayList;
 import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.function.BiConsumer;
@@ -265,6 +268,32 @@ public abstract class AViewDialog<T extends Serializable> extends Dialog impleme
      * Sovrascritto
      */
     protected void readSpecificFields() {
+    }// end of method
+
+
+    protected void focusOnPost(String currentFieldName) {
+        List<String> keys = new ArrayList<>(fieldMap.keySet());
+        String nameFocus = "";
+        String nameTmp;
+        int pos = 0;
+
+        for (int k = 0; k < keys.size(); k++) {
+            nameTmp = keys.get(k);
+            if (nameTmp.equals(currentFieldName)) {
+                pos = keys.indexOf(nameTmp);
+                pos++;
+                pos = pos < keys.size() ? pos  : 0;
+                nameFocus = keys.get(pos);
+            }// end of if cycle
+        }// end of for cycle
+
+        AbstractField field = getField(nameFocus);
+        if (field instanceof ATextField) {
+            ((ATextField) getField(nameFocus)).focus();
+        }// end of if cycle
+        if (field instanceof ATextArea) {
+            ((ATextArea) getField(nameFocus)).focus();
+        }// end of if cycle
     }// end of method
 
 

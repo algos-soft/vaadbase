@@ -1,6 +1,5 @@
 package it.algos.vaadbase.modules.company;
 
-import com.vaadin.flow.component.AbstractField;
 import com.vaadin.flow.component.notification.Notification;
 import com.vaadin.flow.spring.annotation.SpringComponent;
 import it.algos.vaadbase.annotation.AIScript;
@@ -15,15 +14,12 @@ import it.algos.vaadbase.modules.persona.PersonaService;
 import it.algos.vaadbase.modules.persona.PersonaViewDialog;
 import it.algos.vaadbase.presenter.IAPresenter;
 import it.algos.vaadbase.ui.dialog.AViewDialog;
-import it.algos.vaadbase.ui.fields.ATextArea;
 import it.algos.vaadbase.ui.fields.ATextField;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.beans.factory.config.ConfigurableBeanFactory;
 import org.springframework.context.annotation.Scope;
 
-import java.util.ArrayList;
-import java.util.List;
 import java.util.function.BiConsumer;
 import java.util.function.Consumer;
 
@@ -50,8 +46,6 @@ public class CompanyViewDialog extends AViewDialog<Company> {
 
     public static String CONTATTO = "contatto";
     public static String INDIRIZZO = "indirizzo";
-    public static String POST_CONTATTO = "telefono";
-    public static String POST_INDIRIZZO = "note";
 
     protected PersonaPresenter personaPresenter;
     protected PersonaService personaService;
@@ -93,7 +87,7 @@ public class CompanyViewDialog extends AViewDialog<Company> {
 
         contattoField = (ATextField) getField(CONTATTO);
         if (contattoField != null) {
-            contattoField.addFocusListener(e -> contattoDialog.open(getPersona(), Operation.EDIT, CONTATTO));
+            contattoField.addFocusListener(e -> contattoDialog.open(getContatto(), Operation.EDIT, CONTATTO));
         }// end of if cycle
 
         addressPresenter = StaticContextAccessor.getBean(AddressPresenter.class);
@@ -112,8 +106,11 @@ public class CompanyViewDialog extends AViewDialog<Company> {
      * Sovrascritto
      */
     protected void readSpecificFields() {
-        contattoField.setValue(getPersonaCorrenteValue());
-        indirizzoField.setValue(getIndirizzoCorrenteValue());
+        contattoTemporaneo = getContattoCorrente();
+        contattoField.setValue(contattoTemporaneo != null ? contattoTemporaneo.toString() : "");
+
+        indirizzoTemporaneo = getIndirizzoCorrente();
+        indirizzoField.setValue(indirizzoTemporaneo != null ? indirizzoTemporaneo.toString() : "");
     }// end of method
 
 
@@ -133,7 +130,7 @@ public class CompanyViewDialog extends AViewDialog<Company> {
     protected void saveUpdateCon(Persona entityBean, AViewDialog.Operation operation) {
         contattoTemporaneo = entityBean;
         contattoField.setValue(entityBean.toString());
-        ((ATextField) getField(POST_CONTATTO)).focus();
+        focusOnPost(CONTATTO);
         Notification.show("La modifica di persona è stata confermata ma devi registrare questa company per renderla definitiva", 3000, Notification.Position.BOTTOM_START);
     }// end of method
 
@@ -141,21 +138,20 @@ public class CompanyViewDialog extends AViewDialog<Company> {
     protected void deleteUpdateCon(Persona entityBean) {
         contattoTemporaneo = null;
         contattoField.setValue("");
-        ((ATextField) getField(POST_CONTATTO)).focus();
+        focusOnPost(CONTATTO);
         Notification.show("La cancellazione di persona è stata confermata ma devi registrare questa company per renderla definitiva", 3000, Notification.Position.BOTTOM_START);
     }// end of method
 
 
     protected void annullaCon(Persona entityBean) {
         focusOnPost(CONTATTO);
-//        ((ATextField) getField(POST_CONTATTO)).focus();
     }// end of method
 
 
     protected void saveUpdateInd(Address entityBean, AViewDialog.Operation operation) {
         indirizzoTemporaneo = entityBean;
         indirizzoField.setValue(entityBean.toString());
-        ((ATextArea) getField(POST_INDIRIZZO)).focus();
+        focusOnPost(INDIRIZZO);
         Notification.show("La modifica di indirizzo è stata confermata ma devi registrare questa company per renderla definitiva", 3000, Notification.Position.BOTTOM_START);
     }// end of method
 
@@ -163,40 +159,13 @@ public class CompanyViewDialog extends AViewDialog<Company> {
     protected void deleteUpdateInd(Address entityBean) {
         indirizzoTemporaneo = null;
         indirizzoField.setValue("");
-        ((ATextArea) getField(POST_INDIRIZZO)).focus();
+        focusOnPost(INDIRIZZO);
         Notification.show("La cancellazione di indirizzo è stata confermata ma devi registrare questa company per renderla definitiva", 3000, Notification.Position.BOTTOM_START);
     }// end of method
 
 
     protected void annullaInd(Address entityBean) {
         focusOnPost(INDIRIZZO);
-//        ((ATextArea) getField(POST_INDIRIZZO)).focus();
-    }// end of method
-
-
-    protected void focusOnPost(String currentFieldName) {
-        List<String> keys = new ArrayList<>(fieldMap.keySet());
-        String nameFocus = "";
-        String nameTmp;
-        int pos = 0;
-
-        for (int k = 0; k < keys.size(); k++) {
-            nameTmp = keys.get(k);
-            if (nameTmp.equals(currentFieldName)) {
-                pos = keys.indexOf(nameTmp);
-                pos++;
-                pos = pos < keys.size() ? pos  : 0;
-                nameFocus = keys.get(pos);
-            }// end of if cycle
-        }// end of for cycle
-
-        AbstractField field = getField(nameFocus);
-        if (field instanceof ATextField) {
-            ((ATextField) getField(nameFocus)).focus();
-        }// end of if cycle
-        if (field instanceof ATextArea) {
-            ((ATextArea) getField(nameFocus)).focus();
-        }// end of if cycle
     }// end of method
 
 
@@ -212,18 +181,6 @@ public class CompanyViewDialog extends AViewDialog<Company> {
     }// end of method
 
 
-    private String getIndirizzoCorrenteValue() {
-        String value = "";
-        Address indirizzo = getIndirizzoCorrente();
-
-        if (indirizzo != null) {
-            value = indirizzo.toString();
-        }// end of if cycle
-
-        return value;
-    }// end of method
-
-
     private Address getIndirizzo() {
         Address indirizzo = getIndirizzoCorrente();
 
@@ -235,7 +192,7 @@ public class CompanyViewDialog extends AViewDialog<Company> {
     }// end of method
 
 
-    private Persona getPersonaCorrente() {
+    private Persona getContattoCorrente() {
         Persona persona = null;
         Company company = getCurrentItem();
 
@@ -247,20 +204,8 @@ public class CompanyViewDialog extends AViewDialog<Company> {
     }// end of method
 
 
-    private String getPersonaCorrenteValue() {
-        String value = "";
-        Persona persona = getPersonaCorrente();
-
-        if (persona != null) {
-            value = persona.toString();
-        }// end of if cycle
-
-        return value;
-    }// end of method
-
-
-    private Persona getPersona() {
-        Persona persona = getPersonaCorrente();
+    private Persona getContatto() {
+        Persona persona = getContattoCorrente();
 
         if (persona == null) {
             persona = personaService.newEntity();
