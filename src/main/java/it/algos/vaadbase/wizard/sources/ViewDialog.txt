@@ -2,6 +2,7 @@ package it.algos.@MODULELOWER@.modules.@PACKAGE@;
 
 import java.util.function.BiConsumer;
 import java.util.function.Consumer;
+import lombok.extern.slf4j.Slf4j;
 import com.vaadin.flow.component.textfield.TextField;
 import com.vaadin.flow.data.converter.StringToIntegerConverter;
 import com.vaadin.flow.data.validator.IntegerRangeValidator;
@@ -23,15 +24,18 @@ import static it.algos.@MODULELOWER@.application.@APPCOST@.@QUALIFIER@;
  * User: @USER@
  * Date: @TODAY@
  * <p>
- * Estende la classe astratta ADialog per visualizzare i fields <br>
+ * Estende la classe astratta AViewDialog per visualizzare i fields <br>
  * <p>
- * Not annotated with @SpringComponent (sbagliato)
- * Annotated with @Scope (obbligatorio = 'prototype')
+ * Not annotated with @SpringComponent (inutile, perchè viene costruita da VaadinFlow nel costruttore di AViewList) <br>
+ * Not annotated with @SpringView (sbagliato) perché usa la @Route di VaadinFlow <br>
+ * Annotated with @Scope (obbligatorio = 'prototype') <br>
  * Annotated with @Qualifier (obbligatorio) per permettere a Spring di istanziare la classe specifica <br>
+ * Annotated with @Slf4j (facoltativo) per i logs automatici <br>
  * Annotated with @AIScript (facoltativo Algos) per controllare la ri-creazione di questo file dal Wizard <br>
  */
 @Scope(ConfigurableBeanFactory.SCOPE_PROTOTYPE)
 @Qualifier(@QUALIFIER@)
+@Slf4j
 @AIScript(sovrascrivibile = true)
 public class @ENTITY@ViewDialog extends AViewDialog<@ENTITY@> {
 

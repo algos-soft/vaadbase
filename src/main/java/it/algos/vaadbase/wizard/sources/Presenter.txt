@@ -43,8 +43,8 @@ public class @ENTITY@Presenter extends APresenter {
      * Si usa una costante statica, per essere sicuri di scrivere sempre uguali i riferimenti <br>
      * Regola il modello-dati specifico e lo passa al costruttore della superclasse <br>
      *
-     * @param service layer di collegamento per la Repository
-     * @param view    principale gestita da Flow
+     * @param service layer di collegamento per la Repository e la Business Logic
+     * @param view    vista principale gestita da Flow
      */
     public @ENTITY@Presenter(@Qualifier(@QUALIFIER@) IAService service, @Lazy @Qualifier(@QUALIFIER@) IAView view) {
         super(@ENTITY@.class, service, view);

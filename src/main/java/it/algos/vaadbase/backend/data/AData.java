@@ -28,13 +28,9 @@ public abstract class AData implements IAData{
 
     private final Random random = new Random(1L);
 
+
     /**
-     * Costruttore @Autowired (nella sottoclasse concreta)
-     * In the newest Spring release, it’s constructor does not need to be annotated with @Autowired annotation.
-     * Se ci sono DUE o più costruttori, va in errore
-     * Se ci sono DUE costruttori, di cui uno senza parametri, inietta quello senza parametri
-     *
-     * @param service iniettato da Spring
+     * Costruttore @Autowired <br>
      */
     public AData(IAService service) {
         this.service = service;

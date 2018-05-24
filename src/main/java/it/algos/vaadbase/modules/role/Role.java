@@ -1,33 +1,36 @@
 package it.algos.vaadbase.modules.role;
 
-import com.vaadin.flow.spring.annotation.SpringComponent;
-import it.algos.vaadbase.annotation.AIScript;
 import it.algos.vaadbase.backend.annotation.EACompanyRequired;
-import it.algos.vaadbase.backend.entity.AEntity;
 import it.algos.vaadbase.ui.annotation.*;
-import it.algos.vaadbase.ui.enumeration.EAFieldAccessibility;
-import it.algos.vaadbase.ui.enumeration.EAFieldType;
 import it.algos.vaadbase.ui.enumeration.EAListButton;
-import it.algos.vaadbase.ui.enumeration.EARoleType;
-import lombok.*;
-import org.springframework.beans.factory.annotation.Qualifier;
-import org.springframework.beans.factory.config.ConfigurableBeanFactory;
-import org.springframework.context.annotation.Scope;
-import org.springframework.data.mongodb.core.index.Indexed;
-import org.springframework.data.mongodb.core.mapping.Document;
-
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Size;
-
+import org.hibernate.validator.constraints.NotEmpty;
+import org.springframework.beans.factory.annotation.Qualifier;
+import org.springframework.beans.factory.config.ConfigurableBeanFactory;
+import org.springframework.data.mongodb.core.index.Indexed;
+import org.springframework.data.mongodb.core.mapping.Document;
+import org.springframework.context.annotation.Scope;
+import lombok.*;
+import com.vaadin.flow.spring.annotation.SpringComponent;
+import it.algos.vaadbase.ui.enumeration.EARoleType;
+import it.algos.vaadbase.backend.entity.AEntity;
+import it.algos.vaadbase.backend.entity.ACEntity;
+import it.algos.vaadbase.ui.annotation.AIColumn;
+import it.algos.vaadbase.ui.annotation.AIField;
+import it.algos.vaadbase.ui.enumeration.EAFieldAccessibility;
+import it.algos.vaadbase.ui.enumeration.EAFieldType;
+import it.algos.vaadbase.annotation.*;
 import static it.algos.vaadbase.application.BaseCost.TAG_ROL;
 
 /**
- * Project vaadbase
- * Created by Algos
- * User: Gac
- * Date: 2018-04-02
- * <br>
- * Estende la Entity astratta AEntity che contiene la key property ObjectId <br>
+ * Project vaadbase <br>
+ * Created by Algos <br>
+ * User: Gac <br>
+ * Date: 24-mag-2018 9.55.36 <br>
+ * <p>
+ * Estende la entity astratta AEntity che contiene la key property ObjectId <br>
+ * <p>
  * Annotated with @SpringComponent (obbligatorio) <br>
  * Annotated with @Document (facoltativo) per avere un nome della collection (DB Mongo) diverso dal nome della Entity <br>
  * Annotated with @Scope (obbligatorio = 'singleton') <br>
@@ -36,14 +39,15 @@ import static it.algos.vaadbase.application.BaseCost.TAG_ROL;
  * Annotated with @AllArgsConstructor (Lombok) per usare il costruttore completo nel Service <br>
  * Annotated with @Builder (Lombok) lets you automatically produce the code required to have your class
  * be instantiable with code such as: Person.builder().name("Adam Savage").city("San Francisco").build(); <br>
- * Annotated with @EqualsAndHashCode (facoltativo) per ??? <br>
+ * Annotated with @EqualsAndHashCode (Lombok) per l'uguaglianza di due istanze dellaq classe <br>
  * Annotated with @Qualifier (obbligatorio) per permettere a Spring di istanziare la sottoclasse specifica <br>
- * Annotated with @AIEntity (facoltativo) per alcuni parametri generali del modulo <br>
- * Annotated with @AIList (facoltativo) per le colonne della Lista e loro visibilità/accessibilità relativa all'utente <br>
- * Annotated with @AIForm (facoltativo) per i fields del Form e loro visibilità/accessibilità relativa all'utente <br>
- * Annotated with @AIScript (facoltativo) per controllare la ri-creazione di questo file nello script del framework <br>
- * Inserisce SEMPRE la versione di serializzazione che viene poi filtrata per non mostrarla in List e Form <br>
- * Le singole property sono annotate con @AIField (obbligatorio per il tipo di Field) e @AIColumn (facoltativo) <br>
+ * Annotated with @AIEntity (facoltativo Algos) per alcuni parametri generali del modulo <br>
+ * Annotated with @AIList (facoltativo Algos) per le colonne automatiche della Lista  <br>
+ * Annotated with @AIForm (facoltativo Algos) per i fields automatici del Dialog e del Form <br>
+ * Annotated with @AIScript (facoltativo Algos) per controllare la ri-creazione di questo file dal Wizard <br>
+ * Inserisce SEMPRE la versione di serializzazione <br>
+ * Le singole property sono annotate con @AIField (obbligatorio Algos) per il tipo di Field nel Dialog e nel Form <br>
+ * Le singole property sono annotate con @AIColumn (facoltativo Algos) per il tipo di Column nella Grid <br>
  */
 @SpringComponent
 @Document(collection = "role")
@@ -54,10 +58,10 @@ import static it.algos.vaadbase.application.BaseCost.TAG_ROL;
 @Builder
 @EqualsAndHashCode(callSuper = false)
 @Qualifier(TAG_ROL)
-@AIEntity(roleTypeVisibility = EARoleType.user, company = EACompanyRequired.nonUsata)
-@AIList(fields = {"ordine", "code"}, dev = EAListButton.standard, admin = EAListButton.noSearch, user = EAListButton.show)
+@AIEntity(company = EACompanyRequired.nonUsata)
+@AIList(fields = {"ordine", "code"})
 @AIForm(fields = {"ordine", "code"})
-@AIScript(sovrascrivibile = true)
+@AIScript(sovrascrivibile = false)
 public class Role extends AEntity {
 
 
@@ -66,33 +70,34 @@ public class Role extends AEntity {
      */
     private final static long serialVersionUID = 1L;
 
-    /**
-     * ordine di presentazione (obbligatorio, unico)
-     * il più importante per primo
+    
+	/**
+     * ordine di presentazione (obbligatorio, unico) <br>
+     * il più importante per primo <br>
      */
-    @NotNull(message = "Deve contenere un numero")
+    @NotNull
     @Indexed()
-    @AIField(type = EAFieldType.integer, widthEM = 3, dev = EAFieldAccessibility.showOnly, admin = EAFieldAccessibility.never)
+    @AIField(type = EAFieldType.integer, widthEM = 3)
     @AIColumn(name = "#", width = 55)
     private int ordine;
-
-    /**
-     * codice di riferimento (obbligatorio, unico)
+    
+	/**
+     * codice di riferimento (obbligatorio, unico) <br>
      */
-    @NotNull(message = "Il codice è obbligatorio")
-    @Size(min = 3, message = "Deve contenere almeno 3 caratteri")
+    @NotNull
     @Indexed()
-    @AIField(type = EAFieldType.text, required = true, focus = true, widthEM = 12, dev = EAFieldAccessibility.allways)
+    @Size(min = 3)
+    @AIField(type = EAFieldType.text, required = true, focus = true, widthEM = 12)
     @AIColumn(width = 210)
     private String code;
-
+    
 
     /**
      * @return a string representation of the object.
      */
     @Override
     public String toString() {
-        return getCode();
+        return code;
     }// end of method
 
 

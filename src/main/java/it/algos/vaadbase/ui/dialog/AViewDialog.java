@@ -46,8 +46,8 @@ public abstract class AViewDialog<T extends Serializable> extends Dialog impleme
     private final FormLayout formLayout = new FormLayout();
     private final HorizontalLayout buttonBar = new HorizontalLayout(saveButton, cancelButton, deleteButton);
     private final ConfirmationDialog<T> confirmationDialog = new ConfirmationDialog<>();
-    private final BiConsumer<T, AViewDialog.Operation> itemSaver;
-    private final Consumer<T> itemDeleter;
+    private  BiConsumer<T, AViewDialog.Operation> itemSaver;
+    private  Consumer<T> itemDeleter;
     protected IAService service;
     protected IAPresenter presenter;
     //--collegamento tra i fields e la entityBean
@@ -58,6 +58,15 @@ public abstract class AViewDialog<T extends Serializable> extends Dialog impleme
     private String itemType;
     private Registration registrationForSave;
     private T currentItem;
+
+    /**
+     * Constructs a new instance.
+     *
+     * @param presenter   per gestire la business logic del package
+     */
+    public AViewDialog(IAPresenter presenter) {
+        this(presenter, null, null);
+    }// end of constructor
 
     /**
      * Constructs a new instance.
@@ -104,6 +113,11 @@ public abstract class AViewDialog<T extends Serializable> extends Dialog impleme
         });
     }// end of constructor
 
+
+    public void fixFunzioni(BiConsumer<T, AViewDialog.Operation> itemSaver, Consumer<T> itemDeleter) {
+        this.itemSaver = itemSaver;
+        this.itemDeleter = itemDeleter;
+    }
 
     private void initTitle() {
         add(titleField);
@@ -245,10 +259,11 @@ public abstract class AViewDialog<T extends Serializable> extends Dialog impleme
             return;
         }// end of if cycle
 
-        this.itemType = presenter.getView().getName();
         currentItem = (T) item;
+        this.itemType = presenter.getView().getName();
         title = title.equals("") ? itemType : title;
         titleField.setText(operation.getNameInTitle() + " " + title);
+
         if (registrationForSave != null) {
             registrationForSave.remove();
         }
@@ -282,7 +297,7 @@ public abstract class AViewDialog<T extends Serializable> extends Dialog impleme
             if (nameTmp.equals(currentFieldName)) {
                 pos = keys.indexOf(nameTmp);
                 pos++;
-                pos = pos < keys.size() ? pos  : 0;
+                pos = pos < keys.size() ? pos : 0;
                 nameFocus = keys.get(pos);
             }// end of if cycle
         }// end of for cycle

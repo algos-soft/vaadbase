@@ -1,84 +1,68 @@
 package it.algos.vaadbase.modules.role;
 
 import com.vaadin.flow.spring.annotation.SpringComponent;
-import it.algos.vaadbase.annotation.AIScript;
-import it.algos.vaadbase.backend.entity.AEntity;
-import it.algos.vaadbase.backend.service.AService;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.beans.factory.annotation.Autowired;
+import org.bson.types.ObjectId;
+import java.util.List;
+import java.util.stream.Collectors;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.beans.factory.config.ConfigurableBeanFactory;
-import org.springframework.context.annotation.Scope;
 import org.springframework.data.mongodb.repository.MongoRepository;
 import org.springframework.stereotype.Service;
-
-import java.util.List;
-
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.context.annotation.Scope;
+import it.algos.vaadbase.annotation.AIScript;
+import it.algos.vaadbase.backend.service.AService;
+import it.algos.vaadbase.backend.entity.AEntity;
 import static it.algos.vaadbase.application.BaseCost.TAG_ROL;
 
 /**
- * Project vaadbase
- * Created by Algos
- * User: Gac
- * Date: 2018-04-02
- * Estende la Entity astratta AService. Layer di collegamento tra il Presenter e la Repository.
- * Annotated with @@Slf4j (facoltativo) per i logs automatici
- * Annotated with @SpringComponent (obbligatorio)
- * Annotated with @Service (ridondante)
- * Annotated with @Scope (obbligatorio = 'singleton')
- * Annotated with @Qualifier (obbligatorio) per permettere a Spring di istanziare la sottoclasse specifica
- * Annotated with @AIScript (facoltativo) per controllare la ri-creazione di questo file nello script del framework
+ * Project vaadbase <br>
+ * Created by Algos <br>
+ * User: Gac <br>
+ * Date: 24-mag-2018 9.55.36 <br>
+ * <br>
+ * Estende la classe astratta AService. Layer di collegamento per la Repository. <br>
+ * <br>
+ * Annotated with @SpringComponent (obbligatorio) <br>
+ * Annotated with @Service (ridondante) <br>
+ * Annotated with @Scope (obbligatorio = 'singleton') <br>
+ * Annotated with @Qualifier (obbligatorio) per permettere a Spring di istanziare la classe specifica <br>
+ * Annotated with @@Slf4j (facoltativo) per i logs automatici <br>
+ * Annotated with @AIScript (facoltativo Algos) per controllare la ri-creazione di questo file dal Wizard <br>
  */
-@Slf4j
 @SpringComponent
 @Service
 @Scope(ConfigurableBeanFactory.SCOPE_SINGLETON)
 @Qualifier(TAG_ROL)
-@AIScript(sovrascrivibile = true)
+@Slf4j
+@AIScript(sovrascrivibile = false)
 public class RoleService extends AService {
 
-    private static final RoleService INSTANCE = new RoleService();
 
     /**
-     * La repository viene iniettata dal costruttore, in modo che sia disponibile nella superclasse,
-     * dove viene usata l'interfaccia MongoRepository
-     * Spring costruisce al volo, quando serve, una implementazione di RoleRepository (come previsto dal @Qualifier)
-     * Qui si una una interfaccia locale (col casting nel costruttore) per usare i metodi specifici
+     * La repository viene iniettata dal costruttore e passata al costruttore della superclasse, <br>
+     * Spring costruisce una implementazione concreta dell'interfaccia MongoRepository (come previsto dal @Qualifier) <br>
+     * Qui si una una interfaccia locale (col casting nel costruttore) per usare i metodi specifici <br>
      */
     private RoleRepository repository;
 
 
     /**
-     * Costruttore @Autowired (nella superclasse)
-     * In the newest Spring release, it’s constructor does not need to be annotated with @Autowired annotation
-     * Se i costruttori sono più di uno, si DEVE usare @Autowired
-     * Si usa un @Qualifier(), per avere la sottoclasse specifica
-     * Si usa una costante statica, per essere sicuri di scrivere sempre uguali i riferimenti
+     * Costruttore @Autowired <br>
+     * Si usa un @Qualifier(), per avere la sottoclasse specifica <br>
+     * Si usa una costante statica, per essere sicuri di scrivere sempre uguali i riferimenti <br>
+     *
+     * @param repository per la persistenza dei dati
      */
-    @Autowired
     public RoleService(@Qualifier(TAG_ROL) MongoRepository repository) {
         super(repository);
         this.repository = (RoleRepository) repository;
-        super.entityClass = Role.class;
-    }// end of Spring constructor
-
-
-    //private constructor to avoid client applications to use constructor
-    private RoleService() {
-    }
+   }// end of Spring constructor
 
 
     /**
-     * Gets the unique instance of this Singleton.
-     *
-     * @return the unique instance of this Singleton
-     */
-    public static RoleService getInstance() {
-        return INSTANCE;
-    }// end of method
-
-    /**
-     * Ricerca di una entity (la crea se non la trova)
+     * Ricerca di una entity (la crea se non la trova) <br>
      *
      * @param code di riferimento (obbligatorio ed unico)
      *
@@ -108,28 +92,14 @@ public class RoleService extends AService {
     }// end of method
 
 
-//    /**
-//     * Creazione in memoria di una nuova entity che NON viene salvata
-//     * Eventuali regolazioni iniziali delle property
-//     * Properties obbligatorie
-//     * Gli argomenti (parametri) della new Entity DEVONO essere ordinati come nella Entity (costruttore lombok)
-//     *
-//     * @param code codice di riferimento (obbligatorio)
-//     *
-//     * @return la nuova entity appena creata (non salvata)
-//     */
-//    public Prova newEntity(String code) {
-//        return newEntity(code, "");
-//    }// end of method
-
     /**
-     * Creazione in memoria di una nuova entity che NON viene salvata
-     * Eventuali regolazioni iniziali delle property
-     * All properties
-     * Gli argomenti (parametri) della new Entity DEVONO essere ordinati come nella Entity (costruttore lombok)
+     * Creazione in memoria di una nuova entity che NON viene salvata <br>
+     * Eventuali regolazioni iniziali delle property <br>
+     * All properties <br>
+     * Gli argomenti (parametri) della new Entity DEVONO essere ordinati come nella Entity (costruttore lombok) <br>
      *
-     * @param ordine di presentazione (obbligatorio con inserimento automatico se è zero)
-     * @param code   codice di riferimento (obbligatorio)
+     * @param ordine      di presentazione (obbligatorio con inserimento automatico se è zero)
+	* @param code        codice di riferimento (obbligatorio)
      *
      * @return la nuova entity appena creata (non salvata)
      */
@@ -137,20 +107,20 @@ public class RoleService extends AService {
         Role entity = null;
 
         entity = findByKeyUnica(code);
-        if (entity != null) {
-            return findByKeyUnica(code);
-        }// end of if cycle
-
+		if (entity != null) {
+			return findByKeyUnica(code);
+		}// end of if cycle
+		
         entity = Role.builder()
-                .ordine(ordine != 0 ? ordine : this.getNewOrdine())
-                .code(code)
+				.ordine(ordine != 0 ? ordine : this.getNewOrdine())
+				.code(code)
                 .build();
 
         return entity;
     }// end of method
 
     /**
-     * Recupera una istanza della Entity usando la query della property specifica (obbligatoria ed unica)
+     * Recupera una istanza della Entity usando la query della property specifica (obbligatoria ed unica) <br>
      *
      * @param code di riferimento (obbligatorio)
      *
@@ -162,21 +132,48 @@ public class RoleService extends AService {
 
 
     /**
-     * Returns all instances of the type
-     * La Entity è EACompanyRequired.nonUsata. Non usa Company.
-     * Lista ordinata
+     * Returns all instances of the type <br>
+     * La Entity è EACompanyRequired.nonUsata. Non usa Company. <br>
+     * Lista ordinata <br>
      *
      * @return lista ordinata di tutte le entities
      */
     @Override
     public List<Role> findAll() {
-        return repository.findAllByOrderByOrdineAsc();
+        List<Role> lista = null;
+
+        lista = repository.findAllByOrderByOrdineAsc();
+
+        return lista;
     }// end of method
 
 
     /**
-     * Opportunità di controllare (per le nuove schede) che la key unica non esista già.
-     * Invocato appena prima del save(), solo per una nuova entity
+     * Fetches the entities whose 'main text property' matches the given filter text.
+     * <p>
+     * The matching is case insensitive. When passed an empty filter text,
+     * the method returns all categories. The returned list is ordered by name.
+     * The 'main text property' is different in each entity class and chosen in the specific subclass
+     *
+     * @param filter the filter text
+     *
+     * @return the list of matching entities
+     */
+    @Override
+    public List<Role> findFilter(String filter) {
+        String normalizedFilter = filter.toLowerCase();
+        List<Role> lista = findAll();
+
+        return lista.stream()
+                .filter(entity -> entity.getCode().toLowerCase().contains(normalizedFilter))
+                .sorted((entity1, entity2) -> entity1.getCode().compareToIgnoreCase(entity2.getCode()))
+                .collect(Collectors.toList());
+    }// end of method
+
+
+    /**
+     * Opportunità di controllare (per le nuove schede) che la key unica non esista già. <br>
+     * Invocato appena prima del save(), solo per una nuova entity <br>
      *
      * @param entityBean nuova da creare
      */
@@ -186,20 +183,20 @@ public class RoleService extends AService {
     }// end of method
 
     /**
-     * Opportunità di usare una idKey specifica.
-     * Invocato appena prima del save(), solo per una nuova entity
+     * Opportunità di usare una idKey specifica. <br>
+     * Invocato appena prima del save(), solo per una nuova entity <br>
      *
      * @param entityBean da salvare
      */
     protected void creaIdKeySpecifica(AEntity entityBean) {
-        entityBean.id = ((Role) entityBean).getCode();
+        entityBean.id = ((Role)entityBean).getCode();
     }// end of method
 
     /**
-     * Ordine di presentazione (obbligatorio, unico per tutte le eventuali company2),
-     * Viene calcolato in automatico alla creazione della entity
-     * Recupera dal DB il valore massimo pre-esistente della property
-     * Incrementa di uno il risultato
+     * Ordine di presentazione (obbligatorio, unico per tutte le eventuali company), <br>
+     * Viene calcolato in automatico alla creazione della entity <br>
+     * Recupera dal DB il valore massimo pre-esistente della property <br>
+     * Incrementa di uno il risultato <br>
      */
     public int getNewOrdine() {
         int ordine = 0;

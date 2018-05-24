@@ -38,17 +38,17 @@ import static it.algos.vaadbase.application.BaseCost.TAG_PER;
  * <br>
  * Estende la classe astratta AViewList per visualizzare la Grid <br>
  * <p>
- * Annotated with @SpringComponent (obbligatorio per le injections)
+ * NON annotated with @SpringComponent - Sbagliato perché va in conflitto con la @Route
+ * NON annotated with @SpringView - Sbagliato perché usa la Route di VaadinFlow
  * Annotated with @Scope (obbligatorio = 'singleton')
- * Not annotated with @SpringView (sbagliato) perché usa la @Route di VaadinFlow
  * Annotated with @Route (obbligatorio) per la selezione della vista. @Route(value = "") per la vista iniziale
  * Annotated with @Qualifier (obbligatorio) per permettere a Spring di istanziare la sottoclasse specifica
+ * Annotated with @Slf4j (facoltativo) per i logs automatici <br>
  * Annotated with @AIScript (facoltativo Algos) per controllare la ri-creazione di questo file dal Wizard <br>
  */
-@SpringComponent
 @Scope(ConfigurableBeanFactory.SCOPE_SINGLETON)
-@Qualifier(TAG_PER)
 @Route(value = TAG_PER, layout = MainLayout.class)
+@Qualifier(TAG_PER)
 @AIScript(sovrascrivibile = true)
 public class PersonaViewList extends AViewList {
 

@@ -52,6 +52,7 @@ public class VaadtestBoot extends ABoot {
      */
     @EventListener
     public void onApplicationEvent(ContextRefreshedEvent event) {
+        super.onApplicationEvent(event);
         this.iniziaData();
         this.addAllRouteView();
     }// end of method

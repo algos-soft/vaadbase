@@ -385,13 +385,23 @@ public  class AService implements IAService {
 
 
     /**
-     * Se la nuova entity usa la company2, la recupera dal login
+     * Se la nuova entity usa la company, la recupera dal login
      * Se la campany manca, lancia l'eccezione
      *
      * @param entityBean da creare
      */
     protected AEntity addCompany(AEntity entityBean) {
-        Company company;
+        return addCompany(entityBean, (Company) null);
+    }// end of method
+
+    /**
+     * Se la nuova entity usa la company, la recupera dal login
+     * Se la campany manca, lancia l'eccezione
+     *
+     * @param entityBean da creare
+     * @param company    da utilizzare se valida (può essere nulla)
+     */
+    protected AEntity addCompany(AEntity entityBean, Company company) {
         EACompanyRequired tableCompanyRequired = EACompanyRequired.obbligatoria;//@todo provvisorio - va letto dall'annotation della Entity
 
         //--se la EntityClass non estende ACCompany, nopn deve fare nulla
@@ -399,31 +409,35 @@ public  class AService implements IAService {
             return entityBean;
         }// end of if cycle
 
+        if (company == null) {
+            if (login != null) {
+                company = login.getCompany();
+            }// end of if cycle
+        }// end of if cycle
+
         //--controlla l'obbligatorietà della Company
 //            tableCompanyRequired = annotation.getCompanyRequired(entityBean.getClass());
-            switch (tableCompanyRequired) {
-                case nonUsata:
-                    log.error("C'è una discrepanza tra 'extends ACEntity' della classe " + entityBean.getClass().getSimpleName() + " e l'annotation @AIEntity della classe stessa");
-                    break;
-                case facoltativa:
-                    company = login.getCompany();
-                    if (company != null) {
-                        ((ACEntity) entityBean).company = company;
-                    } else {
-                        log.info("Nuova scheda senza company2 (facoltativa)");
-                    }// end of if/else cycle
-                    break;
-                case obbligatoria:
-                    company = login.getCompany();
-                    if (company != null) {
-                        ((ACEntity) entityBean).company = company;
-                    } else {
-                        entityBean = null;
-                    }// end of if/else cycle
-                    break;
-                default:
-                    break;
-            } // end of switch statement
+        switch (tableCompanyRequired) {
+            case nonUsata:
+                log.error("C'è una discrepanza tra 'extends ACEntity' della classe " + entityBean.getClass().getSimpleName() + " e l'annotation @AIEntity della classe stessa");
+                break;
+            case facoltativa:
+                if (company != null) {
+                    ((ACEntity) entityBean).company = company;
+                } else {
+                    log.info("Nuova scheda senza company (facoltativa)");
+                }// end of if/else cycle
+                break;
+            case obbligatoria:
+                if (company != null) {
+                    ((ACEntity) entityBean).company = company;
+                } else {
+                    entityBean = null;
+                }// end of if/else cycle
+                break;
+            default:
+                break;
+        } // end of switch statement
 
         return entityBean;
     }// end of method

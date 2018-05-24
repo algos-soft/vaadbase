@@ -6,6 +6,7 @@ import it.algos.vaadbase.backend.data.AData;
 import it.algos.vaadbase.backend.service.IAService;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Qualifier;
+import org.springframework.beans.factory.config.ConfigurableBeanFactory;
 import org.springframework.context.annotation.Scope;
 
 /**
@@ -14,16 +15,23 @@ import org.springframework.context.annotation.Scope;
  * User: gac
  * Date: dom, 12-nov-2017
  * Time: 14:54
+ * <p>
+ * Estende la classe astratta AData per la costruzione inziale della Collection <br>
+ * <p>
+ * Annotated with @SpringComponent (obbligatorio per le injections) <br>
+ * Annotated with @Scope (obbligatorio = 'singleton') <br>
+ * Annotated with @Qualifier (obbligatorio) per permettere a Spring di istanziare la sottoclasse specifica <br>
+ * Annotated with @Slf4j (facoltativo) per i logs automatici <br>
  */
-@Slf4j
 @SpringComponent
-@Scope("singleton")
+@Scope(ConfigurableBeanFactory.SCOPE_SINGLETON)
 @Qualifier(BaseCost.TAG_ROL)
+@Slf4j
 public class RoleData extends AData {
 
 
     /**
-     * Il service iniettato dal costruttore, in modo che sia disponibile nella superclasse,
+     * Il service viene iniettato dal costruttore, in modo che sia disponibile nella superclasse,
      * dove viene usata l'interfaccia IAService
      * Spring costruisce al volo, quando serve, una implementazione di IAService (come previsto dal @Qualifier)
      * Qui si una una interfaccia locale (col casting nel costruttore) per usare i metodi specifici
@@ -49,13 +57,12 @@ public class RoleData extends AData {
      * Creazione di una collezione
      * Solo se non ci sono records
      * Controlla se la collezione esiste già
-     * Creazione della collezione
      */
-    public void loadData() {
+    public void findOrCrea() {
         int numRec = 0;
 
         if (nessunRecordEsistente()) {
-            this.creaData();
+            this.crea();
             numRec = service.count();
             log.warn("Algos - Creazione dati iniziali ADataGenerator(@PostConstruct).loadData() -> roleData.loadData(): " + numRec + " schede");
         } else {
@@ -68,7 +75,7 @@ public class RoleData extends AData {
     /**
      * Creazione della collezione
      */
-    private void creaData() {
+    public void crea() {
         for (EARole ruolo : EARole.values()) {
             service.findOrCrea(ruolo.toString());
         }// end of for cycle

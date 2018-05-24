@@ -1,4 +1,4 @@
-package it.algos.vaadtest.modules.prova;
+package it.algos.vaadbase.modules.role;
 
 import java.util.function.BiConsumer;
 import java.util.function.Consumer;
@@ -16,13 +16,13 @@ import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.beans.factory.config.ConfigurableBeanFactory;
 import org.springframework.context.annotation.Lazy;
 import org.springframework.context.annotation.Scope;
-import static it.algos.vaadtest.application.AppCost.TAG_PRO;
+import static it.algos.vaadbase.application.BaseCost.TAG_ROL;
 
 /**
- * Project vaadtest <br>
+ * Project vaadbase <br>
  * Created by Algos
  * User: Gac
- * Date: 24-mag-2018 9.52.00
+ * Date: 24-mag-2018 9.55.36
  * <p>
  * Estende la classe astratta AViewDialog per visualizzare i fields <br>
  * <p>
@@ -34,10 +34,10 @@ import static it.algos.vaadtest.application.AppCost.TAG_PRO;
  * Annotated with @AIScript (facoltativo Algos) per controllare la ri-creazione di questo file dal Wizard <br>
  */
 @Scope(ConfigurableBeanFactory.SCOPE_PROTOTYPE)
-@Qualifier(TAG_PRO)
+@Qualifier(TAG_ROL)
 @Slf4j
 @AIScript(sovrascrivibile = true)
-public class ProvaViewDialog extends AViewDialog<Prova> {
+public class RoleViewDialog extends AViewDialog<Role> {
 
     /**
      * Costruttore
@@ -46,7 +46,7 @@ public class ProvaViewDialog extends AViewDialog<Prova> {
      * @param itemSaver   funzione associata al bottone 'registra'
      * @param itemDeleter funzione associata al bottone 'annulla'
      */
-    public ProvaViewDialog(IAPresenter presenter, BiConsumer<Prova, AViewDialog.Operation> itemSaver, Consumer<Prova> itemDeleter) {
+    public RoleViewDialog(IAPresenter presenter, BiConsumer<Role, AViewDialog.Operation> itemSaver, Consumer<Role> itemDeleter) {
         super(presenter, itemSaver, itemDeleter);
     }// end of constructor
 

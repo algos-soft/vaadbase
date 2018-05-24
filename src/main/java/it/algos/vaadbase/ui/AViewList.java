@@ -34,8 +34,8 @@ import java.util.List;
  * Classe astratta per visualizzare la Grid e il Form/Dialog <br>
  * <p>
  * Le sottoclassi concrete NON hanno le annotation @SpringComponent, @SpringView e @Scope
- * NON annotated with @SpringComponent - Non funziona - Va in conflitto con la @Route
- * NON annotated with @SpringView - Non funziona perché usa la Route di VaadinFlow
+ * NON annotated with @SpringComponent - Sbagliato perché va in conflitto con la @Route
+ * NON annotated with @SpringView - Sbagliato perché usa la Route di VaadinFlow
  * NON annotated with @Scope - Viene ricreata ogni volta
  * Annotated with @Route (obbligatorio) per la selezione della vista.
  * <p>
@@ -169,6 +169,12 @@ public abstract class AViewList extends VerticalLayout implements IAView, Before
     }// end of method
 
 
+    @Override
+    public void beforeEnter(BeforeEnterEvent beforeEnterEvent) {
+        this.updateView();
+    }// end of method
+
+
     protected void saveUpdate(AEntity entityBean, AViewDialog.Operation operation) {
         service.save(entityBean);
         updateView();
@@ -186,10 +192,6 @@ public abstract class AViewList extends VerticalLayout implements IAView, Before
     public void updateView() {
         List items = service.findFilter(searchField.getValue());
         grid.setItems(items);
-    }// end of method
-
-    @Override
-    public void beforeEnter(BeforeEnterEvent beforeEnterEvent) {
     }// end of method
 
 
