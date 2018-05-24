@@ -92,7 +92,7 @@ public class CompanyViewDialog extends AViewDialog<Company> {
 
         addressPresenter = StaticContextAccessor.getBean(AddressPresenter.class);
         addressService = (AddressService) addressPresenter.getService();
-        addressDialog = new AddressViewDialog(addressPresenter, this::saveUpdateInd, this::deleteUpdateInd, this::annullaInd);
+//        addressDialog = new AddressViewDialog(addressPresenter, this::saveUpdateInd, this::deleteUpdateInd, this::annullaInd);
 
         indirizzoField = (ATextField) getField(INDIRIZZO);
         if (indirizzoField != null) {

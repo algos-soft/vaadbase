@@ -17,7 +17,7 @@ import static it.algos.vaadbase.application.BaseCost.TAG_ADD;
  * Project vaadbase <br>
  * Created by Algos <br>
  * User: Gac <br>
- * Date: 9-mag-2018 21.12.07 <br>
+ * Date: 24-mag-2018 12.17.15 <br>
  * <br>
  * Estende la classe astratta APresenter che gestisce la business logic del package <br>
  * <br>
@@ -43,8 +43,8 @@ public class AddressPresenter extends APresenter {
      * Si usa una costante statica, per essere sicuri di scrivere sempre uguali i riferimenti <br>
      * Regola il modello-dati specifico e lo passa al costruttore della superclasse <br>
      *
-     * @param service layer di collegamento per la Repository
-     * @param view    principale gestita da Flow
+     * @param service layer di collegamento per la Repository e la Business Logic
+     * @param view    vista principale gestita da Flow
      */
     public AddressPresenter(@Qualifier(TAG_ADD) IAService service, @Lazy @Qualifier(TAG_ADD) IAView view) {
         super(Address.class, service, view);

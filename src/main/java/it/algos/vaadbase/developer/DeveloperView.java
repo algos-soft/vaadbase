@@ -8,6 +8,7 @@ import com.vaadin.flow.router.Route;
 import it.algos.vaadbase.backend.login.ALogin;
 import it.algos.vaadbase.modules.company.Company;
 import it.algos.vaadbase.modules.company.CompanyService;
+import it.algos.vaadbase.modules.role.RoleData;
 import it.algos.vaadbase.ui.AView;
 import it.algos.vaadbase.ui.MainLayout;
 import lombok.extern.slf4j.Slf4j;
@@ -37,9 +38,8 @@ public class DeveloperView extends AView {
     private CompanyService companyService;
     @Autowired
     private ALogin login;
-    private Label labelUno;
-    private Button buttonUno;
-    private ComboBox<Company> fieldComboCompanies;
+    @Autowired
+    private RoleData roleData;
 
     public DeveloperView() {
     }// end of Spring constructor
@@ -47,29 +47,47 @@ public class DeveloperView extends AView {
 
     @Override
     public void beforeEnter(BeforeEnterEvent event) {
-        inizia();
-    }// end of method
-
-
-    public void inizia() {
         this.setMargin(true);
         this.setSpacing(true);
 
-        String currentProject = System.getProperty("user.dir");
-        currentProject = currentProject.substring(currentProject.lastIndexOf("/") + 1);
+        chooseCompany();
+        resetData();
+    }// end of method
 
-        labelUno = new Label("Selezione da codice di una company in sostituzione del login");
-        this.add(labelUno);
+
+    public void chooseCompany() {
+        Label etichetta;
+        etichetta = new Label("Selezione da codice di una company in sostituzione del login");
+        this.add(etichetta);
 
         List<Company> companies = companyService.findAll();
         String label = "Companies esistenti";
-        fieldComboCompanies = new ComboBox<>();
+        ComboBox<Company> fieldComboCompanies = new ComboBox<>();
         fieldComboCompanies.setWidth("20em");
         fieldComboCompanies.setAllowCustomValue(false);
         fieldComboCompanies.setLabel(label);
         fieldComboCompanies.setItems(companies);
         fieldComboCompanies.addValueChangeListener(event -> sincroCompany(event.getValue()));//end of lambda expressions
         this.add(fieldComboCompanies);
+    }// end of method
+
+
+    public void resetData() {
+        Label etichetta;
+        etichetta = new Label("Ricostruisce completamente i dati iniziali, cancellando quelli non previsti");
+        this.add(new Label(""));
+        this.add(etichetta);
+
+        String label = "Reset";
+        Button resetButton = new Button();
+        resetButton.setText(label);
+        resetButton.addClickListener(e -> reset());
+        this.add(resetButton);
+    }// end of method
+
+
+    private void reset() {
+        roleData.crea();
     }// end of method
 
 

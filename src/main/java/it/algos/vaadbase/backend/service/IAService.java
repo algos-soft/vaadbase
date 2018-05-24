@@ -196,9 +196,9 @@ public interface IAService {
     public boolean delete(AEntity entityBean);
 
 
-//    /**
-//     * Deletes all entities of the collection.
-//     */
-//    public boolean deleteAll();
+    /**
+     * Deletes all entities of the collection.
+     */
+    public boolean deleteAll();
 
 }// end of interface

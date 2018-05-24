@@ -76,8 +76,10 @@ public class RoleData extends AData {
      * Creazione della collezione
      */
     public void crea() {
+        service.deleteAll();
+
         for (EARole ruolo : EARole.values()) {
-            service.findOrCrea(ruolo.toString());
+            service.crea(ruolo.toString());
         }// end of for cycle
     }// end of method
 

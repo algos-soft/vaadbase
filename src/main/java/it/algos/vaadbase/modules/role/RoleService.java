@@ -1,19 +1,19 @@
 package it.algos.vaadbase.modules.role;
 
 import com.vaadin.flow.spring.annotation.SpringComponent;
+import it.algos.vaadbase.annotation.AIScript;
+import it.algos.vaadbase.backend.entity.AEntity;
+import it.algos.vaadbase.backend.service.AService;
 import lombok.extern.slf4j.Slf4j;
-import org.bson.types.ObjectId;
-import java.util.List;
-import java.util.stream.Collectors;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.beans.factory.config.ConfigurableBeanFactory;
+import org.springframework.context.annotation.Scope;
 import org.springframework.data.mongodb.repository.MongoRepository;
 import org.springframework.stereotype.Service;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.context.annotation.Scope;
-import it.algos.vaadbase.annotation.AIScript;
-import it.algos.vaadbase.backend.service.AService;
-import it.algos.vaadbase.backend.entity.AEntity;
+
+import java.util.List;
+import java.util.stream.Collectors;
+
 import static it.algos.vaadbase.application.BaseCost.TAG_ROL;
 
 /**
@@ -58,7 +58,7 @@ public class RoleService extends AService {
     public RoleService(@Qualifier(TAG_ROL) MongoRepository repository) {
         super(repository);
         this.repository = (RoleRepository) repository;
-   }// end of Spring constructor
+    }// end of Spring constructor
 
 
     /**
@@ -72,9 +72,25 @@ public class RoleService extends AService {
         Role entity = findByKeyUnica(code);
 
         if (entity == null) {
-            entity = newEntity(0, code);
-            save(entity);
+            entity = crea(code);
         }// end of if cycle
+
+        return entity;
+    }// end of method
+
+
+    /**
+     * Creazione di una entity <br>
+     *
+     * @param code di riferimento (obbligatorio ed unico)
+     *
+     * @return la entity appena creata
+     */
+    public Role crea(String code) {
+        Role entity;
+
+        entity = newEntity(0, code);
+        save(entity);
 
         return entity;
     }// end of method
@@ -98,8 +114,8 @@ public class RoleService extends AService {
      * All properties <br>
      * Gli argomenti (parametri) della new Entity DEVONO essere ordinati come nella Entity (costruttore lombok) <br>
      *
-     * @param ordine      di presentazione (obbligatorio con inserimento automatico se è zero)
-	* @param code        codice di riferimento (obbligatorio)
+     * @param ordine di presentazione (obbligatorio con inserimento automatico se è zero)
+     * @param code   codice di riferimento (obbligatorio)
      *
      * @return la nuova entity appena creata (non salvata)
      */
@@ -107,13 +123,13 @@ public class RoleService extends AService {
         Role entity = null;
 
         entity = findByKeyUnica(code);
-		if (entity != null) {
-			return findByKeyUnica(code);
-		}// end of if cycle
-		
+        if (entity != null) {
+            return findByKeyUnica(code);
+        }// end of if cycle
+
         entity = Role.builder()
-				.ordine(ordine != 0 ? ordine : this.getNewOrdine())
-				.code(code)
+                .ordine(ordine != 0 ? ordine : this.getNewOrdine())
+                .code(code)
                 .build();
 
         return entity;
@@ -140,11 +156,7 @@ public class RoleService extends AService {
      */
     @Override
     public List<Role> findAll() {
-        List<Role> lista = null;
-
-        lista = repository.findAllByOrderByOrdineAsc();
-
-        return lista;
+        return repository.findAllByOrderByOrdineAsc();
     }// end of method
 
 
@@ -166,7 +178,6 @@ public class RoleService extends AService {
 
         return lista.stream()
                 .filter(entity -> entity.getCode().toLowerCase().contains(normalizedFilter))
-                .sorted((entity1, entity2) -> entity1.getCode().compareToIgnoreCase(entity2.getCode()))
                 .collect(Collectors.toList());
     }// end of method
 
@@ -189,7 +200,7 @@ public class RoleService extends AService {
      * @param entityBean da salvare
      */
     protected void creaIdKeySpecifica(AEntity entityBean) {
-        entityBean.id = ((Role)entityBean).getCode();
+        entityBean.id = ((Role) entityBean).getCode();
     }// end of method
 
     /**

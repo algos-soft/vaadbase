@@ -53,7 +53,7 @@ public class PersonaViewDialog extends AViewDialog<Persona> {
      * @param itemDeleter funzione associata al bottone 'cancella'
      */
     public PersonaViewDialog(IAPresenter presenter, BiConsumer<Persona, AViewDialog.Operation> itemSaver, Consumer<Persona> itemDeleter) {
-        super(presenter, itemSaver, itemDeleter, false);
+        super(presenter, itemSaver, itemDeleter, null,false);
     }// end of constructor
 
     /**
@@ -65,8 +65,7 @@ public class PersonaViewDialog extends AViewDialog<Persona> {
      * @param itemAnnulla funzione associata al bottone 'annulla'
      */
     public PersonaViewDialog(IAPresenter presenter, BiConsumer<Persona, AViewDialog.Operation> itemSaver, Consumer<Persona> itemDeleter,Consumer<Persona> itemAnnulla) {
-        super(presenter, itemSaver, itemDeleter, true);
-        this.itemAnnulla = itemAnnulla;
+        super(presenter, itemSaver, itemDeleter, itemAnnulla,true);
     }// end of constructor
 
 
@@ -79,7 +78,7 @@ public class PersonaViewDialog extends AViewDialog<Persona> {
     @Override
     protected void addSpecificAlgosFields() {
         addressPresenter = StaticContextAccessor.getBean(AddressPresenter.class);
-        addressDialog = new AddressViewDialog(addressPresenter, this::saveUpdate, this::deleteUpdate, this::annullaInd);
+//        addressDialog = new AddressViewDialog(addressPresenter, this::saveUpdate, this::deleteUpdate, this::annullaInd);
         addressService = (AddressService) addressPresenter.getService();
 
         indirizzoField=(ATextField) getField(INDIRIZZO);

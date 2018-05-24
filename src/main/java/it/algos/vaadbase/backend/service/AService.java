@@ -27,7 +27,7 @@ import java.util.List;
 @Slf4j
 @SpringComponent
 @Scope("singleton")
-public  class AService implements IAService {
+public class AService implements IAService {
 
 
     /**
@@ -35,20 +35,18 @@ public  class AService implements IAService {
      */
     @Autowired
     public AAnnotationService annotation;
-    @Override
-    public AAnnotationService getAnnotationService() {
-        return annotation;
-    }// end of method
-
     /**
      * Service iniettato da Spring (@Scope = 'singleton'). Unica per tutta l'applicazione. Usata come libreria.
      */
     @Autowired
     public AFieldService field;
-//    @Override
-    public AFieldService getFieldService() {
-        return field;
-    }// end of method
+    @Autowired
+    public ATextService text;
+    /**
+     * Inietta da Spring come 'session'
+     */
+    @Autowired
+    public ALogin login;
 
 //    @Autowired
 //    public AReflectionService reflection;
@@ -60,28 +58,13 @@ public  class AService implements IAService {
 
 //    @Autowired
 //    public AArrayService array;
-
-
-    @Autowired
-    public ATextService text;
-
-
-    /**
-     * Inietta da Spring come 'session'
-     */
-    @Autowired
-    public ALogin login;
-
-//    @Autowired
-//    private LogService logger;
-
     //--la repository dei dati viene iniettata dal costruttore della sottoclasse concreta
     public MongoRepository repository;
-
-
     //--il modello-dati specifico viene regolato dalla sottoclasse nel costruttore
     public Class<? extends AEntity> entityClass;
 
+//    @Autowired
+//    private LogService logger;
 
     /**
      * Default constructor
@@ -99,6 +82,15 @@ public  class AService implements IAService {
         this.repository = repository;
     }// end of Spring constructor
 
+    @Override
+    public AAnnotationService getAnnotationService() {
+        return annotation;
+    }// end of method
+
+    //    @Override
+    public AFieldService getFieldService() {
+        return field;
+    }// end of method
 
     /**
      * Returns the number of entities available.
@@ -684,8 +676,22 @@ public  class AService implements IAService {
         return true;
     }// end of method
 
+    /**
+     * Deletes all entities of the collection.
+     */
+    @Override
+    public boolean deleteAll() {
 
-//    public void logDeleteBean(AEntity deletedBean) {
+        for (AEntity entityBean : findAll()) {
+            repository.delete(entityBean);
+        }// end of for cycle
+
+        //@todo aggiungere controllo se i records sono stati cancellati
+        return true;
+    }// end of method
+
+
+    //    public void logDeleteBean(AEntity deletedBean) {
 //        String note;
 //        String clazz = text.primaMaiuscola(deletedBean.getClass().getSimpleName());
 //

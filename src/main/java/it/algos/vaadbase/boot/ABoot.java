@@ -4,7 +4,9 @@ import it.algos.vaadbase.application.BaseCost;
 import it.algos.vaadbase.modules.address.AddressViewList;
 import it.algos.vaadbase.modules.company.CompanyViewList;
 import it.algos.vaadbase.modules.persona.PersonaViewList;
+import it.algos.vaadbase.modules.role.RoleData;
 import it.algos.vaadbase.modules.role.RoleViewList;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.event.ContextRefreshedEvent;
 import org.springframework.context.event.EventListener;
 
@@ -28,11 +30,11 @@ import javax.servlet.ServletContextListener;
  */
 public abstract class ABoot implements ServletContextListener {
 
-//    /**
-//     * Inietta da Spring come 'singleton'
-//     */
-//    @Autowired
-//    public RoleData role;
+    /**
+     * Inietta da Spring come 'singleton'
+     */
+    @Autowired
+    public RoleData role;
 
 //    /**
 //     * Inietta da Spring come 'singleton'
@@ -93,7 +95,7 @@ public abstract class ABoot implements ServletContextListener {
      * Inizializzazione dei dati standard di alcune collections sul DB Mongo
      */
     protected void iniziaDataStandard() {
-//        this.role.findOrCrea();
+        this.role.findOrCrea();
 //        this.logtype.findOrCrea();
 //        this.stato.findOrCrea();
     }// end of method

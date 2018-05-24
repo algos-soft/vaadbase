@@ -125,7 +125,6 @@ public class @ENTITY@Service extends AService {
 
         return lista.stream()
                 .filter(entity -> entity.getCode().toLowerCase().contains(normalizedFilter))
-                .sorted((entity1, entity2) -> entity1.getCode().compareToIgnoreCase(entity2.getCode()))
                 .collect(Collectors.toList());
     }// end of method
 

@@ -46,8 +46,6 @@ public abstract class AViewDialog<T extends Serializable> extends Dialog impleme
     private final FormLayout formLayout = new FormLayout();
     private final HorizontalLayout buttonBar = new HorizontalLayout(saveButton, cancelButton, deleteButton);
     private final ConfirmationDialog<T> confirmationDialog = new ConfirmationDialog<>();
-    private  BiConsumer<T, AViewDialog.Operation> itemSaver;
-    private  Consumer<T> itemDeleter;
     protected IAService service;
     protected IAPresenter presenter;
     //--collegamento tra i fields e la entityBean
@@ -55,6 +53,9 @@ public abstract class AViewDialog<T extends Serializable> extends Dialog impleme
     protected Class binderClass;
     protected LinkedHashMap<String, AbstractField> fieldMap;
     protected AFieldService fieldService;
+    private BiConsumer<T, AViewDialog.Operation> itemSaver;
+    private Consumer<T> itemDeleter;
+    private Consumer<T> itemAnnulla;
     private String itemType;
     private Registration registrationForSave;
     private T currentItem;
@@ -62,7 +63,7 @@ public abstract class AViewDialog<T extends Serializable> extends Dialog impleme
     /**
      * Constructs a new instance.
      *
-     * @param presenter   per gestire la business logic del package
+     * @param presenter per gestire la business logic del package
      */
     public AViewDialog(IAPresenter presenter) {
         this(presenter, null, null);
@@ -76,7 +77,7 @@ public abstract class AViewDialog<T extends Serializable> extends Dialog impleme
      * @param itemDeleter funzione associata al bottone 'annulla'
      */
     public AViewDialog(IAPresenter presenter, BiConsumer<T, AViewDialog.Operation> itemSaver, Consumer<T> itemDeleter) {
-        this(presenter, itemSaver, itemDeleter, false);
+        this(presenter, itemSaver, itemDeleter, null,false);
     }// end of constructor
 
     /**
@@ -85,13 +86,15 @@ public abstract class AViewDialog<T extends Serializable> extends Dialog impleme
      * @param presenter               per gestire la business logic del package
      * @param itemSaver               funzione associata al bottone 'registra'
      * @param itemDeleter             funzione associata al bottone 'annulla'
+     * @param itemAnnulla             funzione associata al bottone 'annulla'
      * @param confermaSenzaRegistrare cambia il testo del bottone 'Registra' in 'Conferma'
      */
-    public AViewDialog(IAPresenter presenter, BiConsumer<T, AViewDialog.Operation> itemSaver, Consumer<T> itemDeleter, boolean confermaSenzaRegistrare) {
+    public AViewDialog(IAPresenter presenter, BiConsumer<T, AViewDialog.Operation> itemSaver, Consumer<T> itemDeleter, Consumer<T> itemAnnulla, boolean confermaSenzaRegistrare) {
         this.presenter = presenter;
         this.service = presenter.getService();
         this.itemSaver = itemSaver;
         this.itemDeleter = itemDeleter;
+        this.itemAnnulla = itemAnnulla;
         this.binderClass = presenter.getEntityClazz();
         this.fieldService = presenter.getService().getFieldService();
 
@@ -114,10 +117,10 @@ public abstract class AViewDialog<T extends Serializable> extends Dialog impleme
     }// end of constructor
 
 
-    public void fixFunzioni(BiConsumer<T, AViewDialog.Operation> itemSaver, Consumer<T> itemDeleter) {
-        this.itemSaver = itemSaver;
-        this.itemDeleter = itemDeleter;
-    }
+//    public void fixFunzioni(BiConsumer<T, AViewDialog.Operation> itemSaver, Consumer<T> itemDeleter) {
+//        this.itemSaver = itemSaver;
+//        this.itemDeleter = itemDeleter;
+//    }
 
     private void initTitle() {
         add(titleField);
