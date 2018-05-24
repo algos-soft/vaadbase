@@ -7,6 +7,7 @@ import com.vaadin.flow.component.icon.Icon;
 import com.vaadin.flow.component.html.Label;
 import com.vaadin.flow.component.textfield.TextField;
 import com.vaadin.flow.data.renderer.ComponentRenderer;
+import it.algos.vaadbase.ui.dialog.IADialog;
 import it.algos.vaadbase.ui.dialog.AViewDialog;
 import com.vaadin.flow.component.icon.VaadinIcons;
 import com.vaadin.flow.component.notification.Notification;
@@ -19,6 +20,8 @@ import com.vaadin.flow.spring.annotation.SpringComponent;
 import com.vaadin.flow.component.orderedlayout.VerticalLayout;
 import javax.annotation.PostConstruct;
 import java.util.List;
+import lombok.extern.slf4j.Slf4j;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.config.ConfigurableBeanFactory;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.context.annotation.Lazy;
@@ -34,21 +37,23 @@ import static it.algos.vaadbase.application.BaseCost.TAG_PER;
  * Project vaadbase <br>
  * Created by Algos <br>
  * User: Gac <br>
- * Date: 10-mag-2018 6.41.22 <br>
+ * Date: 24-mag-2018 20.36.04 <br>
  * <br>
  * Estende la classe astratta AViewList per visualizzare la Grid <br>
  * <p>
- * NON annotated with @SpringComponent - Sbagliato perché va in conflitto con la @Route
- * NON annotated with @SpringView - Sbagliato perché usa la Route di VaadinFlow
- * Annotated with @Scope (obbligatorio = 'singleton')
- * Annotated with @Route (obbligatorio) per la selezione della vista. @Route(value = "") per la vista iniziale
- * Annotated with @Qualifier (obbligatorio) per permettere a Spring di istanziare la sottoclasse specifica
+ * Not annotated with @SpringView (sbagliato) perché usa la @Route di VaadinFlow <br>
+ * Annotated with @SpringComponent (obbligatorio per le injections) <br>
+ * Annotated with @Scope (obbligatorio = 'singleton') <br>
+ * Annotated with @Route (obbligatorio) per la selezione della vista. @Route(value = "") per la vista iniziale <br>
+ * Annotated with @Qualifier (obbligatorio) per permettere a Spring di istanziare la sottoclasse specifica <br>
  * Annotated with @Slf4j (facoltativo) per i logs automatici <br>
  * Annotated with @AIScript (facoltativo Algos) per controllare la ri-creazione di questo file dal Wizard <br>
  */
+@SpringComponent
 @Scope(ConfigurableBeanFactory.SCOPE_SINGLETON)
 @Route(value = TAG_PER, layout = MainLayout.class)
 @Qualifier(TAG_PER)
+@Slf4j
 @AIScript(sovrascrivibile = true)
 public class PersonaViewList extends AViewList {
 
@@ -65,11 +70,13 @@ public class PersonaViewList extends AViewList {
      * Si usa una costante statica, per essere sicuri di scrivere sempre uguali i riferimenti <br>
      *
      * @param presenter per gestire la business logic del package
+     * @param dialog    per visualizzare i fields
      */
-     public PersonaViewList(@Qualifier(TAG_PER) IAPresenter presenter) {
-        super(presenter);
-        dialog = new PersonaViewDialog(presenter, this::saveUpdate, this::deleteUpdate);
-   }// end of Spring constructor
+    @Autowired
+    public PersonaViewList(@Qualifier(TAG_PER) IAPresenter presenter, @Qualifier(TAG_PER) IADialog dialog) {
+        super(presenter, dialog);
+        ((PersonaViewDialog) dialog).fixFunzioni(this::saveUpdate, this::deleteUpdate);
+    }// end of Spring constructor
 
 
      /**
@@ -92,20 +99,5 @@ public class PersonaViewList extends AViewList {
         return edit;
     }// end of method
 
-    /**
-     * Crea la scritta esplicativa
-     * Può essere sovrascritto per un'intestazione specifica (caption) della grid
-     */
-    @Override
-    protected void addDeveloperAlert() {
-        VerticalLayout layout =new VerticalLayout();
-        layout.setMargin(false);
-        layout.setSpacing(false);
-        layout.add(new Label("Lista visibile solo al developer"));
-        layout.add(new Label("NON usa la company"));
-        layout.add(new Label("L'entity è 'embedded' nelle collezioni che la usano (no @Annotation property DbRef)"));
-        layout.add(new Label("In pratica questa lista non dovrebbe mai essere usata (serve come test o per le sottoclassi specifiche)"));
-        add(layout);
-    }// end of method
 
 }// end of class

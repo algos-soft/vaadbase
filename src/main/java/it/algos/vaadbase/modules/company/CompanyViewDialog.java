@@ -24,6 +24,7 @@ import java.util.function.BiConsumer;
 import java.util.function.Consumer;
 
 import static it.algos.vaadbase.application.BaseCost.TAG_COM;
+import static it.algos.vaadbase.application.BaseCost.TAG_PER;
 
 /**
  * Project vaadbase <br>
@@ -31,11 +32,13 @@ import static it.algos.vaadbase.application.BaseCost.TAG_COM;
  * User: Gac
  * Date: 9-mag-2018 19.52.23
  * <p>
- * Estende la classe astratta ADialog per visualizzare i fields <br>
+ * Estende la classe astratta AViewDialog per visualizzare i fields <br>
  * <p>
- * Not annotated with @SpringComponent (sbagliato)
- * Annotated with @Scope (obbligatorio = 'prototype')
+ * Not annotated with @SpringView (sbagliato) perché usa la @Route di VaadinFlow <br>
+ * Annotated with @SpringComponent (obbligatorio) <br>
+ * Annotated with @Scope (obbligatorio = 'prototype') <br>
  * Annotated with @Qualifier (obbligatorio) per permettere a Spring di istanziare la classe specifica <br>
+ * Annotated with @Slf4j (facoltativo) per i logs automatici <br>
  * Annotated with @AIScript (facoltativo Algos) per controllare la ri-creazione di questo file dal Wizard <br>
  */
 @SpringComponent
@@ -61,15 +64,15 @@ public class CompanyViewDialog extends AViewDialog<Company> {
 
 
     /**
-     * Costruttore
+     * Costruttore @Autowired <br>
+     * Si usa un @Qualifier(), per avere dall'interfaccia la sottoclasse specifica <br>
+     * Si usa una costante statica, per essere sicuri di scrivere sempre uguali i riferimenti <br>
      *
-     * @param presenter   per gestire la business logic del package
-     * @param itemSaver   funzione associata al bottone 'registra'
-     * @param itemDeleter funzione associata al bottone 'annulla'
+     * @param presenter per gestire la business logic del package
      */
     @Autowired
-    public CompanyViewDialog(IAPresenter presenter, BiConsumer<Company, AViewDialog.Operation> itemSaver, Consumer<Company> itemDeleter) {
-        super(presenter, itemSaver, itemDeleter);
+    public CompanyViewDialog(@Qualifier(TAG_COM) IAPresenter presenter) {
+        super(presenter);
     }// end of constructor
 
 
@@ -83,7 +86,8 @@ public class CompanyViewDialog extends AViewDialog<Company> {
     protected void addSpecificAlgosFields() {
         personaPresenter = StaticContextAccessor.getBean(PersonaPresenter.class);
         personaService = (PersonaService) personaPresenter.getService();
-        contattoDialog = new PersonaViewDialog(personaPresenter, this::saveUpdateCon, this::deleteUpdateCon, this::annullaCon);
+        contattoDialog = new PersonaViewDialog(personaPresenter);
+        contattoDialog.fixFunzioni(this::saveUpdateCon, this::deleteUpdateCon, this::annullaCon);
 
         contattoField = (ATextField) getField(CONTATTO);
         if (contattoField != null) {
@@ -92,11 +96,12 @@ public class CompanyViewDialog extends AViewDialog<Company> {
 
         addressPresenter = StaticContextAccessor.getBean(AddressPresenter.class);
         addressService = (AddressService) addressPresenter.getService();
-//        addressDialog = new AddressViewDialog(addressPresenter, this::saveUpdateInd, this::deleteUpdateInd, this::annullaInd);
+        addressDialog = new AddressViewDialog(addressPresenter);
+        addressDialog.fixFunzioni(this::saveUpdateInd, this::deleteUpdateInd, this::annullaInd);
 
         indirizzoField = (ATextField) getField(INDIRIZZO);
         if (indirizzoField != null) {
-            indirizzoField.addFocusListener(e -> addressDialog.open(getIndirizzo(), Operation.EDIT, INDIRIZZO));
+            indirizzoField.addFocusListener(e -> addressDialog.open(getIndirizzo(), Operation.EDIT));
         }// end of if cycle
     }// end of method
 

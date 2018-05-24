@@ -17,7 +17,7 @@ import static it.algos.vaadbase.application.BaseCost.TAG_ADD;
  * Project vaadbase <br>
  * Created by Algos <br>
  * User: Gac <br>
- * Date: 24-mag-2018 12.17.15 <br>
+ * Date: 24-mag-2018 20.34.16 <br>
  * <br>
  * Estende la classe astratta APresenter che gestisce la business logic del package <br>
  * <br>

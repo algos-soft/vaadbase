@@ -1,6 +1,7 @@
 package it.algos.vaadbase.modules.persona;
 
 import com.vaadin.flow.component.notification.Notification;
+import com.vaadin.flow.spring.annotation.SpringComponent;
 import it.algos.vaadbase.annotation.AIScript;
 import it.algos.vaadbase.application.StaticContextAccessor;
 import it.algos.vaadbase.modules.address.Address;
@@ -10,11 +11,11 @@ import it.algos.vaadbase.modules.address.AddressViewDialog;
 import it.algos.vaadbase.presenter.IAPresenter;
 import it.algos.vaadbase.ui.dialog.AViewDialog;
 import it.algos.vaadbase.ui.fields.ATextField;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.beans.factory.config.ConfigurableBeanFactory;
 import org.springframework.context.annotation.Scope;
 
-import java.util.function.BiConsumer;
 import java.util.function.Consumer;
 
 import static it.algos.vaadbase.application.BaseCost.TAG_PER;
@@ -25,16 +26,19 @@ import static it.algos.vaadbase.application.BaseCost.TAG_PER;
  * User: Gac
  * Date: 10-mag-2018 6.41.22
  * <p>
- * Estende la classe astratta ADialog per visualizzare i fields <br>
+ * Estende la classe astratta AViewDialog per visualizzare i fields <br>
  * <p>
- * Not annotated with @SpringComponent (sbagliato)
- * Annotated with @Scope (obbligatorio = 'prototype')
+ * Not annotated with @SpringView (sbagliato) perché usa la @Route di VaadinFlow <br>
+ * Annotated with @SpringComponent (obbligatorio) <br>
+ * Annotated with @Scope (obbligatorio = 'prototype') <br>
  * Annotated with @Qualifier (obbligatorio) per permettere a Spring di istanziare la classe specifica <br>
+ * Annotated with @Slf4j (facoltativo) per i logs automatici <br>
  * Annotated with @AIScript (facoltativo Algos) per controllare la ri-creazione di questo file dal Wizard <br>
  */
+@SpringComponent
 @Scope(ConfigurableBeanFactory.SCOPE_PROTOTYPE)
 @Qualifier(TAG_PER)
-@AIScript(sovrascrivibile = true)
+@AIScript(sovrascrivibile = false)
 public class PersonaViewDialog extends AViewDialog<Persona> {
 
     private final static String INDIRIZZO = "indirizzo";
@@ -46,26 +50,15 @@ public class PersonaViewDialog extends AViewDialog<Persona> {
     private Consumer<Persona> itemAnnulla;
 
     /**
-     * Constructs a new instance.
+     * Costruttore @Autowired <br>
+     * Si usa un @Qualifier(), per avere dall'interfaccia la sottoclasse specifica <br>
+     * Si usa una costante statica, per essere sicuri di scrivere sempre uguali i riferimenti <br>
      *
-     * @param presenter   per gestire la business logic del package
-     * @param itemSaver   funzione associata al bottone 'registra'
-     * @param itemDeleter funzione associata al bottone 'cancella'
+     * @param presenter per gestire la business logic del package
      */
-    public PersonaViewDialog(IAPresenter presenter, BiConsumer<Persona, AViewDialog.Operation> itemSaver, Consumer<Persona> itemDeleter) {
-        super(presenter, itemSaver, itemDeleter, null,false);
-    }// end of constructor
-
-    /**
-     * Constructs a new instance.
-     *
-     * @param presenter   per gestire la business logic del package
-     * @param itemSaver   funzione associata al bottone 'registra'
-     * @param itemDeleter funzione associata al bottone 'cancella'
-     * @param itemAnnulla funzione associata al bottone 'annulla'
-     */
-    public PersonaViewDialog(IAPresenter presenter, BiConsumer<Persona, AViewDialog.Operation> itemSaver, Consumer<Persona> itemDeleter,Consumer<Persona> itemAnnulla) {
-        super(presenter, itemSaver, itemDeleter, itemAnnulla,true);
+    @Autowired
+    public PersonaViewDialog(@Qualifier(TAG_PER) IAPresenter presenter) {
+        super(presenter);
     }// end of constructor
 
 
@@ -78,10 +71,11 @@ public class PersonaViewDialog extends AViewDialog<Persona> {
     @Override
     protected void addSpecificAlgosFields() {
         addressPresenter = StaticContextAccessor.getBean(AddressPresenter.class);
-//        addressDialog = new AddressViewDialog(addressPresenter, this::saveUpdate, this::deleteUpdate, this::annullaInd);
         addressService = (AddressService) addressPresenter.getService();
+        addressDialog = new AddressViewDialog(addressPresenter);
+        addressDialog.fixFunzioni(this::saveUpdate, this::deleteUpdate, this::annullaUpdate);
 
-        indirizzoField=(ATextField) getField(INDIRIZZO);
+        indirizzoField = (ATextField) getField(INDIRIZZO);
         if (indirizzoField != null) {
             indirizzoField.addFocusListener(e -> addressDialog.open(getIndirizzo(), Operation.EDIT));
         }// end of if cycle
@@ -126,7 +120,7 @@ public class PersonaViewDialog extends AViewDialog<Persona> {
     }// end of method
 
 
-    protected void annullaInd(Address entityBean) {
+    protected void annullaUpdate(Address entityBean) {
         cancelButton.focus();
     }// end of method
 

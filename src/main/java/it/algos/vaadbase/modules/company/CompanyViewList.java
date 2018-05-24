@@ -11,12 +11,14 @@ import it.algos.vaadbase.presenter.IAPresenter;
 import it.algos.vaadbase.ui.AViewList;
 import it.algos.vaadbase.ui.MainLayout;
 import it.algos.vaadbase.ui.dialog.AViewDialog;
+import it.algos.vaadbase.ui.dialog.IADialog;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.beans.factory.config.ConfigurableBeanFactory;
 import org.springframework.context.annotation.Scope;
 
 import static it.algos.vaadbase.application.BaseCost.TAG_COM;
+import static it.algos.vaadbase.application.BaseCost.TAG_PER;
 
 /**
  * Project vaadbase <br>
@@ -26,14 +28,15 @@ import static it.algos.vaadbase.application.BaseCost.TAG_COM;
  * <br>
  * Estende la classe astratta AViewList per visualizzare la Grid <br>
  * <p>
- * NON annotated with @SpringComponent - Sbagliato perché va in conflitto con la @Route
- * NON annotated with @SpringView - Sbagliato perché usa la Route di VaadinFlow
- * Annotated with @Scope (obbligatorio = 'singleton')
- * Annotated with @Route (obbligatorio) per la selezione della vista. @Route(value = "") per la vista iniziale
- * Annotated with @Qualifier (obbligatorio) per permettere a Spring di istanziare la sottoclasse specifica
+ * Not annotated with @SpringView (sbagliato) perché usa la @Route di VaadinFlow <br>
+ * Annotated with @SpringComponent (obbligatorio per le injections) <br>
+ * Annotated with @Scope (obbligatorio = 'singleton') <br>
+ * Annotated with @Route (obbligatorio) per la selezione della vista. @Route(value = "") per la vista iniziale <br>
+ * Annotated with @Qualifier (obbligatorio) per permettere a Spring di istanziare la sottoclasse specifica <br>
  * Annotated with @Slf4j (facoltativo) per i logs automatici <br>
  * Annotated with @AIScript (facoltativo Algos) per controllare la ri-creazione di questo file dal Wizard <br>
  */
+@SpringComponent
 @Scope(ConfigurableBeanFactory.SCOPE_SINGLETON)
 @Route(value = TAG_COM, layout = MainLayout.class)
 @Qualifier(TAG_COM)
@@ -53,11 +56,12 @@ public class CompanyViewList extends AViewList {
      * Si usa una costante statica, per essere sicuri di scrivere sempre uguali i riferimenti <br>
      *
      * @param presenter per gestire la business logic del package
+     * @param dialog    per visualizzare i fields
      */
     @Autowired
-    public CompanyViewList(@Qualifier(TAG_COM) IAPresenter presenter) {
-        super(presenter);
-        dialog = new CompanyViewDialog(presenter, this::saveUpdate, this::deleteUpdate);
+    public CompanyViewList(@Qualifier(TAG_COM) IAPresenter presenter, @Qualifier(TAG_COM) IADialog dialog) {
+        super(presenter, dialog);
+        ((CompanyViewDialog) dialog).fixFunzioni(this::saveUpdate, this::deleteUpdate);
     }// end of Spring constructor
 
 

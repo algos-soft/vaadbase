@@ -46,6 +46,7 @@ public abstract class AViewDialog<T extends Serializable> extends Dialog impleme
     private final FormLayout formLayout = new FormLayout();
     private final HorizontalLayout buttonBar = new HorizontalLayout(saveButton, cancelButton, deleteButton);
     private final ConfirmationDialog<T> confirmationDialog = new ConfirmationDialog<>();
+    public Consumer<T> itemAnnulla;
     protected IAService service;
     protected IAPresenter presenter;
     //--collegamento tra i fields e la entityBean
@@ -55,7 +56,6 @@ public abstract class AViewDialog<T extends Serializable> extends Dialog impleme
     protected AFieldService fieldService;
     private BiConsumer<T, AViewDialog.Operation> itemSaver;
     private Consumer<T> itemDeleter;
-    private Consumer<T> itemAnnulla;
     private String itemType;
     private Registration registrationForSave;
     private T currentItem;
@@ -77,7 +77,7 @@ public abstract class AViewDialog<T extends Serializable> extends Dialog impleme
      * @param itemDeleter funzione associata al bottone 'annulla'
      */
     public AViewDialog(IAPresenter presenter, BiConsumer<T, AViewDialog.Operation> itemSaver, Consumer<T> itemDeleter) {
-        this(presenter, itemSaver, itemDeleter, null,false);
+        this(presenter, itemSaver, itemDeleter, null, false);
     }// end of constructor
 
     /**
@@ -118,9 +118,14 @@ public abstract class AViewDialog<T extends Serializable> extends Dialog impleme
 
 
     public void fixFunzioni(BiConsumer<T, AViewDialog.Operation> itemSaver, Consumer<T> itemDeleter) {
+        fixFunzioni(itemSaver, itemDeleter, null);
+    }// end of method
+
+    public void fixFunzioni(BiConsumer<T, AViewDialog.Operation> itemSaver, Consumer<T> itemDeleter, Consumer<T> itemAnnulla) {
         this.itemSaver = itemSaver;
         this.itemDeleter = itemDeleter;
-    }
+        this.itemAnnulla = itemAnnulla;
+    }// end of method
 
     private void initTitle() {
         add(titleField);

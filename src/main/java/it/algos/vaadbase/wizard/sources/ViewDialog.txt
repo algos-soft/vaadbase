@@ -48,6 +48,7 @@ public class @ENTITY@ViewDialog extends AViewDialog<@ENTITY@> {
      *
      * @param presenter per gestire la business logic del package
      */
+    @Autowired
     public @ENTITY@ViewDialog(@Qualifier(@QUALIFIER@) IAPresenter presenter) {
         super(presenter);
     }// end of constructor
