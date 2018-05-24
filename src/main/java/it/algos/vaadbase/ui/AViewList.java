@@ -93,8 +93,17 @@ public abstract class AViewList extends VerticalLayout implements IAView, Before
     protected AForm form;
 
 
+    @Deprecated
     public AViewList(IAPresenter presenter) {
         this.presenter = presenter;
+        this.service = presenter.getService();
+        this.entityClazz = presenter.getEntityClazz();
+        initView();
+    }// end of constructor
+
+    public AViewList(IAPresenter presenter, IADialog dialog) {
+        this.presenter = presenter;
+        this.dialog = dialog;
         this.service = presenter.getService();
         this.entityClazz = presenter.getEntityClazz();
         initView();

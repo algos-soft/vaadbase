@@ -117,10 +117,10 @@ public abstract class AViewDialog<T extends Serializable> extends Dialog impleme
     }// end of constructor
 
 
-//    public void fixFunzioni(BiConsumer<T, AViewDialog.Operation> itemSaver, Consumer<T> itemDeleter) {
-//        this.itemSaver = itemSaver;
-//        this.itemDeleter = itemDeleter;
-//    }
+    public void fixFunzioni(BiConsumer<T, AViewDialog.Operation> itemSaver, Consumer<T> itemDeleter) {
+        this.itemSaver = itemSaver;
+        this.itemDeleter = itemDeleter;
+    }
 
     private void initTitle() {
         add(titleField);

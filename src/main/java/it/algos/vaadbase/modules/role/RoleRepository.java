@@ -14,7 +14,7 @@ import static it.algos.vaadbase.application.BaseCost.TAG_ROL;
  * Project vaadbase <br>
  * Created by Algos <br>
  * User: Gac <br>
- * Date: 24-mag-2018 9.55.36 <br>
+ * Date: 24-mag-2018 20.31.30 <br>
  * <br>
  * Estende la l'interaccia MongoRepository col casting alla Entity relativa di questa repository <br>
  * <br>

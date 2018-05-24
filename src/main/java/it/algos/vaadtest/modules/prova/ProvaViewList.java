@@ -7,6 +7,7 @@ import com.vaadin.flow.component.icon.Icon;
 import com.vaadin.flow.component.html.Label;
 import com.vaadin.flow.component.textfield.TextField;
 import com.vaadin.flow.data.renderer.ComponentRenderer;
+import it.algos.vaadbase.ui.dialog.IADialog;
 import it.algos.vaadbase.ui.dialog.AViewDialog;
 import com.vaadin.flow.component.icon.VaadinIcons;
 import com.vaadin.flow.component.notification.Notification;
@@ -36,13 +37,13 @@ import static it.algos.vaadtest.application.AppCost.TAG_PRO;
  * Project vaadtest <br>
  * Created by Algos <br>
  * User: Gac <br>
- * Date: 24-mag-2018 12.42.24 <br>
+ * Date: 24-mag-2018 20.27.22 <br>
  * <br>
  * Estende la classe astratta AViewList per visualizzare la Grid <br>
  * <p>
+ * Not annotated with @SpringView (sbagliato) perché usa la @Route di VaadinFlow <br>
  * Annotated with @SpringComponent (obbligatorio per le injections) <br>
  * Annotated with @Scope (obbligatorio = 'singleton') <br>
- * Not annotated with @SpringView (sbagliato) perché usa la @Route di VaadinFlow <br>
  * Annotated with @Route (obbligatorio) per la selezione della vista. @Route(value = "") per la vista iniziale <br>
  * Annotated with @Qualifier (obbligatorio) per permettere a Spring di istanziare la sottoclasse specifica <br>
  * Annotated with @Slf4j (facoltativo) per i logs automatici <br>
@@ -69,11 +70,12 @@ public class ProvaViewList extends AViewList {
      * Si usa una costante statica, per essere sicuri di scrivere sempre uguali i riferimenti <br>
      *
      * @param presenter per gestire la business logic del package
+     * @param dialog    per visualizzare i fields
      */
     @Autowired
-    public ProvaViewList(@Qualifier(TAG_PRO) IAPresenter presenter) {
-        super(presenter);
-        dialog = new ProvaViewDialog(presenter, this::saveUpdate, this::deleteUpdate);
+    public ProvaViewList(@Qualifier(TAG_PRO) IAPresenter presenter, @Qualifier(TAG_PRO) IADialog dialog) {
+        super(presenter, dialog);
+        ((ProvaViewDialog) dialog).fixFunzioni(this::saveUpdate, this::deleteUpdate);
     }// end of Spring constructor
 
 

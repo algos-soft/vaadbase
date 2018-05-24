@@ -1,26 +1,26 @@
 package it.algos.vaadbase.modules.role;
 
 import com.vaadin.flow.spring.annotation.SpringComponent;
-import it.algos.vaadbase.annotation.AIScript;
-import it.algos.vaadbase.backend.entity.AEntity;
-import it.algos.vaadbase.backend.service.AService;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.beans.factory.annotation.Qualifier;
-import org.springframework.beans.factory.config.ConfigurableBeanFactory;
-import org.springframework.context.annotation.Scope;
-import org.springframework.data.mongodb.repository.MongoRepository;
-import org.springframework.stereotype.Service;
-
+import org.bson.types.ObjectId;
 import java.util.List;
 import java.util.stream.Collectors;
-
+import org.springframework.beans.factory.annotation.Qualifier;
+import org.springframework.beans.factory.config.ConfigurableBeanFactory;
+import org.springframework.data.mongodb.repository.MongoRepository;
+import org.springframework.stereotype.Service;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.context.annotation.Scope;
+import it.algos.vaadbase.annotation.AIScript;
+import it.algos.vaadbase.backend.service.AService;
+import it.algos.vaadbase.backend.entity.AEntity;
 import static it.algos.vaadbase.application.BaseCost.TAG_ROL;
 
 /**
  * Project vaadbase <br>
  * Created by Algos <br>
  * User: Gac <br>
- * Date: 24-mag-2018 9.55.36 <br>
+ * Date: 24-mag-2018 20.31.30 <br>
  * <br>
  * Estende la classe astratta AService. Layer di collegamento per la Repository. <br>
  * <br>
@@ -58,7 +58,7 @@ public class RoleService extends AService {
     public RoleService(@Qualifier(TAG_ROL) MongoRepository repository) {
         super(repository);
         this.repository = (RoleRepository) repository;
-    }// end of Spring constructor
+   }// end of Spring constructor
 
 
     /**
@@ -72,15 +72,15 @@ public class RoleService extends AService {
         Role entity = findByKeyUnica(code);
 
         if (entity == null) {
-            entity = crea(code);
+            entity = newEntity(0, code);
+            save(entity);
         }// end of if cycle
 
         return entity;
     }// end of method
 
-
     /**
-     * Creazione di una entity <br>
+     * Crea una entity e la registra <br>
      *
      * @param code di riferimento (obbligatorio ed unico)
      *
@@ -114,8 +114,8 @@ public class RoleService extends AService {
      * All properties <br>
      * Gli argomenti (parametri) della new Entity DEVONO essere ordinati come nella Entity (costruttore lombok) <br>
      *
-     * @param ordine di presentazione (obbligatorio con inserimento automatico se è zero)
-     * @param code   codice di riferimento (obbligatorio)
+     * @param ordine      di presentazione (obbligatorio con inserimento automatico se è zero)
+	* @param code        codice di riferimento (obbligatorio)
      *
      * @return la nuova entity appena creata (non salvata)
      */
@@ -123,13 +123,13 @@ public class RoleService extends AService {
         Role entity = null;
 
         entity = findByKeyUnica(code);
-        if (entity != null) {
-            return findByKeyUnica(code);
-        }// end of if cycle
-
+		if (entity != null) {
+			return findByKeyUnica(code);
+		}// end of if cycle
+		
         entity = Role.builder()
-                .ordine(ordine != 0 ? ordine : this.getNewOrdine())
-                .code(code)
+				.ordine(ordine != 0 ? ordine : this.getNewOrdine())
+				.code(code)
                 .build();
 
         return entity;
@@ -156,7 +156,11 @@ public class RoleService extends AService {
      */
     @Override
     public List<Role> findAll() {
-        return repository.findAllByOrderByOrdineAsc();
+        List<Role> lista = null;
+
+        lista = repository.findAllByOrderByOrdineAsc();
+
+        return lista;
     }// end of method
 
 
@@ -200,7 +204,7 @@ public class RoleService extends AService {
      * @param entityBean da salvare
      */
     protected void creaIdKeySpecifica(AEntity entityBean) {
-        entityBean.id = ((Role) entityBean).getCode();
+        entityBean.id = ((Role)entityBean).getCode();
     }// end of method
 
     /**
