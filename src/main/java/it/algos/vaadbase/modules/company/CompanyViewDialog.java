@@ -50,15 +50,15 @@ public class CompanyViewDialog extends AViewDialog<Company> {
     public static String CONTATTO = "contatto";
     public static String INDIRIZZO = "indirizzo";
 
-    protected PersonaPresenter personaPresenter;
-    protected PersonaService personaService;
+    protected PersonaPresenter contattoPresenter;
+    protected PersonaService contattoService;
     protected PersonaViewDialog contattoDialog;
     protected Persona contattoTemporaneo;
     protected ATextField contattoField;
 
-    private AddressPresenter addressPresenter;
-    private AddressService addressService;
-    private AddressViewDialog addressDialog;
+    private AddressPresenter indirizzoPresenter;
+    private AddressService indirizzoService;
+    private AddressViewDialog indirizzoDialog;
     private Address indirizzoTemporaneo;
     private ATextField indirizzoField;
 
@@ -84,24 +84,26 @@ public class CompanyViewDialog extends AViewDialog<Company> {
      */
     @Override
     protected void addSpecificAlgosFields() {
-        personaPresenter = StaticContextAccessor.getBean(PersonaPresenter.class);
-        personaService = (PersonaService) personaPresenter.getService();
-        contattoDialog = new PersonaViewDialog(personaPresenter);
+        contattoPresenter = StaticContextAccessor.getBean(PersonaPresenter.class);
+        contattoService = (PersonaService) contattoPresenter.getService();
+        contattoDialog = new PersonaViewDialog(contattoPresenter);
         contattoDialog.fixFunzioni(this::saveUpdateCon, this::deleteUpdateCon, this::annullaCon);
+        contattoDialog.fixConfermaAndNotRegistrazione();
 
         contattoField = (ATextField) getField(CONTATTO);
         if (contattoField != null) {
             contattoField.addFocusListener(e -> contattoDialog.open(getContatto(), Operation.EDIT, CONTATTO));
         }// end of if cycle
 
-        addressPresenter = StaticContextAccessor.getBean(AddressPresenter.class);
-        addressService = (AddressService) addressPresenter.getService();
-        addressDialog = new AddressViewDialog(addressPresenter);
-        addressDialog.fixFunzioni(this::saveUpdateInd, this::deleteUpdateInd, this::annullaInd);
+        indirizzoPresenter = StaticContextAccessor.getBean(AddressPresenter.class);
+        indirizzoService = (AddressService) indirizzoPresenter.getService();
+        indirizzoDialog = new AddressViewDialog(indirizzoPresenter);
+        indirizzoDialog.fixFunzioni(this::saveUpdateInd, this::deleteUpdateInd, this::annullaInd);
+        indirizzoDialog.fixConfermaAndNotRegistrazione();
 
         indirizzoField = (ATextField) getField(INDIRIZZO);
         if (indirizzoField != null) {
-            indirizzoField.addFocusListener(e -> addressDialog.open(getIndirizzo(), Operation.EDIT));
+            indirizzoField.addFocusListener(e -> indirizzoDialog.open(getIndirizzo(), Operation.EDIT));
         }// end of if cycle
     }// end of method
 
@@ -190,7 +192,7 @@ public class CompanyViewDialog extends AViewDialog<Company> {
         Address indirizzo = getIndirizzoCorrente();
 
         if (indirizzo == null) {
-            indirizzo = addressService.newEntity();
+            indirizzo = indirizzoService.newEntity();
         }// end of if cycle
 
         return indirizzo;
@@ -213,7 +215,7 @@ public class CompanyViewDialog extends AViewDialog<Company> {
         Persona persona = getContattoCorrente();
 
         if (persona == null) {
-            persona = personaService.newEntity();
+            persona = contattoService.newEntity();
         }// end of if cycle
 
         return persona;

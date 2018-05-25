@@ -127,6 +127,12 @@ public abstract class AViewDialog<T extends Serializable> extends Dialog impleme
         this.itemAnnulla = itemAnnulla;
     }// end of method
 
+
+    public void fixConfermaAndNotRegistrazione() {
+        this.saveButton.setText(confirmText);
+    }// end of method
+
+
     private void initTitle() {
         add(titleField);
     }
@@ -294,6 +300,15 @@ public abstract class AViewDialog<T extends Serializable> extends Dialog impleme
     }// end of method
 
 
+    /**
+     * Regola in scrittura eventuali valori NON associati al binder
+     * Dallla  UI al DB
+     * Sovrascritto
+     */
+    protected void writeSpecificFields() {
+    }// end of method
+
+
     protected void focusOnPost(String currentFieldName) {
         List<String> keys = new ArrayList<>(fieldMap.keySet());
         String nameFocus = "";
@@ -320,6 +335,9 @@ public abstract class AViewDialog<T extends Serializable> extends Dialog impleme
     }// end of method
 
 
+    /**
+     * Azione proveniente dal click sul bottone Registra
+     */
     private void saveClicked(AViewDialog.Operation operation) {
         boolean isValid = binder.writeBeanIfValid(currentItem);
 
@@ -333,23 +351,22 @@ public abstract class AViewDialog<T extends Serializable> extends Dialog impleme
                     .map(ValidationResult::getErrorMessage)
                     .collect(Collectors.joining("; ")), 3000, Notification.Position.BOTTOM_START);
         }
-    }
-
-    /**
-     * Regola in scrittura eventuali valori NON associati al binder
-     * Dallla  UI al DB
-     * Sovrascritto
-     */
-    protected void writeSpecificFields() {
     }// end of method
 
+
+    /**
+     * Azione proveniente dal click sul bottone Cancella (delete)
+     */
     private void deleteClicked() {
         if (confirmationDialog.getElement().getParent() == null) {
             getUI().ifPresent(ui -> ui.add(confirmationDialog));
         }
         confirmDelete();
-    }
+    }// end of method
 
+    /**
+     * Azione proveniente dal click sul bottone Annulla
+     */
     public void close() {
         super.close();
         presenter.getView().updateView();
@@ -379,7 +396,7 @@ public abstract class AViewDialog<T extends Serializable> extends Dialog impleme
     private void deleteConfirmed(T item) {
         itemDeleter.accept(item);
         close();
-    }
+    }// end of method
 
 
     /**

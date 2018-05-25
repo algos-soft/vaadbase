@@ -74,6 +74,7 @@ public class PersonaViewDialog extends AViewDialog<Persona> {
         addressService = (AddressService) addressPresenter.getService();
         addressDialog = new AddressViewDialog(addressPresenter);
         addressDialog.fixFunzioni(this::saveUpdate, this::deleteUpdate, this::annullaUpdate);
+        addressDialog.fixConfermaAndNotRegistrazione();
 
         indirizzoField = (ATextField) getField(INDIRIZZO);
         if (indirizzoField != null) {
