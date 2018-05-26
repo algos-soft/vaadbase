@@ -43,7 +43,7 @@ public abstract class AViewDialog<T extends Serializable> extends Dialog impleme
     protected final Button deleteButton = new Button("Elimina");
     private final H2 titleField = new H2();
     private final String confirmText = "Conferma";
-    private final FormLayout formLayout = new FormLayout();
+    protected final FormLayout formLayout = new FormLayout();
     private final HorizontalLayout buttonBar = new HorizontalLayout(saveButton, cancelButton, deleteButton);
     private final ConfirmationDialog<T> confirmationDialog = new ConfirmationDialog<>();
     public Consumer<T> itemAnnulla;
@@ -58,7 +58,7 @@ public abstract class AViewDialog<T extends Serializable> extends Dialog impleme
     private Consumer<T> itemDeleter;
     private String itemType;
     private Registration registrationForSave;
-    private T currentItem;
+    protected T currentItem;
 
     /**
      * Constructs a new instance.
@@ -76,9 +76,11 @@ public abstract class AViewDialog<T extends Serializable> extends Dialog impleme
      * @param itemSaver   funzione associata al bottone 'registra'
      * @param itemDeleter funzione associata al bottone 'annulla'
      */
+    @Deprecated
     public AViewDialog(IAPresenter presenter, BiConsumer<T, AViewDialog.Operation> itemSaver, Consumer<T> itemDeleter) {
         this(presenter, itemSaver, itemDeleter, null, false);
     }// end of constructor
+
 
     /**
      * Constructs a new instance.
@@ -89,6 +91,7 @@ public abstract class AViewDialog<T extends Serializable> extends Dialog impleme
      * @param itemAnnulla             funzione associata al bottone 'annulla'
      * @param confermaSenzaRegistrare cambia il testo del bottone 'Registra' in 'Conferma'
      */
+    @Deprecated
     public AViewDialog(IAPresenter presenter, BiConsumer<T, AViewDialog.Operation> itemSaver, Consumer<T> itemDeleter, Consumer<T> itemAnnulla, boolean confermaSenzaRegistrare) {
         this.presenter = presenter;
         this.service = presenter.getService();
@@ -105,7 +108,10 @@ public abstract class AViewDialog<T extends Serializable> extends Dialog impleme
         initTitle();
         initFormLayout();
         initButtonBar();
-        initFields();
+        creaFields();
+
+        //--Eventuali aggiustamenti finali al layout
+        fixLayout();
 
         setCloseOnEsc(true);
         setCloseOnOutsideClick(false);
@@ -144,7 +150,7 @@ public abstract class AViewDialog<T extends Serializable> extends Dialog impleme
         Div div = new Div(formLayout);
         div.addClassName("has-padding");
         add(div);
-    }
+    }// end of method
 
     private void initButtonBar() {
         saveButton.setAutofocus(true);
@@ -158,39 +164,39 @@ public abstract class AViewDialog<T extends Serializable> extends Dialog impleme
     }
 
     /**
-     * Prepara i fields
-     * Costruisce una fieldList interna
+     * Crea i fields (non esiste ancora la entityBean, che arriva nel metodo open())
+     * <p>
      * Crea un nuovo binder per questo Dialog e questa Entity
-     * Costruisce i componenti grafici AFields (di tipo AbstractField), in base ai reflectedFields ricevuti dal service
-     * --e regola le varie properties grafiche (caption, visible, editable, width, ecc)
-     * Aggiunge i componenti grafici AField al binder
-     * Aggiunge i componenti grafici AField ad una fieldList interna,
-     * --necessaria per ''recuperare'' un singolo algosField dal nome
-     * Inizializza i componenti grafici AField
-     * Aggiunge al binder eventuali fields specifici, prima di trascrivere la entityBean nel bind
-     * Legge la entityBean, ed inserisce nel binder i valori nei fields grafici AFields
-     * Aggiunge i componenti grafici AField al layout
-     * Eventuali regolazioni specifiche per i fields, dopo la trascrizione della entityBean nel binder
-     *
-     * @param layout              in cui inserire i campi (window o panel)
-     * @param reflectedJavaFields previsti nel modello dati della Entity più eventuali aggiunte della sottoclasse
+     * Crea una mappa fieldMap, per recuperare i fields dal nome
+     * Costruisce una lista di properties
+     * Costruisce i fields (di tipo AbstractField) della lista, in base ai reflectedFields ricevuti dal service
+     * Inizializza le properties grafiche (caption, visible, editable, width, ecc)
+     * Aggiunge i fields al binder
+     * Aggiunge i fields alla mappa fieldMap
+     * Aggiunge al binder ed alla fieldMap, eventuali fields specifici (costruiti non come standard type)
+     * Aggiunge i fields al layout
      */
-    protected void initFields() {
+    protected void creaFields() {
+        List<String> properties;
         AbstractField newField = null;
 
+        //--controllo iniziale di sicurezza
         if (service == null) {
             return;
         }// end of if cycle
 
+        //--Crea un nuovo binder per questo Dialog e questa Entity
         binder = new Binder(binderClass);
+
+        //--Crea una mappa fieldMap, per recuperare i fiels dal nome
         fieldMap = new LinkedHashMap<>();
 
         //--Costruisce una lista di nomi delle properties
-        List<String> properties = getFieldsList();
+        properties = getFieldsList();
 
         //--Costruisce ogni singolo field
         //--Aggiunge il field al binder, nel metodo create() del fieldService
-        //--Aggiunge il field una fieldList protected di questa classe (serve per recuperare il field dal nome)
+        //--Aggiunge il field una fieldMap, per recuperare i fields dal nome
         for (String fieldName : properties) {
             newField = fieldService.create(binder, binderClass, fieldName);
             if (newField != null) {
@@ -198,18 +204,11 @@ public abstract class AViewDialog<T extends Serializable> extends Dialog impleme
             }// end of if cycle
         }// end of for cycle
 
-        //--Aggiunge al binder eventuali fields specifici, prima di trascrivere la entityBean nel binder
-        //--rimanda ad un metodo separato per poterlo sovrascrivere
-        //--Costruisce eventuali fields specifici, prima di trascrivere la entityBean nel binder
-        //--Aggiunge il field al binder, nel metodo sovrascritto della sottoclasse specifica
-        //--Aggiunge il field una fieldList protected di questa classe (serve per recuperare il field dal nome)
+        //--Aggiunge al binder ed alla fieldMap, eventuali fields specifici (costruiti non come standard type)
         addSpecificAlgosFields();
 
         //--Aggiunge ogni singolo field al layout grafico
-        for (String name : fieldMap.keySet()) {
-            getFormLayout().add(fieldMap.get(name));
-        }// end of for cycle
-
+        addFieldsToLayout();
     }// end of method
 
 
@@ -229,6 +228,7 @@ public abstract class AViewDialog<T extends Serializable> extends Dialog impleme
         return getSpecificFieldsList(properties);
     }// end of method
 
+
     /**
      * Costruisce una lista di nomi delle properties nella sottoclasse specifica
      */
@@ -238,14 +238,29 @@ public abstract class AViewDialog<T extends Serializable> extends Dialog impleme
 
 
     /**
-     * Aggiunge al binder eventuali fields specifici, prima di trascrivere la entityBean nel binder
-     * Sovrascritto
-     * Aggiunge il field al binder
-     * Aggiunge il field alla fieldList interna
+     * Aggiunge eventuali fields specifici (costruiti non come standard type)
+     * Aggiunge i fields al binder
+     * Aggiunge i fields alla fieldMap
      */
     protected void addSpecificAlgosFields() {
     }// end of method
 
+
+    /**
+     * Aggiunge ogni singolo field della fieldMap al layout grafico
+     * Eventuali posizionamenti ed ordinamenti diversi dalla standard, possono essere sovrascritti
+     */
+    protected void addFieldsToLayout() {
+        for (String name : fieldMap.keySet()) {
+            getFormLayout().add(fieldMap.get(name));
+        }// end of for cycle
+    }// end of method
+
+    /**
+     * Eventuali aggiustamenti finali al layout
+     */
+    protected void fixLayout() {
+    }// end of method
 
     /**
      * Opens the given item for editing in the dialog.
@@ -259,11 +274,13 @@ public abstract class AViewDialog<T extends Serializable> extends Dialog impleme
         open(item, operation, "");
     }// end of method
 
+
     /**
      * Opens the given item for editing in the dialog.
+     * Legge la entityBean, ed inserisce i valori nel binder
+     * Legge la entityBean ed inserisce nella UI i valori di eventuali fields NON associati al binder
      *
-     * @param item      The item to edit; it may be an existing or a newly created
-     *                  instance
+     * @param item      The item to edit; it may be an existing or a newly created instance
      * @param operation The operation being performed on the item
      */
     @Override
@@ -293,7 +310,7 @@ public abstract class AViewDialog<T extends Serializable> extends Dialog impleme
 
 
     /**
-     * Regola in lettura eventuali valori NON associati al binder
+     * Legge la entityBean ed inserisce nella UI i valori di eventuali fields NON associati al binder
      * Sovrascritto
      */
     protected void readSpecificFields() {

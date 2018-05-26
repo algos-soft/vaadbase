@@ -337,8 +337,14 @@ public abstract class APresenter implements IAPresenter {
         return service;
     }// end of method
 
+    @Override
     public IAView getView() {
         return view;
+    }// end of method
+
+    @Override
+    public void setView(IAView view) {
+        this.view=view;
     }// end of method
 
 }// end of class

@@ -37,19 +37,18 @@ import static it.algos.vaadtest.application.AppCost.TAG_PRO;
  * Project vaadtest <br>
  * Created by Algos <br>
  * User: Gac <br>
- * Date: 24-mag-2018 20.27.22 <br>
+ * Date: 26-mag-2018 21.35.55 <br>
  * <br>
  * Estende la classe astratta AViewList per visualizzare la Grid <br>
  * <p>
  * Not annotated with @SpringView (sbagliato) perché usa la @Route di VaadinFlow <br>
- * Annotated with @SpringComponent (obbligatorio per le injections) <br>
+ * Not annotated with @SpringComponent (sbagliato) perché usa la @Route di VaadinFlow <br>
  * Annotated with @Scope (obbligatorio = 'singleton') <br>
  * Annotated with @Route (obbligatorio) per la selezione della vista. @Route(value = "") per la vista iniziale <br>
  * Annotated with @Qualifier (obbligatorio) per permettere a Spring di istanziare la sottoclasse specifica <br>
  * Annotated with @Slf4j (facoltativo) per i logs automatici <br>
  * Annotated with @AIScript (facoltativo Algos) per controllare la ri-creazione di questo file dal Wizard <br>
  */
-@SpringComponent
 @Scope(ConfigurableBeanFactory.SCOPE_SINGLETON)
 @Route(value = TAG_PRO, layout = MainLayout.class)
 @Qualifier(TAG_PRO)

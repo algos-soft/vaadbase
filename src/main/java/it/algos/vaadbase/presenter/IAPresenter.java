@@ -21,6 +21,7 @@ public interface IAPresenter {
     public IAService getService();
 
     public IAView getView();
+    public void setView(IAView view);
 
 
 //    /**

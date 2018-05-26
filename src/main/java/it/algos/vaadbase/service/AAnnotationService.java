@@ -637,6 +637,25 @@ public class AAnnotationService {
 
 
     /**
+     * Get the clazz of the property.
+     *
+     * @param reflectionJavaField di riferimento per estrarre la Annotation
+     *
+     * @return the type for the specific column
+     */
+    public Class getClazz(final Field reflectionJavaField) {
+        Class clazz = null;
+        AIField annotation = this.getAIField(reflectionJavaField);
+
+        if (annotation != null) {
+            clazz = annotation.clazz();
+        }// end of if cycle
+
+        return clazz;
+    }// end of method
+
+
+    /**
      * Get the name (field) of the property.
      * Se manca, usa il nome della property
      *

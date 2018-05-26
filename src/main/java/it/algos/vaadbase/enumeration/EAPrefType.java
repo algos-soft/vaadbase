@@ -83,22 +83,20 @@ public enum EAPrefType {
     },// end of single enumeration
 
     integer("intero", EAFieldType.integer) {
-        //@todo RIMETTERE
+        @Override
+        public byte[] objectToBytes(Object obj) {
+            byte[] bytes = new byte[0];
+            if (obj instanceof Integer) {
+                int num = (Integer) obj;
+                bytes = intToByteArray(num);
+            }// end of if cycle
+            return bytes;
+        }// end of method
 
-//        @Override
-//        public byte[] objectToBytes(Object obj) {
-//            byte[] bytes = new byte[0];
-//            if (obj instanceof Integer) {
-//                int num = (Integer) obj;
-//                bytes = LibByte.intToByteArray(num);
-//            }// end of if cycle
-//            return bytes;
-//        }// end of method
-//
-//        @Override
-//        public Object bytesToObject(byte[] bytes) {
-//            return LibByte.byteArrayToInt(bytes);
-//        }// end of method
+        @Override
+        public Object bytesToObject(byte[] bytes) {
+            return byteArrayToInt(bytes);
+        }// end of method
     },// end of single enumeration
 
     date("data", EAFieldType.localdatetime) {
@@ -269,5 +267,24 @@ public enum EAPrefType {
         return valori;
     }// end of static method
 
+    public static byte[] intToByteArray(int a) {
+        return new byte[]{
+                (byte) ((a >> 24) & 0xFF),
+                (byte) ((a >> 16) & 0xFF),
+                (byte) ((a >> 8) & 0xFF),
+                (byte) (a & 0xFF)
+        };
+    }// end of static method
+
+    public static int byteArrayToInt(byte[] b) {
+        int num = 0;
+        if ((b != null) && (b.length > 0)) {
+            num = b[3] & 0xFF |
+                    (b[2] & 0xFF) << 8 |
+                    (b[1] & 0xFF) << 16 |
+                    (b[0] & 0xFF) << 24;
+        }
+        return num;
+    }// end of static method
 
 }// end of enumeration class

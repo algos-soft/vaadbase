@@ -103,6 +103,7 @@ public abstract class AViewList extends VerticalLayout implements IAView, Before
 
     public AViewList(IAPresenter presenter, IADialog dialog) {
         this.presenter = presenter;
+        this.presenter.setView(this);
         this.dialog = dialog;
         this.service = presenter.getService();
         this.entityClazz = presenter.getEntityClazz();

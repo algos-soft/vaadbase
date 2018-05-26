@@ -42,14 +42,13 @@ import static it.algos.vaadbase.application.BaseCost.TAG_PER;
  * Estende la classe astratta AViewList per visualizzare la Grid <br>
  * <p>
  * Not annotated with @SpringView (sbagliato) perché usa la @Route di VaadinFlow <br>
- * Annotated with @SpringComponent (obbligatorio per le injections) <br>
+ * Not annotated with @SpringComponent (sbagliato) perché usa la @Route di VaadinFlow <br>
  * Annotated with @Scope (obbligatorio = 'singleton') <br>
  * Annotated with @Route (obbligatorio) per la selezione della vista. @Route(value = "") per la vista iniziale <br>
  * Annotated with @Qualifier (obbligatorio) per permettere a Spring di istanziare la sottoclasse specifica <br>
  * Annotated with @Slf4j (facoltativo) per i logs automatici <br>
  * Annotated with @AIScript (facoltativo Algos) per controllare la ri-creazione di questo file dal Wizard <br>
  */
-@SpringComponent
 @Scope(ConfigurableBeanFactory.SCOPE_SINGLETON)
 @Route(value = TAG_PER, layout = MainLayout.class)
 @Qualifier(TAG_PER)

@@ -84,6 +84,7 @@ public class AFieldService {
         AbstractField field = null;
         String fieldName = reflectionJavaField.getName();
 //        int minDefault = 3;
+        Class clazz = null;
         EAFieldType type = annotation.getFormType(reflectionJavaField);
         String stringMessage = "Code must contain at least 3 printable characters";
         String intMessage = " deve contenere solo caratteri numerici";
@@ -93,6 +94,7 @@ public class AFieldService {
         String message;
         int min = 0;
 
+        clazz = annotation.getClazz(reflectionJavaField);
         message = annotation.getMessage(reflectionJavaField);
         min = annotation.getSizeMin(reflectionJavaField);
         type = annotation.getFormType(reflectionJavaField);
@@ -129,6 +131,13 @@ public class AFieldService {
                 break;
             case enumeration:
                 field = new AComboBox(caption);
+                if (clazz != null) {
+                    Object[] values = clazz.getEnumConstants();
+                    if (values != null) {
+                        ((AComboBox) field).setItems(values);
+                    }// end of if cycle
+                }// end of if cycle
+                binder.forField(field).bind(fieldName);
                 break;
             case link:
                 field = new ATextField(caption);
