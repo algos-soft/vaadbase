@@ -25,11 +25,6 @@ import static it.algos.vaadbase.application.BaseCost.TAG_ROL;
  * Annotated with @Scope (obbligatorio = 'singleton') <br>
  * Annotated with @Qualifier (obbligatorio) per permettere a Spring di istanziare la sottoclasse specifica <br>
  * Annotated with @AIScript (facoltativo Algos) per controllare la ri-creazione di questo file dal Wizard <br>
- * <p>
- * Constructor use @Lazy to avoid the Circular Dependency
- * A simple way to break the cycle is saying Spring to initialize one of the beans lazily.
- * That is: instead of fully initializing the bean, it will create a proxy to inject it into the other bean.
- * The injected bean will only be fully created when it’s first needed.
  */
 @SpringComponent
 @Scope(ConfigurableBeanFactory.SCOPE_SINGLETON)
@@ -44,10 +39,9 @@ public class RolePresenter extends APresenter {
      * Regola il modello-dati specifico e lo passa al costruttore della superclasse <br>
      *
      * @param service layer di collegamento per la Repository e la Business Logic
-     * @param view    vista principale gestita da Flow
      */
-    public RolePresenter(@Qualifier(TAG_ROL) IAService service, @Lazy @Qualifier(TAG_ROL) IAView view) {
-        super(Role.class, service, view);
+    public RolePresenter(@Qualifier(TAG_ROL) IAService service) {
+        super(Role.class, service);
      }// end of Spring constructor
 
 

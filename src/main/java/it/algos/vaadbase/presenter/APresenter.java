@@ -92,13 +92,11 @@ public abstract class APresenter implements IAPresenter {
      *
      * @param entityClazz iniettato da Spring come sottoclasse concreta specificata dal @Qualifier
      * @param service     iniettato da Spring come sottoclasse concreta specificata dal @Qualifier
-     * @param view        iniettato da Spring come sottoclasse concreta specificata dal @Qualifier
      */
-    public APresenter(Class<? extends AEntity> entityClazz, IAService service, IAView view) {
+    public APresenter(Class<? extends AEntity> entityClazz, IAService service) {
         ((AService) service).entityClass = entityClazz;
         this.entityClazz = entityClazz;
         this.service = service;
-        this.view = view;
     }// end of Spring constructor
 
 
