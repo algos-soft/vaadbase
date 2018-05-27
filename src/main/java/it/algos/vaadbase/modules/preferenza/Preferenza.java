@@ -56,7 +56,7 @@ import static it.algos.vaadbase.application.BaseCost.TAG_PRE;
 @Qualifier(TAG_PRE)
 @AIEntity(company = EACompanyRequired.nonUsata)
 @AIList(fields = {"ordine", "code", "type", "descrizione"})
-@AIForm(fields = {"ordine", "code", "descrizione", "type"})
+@AIForm(fields = {"ordine", "code", "descrizione", "type","value"})
 @AIScript(sovrascrivibile = false)
 public class Preferenza extends AEntity {
 
@@ -107,7 +107,7 @@ public class Preferenza extends AEntity {
 
     //--valore della preferenza (obbligatorio)
     @NotNull
-    @AIField(type = EAFieldType.text, required = true, widthEM = 12)
+    @AIField(type = EAFieldType.pref, required = true, name = "Valore", widthEM = 12)
     private byte[] value;
 
 

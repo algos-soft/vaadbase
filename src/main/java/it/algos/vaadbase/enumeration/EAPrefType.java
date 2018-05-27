@@ -90,6 +90,10 @@ public enum EAPrefType {
                 int num = (Integer) obj;
                 bytes = intToByteArray(num);
             }// end of if cycle
+            if (obj instanceof String) {
+                bytes = intToByteArray(new Integer((String)obj));
+            }// end of if cycle
+
             return bytes;
         }// end of method
 

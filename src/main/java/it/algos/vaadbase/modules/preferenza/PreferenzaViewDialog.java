@@ -4,13 +4,12 @@ import com.vaadin.flow.component.AbstractField;
 import com.vaadin.flow.component.orderedlayout.VerticalLayout;
 import com.vaadin.flow.spring.annotation.SpringComponent;
 import it.algos.vaadbase.annotation.AIScript;
-import it.algos.vaadbase.converter.AConverterIntegerByte;
+import it.algos.vaadbase.converter.AConverterPrefByte;
 import it.algos.vaadbase.enumeration.EAPrefType;
 import it.algos.vaadbase.presenter.IAPresenter;
 import it.algos.vaadbase.service.ATextService;
 import it.algos.vaadbase.ui.dialog.AViewDialog;
 import it.algos.vaadbase.ui.fields.AComboBox;
-import it.algos.vaadbase.ui.fields.AIntegerField;
 import it.algos.vaadbase.ui.fields.ATextField;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -45,8 +44,7 @@ public class PreferenzaViewDialog extends AViewDialog<Preferenza> {
     private final static String TIPO_FIELD_NAME = "type";
     private final static String VALUE_FIELD_NAME = "value";
     @Autowired
-    private ATextService text;
-    private VerticalLayout valuePlaceHolder;
+    private AConverterPrefByte prefConverter;
 
     /**
      * Costruttore @Autowired <br>
@@ -62,88 +60,50 @@ public class PreferenzaViewDialog extends AViewDialog<Preferenza> {
 
 
     /**
-     * Eventuali aggiustamenti finali al layout
-     */
-    @Override
-    protected void fixLayout() {
-        valuePlaceHolder = new VerticalLayout();
-        getFormLayout().add(valuePlaceHolder);
-
-//        AComboBox comboType = (AComboBox) getField(TIPO_FIELD_NAME);
-//        comboType.addValueChangeListener(e -> sincroType((EAPrefType) e.getValue()));
-    }// end of method
-
-
-    /**
      * Regola in lettura eventuali valori NON associati al binder
      * Sovrascritto
      */
     @Override
     protected void readSpecificFields() {
-        super.readSpecificFields();
+        String label = "Valore";
 
-        EAPrefType type = getTypeDB();
-        sincroType(type);
+        EAPrefType type = getType();
+        if (type == null) {
+            type = EAPrefType.string;
+        }// end of if cycle
+        prefConverter.setType(type);
+
+//        AbstractField valueField = getField(VALUE_FIELD_NAME);
+//        if (valueField != null) {
+//            try { // prova ad eseguire il codice
+//                binder.removeBinding(valueField);
+//                fieldMap.remove(VALUE_FIELD_NAME);
+//                getFormLayout().remove(valueField);
+//            } catch (Exception unErrore) { // intercetta l'errore
+//                log.error(unErrore.toString());
+//            }// fine del blocco try-catch
+//        }// end of if cycle
+//        valueField = new ATextField(label);
+//        prefConverter.setType(type);
+//        binder.forField(valueField).withConverter(prefConverter).bind(VALUE_FIELD_NAME);
+//        fieldMap.put(VALUE_FIELD_NAME, valueField);
+//        getFormLayout().add(valueField);
 
         AComboBox comboType = (AComboBox) getField(TIPO_FIELD_NAME);
-        comboType.addValueChangeListener(e -> sincroType((EAPrefType) e.getValue()));
+        comboType.addValueChangeListener(e -> prefConverter.setType((EAPrefType) e.getValue()));
+        comboType.setValue(type);
 
-    }// end of method
-
-    /**
-     *
-     */
-    private void sincroType(EAPrefType type) {
-        String label = "Valore";
-        valuePlaceHolder.removeAll();
-        AbstractField valueField = getField(VALUE_FIELD_NAME);
-        if (valueField != null) {
-            try { // prova ad eseguire il codice
-                fieldMap.remove(VALUE_FIELD_NAME);
-                binder.removeBinding(valueField);
-//                formLayout.removeAll();
-//                getFormLayout().remove(valueField);
-            } catch (Exception unErrore) { // intercetta l'errore
-                log.error(unErrore.toString());
-            }// fine del blocco try-catch
-        }// end of if cycle
-
-        if (type != null) {
-            switch (type) {
-                case string:
-                    label = "Valore (string)";
-                    valueField = new ATextField(label);
-                    binder.forField(valueField).bind(VALUE_FIELD_NAME);
-                    break;
-                case integer:
-                    label = "Valore (int)";
-                    String message = label + " deve contenere solo caratteri numerici";
-                    AConverterIntegerByte integerConverter = new AConverterIntegerByte();
-                    valueField = new AIntegerField(label);
-                    binder.forField(valueField).withConverter(integerConverter).bind(VALUE_FIELD_NAME);
-                    break;
-                default:
-                    log.warn("Switch - caso non definito");
-                    break;
-            } // end of switch statement
-        }// end of if cycle
-
-        try { // prova ad eseguire il codice
-            fieldMap.put(VALUE_FIELD_NAME, valueField);
-            binder.readBean(currentItem);
-        } catch (Exception unErrore) { // intercetta l'errore
-            log.error(unErrore.toString());
-        }// fine del blocco try-catch
-
-        if (valueField != null) {
-            valuePlaceHolder.add(valueField);
-//            getFormLayout().add(valueField);
-        }// end of if cycle
+        if (operation == Operation.ADD) {
+            comboType.setEnabled(true);
+        } else {
+            comboType.setEnabled(false);
+        }// end of if/else cycle
 
     }// end of method
 
 
-    private EAPrefType getTypeDB() {
+
+    private EAPrefType getType() {
         EAPrefType type = null;
         Preferenza preferenza = getCurrentItem();
 
@@ -154,12 +114,6 @@ public class PreferenzaViewDialog extends AViewDialog<Preferenza> {
         return type;
     }// end of method
 
-    private EAPrefType getTypeUI() {
-        AComboBox typeField = (AComboBox) getField(TIPO_FIELD_NAME);
-        Object value = typeField.getValue();
-        return null;
-//        return (EAFieldType) typeField.getValue();
-    }// end of method
 
 
 }// end of class

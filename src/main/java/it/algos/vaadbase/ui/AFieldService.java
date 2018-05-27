@@ -5,6 +5,7 @@ import com.vaadin.flow.data.binder.Binder;
 import com.vaadin.flow.data.converter.StringToIntegerConverter;
 import com.vaadin.flow.data.validator.StringLengthValidator;
 import com.vaadin.flow.spring.annotation.SpringComponent;
+import it.algos.vaadbase.converter.AConverterPrefByte;
 import it.algos.vaadbase.service.AAnnotationService;
 import it.algos.vaadbase.service.AReflectionService;
 import it.algos.vaadbase.service.ATextService;
@@ -53,6 +54,8 @@ public class AFieldService {
     @Autowired
     public ATextService text;
 
+    @Autowired
+    private AConverterPrefByte prefConverter;
 
     /**
      * Create a single field.
@@ -140,6 +143,13 @@ public class AFieldService {
                 binder.forField(field).bind(fieldName);
                 break;
             case link:
+                field = new ATextField(caption);
+                break;
+            case pref:
+                field = new ATextField(caption);
+                binder.forField(field).withConverter(prefConverter).bind(fieldName);
+                break;
+            case noBinder:
                 field = new ATextField(caption);
                 break;
             default:

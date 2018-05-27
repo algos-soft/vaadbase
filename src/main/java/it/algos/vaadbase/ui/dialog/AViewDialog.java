@@ -41,9 +41,9 @@ public abstract class AViewDialog<T extends Serializable> extends Dialog impleme
     protected final Button saveButton = new Button("Registra");
     protected final Button cancelButton = new Button("Annulla");
     protected final Button deleteButton = new Button("Elimina");
+    protected final FormLayout formLayout = new FormLayout();
     private final H2 titleField = new H2();
     private final String confirmText = "Conferma";
-    protected final FormLayout formLayout = new FormLayout();
     private final HorizontalLayout buttonBar = new HorizontalLayout(saveButton, cancelButton, deleteButton);
     private final ConfirmationDialog<T> confirmationDialog = new ConfirmationDialog<>();
     public Consumer<T> itemAnnulla;
@@ -54,11 +54,12 @@ public abstract class AViewDialog<T extends Serializable> extends Dialog impleme
     protected Class binderClass;
     protected LinkedHashMap<String, AbstractField> fieldMap;
     protected AFieldService fieldService;
+    protected T currentItem;
+    protected Operation operation;
     private BiConsumer<T, AViewDialog.Operation> itemSaver;
     private Consumer<T> itemDeleter;
     private String itemType;
     private Registration registrationForSave;
-    protected T currentItem;
 
     /**
      * Constructs a new instance.
@@ -289,7 +290,7 @@ public abstract class AViewDialog<T extends Serializable> extends Dialog impleme
             Notification.show("Qualcosa non ha funzionato in AViewDialog.open()", 3000, Notification.Position.BOTTOM_START);
             return;
         }// end of if cycle
-
+        this.operation = operation;
         currentItem = (T) item;
         this.itemType = presenter.getView().getName();
         title = title.equals("") ? itemType : title;
@@ -300,8 +301,8 @@ public abstract class AViewDialog<T extends Serializable> extends Dialog impleme
         }
         registrationForSave = saveButton.addClickListener(e -> saveClicked(operation));
 
-        binder.readBean(currentItem);
         readSpecificFields();
+        binder.readBean(currentItem);
 
         deleteButton.setEnabled(operation.isDeleteEnabled());
         open();
@@ -355,7 +356,7 @@ public abstract class AViewDialog<T extends Serializable> extends Dialog impleme
     /**
      * Azione proveniente dal click sul bottone Registra
      */
-    private void saveClicked(AViewDialog.Operation operation) {
+    protected void saveClicked(AViewDialog.Operation operation) {
         boolean isValid = binder.writeBeanIfValid(currentItem);
 
         if (isValid) {
