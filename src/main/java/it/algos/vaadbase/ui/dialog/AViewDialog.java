@@ -56,7 +56,7 @@ public abstract class AViewDialog<T extends Serializable> extends Dialog impleme
     protected AFieldService fieldService;
     protected T currentItem;
     protected Operation operation;
-    private BiConsumer<T, AViewDialog.Operation> itemSaver;
+    protected BiConsumer<T, AViewDialog.Operation> itemSaver;
     private Consumer<T> itemDeleter;
     private String itemType;
     private Registration registrationForSave;
@@ -301,8 +301,8 @@ public abstract class AViewDialog<T extends Serializable> extends Dialog impleme
         }
         registrationForSave = saveButton.addClickListener(e -> saveClicked(operation));
 
-        readSpecificFields();
         binder.readBean(currentItem);
+        readSpecificFields();
 
         deleteButton.setEnabled(operation.isDeleteEnabled());
         open();

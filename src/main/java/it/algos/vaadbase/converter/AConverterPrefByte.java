@@ -23,7 +23,7 @@ public class AConverterPrefByte implements Converter<String, byte[]> {
 
     @Override
     public Result<byte[]> convertToModel(String stringValue, ValueContext valueContext) {
-        if (type != null) {
+         if (type != null) {
             return Result.ok((byte[]) type.objectToBytes(stringValue));
         } else {
             return Result.ok((byte[]) null);

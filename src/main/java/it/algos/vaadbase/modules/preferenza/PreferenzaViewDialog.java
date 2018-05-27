@@ -1,7 +1,10 @@
 package it.algos.vaadbase.modules.preferenza;
 
 import com.vaadin.flow.component.AbstractField;
+import com.vaadin.flow.component.notification.Notification;
 import com.vaadin.flow.component.orderedlayout.VerticalLayout;
+import com.vaadin.flow.data.binder.BinderValidationStatus;
+import com.vaadin.flow.data.binder.ValidationResult;
 import com.vaadin.flow.spring.annotation.SpringComponent;
 import it.algos.vaadbase.annotation.AIScript;
 import it.algos.vaadbase.converter.AConverterPrefByte;
@@ -16,6 +19,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.beans.factory.config.ConfigurableBeanFactory;
 import org.springframework.context.annotation.Scope;
+
+import java.util.stream.Collectors;
 
 import static it.algos.vaadbase.application.BaseCost.TAG_PRE;
 
@@ -73,22 +78,6 @@ public class PreferenzaViewDialog extends AViewDialog<Preferenza> {
         }// end of if cycle
         prefConverter.setType(type);
 
-//        AbstractField valueField = getField(VALUE_FIELD_NAME);
-//        if (valueField != null) {
-//            try { // prova ad eseguire il codice
-//                binder.removeBinding(valueField);
-//                fieldMap.remove(VALUE_FIELD_NAME);
-//                getFormLayout().remove(valueField);
-//            } catch (Exception unErrore) { // intercetta l'errore
-//                log.error(unErrore.toString());
-//            }// fine del blocco try-catch
-//        }// end of if cycle
-//        valueField = new ATextField(label);
-//        prefConverter.setType(type);
-//        binder.forField(valueField).withConverter(prefConverter).bind(VALUE_FIELD_NAME);
-//        fieldMap.put(VALUE_FIELD_NAME, valueField);
-//        getFormLayout().add(valueField);
-
         AComboBox comboType = (AComboBox) getField(TIPO_FIELD_NAME);
         comboType.addValueChangeListener(e -> prefConverter.setType((EAPrefType) e.getValue()));
         comboType.setValue(type);
@@ -102,7 +91,6 @@ public class PreferenzaViewDialog extends AViewDialog<Preferenza> {
     }// end of method
 
 
-
     private EAPrefType getType() {
         EAPrefType type = null;
         Preferenza preferenza = getCurrentItem();
@@ -113,7 +101,6 @@ public class PreferenzaViewDialog extends AViewDialog<Preferenza> {
 
         return type;
     }// end of method
-
 
 
 }// end of class
