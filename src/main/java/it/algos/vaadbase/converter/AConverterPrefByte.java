@@ -45,6 +45,10 @@ public class AConverterPrefByte implements Converter<String, byte[]> {
             if (genericValue instanceof Integer) {
                 stringValue = ((Integer) genericValue).toString();
             }// end of if cycle
+
+            if (genericValue instanceof Boolean) {
+                stringValue =  genericValue.toString();
+            }// end of if cycle
         }// end of if cycle
 
         return stringValue;

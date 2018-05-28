@@ -57,30 +57,30 @@ public enum EAPrefType {
         }// end of method
     },// end of single enumeration
 
-    bool2("booleano", EAFieldType.checkboxlabel) {
-        @Override
-        public byte[] objectToBytes(Object obj) {
-            byte[] bytes = new byte[0];
-            if (obj instanceof Boolean) {
-                boolean bool = (boolean) obj;
-                bytes = new byte[]{(byte) (bool ? 1 : 0)};
-            }// end of if cycle
-            return bytes;
-        }// end of method
-
-        @Override
-        @SuppressWarnings("all")
-        public Object bytesToObject(byte[] bytes) {
-            Object obj = null;
-            if (bytes.length > 0) {
-                byte b = bytes[0];
-                obj = new Boolean(b == (byte) 0b00000001);
-            } else {
-                obj = new Boolean(false);
-            }// end of if/else cycle
-            return obj;
-        }// end of method
-    },// end of single enumeration
+//    bool2("booleano", EAFieldType.checkboxlabel) {
+//        @Override
+//        public byte[] objectToBytes(Object obj) {
+//            byte[] bytes = new byte[0];
+//            if (obj instanceof Boolean) {
+//                boolean bool = (boolean) obj;
+//                bytes = new byte[]{(byte) (bool ? 1 : 0)};
+//            }// end of if cycle
+//            return bytes;
+//        }// end of method
+//
+//        @Override
+//        @SuppressWarnings("all")
+//        public Object bytesToObject(byte[] bytes) {
+//            Object obj = null;
+//            if (bytes.length > 0) {
+//                byte b = bytes[0];
+//                obj = new Boolean(b == (byte) 0b00000001);
+//            } else {
+//                obj = new Boolean(false);
+//            }// end of if/else cycle
+//            return obj;
+//        }// end of method
+//    },// end of single enumeration
 
     integer("intero", EAFieldType.integer) {
         @Override
@@ -101,11 +101,11 @@ public enum EAPrefType {
         public Object bytesToObject(byte[] bytes) {
             return byteArrayToInt(bytes);
         }// end of method
-    },// end of single enumeration
+    };// end of single enumeration
 
-    date("data", EAFieldType.localdatetime) {
-        //@todo RIMETTERE
-
+//    date("data", EAFieldType.localdatetime) {
+//        @todo RIMETTERE
+//
 //        @Override
 //        public byte[] objectToBytes(Object obj) {
 //            byte[] bytes = new byte[0];
@@ -120,26 +120,26 @@ public enum EAPrefType {
 //        public Object bytesToObject(byte[] bytes) {
 //            return bytes.length > 0 ? LibDate.dateToLocalDateTime(new Date(Longs.fromByteArray(bytes))) : null;
 //        }// end of method
-    },// end of single enumeration
+//    },// end of single enumeration
 
-    email("email", EAFieldType.email) {
-        @Override
-        public byte[] objectToBytes(Object obj) {
-            byte[] bytes = new byte[0];
-            if (obj instanceof String) {
-                String stringa = (String) obj;
-                bytes = stringa.getBytes(Charset.forName("UTF-8"));
-            }// end of if cycle
-            return bytes;
-        }// end of method
-
-        @Override
-        public Object bytesToObject(byte[] bytes) {
-            Object obj = null;
-            obj = new String(bytes, Charset.forName("UTF-8"));
-            return obj;
-        }// end of method
-    },// end of single enumeration
+//    email("email", EAFieldType.email) {
+//        @Override
+//        public byte[] objectToBytes(Object obj) {
+//            byte[] bytes = new byte[0];
+//            if (obj instanceof String) {
+//                String stringa = (String) obj;
+//                bytes = stringa.getBytes(Charset.forName("UTF-8"));
+//            }// end of if cycle
+//            return bytes;
+//        }// end of method
+//
+//        @Override
+//        public Object bytesToObject(byte[] bytes) {
+//            Object obj = null;
+//            obj = new String(bytes, Charset.forName("UTF-8"));
+//            return obj;
+//        }// end of method
+//    },// end of single enumeration
 
 //    decimal("decimale", AFieldType.lungo) {
 //        @Override
@@ -158,10 +158,10 @@ public enum EAPrefType {
 //        }// end of method
 //    },// end of single enumeration
 
-    image("image", EAFieldType.image) {
-        //@todo RIMETTERE
-
-        //        @Override
+//    image("image", EAFieldType.image) {
+//        //@todo RIMETTERE
+//
+//        //        @Override
 //        public Object bytesToObject(byte[] bytes) {
 //            Image img = null;
 //            if (bytes.length > 0) {
@@ -169,12 +169,12 @@ public enum EAPrefType {
 //            }
 //            return img;
 //        }// end of method
-    },// end of single enumeration
+//    },// end of single enumeration
 
-    resource("resource", EAFieldType.resource) {
-        //@todo RIMETTERE
-
-        //        @Override
+//    resource("resource", EAFieldType.resource) {
+//        @todo RIMETTERE
+//
+//                @Override
 //        public Object bytesToObject(byte[] bytes) {
 //            Resource res = null;
 //            Image img = null;
@@ -186,9 +186,9 @@ public enum EAPrefType {
 //            }// end of if cycle
 //            return res;
 //        }// end of method
-    },// end of single enumeration
+//    },// end of single enumeration
 
-    bytes("blog", EAFieldType.json);
+//    bytes("blog", EAFieldType.json);
 
     private String nome;
     private EAFieldType fieldType;

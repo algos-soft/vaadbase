@@ -52,6 +52,7 @@ import java.util.List;
 @Slf4j
 public abstract class AViewList extends VerticalLayout implements IAView, BeforeEnterObserver {
 
+    protected final static String EDIT_NAME = "Edit";
     protected final TextField searchField = new TextField("", "Search");
     /**
      * Service iniettato da Spring (@Scope = 'singleton'). Unica per tutta l'applicazione. Usata come libreria.
@@ -67,21 +68,16 @@ public abstract class AViewList extends VerticalLayout implements IAView, Before
      * Il presenter viene iniettato dal costruttore della sottoclasse concreta
      */
     protected IAPresenter presenter;
-
     /**
      * Il service viene recuperato dal presenter,
      * La repository è gestita direttamente dal service
      */
     protected IAService service;
-
     /**
      * Il modello-dati specifico viene recuperato dal presenter
      */
     protected Class<? extends AEntity> entityClazz;
-
-
     protected Grid<AEntity> grid;
-
     /**
      * Caption sovrastante il body della view
      * Valore che può essere regolato nella classe specifica

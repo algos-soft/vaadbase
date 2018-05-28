@@ -146,8 +146,8 @@ public class AFieldService {
                 field = new ATextField(caption);
                 break;
             case pref:
-                field = new ATextField(caption);
-                binder.forField(field).withConverter(prefConverter).bind(fieldName);
+//                field = new ATextField(caption);
+//                binder.forField(field).withConverter(prefConverter).bind(fieldName);
                 break;
             case noBinder:
                 field = new ATextField(caption);

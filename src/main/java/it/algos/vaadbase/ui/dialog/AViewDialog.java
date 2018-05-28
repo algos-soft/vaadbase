@@ -6,7 +6,9 @@ import com.vaadin.flow.component.dialog.Dialog;
 import com.vaadin.flow.component.formlayout.FormLayout;
 import com.vaadin.flow.component.html.Div;
 import com.vaadin.flow.component.html.H2;
+import com.vaadin.flow.component.html.Label;
 import com.vaadin.flow.component.notification.Notification;
+import com.vaadin.flow.component.orderedlayout.FlexComponent;
 import com.vaadin.flow.component.orderedlayout.HorizontalLayout;
 import com.vaadin.flow.data.binder.Binder;
 import com.vaadin.flow.data.binder.BinderValidationStatus;
@@ -109,7 +111,7 @@ public abstract class AViewDialog<T extends Serializable> extends Dialog impleme
         initTitle();
         initFormLayout();
         initButtonBar();
-        creaFields();
+//        creaFields();
 
         //--Eventuali aggiustamenti finali al layout
         fixLayout();
@@ -161,6 +163,7 @@ public abstract class AViewDialog<T extends Serializable> extends Dialog impleme
         deleteButton.getElement().setAttribute("theme", "tertiary danger");
         buttonBar.setClassName("buttons");
         buttonBar.setSpacing(true);
+        buttonBar.setMargin(true);
         add(buttonBar);
     }
 
@@ -252,6 +255,7 @@ public abstract class AViewDialog<T extends Serializable> extends Dialog impleme
      * Eventuali posizionamenti ed ordinamenti diversi dalla standard, possono essere sovrascritti
      */
     protected void addFieldsToLayout() {
+        getFormLayout().removeAll();
         for (String name : fieldMap.keySet()) {
             getFormLayout().add(fieldMap.get(name));
         }// end of for cycle
@@ -301,8 +305,10 @@ public abstract class AViewDialog<T extends Serializable> extends Dialog impleme
         }
         registrationForSave = saveButton.addClickListener(e -> saveClicked(operation));
 
-        binder.readBean(currentItem);
+
+        creaFields();
         readSpecificFields();
+        binder.readBean(currentItem);
 
         deleteButton.setEnabled(operation.isDeleteEnabled());
         open();
@@ -320,7 +326,7 @@ public abstract class AViewDialog<T extends Serializable> extends Dialog impleme
 
     /**
      * Regola in scrittura eventuali valori NON associati al binder
-     * Dallla  UI al DB
+     * Dalla  UI al DB
      * Sovrascritto
      */
     protected void writeSpecificFields() {
@@ -360,8 +366,8 @@ public abstract class AViewDialog<T extends Serializable> extends Dialog impleme
         boolean isValid = binder.writeBeanIfValid(currentItem);
 
         if (isValid) {
-            itemSaver.accept(currentItem, operation);
             writeSpecificFields();
+            itemSaver.accept(currentItem, operation);
             close();
         } else {
             BinderValidationStatus<T> status = binder.validate();

@@ -91,7 +91,7 @@ public class @ENTITY@ViewList extends AViewList {
 
 
    private Button createEditButton(@ENTITY@ entityBean) {
-        Button edit = new Button("Modifica", event -> dialog.open(entityBean, AViewDialog.Operation.EDIT));
+        Button edit = new Button(EDIT_NAME, event -> dialog.open(entityBean, AViewDialog.Operation.EDIT));
         edit.setIcon(new Icon("lumo", "edit"));
         edit.addClassName("review__edit");
         edit.getElement().setAttribute("theme", "tertiary");

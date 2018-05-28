@@ -1,26 +1,21 @@
 package it.algos.vaadbase.modules.preferenza;
 
 import com.vaadin.flow.component.AbstractField;
-import com.vaadin.flow.component.notification.Notification;
-import com.vaadin.flow.component.orderedlayout.VerticalLayout;
-import com.vaadin.flow.data.binder.BinderValidationStatus;
-import com.vaadin.flow.data.binder.ValidationResult;
 import com.vaadin.flow.spring.annotation.SpringComponent;
 import it.algos.vaadbase.annotation.AIScript;
 import it.algos.vaadbase.converter.AConverterPrefByte;
 import it.algos.vaadbase.enumeration.EAPrefType;
 import it.algos.vaadbase.presenter.IAPresenter;
-import it.algos.vaadbase.service.ATextService;
 import it.algos.vaadbase.ui.dialog.AViewDialog;
+import it.algos.vaadbase.ui.fields.ACheckBox;
 import it.algos.vaadbase.ui.fields.AComboBox;
+import it.algos.vaadbase.ui.fields.AIntegerField;
 import it.algos.vaadbase.ui.fields.ATextField;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.beans.factory.config.ConfigurableBeanFactory;
 import org.springframework.context.annotation.Scope;
-
-import java.util.stream.Collectors;
 
 import static it.algos.vaadbase.application.BaseCost.TAG_PRE;
 
@@ -48,8 +43,6 @@ public class PreferenzaViewDialog extends AViewDialog<Preferenza> {
 
     private final static String TIPO_FIELD_NAME = "type";
     private final static String VALUE_FIELD_NAME = "value";
-    @Autowired
-    private AConverterPrefByte prefConverter;
 
     /**
      * Costruttore @Autowired <br>
@@ -70,23 +63,103 @@ public class PreferenzaViewDialog extends AViewDialog<Preferenza> {
      */
     @Override
     protected void readSpecificFields() {
-        String label = "Valore";
+        AbstractField valueField = getField(VALUE_FIELD_NAME);
+        byte[] byteValue;
+        Object genericValue;
+        byteValue = getCurrentItem().getValue();
+
+        if (valueField != null) {
+            formLayout.remove(valueField);
+            fieldMap.remove(VALUE_FIELD_NAME);
+        }// end of if cycle
 
         EAPrefType type = getType();
-        if (type == null) {
-            type = EAPrefType.string;
-        }// end of if cycle
-        prefConverter.setType(type);
+        type = type != null ? type : EAPrefType.string;
+        genericValue = type.bytesToObject(byteValue);
+
+        valueField = sincro(type);
+        switch (type) {
+            case string:
+                valueField.setValue((String) genericValue);
+                break;
+            case integer:
+                valueField.setValue(genericValue.toString());
+                break;
+            case bool:
+                valueField.setValue((boolean) genericValue);
+                break;
+            default:
+                log.warn("Switch - caso non definito");
+                break;
+        } // end of switch statement
 
         AComboBox comboType = (AComboBox) getField(TIPO_FIELD_NAME);
-        comboType.addValueChangeListener(e -> prefConverter.setType((EAPrefType) e.getValue()));
         comboType.setValue(type);
-
         if (operation == Operation.ADD) {
             comboType.setEnabled(true);
+            comboType.addValueChangeListener(e -> sincro((EAPrefType) e.getValue()));
         } else {
             comboType.setEnabled(false);
         }// end of if/else cycle
+
+    }// end of method
+
+
+    /**
+     * Cambia il valueField sincronizzandolo col comboBox
+     * Senza valori, perché è attivo SOLO in modalita ADD (new record)
+     */
+    protected AbstractField sincro(EAPrefType type) {
+        String caption = "Valore ";
+        AbstractField valueField = getField(VALUE_FIELD_NAME);
+        fieldMap.remove(VALUE_FIELD_NAME);
+
+        if (valueField != null) {
+            formLayout.remove(valueField);
+            valueField = null;
+        }// end of if cycle
+
+        type = type != null ? type : EAPrefType.string;
+        switch (type) {
+            case string:
+                valueField = new ATextField(caption + "(string)");
+                break;
+            case integer:
+                valueField = new AIntegerField(caption + "(solo numeri)");
+                break;
+            case bool:
+                valueField = new ACheckBox(caption + "(vero/falso)");
+                break;
+            default:
+                log.warn("Switch - caso non definito");
+                break;
+        } // end of switch statement
+
+        if (valueField != null) {
+            formLayout.add(valueField);
+            fieldMap.put(VALUE_FIELD_NAME, valueField);
+        }// end of if cycle
+
+        return valueField;
+    }// end of method
+
+
+    /**
+     * Regola in scrittura eventuali valori NON associati al binder
+     * Dalla  UI al DB
+     * Sovrascritto
+     */
+    protected void writeSpecificFields() {
+        EAPrefType type = getType();
+        AbstractField valueField = getField(VALUE_FIELD_NAME);
+        byte[] byteValue;
+        Object genericValue = null;
+
+        if (valueField != null) {
+            genericValue = valueField.getValue();
+            byteValue = type.objectToBytes(genericValue);
+            getCurrentItem().setValue(byteValue);
+        }// end of if cycle
 
     }// end of method
 
