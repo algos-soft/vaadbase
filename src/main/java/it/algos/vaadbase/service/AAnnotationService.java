@@ -2,6 +2,7 @@ package it.algos.vaadbase.service;
 
 import com.vaadin.flow.router.Route;
 import com.vaadin.flow.spring.annotation.SpringComponent;
+import it.algos.vaadbase.backend.annotation.EACompanyRequired;
 import it.algos.vaadbase.backend.entity.AEntity;
 import it.algos.vaadbase.ui.IAView;
 import it.algos.vaadbase.ui.annotation.*;
@@ -347,22 +348,22 @@ public class AAnnotationService {
     }// end of method
 
 
-//    /**
-//     * Get the status 'nonUsata, facoltativa, obbligatoria' of the class.
-//     *
-//     * @param clazz the entity class
-//     */
-//    @SuppressWarnings("all")
-//    public EACompanyRequired getCompanyRequired(final Class<? extends AEntity> clazz) {
-//        EACompanyRequired companyRequired = EACompanyRequired.nonUsata;
-//        AIEntity annotation = getAIEntity(clazz);
-//
-//        if (annotation != null) {
-//            companyRequired = annotation.company2();
-//        }// end of if cycle
-//
-//        return companyRequired;
-//    }// end of method
+    /**
+     * Get the status 'nonUsata, facoltativa, obbligatoria' of the class.
+     *
+     * @param clazz the entity class
+     */
+    @SuppressWarnings("all")
+    public EACompanyRequired getCompanyRequired(final Class<? extends AEntity> clazz) {
+        EACompanyRequired companyRequired = EACompanyRequired.nonUsata;
+        AIEntity annotation = getAIEntity(clazz);
+
+        if (annotation != null) {
+            companyRequired = annotation.company();
+        }// end of if cycle
+
+        return companyRequired;
+    }// end of method
 
 
 //    /**

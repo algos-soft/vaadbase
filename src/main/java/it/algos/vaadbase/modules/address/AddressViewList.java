@@ -75,7 +75,7 @@ public class AddressViewList extends AViewList {
     @Autowired
     public AddressViewList(@Qualifier(TAG_ADD) IAPresenter presenter, @Qualifier(TAG_ADD) IADialog dialog) {
         super(presenter, dialog);
-        ((AddressViewDialog) dialog).fixFunzioni(this::saveUpdate, this::deleteUpdate);
+        ((AddressViewDialog) dialog).fixFunzioni(this::save, this::delete);
     }// end of Spring constructor
 
 

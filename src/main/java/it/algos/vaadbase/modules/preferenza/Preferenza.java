@@ -3,6 +3,7 @@ package it.algos.vaadbase.modules.preferenza;
 import com.vaadin.flow.spring.annotation.SpringComponent;
 import it.algos.vaadbase.annotation.AIScript;
 import it.algos.vaadbase.backend.annotation.EACompanyRequired;
+import it.algos.vaadbase.backend.entity.ACEntity;
 import it.algos.vaadbase.backend.entity.AEntity;
 import it.algos.vaadbase.enumeration.EAPrefType;
 import it.algos.vaadbase.ui.annotation.*;
@@ -54,11 +55,11 @@ import static it.algos.vaadbase.application.BaseCost.TAG_PRE;
 @Builder
 @EqualsAndHashCode(callSuper = false)
 @Qualifier(TAG_PRE)
-@AIEntity(company = EACompanyRequired.nonUsata)
+@AIEntity(company = EACompanyRequired.facoltativa)
 @AIList(fields = {"ordine", "code", "type"})
 @AIForm(fields = {"ordine", "code", "descrizione", "type"})
 @AIScript(sovrascrivibile = false)
-public class Preferenza extends AEntity {
+public class Preferenza extends ACEntity {
 
 
     /**

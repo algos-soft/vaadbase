@@ -21,7 +21,7 @@ public class ATextField extends TextField implements IAField {
     }// end of constructor
 
     public ATextField(String label) {
-        this(label,"");
+        this(label, "");
     }// end of constructor
 
     public ATextField(String label, String placeholder) {
@@ -31,6 +31,11 @@ public class ATextField extends TextField implements IAField {
     @Override
     public ATextField getField() {
         return this;
+    }// end of method
+
+    @Override
+    public String getValue() {
+        return super.getValue().equals("") ? null : super.getValue();
     }// end of method
 
 }// end of class

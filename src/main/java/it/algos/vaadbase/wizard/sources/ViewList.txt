@@ -74,7 +74,7 @@ public class @ENTITY@ViewList extends AViewList {
     @Autowired
     public @ENTITY@ViewList(@Qualifier(@QUALIFIER@) IAPresenter presenter, @Qualifier(@QUALIFIER@) IADialog dialog) {
         super(presenter, dialog);
-        ((@ENTITY@ViewDialog) dialog).fixFunzioni(this::saveUpdate, this::deleteUpdate);
+        ((@ENTITY@ViewDialog) dialog).fixFunzioni(this::save, this::delete);
     }// end of Spring constructor
 
 

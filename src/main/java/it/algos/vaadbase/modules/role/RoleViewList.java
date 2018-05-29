@@ -74,7 +74,7 @@ public class RoleViewList extends AViewList {
     @Autowired
     public RoleViewList(@Qualifier(TAG_ROL) IAPresenter presenter, @Qualifier(TAG_ROL) IADialog dialog) {
         super(presenter, dialog);
-        ((RoleViewDialog) dialog).fixFunzioni(this::saveUpdate, this::deleteUpdate);
+        ((RoleViewDialog) dialog).fixFunzioni(this::save, this::delete);
     }// end of Spring constructor
 
 

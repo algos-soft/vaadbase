@@ -5,6 +5,8 @@ import com.vaadin.flow.data.binder.Binder;
 import com.vaadin.flow.data.converter.StringToIntegerConverter;
 import com.vaadin.flow.data.validator.StringLengthValidator;
 import com.vaadin.flow.spring.annotation.SpringComponent;
+import it.algos.vaadbase.application.StaticContextAccessor;
+import it.algos.vaadbase.backend.service.IAService;
 import it.algos.vaadbase.converter.AConverterPrefByte;
 import it.algos.vaadbase.service.AAnnotationService;
 import it.algos.vaadbase.service.AReflectionService;
@@ -21,6 +23,7 @@ import org.springframework.beans.factory.config.ConfigurableBeanFactory;
 import org.springframework.context.annotation.Scope;
 
 import java.lang.reflect.Field;
+import java.util.List;
 
 /**
  * Project vaadbase
@@ -115,7 +118,7 @@ public class AFieldService {
                 message = text.isValid(message) ? message : mess;
                 stringConverter = new StringLengthValidator(message, min, null);
                 field = new ATextField(caption);
-                binder.forField(field).withValidator(stringConverter).bind(fieldName);
+                binder.forField(field).bind(fieldName);
                 break;
             case textarea:
                 field = new ATextArea(caption);
@@ -131,13 +134,23 @@ public class AFieldService {
                 break;
             case combo:
                 field = new AComboBox(caption);
+                if (clazz != null) {
+                    try { // prova ad eseguire il codice
+                        IAService service=(IAService)StaticContextAccessor.getBean(clazz);
+                        List items = ((IAService)service).findAll();
+                        ((AComboBox) field).setItems(items);
+                    } catch (Exception unErrore) { // intercetta l'errore
+                        log.error(unErrore.toString());
+                    }// fine del blocco try-catch
+                }// end of if cycle
+                field.setReadOnly(false);
                 break;
             case enumeration:
                 field = new AComboBox(caption);
                 if (clazz != null) {
-                    Object[] values = clazz.getEnumConstants();
-                    if (values != null) {
-                        ((AComboBox) field).setItems(values);
+                    Object[] items = clazz.getEnumConstants();
+                    if (items != null) {
+                        ((AComboBox) field).setItems(items);
                     }// end of if cycle
                 }// end of if cycle
                 binder.forField(field).bind(fieldName);

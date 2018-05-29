@@ -15,5 +15,5 @@
         entity = @ENTITY@.builder()@BUILDER@
                 .build();
 
-        return entity;
+        return @ADDCOMPANY@;
     }// end of method

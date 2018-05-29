@@ -20,7 +20,7 @@ import static it.algos.vaadtest.application.AppCost.TAG_PRO;
  * Project vaadtest <br>
  * Created by Algos <br>
  * User: Gac <br>
- * Date: 24-mag-2018 12.42.24 <br>
+ * Date: 29-mag-2018 22.50.44 <br>
  * <br>
  * Estende la classe astratta AService. Layer di collegamento per la Repository. <br>
  * <br>
@@ -80,6 +80,19 @@ public class ProvaService extends AService {
     }// end of method
 
     /**
+     * Crea una entity e la registra <br>
+     *
+     * @param code di riferimento (obbligatorio ed unico)
+     *
+     * @return la entity appena creata
+     */
+    public Prova crea(String code) {
+        Prova entity = newEntity(0, code, "");
+        save(entity);
+        return entity;
+    }// end of method
+
+    /**
      * Creazione in memoria di una nuova entity che NON viene salvata
      * Eventuali regolazioni iniziali delle property
      * Senza properties per compatibilità con la superclasse
@@ -114,11 +127,11 @@ public class ProvaService extends AService {
 		
         entity = Prova.builder()
 				.ordine(ordine != 0 ? ordine : this.getNewOrdine())
-				.code(code)
-				.descrizione(descrizione)
+				.code(code.equals("") ? null : code)
+				.descrizione(descrizione.equals("") ? null : descrizione)
                 .build();
 
-        return entity;
+        return (Prova) addCompany(entity);
     }// end of method
 
     /**
@@ -132,65 +145,12 @@ public class ProvaService extends AService {
         return repository.findByCode(code);
     }// end of method
 
-
     /**
-     * Returns all instances of the type <br>
-     * La Entity è EACompanyRequired.nonUsata. Non usa Company. <br>
-     * Lista ordinata <br>
-     *
-     * @return lista ordinata di tutte le entities
+     * Property unica (se esiste).
      */
     @Override
-    public List<Prova> findAll() {
-        List<Prova> lista = null;
-
-        lista = repository.findAllByOrderByOrdineAsc();
-
-        return lista;
-    }// end of method
-
-
-    /**
-     * Fetches the entities whose 'main text property' matches the given filter text.
-     * <p>
-     * The matching is case insensitive. When passed an empty filter text,
-     * the method returns all categories. The returned list is ordered by name.
-     * The 'main text property' is different in each entity class and chosen in the specific subclass
-     *
-     * @param filter the filter text
-     *
-     * @return the list of matching entities
-     */
-    @Override
-    public List<Prova> findFilter(String filter) {
-        String normalizedFilter = filter.toLowerCase();
-        List<Prova> lista = findAll();
-
-        return lista.stream()
-                .filter(entity -> entity.getCode().toLowerCase().contains(normalizedFilter))
-                .collect(Collectors.toList());
-    }// end of method
-
-
-    /**
-     * Opportunità di controllare (per le nuove schede) che la key unica non esista già. <br>
-     * Invocato appena prima del save(), solo per una nuova entity <br>
-     *
-     * @param entityBean nuova da creare
-     */
-    @Override
-    protected boolean isEsisteEntityKeyUnica(AEntity entityBean) {
-        return findByKeyUnica(((Prova) entityBean).getCode()) != null;
-    }// end of method
-
-    /**
-     * Opportunità di usare una idKey specifica. <br>
-     * Invocato appena prima del save(), solo per una nuova entity <br>
-     *
-     * @param entityBean da salvare
-     */
-    protected void creaIdKeySpecifica(AEntity entityBean) {
-        entityBean.id = ((Prova)entityBean).getCode();
+    public String getPropertyUnica(AEntity entityBean) {
+        return ((Prova) entityBean).getCode();
     }// end of method
 
     /**

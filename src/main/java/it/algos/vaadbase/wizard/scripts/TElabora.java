@@ -135,6 +135,8 @@ public class TElabora {
     private String methodNewOrdineText;
     private String methodIdKeySpecificaText;
     private String methodKeyUnicaText;
+    private String methodUsaCompanyText;
+    private String methodAddCompanyText;
     private String methodBuilderText;
     private String superClassEntity;
     private String importCost;
@@ -414,6 +416,7 @@ public class TElabora {
         mappa.put(Token.tagView, "");
         mappa.put(Token.entity, newEntityName);
         mappa.put(Token.superClassEntity, superClassEntity);
+        mappa.put(Token.usaCompany, creaUsaCompany());
         mappa.put(Token.methodFind, creaFind());
         mappa.put(Token.parametersNewEntity, creaParametersNewEntity());
         mappa.put(Token.methodNewEntity, creaNewEntity());
@@ -453,6 +456,7 @@ public class TElabora {
         methodNewEntityText = Token.replace(Token.parametersDoc, methodNewEntityText, creaParametersDoc());
         methodNewEntityText = Token.replace(Token.parameters, methodNewEntityText, creaParameters());
         methodNewEntityText = Token.replace(Token.keyUnica, methodNewEntityText, creaKeyUnica());
+        methodNewEntityText = Token.replace(Token.addCompany, methodNewEntityText, creaAddCompany());
         methodNewEntityText = Token.replace(Token.builder, methodNewEntityText, creaBuilder());
         methodNewEntityText = Token.replace(Token.builder, methodNewEntityText, creaBuilder());
 
@@ -515,9 +519,9 @@ public class TElabora {
         String findAll = "";
 
         if (flagOrdine) {
-            findAll += "lista = repository.findAllByOrderBy" + PROPERTY_ORDINE_NAME + "Asc();";
+            findAll += "repository.findAllByOrderBy" + PROPERTY_ORDINE_NAME + "Asc()";
         } else {
-            findAll += "lista = repository.findAll();";
+            findAll += "repository.findAll()";
         }// end of if/else cycle
 
         return findAll;
@@ -568,8 +572,6 @@ public class TElabora {
     private String creaParametersDoc() {
         parametersDocText = "";
         String inizio = "\n\t* @param ";
-        String intero = "int";
-        String spazio = " ";
         String virgola = ", ";
 
         if (flagOrdine) {
@@ -649,6 +651,32 @@ public class TElabora {
     }// end of method
 
 
+    private String creaUsaCompany() {
+        methodUsaCompanyText = "";
+
+        if (flagCompany) {
+            methodUsaCompanyText = "EACompanyRequired.obbligatoria";
+        } else {
+            methodUsaCompanyText = "EACompanyRequired.nonUsata";
+        }// end of if/else cycle
+
+        return methodUsaCompanyText;
+    }// end of method
+
+
+    private String creaAddCompany() {
+        methodAddCompanyText = "";
+
+        if (flagCompany) {
+            methodAddCompanyText = "(" + newEntityName + ") addCompany(entity)";
+        } else {
+            methodAddCompanyText = "entity";
+        }// end of if/else cycle
+
+        return methodAddCompanyText;
+    }// end of method
+
+
     private String creaBuilder() {
         methodBuilderText = "";
         String stringa = "String";
@@ -660,10 +688,10 @@ public class TElabora {
             methodBuilderText += aCapo + ".ordine(ordine != 0 ? ordine : this.getNewOrdine())";
         }// end of if cycle
         if (flagCode) {
-            methodBuilderText += aCapo + ".code(code)";
+            methodBuilderText += aCapo + ".code(code.equals(\"\") ? null : code)";
         }// end of if cycle
         if (flagDescrizione) {
-            methodBuilderText += aCapo + ".descrizione(descrizione)";
+            methodBuilderText += aCapo + ".descrizione(descrizione.equals(\"\") ? null : descrizione)";
         }// end of if cycle
 
         return methodBuilderText;
@@ -818,7 +846,7 @@ public class TElabora {
 
     private void copiaPom() {
         String destPath = ideaProjectRootPath + "/" + newProjectName + "/" + POM + ".xml";
-        String sourceText = leggeFile(POM );
+        String sourceText = leggeFile(POM);
 
         sourceText = Token.replace(Token.moduleNameMinuscolo, sourceText, newProjectName);
         checkAndWriteFile(destPath, sourceText);

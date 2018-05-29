@@ -19,6 +19,7 @@ import org.springframework.context.annotation.Scope;
  */
 @AIScript(sovrascrivibile = false)
 public class AppCost {
+	public final static String TAG_BOL = "bolla";
 	public final static String TAG_PRO = "prova";
     public static final String TAG_HOME_MENU = "home";
 }// end of static class

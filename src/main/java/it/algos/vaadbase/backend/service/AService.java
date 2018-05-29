@@ -6,9 +6,13 @@ import it.algos.vaadbase.backend.entity.ACEntity;
 import it.algos.vaadbase.backend.entity.AEntity;
 import it.algos.vaadbase.backend.login.ALogin;
 import it.algos.vaadbase.modules.company.Company;
+import it.algos.vaadbase.modules.role.Role;
 import it.algos.vaadbase.service.AAnnotationService;
+import it.algos.vaadbase.service.AReflectionService;
 import it.algos.vaadbase.service.ATextService;
 import it.algos.vaadbase.ui.AFieldService;
+import it.algos.vaadtest.modules.bolla.Bolla;
+import it.algos.vaadtest.modules.prova.Prova;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Scope;
@@ -16,6 +20,8 @@ import org.springframework.data.domain.Sort;
 import org.springframework.data.mongodb.repository.MongoRepository;
 
 import java.util.List;
+import java.util.Optional;
+import java.util.stream.Collectors;
 
 /**
  * Project springvaadin
@@ -30,6 +36,9 @@ import java.util.List;
 public class AService implements IAService {
 
 
+    protected final static String FIELD_NAME_ORDINE = "ordine";
+    protected final static String FIELD_NAME_CODE = "code";
+    protected final static String FIELD_NAME_DESCRIZIONE = "descrizione";
     /**
      * Service iniettato da Spring (@Scope = 'singleton'). Unica per tutta l'applicazione. Usata come libreria.
      */
@@ -40,6 +49,13 @@ public class AService implements IAService {
      */
     @Autowired
     public AFieldService field;
+
+    @Autowired
+    public AReflectionService reflection;
+
+
+    //    @Autowired
+//    public ASessionService session;
     @Autowired
     public ATextService text;
     /**
@@ -47,16 +63,7 @@ public class AService implements IAService {
      */
     @Autowired
     public ALogin login;
-
-//    @Autowired
-//    public AReflectionService reflection;
-
-
-//    @Autowired
-//    public ASessionService session;
-
-
-//    @Autowired
+    //    @Autowired
 //    public AArrayService array;
     //--la repository dei dati viene iniettata dal costruttore della sottoclasse concreta
     public MongoRepository repository;
@@ -113,9 +120,19 @@ public class AService implements IAService {
      * @throws IllegalArgumentException if {@code id} is {@literal null}
      */
     @Override
-    public AEntity find(String id) {
-//        return (AEntity) repository.findOne(id);//@todo non chiaro
-        return null;
+    public AEntity findById(String id) {
+        AEntity entityBean = null;
+        Object genericObj = null;
+        Optional optional = repository.findById(id.trim());
+
+        if (optional.isPresent()) {
+            genericObj = optional.get();
+            if (genericObj instanceof AEntity) {
+                entityBean = (AEntity) genericObj;
+            }// end of if cycle
+        }// end of if cycle
+
+        return entityBean;
     }// end of method
 
 
@@ -133,14 +150,34 @@ public class AService implements IAService {
      */
     @Override
     public List<? extends AEntity> findAll() {
+        List<? extends AEntity> lista = null;
+        String sortName = "";
         Sort sort;
 
-        if (true) {
-            sort = new Sort(Sort.Direction.DESC, "ordine");
-            return repository.findAll(sort);
+        if (reflection.isEsiste(entityClass, FIELD_NAME_ORDINE)) {
+            sortName = FIELD_NAME_ORDINE;
         } else {
-            return repository.findAll();
+            if (reflection.isEsiste(entityClass, FIELD_NAME_CODE)) {
+                sortName = FIELD_NAME_CODE;
+            } else {
+                if (reflection.isEsiste(entityClass, FIELD_NAME_DESCRIZIONE)) {
+                    sortName = FIELD_NAME_DESCRIZIONE;
+                }// end of if cycle
+            }// end of if/else cycle
         }// end of if/else cycle
+
+        try { // prova ad eseguire il codice
+            if (sortName.equals("")) {
+                lista = repository.findAll();
+            } else {
+                sort = new Sort(Sort.Direction.ASC, sortName);
+                lista = repository.findAll(sort);
+            }// end of if/else cycle
+        } catch (Exception unErrore) { // intercetta l'errore
+            log.error(unErrore.toString());
+        }// fine del blocco try-catch
+
+        return lista;
     }// end of method
 
     /**
@@ -156,7 +193,12 @@ public class AService implements IAService {
      */
     @Override
     public List<? extends AEntity> findFilter(String filter) {
-        return findAll();
+        String normalizedFilter = filter.toLowerCase();
+        List<? extends AEntity> lista = findAll();
+
+        return lista.stream()
+                .filter(entity -> getKeyUnica(entity).toLowerCase().contains(normalizedFilter))
+                .collect(Collectors.toList());
     }// end of method
 
 
@@ -408,7 +450,7 @@ public class AService implements IAService {
         }// end of if cycle
 
         //--controlla l'obbligatorietà della Company
-//            tableCompanyRequired = annotation.getCompanyRequired(entityBean.getClass());
+        tableCompanyRequired = annotation.getCompanyRequired(entityBean.getClass());
         switch (tableCompanyRequired) {
             case nonUsata:
                 log.error("C'è una discrepanza tra 'extends ACEntity' della classe " + entityBean.getClass().getSimpleName() + " e l'annotation @AIEntity della classe stessa");
@@ -538,14 +580,66 @@ public class AService implements IAService {
         return (AEntity) repository.save(modifiedBean);
     }// end of method
 
+
     /**
      * Opportunità di controllare (per le nuove schede) che la key unica non esista già.
      * Invocato appena prima del save(), solo per una nuova entity
      *
      * @param entityBean nuova da creare
      */
-    protected boolean isEsisteEntityKeyUnica(AEntity entityBean) {
-        return false;
+    public boolean isEsisteEntityKeyUnica(AEntity entityBean) {
+        return findById(getKeyUnica(entityBean)) != null;
+    }// end of method
+
+
+    /*
+     * Opportunità di usare una idKey specifica. <br>
+     * Invocato appena prima del save(), solo per una nuova entity <br>
+     *
+     * @param entityBean da salvare
+     */
+    public void creaIdKeySpecifica(AEntity entityBean) {
+        entityBean.id = getKeyUnica(entityBean);
+    }// end of method
+
+
+    /**
+     * Formula univoca per costruire la key unica (se esiste).
+     * Può essere costruita liberamente
+     * La utilizza sia in scrittura che in lettura
+     * Se usa la company, questa deve SEMPRE esserci
+     */
+    public String getKeyUnica(AEntity entityBean) {
+        String keyUnica = "";
+        Company company;
+        String companyCode = "";
+
+        if (entityBean instanceof ACEntity) {
+            company = ((ACEntity) entityBean).getCompany();
+        } else {
+            company = login.getCompany();
+        }// end of if/else cycle
+        companyCode = company != null ? company.getCode() : "";
+
+        if (annotation.getCompanyRequired(entityBean.getClass()) == EACompanyRequired.nonUsata) {
+            keyUnica = getPropertyUnica(entityBean);
+        } else {
+            keyUnica = companyCode + getPropertyUnica(entityBean);
+        }// end of if/else cycle
+
+        return keyUnica;
+    }// end of method
+
+
+    /**
+     * Property unica (se esiste).
+     */
+    public String getPropertyUnica(AEntity entityBean) {
+        if (reflection.isEsiste(entityClass, FIELD_NAME_CODE)) {
+            return "";
+        } else {
+            return "";
+        }// end of if/else cycle
     }// end of method
 
 
@@ -614,15 +708,6 @@ public class AService implements IAService {
 //
 //        return mappa;
 //    }// end of method
-
-    /**
-     * Opportunità di usare una idKey specifica.
-     * Invocato appena prima del save(), solo per una nuova entity
-     *
-     * @param entityBean da salvare
-     */
-    protected void creaIdKeySpecifica(AEntity entityBean) {
-    }// end of method
 
 
 //    /**
@@ -711,6 +796,8 @@ public class AService implements IAService {
 //        repository.deleteAll();
 //        return repository.count() == 0;
 //    }// end of method
+
+
 
 
 //    /**

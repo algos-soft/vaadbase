@@ -58,7 +58,7 @@ import static it.algos.@MODULELOWER@.application.@APPCOST@.@QUALIFIER@;
 @Builder
 @EqualsAndHashCode(callSuper = false)
 @Qualifier(@QUALIFIER@)
-@AIEntity(company = EACompanyRequired.nonUsata)
+@AIEntity(company = @USACOMPANY@)
 @AIList(fields = {@PROPERTIES@})
 @AIForm(fields = {@PROPERTIES@})
 @AIScript(sovrascrivibile = false)

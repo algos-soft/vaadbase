@@ -1,9 +1,7 @@
     /**
-     * Opportunità di usare una idKey specifica. <br>
-     * Invocato appena prima del save(), solo per una nuova entity <br>
-     *
-     * @param entityBean da salvare
+     * Property unica (se esiste).
      */
-    protected void creaIdKeySpecifica(AEntity entityBean) {
-        entityBean.id = ((@ENTITY@)entityBean).getCode();
+    @Override
+    public String getPropertyUnica(AEntity entityBean) {
+        return ((@ENTITY@) entityBean).getCode();
     }// end of method

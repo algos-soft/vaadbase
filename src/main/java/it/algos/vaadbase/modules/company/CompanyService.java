@@ -148,8 +148,8 @@ public class CompanyService extends AService {
                 .code(code)
                 .descrizione(descrizione)
                 .contatto(contatto)
-                .telefono(telefono)
-                .email(email)
+                .telefono(telefono.equals("") ? null : telefono)
+                .email(email.equals("") ? null : email)
                 .indirizzo(indirizzo)
                 .build();
 
@@ -218,26 +218,34 @@ public class CompanyService extends AService {
 
 
     /**
-     * Opportunità di controllare (per le nuove schede) che la key unica non esista già. <br>
-     * Invocato appena prima del save(), solo per una nuova entity <br>
-     *
-     * @param entityBean nuova da creare
+     * Property unica (se esiste).
      */
-    @Override
-    protected boolean isEsisteEntityKeyUnica(AEntity entityBean) {
-        return findByKeyUnica(((Company) entityBean).getCode()) != null;
+    public String getPropertyUnica(AEntity entityBean) {
+        return ((Company) entityBean).getCode();
     }// end of method
 
 
-    /**
-     * Opportunità di usare una idKey specifica. <br>
-     * Invocato appena prima del save(), solo per una nuova entity <br>
-     *
-     * @param entityBean da salvare
-     */
-    protected void creaIdKeySpecifica(AEntity entityBean) {
-        entityBean.id = ((Company) entityBean).getCode();
-    }// end of method
+//    /**
+//     * Opportunità di controllare (per le nuove schede) che la key unica non esista già. <br>
+//     * Invocato appena prima del save(), solo per una nuova entity <br>
+//     *
+//     * @param entityBean nuova da creare
+//     */
+//    @Override
+//    public boolean isEsisteEntityKeyUnica(AEntity entityBean) {
+//        return findByKeyUnica(((Company) entityBean).getCode()) != null;
+//    }// end of method
+//
+//
+//    /**
+//     * Opportunità di usare una idKey specifica. <br>
+//     * Invocato appena prima del save(), solo per una nuova entity <br>
+//     *
+//     * @param entityBean da salvare
+//     */
+//    protected void creaIdKeySpecifica(AEntity entityBean) {
+//        entityBean.id = ((Company) entityBean).getCode();
+//    }// end of method
 
 
 }// end of class

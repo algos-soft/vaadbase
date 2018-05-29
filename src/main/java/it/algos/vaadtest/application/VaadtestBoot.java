@@ -12,6 +12,7 @@ import org.springframework.beans.factory.config.ConfigurableBeanFactory;
 import org.springframework.context.annotation.Scope;
 import org.springframework.context.event.ContextRefreshedEvent;
 import org.springframework.context.event.EventListener;
+import it.algos.vaadtest.modules.bolla.BollaViewList;
 
 /**
  * Project vaadbase
@@ -83,6 +84,7 @@ public class VaadtestBoot extends ABoot {
      * Verranno lette da MainLayout la prima volta che il browser 'chiama' una view
      */
     private void addRouteSpecifiche() {
+		BaseCost.MENU_CLAZZ_LIST.add(BollaViewList.class);
         BaseCost.MENU_CLAZZ_LIST.add(HomeView.class);
         BaseCost.MENU_CLAZZ_LIST.add(ProvaViewList.class);
         BaseCost.MENU_CLAZZ_LIST.add(WizardView.class);

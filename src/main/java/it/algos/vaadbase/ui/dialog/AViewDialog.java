@@ -361,6 +361,7 @@ public abstract class AViewDialog<T extends Serializable> extends Dialog impleme
 
     /**
      * Azione proveniente dal click sul bottone Registra
+     * Inizio delle operazioni di registrazione
      */
     protected void saveClicked(AViewDialog.Operation operation) {
         boolean isValid = binder.writeBeanIfValid(currentItem);

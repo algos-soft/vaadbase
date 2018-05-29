@@ -181,14 +181,31 @@ public abstract class AViewList extends VerticalLayout implements IAView, Before
     }// end of method
 
 
-    protected void saveUpdate(AEntity entityBean, AViewDialog.Operation operation) {
-        service.save(entityBean);
-        updateView();
-        Notification.show(entityBean + " successfully " + operation.getNameInText() + "ed.", 3000, Notification.Position.BOTTOM_START);
+    protected void save(AEntity entityBean, AViewDialog.Operation operation) {
+        switch (operation) {
+            case ADD:
+                if (service.isEsisteEntityKeyUnica(entityBean)) {
+                    Notification.show(entityBean + " non è stata registrata, perché esisteva già con lo stesso code ", 3000, Notification.Position.BOTTOM_START);
+                } else {
+                    service.save(entityBean);
+                    updateView();
+                    Notification.show(entityBean + " successfully " + operation.getNameInText() + "ed.", 3000, Notification.Position.BOTTOM_START);
+                }// end of if/else cycle
+                break;
+            case EDIT:
+                service.save(entityBean);
+                updateView();
+                Notification.show(entityBean + " successfully " + operation.getNameInText() + "ed.", 3000, Notification.Position.BOTTOM_START);
+                break;
+            default:
+                log.warn("Switch - caso non definito");
+                break;
+        } // end of switch statement
+
     }// end of method
 
 
-    protected void deleteUpdate(AEntity entityBean) {
+    protected void delete(AEntity entityBean) {
         service.delete(entityBean);
         Notification.show(entityBean + " successfully deleted.", 3000, Notification.Position.BOTTOM_START);
         updateView();

@@ -6,9 +6,15 @@
      */
     public int getNewOrdine() {
         int ordine = 0;
+        Sort sort;
+        List<@ENTITY@> lista = null;
 
-        List<@ENTITY@> lista = repository.findTop1AllByOrderByOrdineDesc();
-        if (lista != null && lista.size() == 1) {
+        if (reflection.isEsiste(entityClass, FIELD_NAME_ORDINE)) {
+            sort = new Sort(Sort.Direction.DESC, FIELD_NAME_ORDINE);
+            lista = repository.findAll(sort);
+        }// end of if/else cycle
+
+        if (lista != null && lista.size() > 0) {
             ordine = lista.get(0).getOrdine();
         }// end of if cycle
 

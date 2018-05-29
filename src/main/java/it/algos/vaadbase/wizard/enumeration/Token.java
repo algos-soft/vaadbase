@@ -39,7 +39,9 @@ public enum Token {
     propertyOrdine("ORDINE"),
     propertyCode("CODE"),
     propertyDescrizione("DESCRIZIONE"),
-    toString("TOSTRING");
+    toString("TOSTRING"),
+    usaCompany("USACOMPANY"),
+    addCompany("ADDCOMPANY");
 
     private String tokenTag;
 

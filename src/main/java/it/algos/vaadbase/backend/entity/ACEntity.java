@@ -1,6 +1,7 @@
 package it.algos.vaadbase.backend.entity;
 
 import it.algos.vaadbase.modules.company.Company;
+import it.algos.vaadbase.modules.company.CompanyService;
 import it.algos.vaadbase.ui.annotation.AIColumn;
 import it.algos.vaadbase.ui.annotation.AIField;
 import it.algos.vaadbase.ui.enumeration.EAFieldAccessibility;
@@ -26,7 +27,7 @@ public abstract class ACEntity extends AEntity {
      * riferimento dinamico CON @DBRef
      */
     @DBRef
-    @AIField(type = EAFieldType.combo, clazz = Company.class, dev = EAFieldAccessibility.newOnly, admin = EAFieldAccessibility.showOnly)
+    @AIField(type = EAFieldType.combo, clazz = CompanyService.class, dev = EAFieldAccessibility.newOnly, admin = EAFieldAccessibility.showOnly)
     @AIColumn(name = "Company", width = 115)
     public Company company;
 

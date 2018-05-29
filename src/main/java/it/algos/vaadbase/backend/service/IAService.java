@@ -45,7 +45,7 @@ public interface IAService {
      *
      * @throws IllegalArgumentException if {@code id} is {@literal null}
      */
-    public AEntity find(String id);
+    public AEntity findById(String id);
 
 
     /**
@@ -185,14 +185,23 @@ public interface IAService {
 
 
     /**
-     * Deletes a given entity.
+     * Opportunità di controllare (per le nuove schede) che la key unica non esista già.
+     * Invocato appena prima del save(), solo per una nuova entity
      *
-     * @param entityBean must not be null
-     *
-     * @return true, se la entity è stata effettivamente cancellata
-     *
-     * @throws IllegalArgumentException in case the given entity is {@literal null}.
+     * @param entityBean nuova da creare
      */
+    public boolean isEsisteEntityKeyUnica(AEntity entityBean) ;
+
+
+        /**
+          * Deletes a given entity.
+          *
+          * @param entityBean must not be null
+          *
+          * @return true, se la entity è stata effettivamente cancellata
+          *
+          * @throws IllegalArgumentException in case the given entity is {@literal null}.
+          */
     public boolean delete(AEntity entityBean);
 
 

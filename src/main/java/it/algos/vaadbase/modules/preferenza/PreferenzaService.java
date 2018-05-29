@@ -1,19 +1,19 @@
 package it.algos.vaadbase.modules.preferenza;
 
 import com.vaadin.flow.spring.annotation.SpringComponent;
+import it.algos.vaadbase.annotation.AIScript;
+import it.algos.vaadbase.backend.entity.AEntity;
+import it.algos.vaadbase.backend.service.AService;
 import lombok.extern.slf4j.Slf4j;
-import org.bson.types.ObjectId;
-import java.util.List;
-import java.util.stream.Collectors;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.beans.factory.config.ConfigurableBeanFactory;
+import org.springframework.context.annotation.Scope;
 import org.springframework.data.mongodb.repository.MongoRepository;
 import org.springframework.stereotype.Service;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.context.annotation.Scope;
-import it.algos.vaadbase.annotation.AIScript;
-import it.algos.vaadbase.backend.service.AService;
-import it.algos.vaadbase.backend.entity.AEntity;
+
+import java.util.List;
+import java.util.stream.Collectors;
+
 import static it.algos.vaadbase.application.BaseCost.TAG_PRE;
 
 /**
@@ -58,7 +58,7 @@ public class PreferenzaService extends AService {
     public PreferenzaService(@Qualifier(TAG_PRE) MongoRepository repository) {
         super(repository);
         this.repository = (PreferenzaRepository) repository;
-   }// end of Spring constructor
+    }// end of Spring constructor
 
 
     /**
@@ -115,8 +115,8 @@ public class PreferenzaService extends AService {
      * Gli argomenti (parametri) della new Entity DEVONO essere ordinati come nella Entity (costruttore lombok) <br>
      *
      * @param ordine      di presentazione (obbligatorio con inserimento automatico se è zero)
-	* @param code        codice di riferimento (obbligatorio)
-	* @param descrizione (facoltativa, non unica)
+     * @param code        codice di riferimento (obbligatorio)
+     * @param descrizione (facoltativa, non unica)
      *
      * @return la nuova entity appena creata (non salvata)
      */
@@ -124,14 +124,14 @@ public class PreferenzaService extends AService {
         Preferenza entity = null;
 
         entity = findByKeyUnica(code);
-		if (entity != null) {
-			return findByKeyUnica(code);
-		}// end of if cycle
-		
+        if (entity != null) {
+            return findByKeyUnica(code);
+        }// end of if cycle
+
         entity = Preferenza.builder()
-				.ordine(ordine != 0 ? ordine : this.getNewOrdine())
-				.code(code)
-				.descrizione(descrizione)
+                .ordine(ordine != 0 ? ordine : this.getNewOrdine())
+                .code(code)
+                .descrizione(descrizione)
                 .build();
 
         return entity;
@@ -188,26 +188,26 @@ public class PreferenzaService extends AService {
     }// end of method
 
 
-    /**
-     * Opportunità di controllare (per le nuove schede) che la key unica non esista già. <br>
-     * Invocato appena prima del save(), solo per una nuova entity <br>
-     *
-     * @param entityBean nuova da creare
-     */
-    @Override
-    protected boolean isEsisteEntityKeyUnica(AEntity entityBean) {
-        return findByKeyUnica(((Preferenza) entityBean).getCode()) != null;
-    }// end of method
+//    /**
+//     * Opportunità di controllare (per le nuove schede) che la key unica non esista già. <br>
+//     * Invocato appena prima del save(), solo per una nuova entity <br>
+//     *
+//     * @param entityBean nuova da creare
+//     */
+//    @Override
+//    public boolean isEsisteEntityKeyUnica(AEntity entityBean) {
+//        return findByKeyUnica(((Preferenza) entityBean).getCode()) != null;
+//    }// end of method
 
-    /**
-     * Opportunità di usare una idKey specifica. <br>
-     * Invocato appena prima del save(), solo per una nuova entity <br>
-     *
-     * @param entityBean da salvare
-     */
-    protected void creaIdKeySpecifica(AEntity entityBean) {
-        entityBean.id = ((Preferenza)entityBean).getCode();
-    }// end of method
+//    /**
+//     * Opportunità di usare una idKey specifica. <br>
+//     * Invocato appena prima del save(), solo per una nuova entity <br>
+//     *
+//     * @param entityBean da salvare
+//     */
+//    protected void creaIdKeySpecifica(AEntity entityBean) {
+//        entityBean.id = ((Preferenza) entityBean).getCode();
+//    }// end of method
 
     /**
      * Ordine di presentazione (obbligatorio, unico per tutte le eventuali company), <br>
@@ -225,5 +225,94 @@ public class PreferenzaService extends AService {
 
         return ordine + 1;
     }// end of method
+
+
+    private Preferenza get(String code) {
+        return findByKeyUnica(code);
+    } // end of static method
+
+
+    public Object getValue(String code) {
+        return get(code).getValue();
+    } // end of static method
+
+
+    public String getString(String code) {
+        return (String) getValue(code);
+    } // end of static method
+
+//    public static String getString(String code, Object defaultValue) {
+//        return getString(code, CompanySessionLib.getCompany(), defaultValue);
+//    } // end of static method
+//
+//    public static String getString(String code, BaseCompany company) {
+//        return getString(code, company, "");
+//    } // end of static method
+//
+//    public static String getString(String code, BaseCompany company, Object defaultValue) {
+//        Pref pref = Pref.findByCode(code, company);
+//
+//        if (pref != null) {
+//            return (String) pref.getValore();
+//        }// end of if cycle
+//
+//        if (defaultValue != null && defaultValue instanceof String) {
+//            return (String) defaultValue;
+//        }// end of if cycle
+//
+//        return null;
+//    } // end of static method
+//
+//    public static Boolean getBool(String code) {
+//        return getBool(code, "");
+//    } // end of static method
+//
+//    public static Boolean getBool(String code, Object defaultValue) {
+//        return getBool(code, CompanySessionLib.getCompany(), defaultValue);
+//    } // end of static method
+//
+//    public static Boolean getBool(String code, BaseCompany company) {
+//        return getBool(code, company, "");
+//    } // end of static method
+//
+//    public static Boolean getBool(String code, BaseCompany company, Object defaultValue) {
+//        Pref pref = Pref.findByCode(code, company);
+//
+//        if (pref != null) {
+//            return (boolean) pref.getValore();
+//        }// end of if cycle
+//
+//        if (defaultValue != null && defaultValue instanceof Boolean) {
+//            return (boolean) defaultValue;
+//        }// end of if cycle
+//
+//        return false;
+//    } // end of static method
+//
+//    public static int getInt(String code) {
+//        return getInt(code, "");
+//    } // end of static method
+//
+//    public static int getInt(String code, Object defaultValue) {
+//        return getInt(code, CompanySessionLib.getCompany(), defaultValue);
+//    } // end of static method
+//
+//    public static int getInt(String code, BaseCompany company) {
+//        return getInt(code, company, "");
+//    } // end of static method
+//
+//    public static int getInt(String code, BaseCompany company, Object defaultValue) {
+//        Pref pref = Pref.findByCode(code, company);
+//
+//        if (pref != null) {
+//            return (int) pref.getValore();
+//        }// end of if cycle
+//
+//        if (defaultValue != null && defaultValue instanceof Integer) {
+//            return (int) defaultValue;
+//        }// end of if cycle
+//
+//        return 0;
+//    } // end of static method
 
 }// end of class

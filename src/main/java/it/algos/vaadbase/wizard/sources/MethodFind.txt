@@ -24,10 +24,7 @@
      * @return la entity appena creata
      */
     public @ENTITY@ crea(String code) {
-        @ENTITY@ entity;
-
-        entity = newEntity(@PARAMETERSFIND@);
+        @ENTITY@ entity = newEntity(@PARAMETERSFIND@);
         save(entity);
-
         return entity;
     }// end of method

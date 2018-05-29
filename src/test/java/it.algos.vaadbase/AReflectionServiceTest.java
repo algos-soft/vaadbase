@@ -104,7 +104,7 @@ public class AReflectionServiceTest extends ATest {
      */
     @Test
     public void getAllFieldsNameNoCrono() {
-        previstoIntero = 4;
+        previstoIntero = 3;
         ottenutoList = service.getAllFieldsNameNoCrono(ROLE_ENTITY_CLASS);
         assertNotNull(ottenutoList);
         ottenutoIntero = ottenutoList.size();
@@ -243,7 +243,7 @@ public class AReflectionServiceTest extends ATest {
     @Test
     public void getAllStatic() {
         int ottenutoSize;
-        int previstoSize = 3;
+        int previstoSize = 2;
 
         ottenutoFieldList = service.getAllFieldsView(ROLE_VIEW_CLASS);
         assertNotNull(ottenutoFieldList);
@@ -272,7 +272,7 @@ public class AReflectionServiceTest extends ATest {
      */
     @Test
     public void getIconView() {
-        VaadinIcons iconaPrevista = VaadinIcons.ACADEMY_CAP;
+        VaadinIcons iconaPrevista = VaadinIcons.ASTERISK;
         VaadinIcons iconaOttenuta = service.getIconView(ROLE_VIEW_CLASS);
         assertNotNull(iconaOttenuta);
         assertEquals(iconaPrevista, iconaOttenuta);
@@ -365,8 +365,31 @@ public class AReflectionServiceTest extends ATest {
         reflectionJavaField = ottenutoFieldList.get(1);
         ottenuto = reflectionJavaField.getName();
         assertEquals(previsto, ottenuto);
+    }// end of single test
 
 
+    @SuppressWarnings("javadoc")
+    /**
+     * Se esiste il field della Entity
+     *
+     * @param entityClazz     classe su cui operare la riflessione
+     * @param publicFieldName property
+     *
+     * @return lista di fields della Entity e di tutte le supeclassi
+     */
+    @Test
+    public void isEsiste() {
+        previstoBooleano = true;
+        ottenutoBooleano = service.isEsiste(ROLE_ENTITY_CLASS, FIELD_NAME_ORDINE);
+        assertEquals(previstoBooleano, ottenutoBooleano);
+
+        previstoBooleano = true;
+        ottenutoBooleano = service.isEsiste(ROLE_ENTITY_CLASS, FIELD_NAME_CODE);
+        assertEquals(previstoBooleano, ottenutoBooleano);
+
+        previstoBooleano = false;
+        ottenutoBooleano = service.isEsiste(ROLE_ENTITY_CLASS, FIELD_NAME_PASSWORD);
+        assertEquals(previstoBooleano, ottenutoBooleano);
     }// end of single test
 
 

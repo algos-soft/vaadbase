@@ -65,7 +65,7 @@ public class PreferenzaViewList extends AViewList {
     @Autowired
     public PreferenzaViewList(@Qualifier(TAG_PRE) IAPresenter presenter, @Qualifier(TAG_PRE) IADialog dialog) {
         super(presenter, dialog);
-        ((PreferenzaViewDialog) dialog).fixFunzioni(this::saveUpdate, this::deleteUpdate);
+        ((PreferenzaViewDialog) dialog).fixFunzioni(this::save, this::delete);
     }// end of Spring constructor
 
 

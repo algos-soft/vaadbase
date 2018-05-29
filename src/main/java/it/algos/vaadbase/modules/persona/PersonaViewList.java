@@ -74,7 +74,7 @@ public class PersonaViewList extends AViewList {
     @Autowired
     public PersonaViewList(@Qualifier(TAG_PER) IAPresenter presenter, @Qualifier(TAG_PER) IADialog dialog) {
         super(presenter, dialog);
-        ((PersonaViewDialog) dialog).fixFunzioni(this::saveUpdate, this::deleteUpdate);
+        ((PersonaViewDialog) dialog).fixFunzioni(this::save, this::delete);
     }// end of Spring constructor
 
 

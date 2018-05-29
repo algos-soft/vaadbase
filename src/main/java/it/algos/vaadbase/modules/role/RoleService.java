@@ -1,12 +1,14 @@
 package it.algos.vaadbase.modules.role;
 
 import com.vaadin.flow.spring.annotation.SpringComponent;
+import it.algos.vaadtest.modules.prova.Prova;
 import lombok.extern.slf4j.Slf4j;
 import org.bson.types.ObjectId;
 import java.util.List;
 import java.util.stream.Collectors;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.beans.factory.config.ConfigurableBeanFactory;
+import org.springframework.data.domain.Sort;
 import org.springframework.data.mongodb.repository.MongoRepository;
 import org.springframework.stereotype.Service;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -187,25 +189,12 @@ public class RoleService extends AService {
 
 
     /**
-     * Opportunità di controllare (per le nuove schede) che la key unica non esista già. <br>
-     * Invocato appena prima del save(), solo per una nuova entity <br>
-     *
-     * @param entityBean nuova da creare
+     * Property unica (se esiste).
      */
-    @Override
-    protected boolean isEsisteEntityKeyUnica(AEntity entityBean) {
-        return findByKeyUnica(((Role) entityBean).getCode()) != null;
+    public String getPropertyUnica(AEntity entityBean) {
+        return ((Role) entityBean).getCode();
     }// end of method
 
-    /**
-     * Opportunità di usare una idKey specifica. <br>
-     * Invocato appena prima del save(), solo per una nuova entity <br>
-     *
-     * @param entityBean da salvare
-     */
-    protected void creaIdKeySpecifica(AEntity entityBean) {
-        entityBean.id = ((Role)entityBean).getCode();
-    }// end of method
 
     /**
      * Ordine di presentazione (obbligatorio, unico per tutte le eventuali company), <br>
@@ -215,9 +204,15 @@ public class RoleService extends AService {
      */
     public int getNewOrdine() {
         int ordine = 0;
+        Sort sort;
+        List<Role> lista = null;
 
-        List<Role> lista = repository.findTop1AllByOrderByOrdineDesc();
-        if (lista != null && lista.size() == 1) {
+        if (reflection.isEsiste(entityClass, FIELD_NAME_ORDINE)) {
+            sort = new Sort(Sort.Direction.DESC, FIELD_NAME_ORDINE);
+            lista = repository.findAll(sort);
+        }// end of if/else cycle
+
+        if (lista != null && lista.size() > 0) {
             ordine = lista.get(0).getOrdine();
         }// end of if cycle
 

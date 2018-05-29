@@ -4,7 +4,6 @@ import com.vaadin.flow.component.icon.VaadinIcons;
 import com.vaadin.flow.spring.annotation.SpringComponent;
 import it.algos.vaadbase.application.BaseCost;
 import it.algos.vaadbase.backend.entity.AEntity;
-import it.algos.vaadbase.modules.role.Role;
 import it.algos.vaadbase.ui.IAView;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -435,6 +434,19 @@ public class AReflectionService {
         }// end of if cycle
 
         return fieldsList;
+    }// end of method
+
+
+    /**
+     * Se esiste il field della Entity
+     *
+     * @param entityClazz     classe su cui operare la riflessione
+     * @param publicFieldName property
+     *
+     * @return lista di fields della Entity e di tutte le supeclassi
+     */
+    public boolean isEsiste(Class<? extends AEntity> entityClazz, final String publicFieldName) {
+        return getField(entityClazz, publicFieldName) != null;
     }// end of method
 
 

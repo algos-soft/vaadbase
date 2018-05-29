@@ -60,7 +60,7 @@ public class CompanyViewList extends AViewList {
     @Autowired
     public CompanyViewList(@Qualifier(TAG_COM) IAPresenter presenter, @Qualifier(TAG_COM) IADialog dialog) {
         super(presenter, dialog);
-        ((CompanyViewDialog) dialog).fixFunzioni(this::saveUpdate, this::deleteUpdate);
+        ((CompanyViewDialog) dialog).fixFunzioni(this::save, this::delete);
     }// end of Spring constructor
 
 

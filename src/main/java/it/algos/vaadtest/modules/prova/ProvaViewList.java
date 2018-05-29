@@ -37,7 +37,7 @@ import static it.algos.vaadtest.application.AppCost.TAG_PRO;
  * Project vaadtest <br>
  * Created by Algos <br>
  * User: Gac <br>
- * Date: 26-mag-2018 21.35.55 <br>
+ * Date: 29-mag-2018 22.50.44 <br>
  * <br>
  * Estende la classe astratta AViewList per visualizzare la Grid <br>
  * <p>
@@ -74,7 +74,7 @@ public class ProvaViewList extends AViewList {
     @Autowired
     public ProvaViewList(@Qualifier(TAG_PRO) IAPresenter presenter, @Qualifier(TAG_PRO) IADialog dialog) {
         super(presenter, dialog);
-        ((ProvaViewDialog) dialog).fixFunzioni(this::saveUpdate, this::deleteUpdate);
+        ((ProvaViewDialog) dialog).fixFunzioni(this::save, this::delete);
     }// end of Spring constructor
 
 
@@ -91,7 +91,7 @@ public class ProvaViewList extends AViewList {
 
 
    private Button createEditButton(Prova entityBean) {
-        Button edit = new Button("Modifica", event -> dialog.open(entityBean, AViewDialog.Operation.EDIT));
+        Button edit = new Button(EDIT_NAME, event -> dialog.open(entityBean, AViewDialog.Operation.EDIT));
         edit.setIcon(new Icon("lumo", "edit"));
         edit.addClassName("review__edit");
         edit.getElement().setAttribute("theme", "tertiary");
