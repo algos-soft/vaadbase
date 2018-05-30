@@ -5,6 +5,7 @@ import com.vaadin.flow.spring.annotation.SpringComponent;
 import it.algos.vaadbase.annotation.AIScript;
 import it.algos.vaadbase.converter.AConverterPrefByte;
 import it.algos.vaadbase.enumeration.EAPrefType;
+import it.algos.vaadbase.modules.company.CompanyService;
 import it.algos.vaadbase.presenter.IAPresenter;
 import it.algos.vaadbase.ui.dialog.AViewDialog;
 import it.algos.vaadbase.ui.fields.ACheckBox;
@@ -16,6 +17,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.beans.factory.config.ConfigurableBeanFactory;
 import org.springframework.context.annotation.Scope;
+
+import java.util.List;
 
 import static it.algos.vaadbase.application.BaseCost.TAG_PRE;
 
@@ -45,6 +48,13 @@ public class PreferenzaViewDialog extends AViewDialog<Preferenza> {
     private final static String VALUE_FIELD_NAME = "value";
 
     /**
+     * Service iniettato da Spring (@Scope = 'singleton'). Unica per tutta l'applicazione. Usata come libreria.
+     */
+    @Autowired
+    public CompanyService companyService;
+    private AComboBox companyField;
+
+    /**
      * Costruttore @Autowired <br>
      * Si usa un @Qualifier(), per avere dall'interfaccia la sottoclasse specifica <br>
      * Si usa una costante statica, per essere sicuri di scrivere sempre uguali i riferimenti <br>
@@ -58,11 +68,30 @@ public class PreferenzaViewDialog extends AViewDialog<Preferenza> {
 
 
     /**
+     * Aggiunge al binder eventuali fields specifici, prima di trascrivere la entityBean nel binder
+     * Sovrascritto
+     * Dopo aver creato un AField specifico, usare il metodo super.addFieldBinder() per:
+     * Inizializzare AField
+     */
+    @Override
+    protected void addSpecificAlgosFields() {
+        super.addSpecificAlgosFields();
+
+        companyField = (AComboBox) getField("company");
+
+        List items = companyService.findAll();
+        companyField.setItems(items);
+        companyField.setEnabled(false);
+    }// end of method
+
+    /**
      * Regola in lettura eventuali valori NON associati al binder
      * Sovrascritto
      */
     @Override
     protected void readSpecificFields() {
+        super.readSpecificFields();
+        companyField.setValue(((Preferenza) getCurrentItem()).getCompany());
         AbstractField valueField = getField(VALUE_FIELD_NAME);
         byte[] byteValue;
         Object genericValue;

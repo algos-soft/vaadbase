@@ -49,12 +49,13 @@ public class ProvaService extends AService {
 
 
     /**
-     * Costruttore @Autowired <br>
+     * Costruttore <br>
      * Si usa un @Qualifier(), per avere la sottoclasse specifica <br>
      * Si usa una costante statica, per essere sicuri di scrivere sempre uguali i riferimenti <br>
      *
      * @param repository per la persistenza dei dati
      */
+    @Autowired
     public ProvaService(@Qualifier(TAG_PRO) MongoRepository repository) {
         super(repository);
         this.repository = (ProvaRepository) repository;

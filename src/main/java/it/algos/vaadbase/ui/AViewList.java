@@ -214,7 +214,9 @@ public abstract class AViewList extends VerticalLayout implements IAView, Before
 
     public void updateView() {
         List items = service.findFilter(searchField.getValue());
-        grid.setItems(items);
+        if (items != null) {
+            grid.setItems(items);
+        }// end of if cycle
     }// end of method
 
 

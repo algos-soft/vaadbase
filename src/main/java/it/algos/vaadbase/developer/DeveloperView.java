@@ -12,6 +12,7 @@ import it.algos.vaadbase.modules.preferenza.PreferenzaData;
 import it.algos.vaadbase.modules.role.RoleData;
 import it.algos.vaadbase.ui.AView;
 import it.algos.vaadbase.ui.MainLayout;
+import it.algos.vaadbase.ui.fields.ACheckBox;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
@@ -53,8 +54,20 @@ public class DeveloperView extends AView {
         this.setMargin(true);
         this.setSpacing(true);
 
+        setDeveloper();
         chooseCompany();
         resetData();
+    }// end of method
+
+
+    public void setDeveloper() {
+        Label etichetta;
+        etichetta = new Label("Login come developer");
+        this.add(etichetta);
+
+        ACheckBox checkBox= new ACheckBox("Developer",false);
+        checkBox.addValueChangeListener(event -> login.setDeveloper(event.getValue()));//end of lambda expressions
+        this.add(checkBox);
     }// end of method
 
 

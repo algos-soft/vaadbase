@@ -23,6 +23,7 @@ public class ALogin {
     @Autowired
     private CompanyService service;
     private Company company;
+    private boolean developer = false;
 
     public Company getCompany() {
         return company;
@@ -30,6 +31,14 @@ public class ALogin {
 
     public void setCompany(Company company) {
         this.company = company;
+    }// end of method
+
+    public boolean isDeveloper() {
+        return developer;
+    }// end of method
+
+    public void setDeveloper(boolean developer) {
+        this.developer = developer;
     }// end of method
 
 }// end of class

@@ -6,8 +6,9 @@ import it.algos.vaadbase.backend.entity.ACEntity;
 import it.algos.vaadbase.backend.entity.AEntity;
 import it.algos.vaadbase.backend.login.ALogin;
 import it.algos.vaadbase.modules.company.Company;
-import it.algos.vaadbase.modules.role.Role;
+import it.algos.vaadbase.modules.preferenza.EAPreferenza;
 import it.algos.vaadbase.service.AAnnotationService;
+import it.algos.vaadbase.service.APreferenzaService;
 import it.algos.vaadbase.service.AReflectionService;
 import it.algos.vaadbase.service.ATextService;
 import it.algos.vaadbase.ui.AFieldService;
@@ -67,6 +68,11 @@ public class AService implements IAService {
     public MongoRepository repository;
     //--il modello-dati specifico viene regolato dalla sottoclasse nel costruttore
     public Class<? extends AEntity> entityClass;
+    /**
+     * Inietta da Spring come 'singleton'
+     */
+    @Autowired
+    protected APreferenzaService pref;
 
 //    @Autowired
 //    private LogService logger;
@@ -191,42 +197,34 @@ public class AService implements IAService {
      */
     @Override
     public List<? extends AEntity> findFilter(String filter) {
+        List<? extends AEntity> lista = null;
         String normalizedFilter = filter.toLowerCase();
-        List<? extends AEntity> lista = findAll();
+        boolean appUsaCompany = pref.isBool(EAPreferenza.usaCompany.getCode());
+        boolean entityUsaCompany = annotation.getCompanyRequired(entityClass) != EACompanyRequired.nonUsata;
+        Company company = login.getCompany();
+        boolean nonEsisteCompany = company == null;
+        boolean notDeveloper = !login.isDeveloper();
 
-        return lista.stream()
-                .filter(entity -> getKeyUnica(entity).toLowerCase().contains(normalizedFilter))
-                .collect(Collectors.toList());
+        if (appUsaCompany && entityUsaCompany && nonEsisteCompany) {
+            return lista;
+        }// end of if cycle
+
+        if (appUsaCompany && entityUsaCompany && notDeveloper) {
+            lista = findAll();
+            lista = lista.stream()
+                    .filter(entity -> ((ACEntity) entity).company != null)
+                    .filter(entity -> ((ACEntity) entity).company.getCode().equals(company.getCode()))
+                    .filter(entity -> getKeyUnica(entity).toLowerCase().contains(normalizedFilter))
+                    .collect(Collectors.toList());
+        } else {
+            lista = findAll();
+            lista = lista.stream()
+                    .filter(entity -> getKeyUnica(entity).toLowerCase().contains(normalizedFilter))
+                    .collect(Collectors.toList());
+        }// end of if/else cycle
+
+        return lista;
     }// end of method
-
-
-    //    /**
-//     * Colonne visibili (e ordinate) nella Grid
-//     * Sovrascrivibile
-//     * La colonna key ID normalmente non si visualizza
-//     * 1) Se questo metodo viene sovrascritto, si utilizza la lista della sottoclasse specifica (con o senza ID)
-//     * 2) Se la classe AEntity->@AIList(columns = ...) prevede una lista specifica, usa quella lista (con o senza ID)
-//     * 3) Se non trova AEntity->@AIList, usa tutti i campi della AEntity (senza ID)
-//     * 5) Vengono visualizzati anche i campi delle superclassi della classe AEntity
-//     * Ad esempio: company2 della classe ACompanyEntity (se è previsto e se è un developer)
-//     *
-//     * @return lista di fields visibili nella Grid
-//     */
-//    @Override
-//    public List<Field> getListFields() {
-//        List<Field> listaField = null;
-//        List<String> listaNomi = null;
-//
-//        //--Se la classe AEntity->@AIList prevede una lista specifica, usa quella lista (con o senza ID)
-//        //--rimanda ad un metodo separato per poterlo sovrascrivere
-////        listaNomi = this.getListFieldsName();
-//
-//        //--Se non trova nulla, usa tutti i campi (senza ID, senza note, senza creazione, senza modifica)
-//        //--rimanda ad un metodo separato per poterlo sovrascrivere
-////        listaField = getListFields(listaNomi);
-//
-//        return listaField;
-//    }// end of method
 
 
     /**
@@ -255,153 +253,6 @@ public class AService implements IAService {
     public List<String> getFormPropertiesName() {
         return annotation.getFormPropertiesName(entityClass);
     }// end of method
-
-//    /**
-//     * Fields dichiarati nella Entity, da usare come columns della Grid (List)
-//     * Se listaNomi è nulla, usa tutti i campi (senza ID, senza note, senza creazione, senza modifica)
-//     * Comprende la entity e tutte le superclassi (fino a ACEntity e AEntity)
-//     * Se la company2 è prevista (AlgosApp.USE_MULTI_COMPANY, login.isDeveloper() e entityClazz derivata da ACEntity),
-//     * la posiziona come prima colonna a sinistra
-//     *
-//     * @param listaNomi dei fields da considerare. Tutti, se listaNomi=null
-//     *
-//     * @return lista di fields visibili nella Grid
-//     */
-//    protected List<Field> getListFields(List<String> listaNomi) {
-//        return reflection.getListFields(entityClass, listaNomi);
-//    }// end of method
-
-
-//    /**
-//     * Fields visibili (e ordinati) nel Form
-//     * Sovrascrivibile
-//     * Il campo key ID normalmente non viene visualizzato
-//     * 1) Se questo metodo viene sovrascritto, si utilizza la lista della sottoclasse specifica (con o senza ID)
-//     * 2) Se la classe AEntity->@AIForm(fields = ...) prevede una lista specifica, usa quella lista (con o senza ID)
-//     * 3) Se non trova AEntity->@AIForm, usa tutti i campi della AEntity (senza ID)
-//     * 5) Vengono visualizzati anche i campi delle superclassi della classe AEntity
-//     * Ad esempio: company2 della classe ACompanyEntity (se è previsto e se è un developer)
-//     *
-//     * @return lista di fields visibili nel Form
-//     */
-//    @Override
-//    public List<Field> getFormFields() {
-//        List<Field> listaField = null;
-//        List<String> listaNomi = null;
-//
-//        //--Se la classe AEntity->@AIForm prevede una lista specifica, usa quella lista (con o senza ID)
-//        //--rimanda ad un metodo separato per poterlo sovrascrivere
-////        listaNomi = this.getFormFieldsName();
-//
-//        //--Se non trova nulla, usa tutti i campi:
-//        //--user = senza ID, senza note, senza creazione, senza modifica
-//        //--developer = con ID, con note, con creazione, con modifica
-//        //--rimanda ad un metodo separato per poterlo sovrascrivere
-////        listaField = this.getFormFields(listaNomi);
-//
-//        return listaField;
-//    }// end of method
-
-
-//    /**
-//     * Nomi dei fields da considerare per estrarre i Java Reflected Field dalle @Annotation della Entity
-//     * Se la classe AEntity->@AIForm prevede una lista specifica, usa quella lista (con o senza ID)
-//     * Sovrascrivibile
-//     *
-//     * @return nomi dei fields, oppure null se non esiste l'Annotation specifica @AIForm() nella Entity
-//     */
-//    protected List<String> getFormFieldsName() {
-//        return annotation.getFormFieldsName(entityClass);
-//    }// end of method
-
-
-//    /**
-//     * Fields dichiarati nella Entity, da usare come campi del Form
-//     * Se listaNomi è nulla, usa tutti i campi:
-//     * user = senza ID, senza note, senza creazione, senza modifica
-//     * developer = con ID, con note, con creazione, con modifica
-//     * Comprende la entity e tutte le superclassi (fino a ACEntity e AEntity)
-//     * Se la company2 è prevista (AlgosApp.USE_MULTI_COMPANY, login.isDeveloper() e entityClazz derivata da ACEntity),
-//     * la posiziona come secondo campo in alto, dopo la keyID
-//     *
-//     * @param listaNomi dei fields da considerare. Tutti, se listaNomi=null
-//     *
-//     * @return lista di fields visibili nel Form
-//     */
-//    protected List<Field> getFormFields(List<String> listaNomi) {
-//        return reflection.getFormFields(entityClass, listaNomi);
-//    }// end of method
-
-
-//    /**
-//     * Lista di bottoni presenti nella toolbar (footer) della view AList
-//     * Legge la enumeration indicata nella @Annotation della AEntity
-//     *
-//     * @return lista (type) di bottoni visibili nella toolbar della view AList
-//     */
-//    public List<EATypeButton> getListTypeButtons() {
-//        EAListButton listaBottoni = annotation.getListBotton(entityClass);
-//        EATypeButton[] matrice = null;
-//
-//        if (listaBottoni != null) {
-//            switch (listaBottoni) {
-//                case standard:
-//                    matrice = new EATypeButton[]{EATypeButton.create, EATypeButton.edit, EATypeButton.delete, EATypeButton.search};
-//                    break;
-//                case noSearch:
-//                    matrice = new EATypeButton[]{EATypeButton.create, EATypeButton.edit, EATypeButton.delete};
-//                    break;
-//                case noCreate:
-//                    matrice = new EATypeButton[]{EATypeButton.edit, EATypeButton.delete};
-//                    break;
-//                case edit:
-//                    matrice = new EATypeButton[]{EATypeButton.edit};
-//                    break;
-//                case show:
-//                    matrice = new EATypeButton[]{EATypeButton.show};
-//                    break;
-//                case noButtons:
-//                    matrice = new EATypeButton[]{};
-//                    break;
-//                default:
-//                    log.warn("Switch - caso non definito");
-//                    break;
-//            } // end of switch statement
-//        }// end of if cycle
-//
-//        return Arrays.asList(matrice);
-//    }// end of method
-
-
-//    /**
-//     * Lista di bottoni presenti nella toolbar (footer) della view AForm
-//     * Legge la enumeration indicata nella @Annotation della AEntity
-//     *
-//     * @return lista (type) di bottoni visibili nella toolbar della view AForm
-//     */
-//    public List<EATypeButton> getFormTypeButtons() {
-//        EAFormButton listaBottoni = annotation.getFormBotton(entityClass);
-//        EATypeButton[] matrice = null;
-//
-//        if (listaBottoni != null) {
-//            switch (listaBottoni) {
-//                case standard:
-//                    matrice = new EATypeButton[]{EATypeButton.annulla, EATypeButton.revert, EATypeButton.registra};
-//                    break;
-//                case show:
-//                    matrice = new EATypeButton[]{EATypeButton.annulla};
-//                    break;
-//                case conferma:
-//                    matrice = new EATypeButton[]{EATypeButton.annulla, EATypeButton.conferma};
-//                    break;
-//                default:
-//                    log.warn("Switch - caso non definito");
-//                    break;
-//            } // end of switch statement
-//        }// end of if cycle
-//
-//        return Arrays.asList(matrice);
-//    }// end of method
 
 
     /**
@@ -710,7 +561,7 @@ public class AService implements IAService {
 
 //    /**
 //     * Controlla che la entity estenda ACompanyEntity
-//     * Se manca la company2, cerca di usare quella del login (se esiste)
+//     * Se manca la company, cerca di usare quella del login (se esiste)
 //     * Se la campany manca ancora, lancia l'eccezione
 //     * //     * Controlla che la gestione della chiave unica sia soddisfatta
 //     *
@@ -795,24 +646,5 @@ public class AService implements IAService {
 //        return repository.count() == 0;
 //    }// end of method
 
-
-
-
-//    /**
-//     * Ordine di presentazione (obbligatorio, unico per tutte le eventuali company2),
-//     * Viene calcolato in automatico alla creazione della entity
-//     * Recupera dal DB il valore massimo pre-esistente della property
-//     * Incrementa di uno il risultato
-//     */
-//    public int getNewOrdine() {
-//        int ordine = 0;
-//
-//        List<Object> lista = repository.findTop1AllByOrderByOrdineDesc();
-//        if (lista != null && lista.size() == 1) {
-//            ordine = lista.get(0).getOrdine();
-//        }// end of if cycle
-//
-//        return ordine + 1;
-//    }// end of method
 
 }// end of class

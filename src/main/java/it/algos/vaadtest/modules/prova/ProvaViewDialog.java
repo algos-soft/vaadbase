@@ -42,7 +42,7 @@ public class ProvaViewDialog extends AViewDialog<Prova> {
 
 
    /**
-     * Costruttore @Autowired <br>
+     * Costruttore <br>
      * Si usa un @Qualifier(), per avere dall'interfaccia la sottoclasse specifica <br>
      * Si usa una costante statica, per essere sicuri di scrivere sempre uguali i riferimenti <br>
      *

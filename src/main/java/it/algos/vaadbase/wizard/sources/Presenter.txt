@@ -33,13 +33,14 @@ import static it.algos.@MODULELOWER@.application.@APPCOST@.@QUALIFIER@;
 public class @ENTITY@Presenter extends APresenter {
 
     /**
-     * Costruttore @Autowired <br>
+     * Costruttore <br>
      * Si usa un @Qualifier(), per avere la sottoclasse specifica <br>
      * Si usa una costante statica, per essere sicuri di scrivere sempre uguali i riferimenti <br>
      * Regola il modello-dati specifico e lo passa al costruttore della superclasse <br>
      *
      * @param service layer di collegamento per la Repository e la Business Logic
      */
+    @Autowired
     public @ENTITY@Presenter(@Qualifier(@QUALIFIER@) IAService service) {
         super(@ENTITY@.class, service);
      }// end of Spring constructor

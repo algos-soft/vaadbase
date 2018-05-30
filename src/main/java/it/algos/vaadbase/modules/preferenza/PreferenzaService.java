@@ -197,26 +197,26 @@ public class PreferenzaService extends AService {
     }// end of method
 
 
-    /**
-     * Fetches the entities whose 'main text property' matches the given filter text.
-     * <p>
-     * The matching is case insensitive. When passed an empty filter text,
-     * the method returns all categories. The returned list is ordered by name.
-     * The 'main text property' is different in each entity class and chosen in the specific subclass
-     *
-     * @param filter the filter text
-     *
-     * @return the list of matching entities
-     */
-    @Override
-    public List<Preferenza> findFilter(String filter) {
-        String normalizedFilter = filter.toLowerCase();
-        List<Preferenza> lista = findAll();
-
-        return lista.stream()
-                .filter(entity -> entity.getCode().toLowerCase().contains(normalizedFilter))
-                .collect(Collectors.toList());
-    }// end of method
+//    /**
+//     * Fetches the entities whose 'main text property' matches the given filter text.
+//     * <p>
+//     * The matching is case insensitive. When passed an empty filter text,
+//     * the method returns all categories. The returned list is ordered by name.
+//     * The 'main text property' is different in each entity class and chosen in the specific subclass
+//     *
+//     * @param filter the filter text
+//     *
+//     * @return the list of matching entities
+//     */
+//    @Override
+//    public List<Preferenza> findFilter(String filter) {
+//        String normalizedFilter = filter.toLowerCase();
+//        List<Preferenza> lista = findAll();
+//
+//        return lista.stream()
+//                .filter(entity -> entity.getCode().toLowerCase().contains(normalizedFilter))
+//                .collect(Collectors.toList());
+//    }// end of method
 
 
     /**

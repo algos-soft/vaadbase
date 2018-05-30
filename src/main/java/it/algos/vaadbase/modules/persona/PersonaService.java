@@ -120,27 +120,6 @@ public class PersonaService extends AService {
     }// end of method
 
 
-    /**
-     * Fetches the entities whose 'main text property' matches the given filter text.
-     * <p>
-     * The matching is case insensitive. When passed an empty filter text,
-     * the method returns all categories. The returned list is ordered by name.
-     * The 'main text property' is different in each entity class and chosen in the specific subclass
-     *
-     * @param filter the filter text
-     *
-     * @return the list of matching entities
-     */
-    @Override
-    public List<Persona> findFilter(String filter) {
-        String normalizedFilter = filter.toLowerCase();
-        List<Persona> lista = repository.findAll();
-
-        return lista.stream()
-                .filter(entity -> entity.getCognome().toLowerCase().contains(normalizedFilter))
-                .sorted((entity1, entity2) -> entity1.getCognome().compareToIgnoreCase(entity2.getCognome()))
-                .collect(Collectors.toList());
-    }// end of method
 
 
 }// end of class

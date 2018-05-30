@@ -56,8 +56,8 @@ import static it.algos.vaadbase.application.BaseCost.TAG_PRE;
 @EqualsAndHashCode(callSuper = false)
 @Qualifier(TAG_PRE)
 @AIEntity(company = EACompanyRequired.facoltativa)
-@AIList(fields = {"ordine", "code", "type"})
-@AIForm(fields = {"ordine", "code", "descrizione", "type"})
+@AIList(fields = {"company","ordine", "code", "type"})
+@AIForm(fields = {"company","ordine", "code", "descrizione", "type"})
 @AIScript(sovrascrivibile = false)
 public class Preferenza extends ACEntity {
 
