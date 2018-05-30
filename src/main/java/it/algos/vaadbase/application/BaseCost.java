@@ -10,7 +10,6 @@ import java.util.List;
 import java.util.Locale;
 
 public class BaseCost {
-	public final static String TAG_PRE = "preferenza";
     public final static boolean USA_BAKERY_PAGES = false;
     public static final Locale APP_LOCALE = Locale.US;
 
@@ -24,6 +23,7 @@ public class BaseCost {
     public final static String TAG_PER = "person";
     public final static String TAG_COM = "company";
     public final static String TAG_ROL = "role";
+    public final static String TAG_PRE = "preferenza";
 
 
     public static final String PAGE_ROOT = "";

@@ -8,6 +8,7 @@ import com.vaadin.flow.router.Route;
 import it.algos.vaadbase.backend.login.ALogin;
 import it.algos.vaadbase.modules.company.Company;
 import it.algos.vaadbase.modules.company.CompanyService;
+import it.algos.vaadbase.modules.preferenza.PreferenzaData;
 import it.algos.vaadbase.modules.role.RoleData;
 import it.algos.vaadbase.ui.AView;
 import it.algos.vaadbase.ui.MainLayout;
@@ -40,6 +41,8 @@ public class DeveloperView extends AView {
     private ALogin login;
     @Autowired
     private RoleData roleData;
+    @Autowired
+    private PreferenzaData prefData;
 
     public DeveloperView() {
     }// end of Spring constructor
@@ -88,6 +91,7 @@ public class DeveloperView extends AView {
 
     private void reset() {
         roleData.crea();
+        prefData.crea();
     }// end of method
 
 

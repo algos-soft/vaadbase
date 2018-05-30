@@ -1,7 +1,6 @@
 package it.algos.vaadbase.modules.role;
 
 import com.vaadin.flow.spring.annotation.SpringComponent;
-import it.algos.vaadtest.modules.prova.Prova;
 import lombok.extern.slf4j.Slf4j;
 import org.bson.types.ObjectId;
 import java.util.List;

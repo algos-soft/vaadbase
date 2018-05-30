@@ -1,12 +1,16 @@
 package it.algos.vaadbase.boot;
 
 import it.algos.vaadbase.application.BaseCost;
+import it.algos.vaadbase.developer.DeveloperView;
 import it.algos.vaadbase.modules.address.AddressViewList;
 import it.algos.vaadbase.modules.company.CompanyViewList;
 import it.algos.vaadbase.modules.persona.PersonaViewList;
+import it.algos.vaadbase.modules.preferenza.EAPreferenza;
+import it.algos.vaadbase.modules.preferenza.PreferenzaData;
 import it.algos.vaadbase.modules.preferenza.PreferenzaViewList;
 import it.algos.vaadbase.modules.role.RoleData;
 import it.algos.vaadbase.modules.role.RoleViewList;
+import it.algos.vaadbase.service.APreferenzaService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.event.ContextRefreshedEvent;
 import org.springframework.context.event.EventListener;
@@ -35,14 +39,23 @@ public abstract class ABoot implements ServletContextListener {
      * Inietta da Spring come 'singleton'
      */
     @Autowired
-    public RoleData role;
+    public RoleData roleData;
+    /**
+     * Inietta da Spring come 'singleton'
+     */
+    @Autowired
+    protected APreferenzaService pref;
+    /**
+     * Inietta da Spring come 'singleton'
+     */
+    @Autowired
+    private PreferenzaData prefData;
 
 //    /**
 //     * Inietta da Spring come 'singleton'
 //     */
 //    @Autowired
 //    public StatoData stato;
-
 
     /**
      * Executed on container startup
@@ -96,11 +109,20 @@ public abstract class ABoot implements ServletContextListener {
      * Inizializzazione dei dati standard di alcune collections sul DB Mongo
      */
     protected void iniziaDataStandard() {
-        this.role.findOrCrea();
+        this.roleData.findOrCrea();
+        this.prefData.findOrCrea();
+
 //        this.logtype.findOrCrea();
 //        this.stato.findOrCrea();
     }// end of method
 
+    /**
+     * Regola alcune preferenze iniziali
+     * Se non esistono, le crea
+     * Se esistono, sostituisce i valori esistenti con quelli indicati qui
+     */
+    protected void regolaPreferenze() {
+    }// end of method
 
     /**
      * Aggiunge le @Route (view) standard
@@ -109,11 +131,24 @@ public abstract class ABoot implements ServletContextListener {
      * Verranno lette da MainLayout la prima volta che il browser 'chiama' una view
      */
     protected void addRouteStandard() {
-        BaseCost.MENU_CLAZZ_LIST.add(RoleViewList.class);
-        BaseCost.MENU_CLAZZ_LIST.add(CompanyViewList.class);
-        BaseCost.MENU_CLAZZ_LIST.add(PreferenzaViewList.class);
-        BaseCost.MENU_CLAZZ_LIST.add(AddressViewList.class); //@todo da levare per il deploy finale
-        BaseCost.MENU_CLAZZ_LIST.add(PersonaViewList.class); //@todo da levare per il deploy finale
+        if (pref.isBool(EAPreferenza.showCompany.getCode())) {
+            BaseCost.MENU_CLAZZ_LIST.add(CompanyViewList.class);
+        }// end of if cycle
+        if (pref.isBool(EAPreferenza.showPreferenza.getCode())) {
+            BaseCost.MENU_CLAZZ_LIST.add(PreferenzaViewList.class);
+        }// end of if cycle
+        if (pref.isBool(EAPreferenza.showRole.getCode())) {
+            BaseCost.MENU_CLAZZ_LIST.add(RoleViewList.class);
+        }// end of if cycle
+        if (pref.isBool(EAPreferenza.showAddress.getCode())) {
+            BaseCost.MENU_CLAZZ_LIST.add(AddressViewList.class);
+        }// end of if cycle
+        if (pref.isBool(EAPreferenza.showPerson.getCode())) {
+            BaseCost.MENU_CLAZZ_LIST.add(PersonaViewList.class);
+        }// end of if cycle
+        if (pref.isBool(EAPreferenza.showDeveloper.getCode())) {
+            BaseCost.MENU_CLAZZ_LIST.add(DeveloperView.class);
+        }// end of if cycle
     }// end of method
 
 }// end of class

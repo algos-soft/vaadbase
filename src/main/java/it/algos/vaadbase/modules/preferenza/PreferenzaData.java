@@ -1,7 +1,6 @@
-package it.algos.vaadbase.modules.role;
+package it.algos.vaadbase.modules.preferenza;
 
 import com.vaadin.flow.spring.annotation.SpringComponent;
-import it.algos.vaadbase.application.BaseCost;
 import it.algos.vaadbase.backend.data.AData;
 import it.algos.vaadbase.backend.service.IAService;
 import lombok.extern.slf4j.Slf4j;
@@ -10,13 +9,14 @@ import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.beans.factory.config.ConfigurableBeanFactory;
 import org.springframework.context.annotation.Scope;
 
+import static it.algos.vaadbase.application.BaseCost.TAG_PRE;
+
 /**
- * Project springvaadin
+ * Project vaadbase
  * Created by Algos
  * User: gac
- * Date: dom, 12-nov-2017
- * Time: 14:54
- * <p>
+ * Date: mer, 30-mag-2018
+ * Time: 07:20
  * Estende la classe astratta AData per la costruzione inziale della Collection <br>
  * I valori iniziali sono presi da una Enumeration codificata e standard <br>
  * Vengono caricati sul DB (mongo) in modo che se ne possano aggiungere altri specifici per l'applicazione<br>
@@ -28,10 +28,9 @@ import org.springframework.context.annotation.Scope;
  */
 @SpringComponent
 @Scope(ConfigurableBeanFactory.SCOPE_SINGLETON)
-@Qualifier(BaseCost.TAG_ROL)
+@Qualifier(TAG_PRE)
 @Slf4j
-public class RoleData extends AData {
-
+public class PreferenzaData extends AData {
 
     /**
      * Il service viene iniettato dal costruttore, in modo che sia disponibile nella superclasse,
@@ -39,7 +38,7 @@ public class RoleData extends AData {
      * Spring costruisce al volo, quando serve, una implementazione di IAService (come previsto dal @Qualifier)
      * Qui si una una interfaccia locale (col casting nel costruttore) per usare i metodi specifici
      */
-    private RoleService service;
+    private PreferenzaService service;
 
 
     /**
@@ -51,9 +50,9 @@ public class RoleData extends AData {
      * @param service iniettato da Spring come sottoclasse concreta specificata dal @Qualifier
      */
     @Autowired
-    public RoleData(@Qualifier(BaseCost.TAG_ROL) IAService service) {
+    public PreferenzaData(@Qualifier(TAG_PRE) IAService service) {
         super(service);
-        this.service = (RoleService) service;
+        this.service = (PreferenzaService) service;
     }// end of Spring constructor
 
 
@@ -82,10 +81,9 @@ public class RoleData extends AData {
     public void crea() {
         service.deleteAll();
 
-        for (EARole ruolo : EARole.values()) {
-            service.crea(ruolo.toString());
+        for (EAPreferenza p : EAPreferenza.values()) {
+            service.crea(p.getCode(), p.getDescrizione(), p.getType(), p.getValue());
         }// end of for cycle
     }// end of method
-
 
 }// end of class

@@ -4,6 +4,8 @@ import com.vaadin.flow.spring.annotation.SpringComponent;
 import it.algos.vaadbase.annotation.AIScript;
 import it.algos.vaadbase.backend.entity.AEntity;
 import it.algos.vaadbase.backend.service.AService;
+import it.algos.vaadbase.enumeration.EAPrefType;
+import it.algos.vaadbase.modules.company.Company;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.beans.factory.config.ConfigurableBeanFactory;
@@ -64,17 +66,24 @@ public class PreferenzaService extends AService {
     /**
      * Ricerca di una entity (la crea se non la trova) <br>
      *
-     * @param code di riferimento (obbligatorio ed unico)
+     * @param code        codice di riferimento (obbligatorio)
+     * @param descrizione (facoltativa)
+     * @param type        (obbligatorio) per convertire in byte[] i valori
+     * @param value       (obbligatorio) memorizza tutto in byte[]
      *
      * @return la entity trovata o appena creata
      */
-    public Preferenza findOrCrea(String code) {
+    public Preferenza findOrCrea(String code, String descrizione, EAPrefType type, Object value) {
         Preferenza entity = findByKeyUnica(code);
 
         if (entity == null) {
-            entity = newEntity(0, code, "");
+            entity = crea(code, descrizione, type, value);
+        } else {
+            entity.setDescrizione(descrizione);
+            entity.setType(type);
+            entity.setValue(type != null ? type.objectToBytes(value) : (byte[]) null);
             save(entity);
-        }// end of if cycle
+        }// end of if/else cycle
 
         return entity;
     }// end of method
@@ -82,16 +91,16 @@ public class PreferenzaService extends AService {
     /**
      * Crea una entity e la registra <br>
      *
-     * @param code di riferimento (obbligatorio ed unico)
+     * @param code        codice di riferimento (obbligatorio)
+     * @param descrizione (facoltativa)
+     * @param type        (obbligatorio) per convertire in byte[] i valori
+     * @param value       (obbligatorio) memorizza tutto in byte[]
      *
      * @return la entity appena creata
      */
-    public Preferenza crea(String code) {
-        Preferenza entity;
-
-        entity = newEntity(0, code, "");
+    public Preferenza crea(String code, String descrizione, EAPrefType type, Object value) {
+        Preferenza entity = newEntity((Company) null, 0, code, descrizione, type, value);
         save(entity);
-
         return entity;
     }// end of method
 
@@ -104,9 +113,26 @@ public class PreferenzaService extends AService {
      */
     @Override
     public Preferenza newEntity() {
-        return newEntity(0, "", "");
+        return newEntity(null, 0, "", "", null, null);
     }// end of method
 
+
+    /**
+     * Creazione in memoria di una nuova entity che NON viene salvata <br>
+     * Eventuali regolazioni iniziali delle property <br>
+     * Properties obbligatorie
+     * Gli argomenti (parametri) della new Entity DEVONO essere ordinati come nella Entity (costruttore lombok) <br>
+     *
+     * @param code        codice di riferimento (obbligatorio)
+     * @param descrizione (facoltativa)
+     * @param type        (obbligatorio) per convertire in byte[] i valori
+     * @param value       (obbligatorio) memorizza tutto in byte[]
+     *
+     * @return la nuova entity appena creata (non salvata)
+     */
+    public Preferenza newEntity(String code, String descrizione, EAPrefType type, Object value) {
+        return newEntity((Company) null, 0, code, descrizione, type, value);
+    }// end of method
 
     /**
      * Creazione in memoria di una nuova entity che NON viene salvata <br>
@@ -114,13 +140,16 @@ public class PreferenzaService extends AService {
      * All properties <br>
      * Gli argomenti (parametri) della new Entity DEVONO essere ordinati come nella Entity (costruttore lombok) <br>
      *
+     * @param company     di appartenenza (obbligatoria, se manca viene recuperata dal login)
      * @param ordine      di presentazione (obbligatorio con inserimento automatico se è zero)
      * @param code        codice di riferimento (obbligatorio)
-     * @param descrizione (facoltativa, non unica)
+     * @param descrizione (facoltativa)
+     * @param type        (obbligatorio) per convertire in byte[] i valori
+     * @param value       (obbligatorio) memorizza tutto in byte[]
      *
      * @return la nuova entity appena creata (non salvata)
      */
-    public Preferenza newEntity(int ordine, String code, String descrizione) {
+    public Preferenza newEntity(Company company, int ordine, String code, String descrizione, EAPrefType type, Object value) {
         Preferenza entity = null;
 
         entity = findByKeyUnica(code);
@@ -130,11 +159,13 @@ public class PreferenzaService extends AService {
 
         entity = Preferenza.builder()
                 .ordine(ordine != 0 ? ordine : this.getNewOrdine())
-                .code(code)
-                .descrizione(descrizione)
+                .code(code.equals("") ? null : code)
+                .descrizione(descrizione.equals("") ? null : descrizione)
+                .type(type)
+                .value(type != null ? type.objectToBytes(value) : (byte[]) null)
                 .build();
 
-        return entity;
+        return (Preferenza) addCompany(entity, company);
     }// end of method
 
     /**
@@ -188,6 +219,14 @@ public class PreferenzaService extends AService {
     }// end of method
 
 
+    /**
+     * Property unica (se esiste).
+     */
+    @Override
+    public String getPropertyUnica(AEntity entityBean) {
+        return ((Preferenza) entityBean).getCode();
+    }// end of method
+
 //    /**
 //     * Opportunità di controllare (per le nuove schede) che la key unica non esista già. <br>
 //     * Invocato appena prima del save(), solo per una nuova entity <br>
@@ -226,93 +265,5 @@ public class PreferenzaService extends AService {
         return ordine + 1;
     }// end of method
 
-
-    private Preferenza get(String code) {
-        return findByKeyUnica(code);
-    } // end of static method
-
-
-    public Object getValue(String code) {
-        return get(code).getValue();
-    } // end of static method
-
-
-    public String getString(String code) {
-        return (String) getValue(code);
-    } // end of static method
-
-//    public static String getString(String code, Object defaultValue) {
-//        return getString(code, CompanySessionLib.getCompany(), defaultValue);
-//    } // end of static method
-//
-//    public static String getString(String code, BaseCompany company) {
-//        return getString(code, company, "");
-//    } // end of static method
-//
-//    public static String getString(String code, BaseCompany company, Object defaultValue) {
-//        Pref pref = Pref.findByCode(code, company);
-//
-//        if (pref != null) {
-//            return (String) pref.getValore();
-//        }// end of if cycle
-//
-//        if (defaultValue != null && defaultValue instanceof String) {
-//            return (String) defaultValue;
-//        }// end of if cycle
-//
-//        return null;
-//    } // end of static method
-//
-//    public static Boolean getBool(String code) {
-//        return getBool(code, "");
-//    } // end of static method
-//
-//    public static Boolean getBool(String code, Object defaultValue) {
-//        return getBool(code, CompanySessionLib.getCompany(), defaultValue);
-//    } // end of static method
-//
-//    public static Boolean getBool(String code, BaseCompany company) {
-//        return getBool(code, company, "");
-//    } // end of static method
-//
-//    public static Boolean getBool(String code, BaseCompany company, Object defaultValue) {
-//        Pref pref = Pref.findByCode(code, company);
-//
-//        if (pref != null) {
-//            return (boolean) pref.getValore();
-//        }// end of if cycle
-//
-//        if (defaultValue != null && defaultValue instanceof Boolean) {
-//            return (boolean) defaultValue;
-//        }// end of if cycle
-//
-//        return false;
-//    } // end of static method
-//
-//    public static int getInt(String code) {
-//        return getInt(code, "");
-//    } // end of static method
-//
-//    public static int getInt(String code, Object defaultValue) {
-//        return getInt(code, CompanySessionLib.getCompany(), defaultValue);
-//    } // end of static method
-//
-//    public static int getInt(String code, BaseCompany company) {
-//        return getInt(code, company, "");
-//    } // end of static method
-//
-//    public static int getInt(String code, BaseCompany company, Object defaultValue) {
-//        Pref pref = Pref.findByCode(code, company);
-//
-//        if (pref != null) {
-//            return (int) pref.getValore();
-//        }// end of if cycle
-//
-//        if (defaultValue != null && defaultValue instanceof Integer) {
-//            return (int) defaultValue;
-//        }// end of if cycle
-//
-//        return 0;
-//    } // end of static method
 
 }// end of class

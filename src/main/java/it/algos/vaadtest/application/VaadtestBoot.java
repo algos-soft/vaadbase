@@ -5,14 +5,18 @@ import it.algos.vaadbase.annotation.AIScript;
 import it.algos.vaadbase.application.BaseCost;
 import it.algos.vaadbase.boot.ABoot;
 import it.algos.vaadbase.developer.DeveloperView;
+import it.algos.vaadbase.enumeration.EAPrefType;
+import it.algos.vaadbase.modules.preferenza.EAPreferenza;
+import it.algos.vaadbase.modules.preferenza.PreferenzaService;
+import it.algos.vaadbase.service.APreferenzaService;
 import it.algos.vaadbase.wizard.ui.WizardView;
+import it.algos.vaadtest.modules.bolla.BollaViewList;
 import it.algos.vaadtest.modules.prova.ProvaViewList;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.config.ConfigurableBeanFactory;
 import org.springframework.context.annotation.Scope;
 import org.springframework.context.event.ContextRefreshedEvent;
 import org.springframework.context.event.EventListener;
-import it.algos.vaadtest.modules.bolla.BollaViewList;
 
 /**
  * Project vaadbase
@@ -39,6 +43,14 @@ public class VaadtestBoot extends ABoot {
     protected CompanyData company;
 
     /**
+     * Inietta da Spring come 'singleton'
+     */
+    @Autowired
+    private PreferenzaService prefService;
+
+
+
+    /**
      * Running logic after the Spring context has been initialized
      * Any class that use this @EventListener annotation,
      * will be executed before the application is up and its onApplicationEvent method will be called
@@ -55,6 +67,7 @@ public class VaadtestBoot extends ABoot {
     public void onApplicationEvent(ContextRefreshedEvent event) {
         super.onApplicationEvent(event);
         this.iniziaData();
+        this.regolaPreferenze();
         this.addAllRouteView();
     }// end of method
 
@@ -65,6 +78,25 @@ public class VaadtestBoot extends ABoot {
         super.iniziaDataStandard();
         this.company.findOrCrea();
 //        this.utente.findOrCrea();
+    }// end of method
+
+
+    /**
+     * Regola alcune preferenze iniziali
+     * Se non esistono, le crea
+     * Se esistono, sostituisce i valori esistenti con quelli indicati qui
+     */
+    @Override
+    protected void regolaPreferenze() {
+        super.regolaPreferenze();
+
+        pref.setBool(EAPreferenza.showCompany.getCode(),true);
+        pref.setBool(EAPreferenza.showRole.getCode(),true);
+        pref.setBool(EAPreferenza.showPreferenza.getCode(),true);
+        pref.setBool(EAPreferenza.showPerson.getCode(),true);
+        pref.setBool(EAPreferenza.showAddress.getCode(),true);
+        pref.setBool(EAPreferenza.showDeveloper.getCode(),true);
+        pref.setBool(EAPreferenza.showWizard.getCode(),true);
     }// end of method
 
 
@@ -84,11 +116,9 @@ public class VaadtestBoot extends ABoot {
      * Verranno lette da MainLayout la prima volta che il browser 'chiama' una view
      */
     private void addRouteSpecifiche() {
-		BaseCost.MENU_CLAZZ_LIST.add(BollaViewList.class);
         BaseCost.MENU_CLAZZ_LIST.add(HomeView.class);
+        BaseCost.MENU_CLAZZ_LIST.add(BollaViewList.class);
         BaseCost.MENU_CLAZZ_LIST.add(ProvaViewList.class);
-        BaseCost.MENU_CLAZZ_LIST.add(WizardView.class);
-        BaseCost.MENU_CLAZZ_LIST.add(DeveloperView.class);
     }// end of method
 
 

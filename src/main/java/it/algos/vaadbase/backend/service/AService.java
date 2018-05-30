@@ -11,8 +11,6 @@ import it.algos.vaadbase.service.AAnnotationService;
 import it.algos.vaadbase.service.AReflectionService;
 import it.algos.vaadbase.service.ATextService;
 import it.algos.vaadbase.ui.AFieldService;
-import it.algos.vaadtest.modules.bolla.Bolla;
-import it.algos.vaadtest.modules.prova.Prova;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Scope;
