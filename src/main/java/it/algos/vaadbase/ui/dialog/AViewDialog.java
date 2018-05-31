@@ -6,20 +6,22 @@ import com.vaadin.flow.component.dialog.Dialog;
 import com.vaadin.flow.component.formlayout.FormLayout;
 import com.vaadin.flow.component.html.Div;
 import com.vaadin.flow.component.html.H2;
-import com.vaadin.flow.component.html.Label;
 import com.vaadin.flow.component.notification.Notification;
-import com.vaadin.flow.component.orderedlayout.FlexComponent;
 import com.vaadin.flow.component.orderedlayout.HorizontalLayout;
 import com.vaadin.flow.data.binder.Binder;
 import com.vaadin.flow.data.binder.BinderValidationStatus;
 import com.vaadin.flow.data.binder.ValidationResult;
 import com.vaadin.flow.shared.Registration;
+import it.algos.vaadbase.backend.service.AService;
 import it.algos.vaadbase.backend.service.IAService;
+import it.algos.vaadbase.modules.company.CompanyService;
 import it.algos.vaadbase.presenter.IAPresenter;
 import it.algos.vaadbase.ui.AFieldService;
+import it.algos.vaadbase.ui.fields.AComboBox;
 import it.algos.vaadbase.ui.fields.ATextArea;
 import it.algos.vaadbase.ui.fields.ATextField;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.beans.factory.annotation.Autowired;
 
 import java.io.Serializable;
 import java.util.ArrayList;
@@ -49,6 +51,11 @@ public abstract class AViewDialog<T extends Serializable> extends Dialog impleme
     private final HorizontalLayout buttonBar = new HorizontalLayout(saveButton, cancelButton, deleteButton);
     private final ConfirmationDialog<T> confirmationDialog = new ConfirmationDialog<>();
     public Consumer<T> itemAnnulla;
+    /**
+     * Service iniettato da Spring (@Scope = 'singleton'). Unica per tutta l'applicazione. Usata come libreria.
+     */
+    @Autowired
+    public CompanyService companyService;
     protected IAService service;
     protected IAPresenter presenter;
     //--collegamento tra i fields e la entityBean
@@ -62,6 +69,7 @@ public abstract class AViewDialog<T extends Serializable> extends Dialog impleme
     private Consumer<T> itemDeleter;
     private String itemType;
     private Registration registrationForSave;
+    protected AComboBox companyField;
 
     /**
      * Constructs a new instance.
@@ -213,6 +221,9 @@ public abstract class AViewDialog<T extends Serializable> extends Dialog impleme
 
         //--Aggiunge ogni singolo field al layout grafico
         addFieldsToLayout();
+
+        //--Controlla l'esistenza del field company e ne regola i valori
+        fixCompanyField();
     }// end of method
 
 
@@ -238,6 +249,23 @@ public abstract class AViewDialog<T extends Serializable> extends Dialog impleme
      */
     protected List<String> getSpecificFieldsList(List<String> properties) {
         return properties;
+    }// end of method
+
+
+    /**
+     * Controlla l'esistenza del field company e ne regola i valori
+     * Il field company esiste solo se si verificano contemporaneamente i seguenti:
+     * 1) l'applicazione usa multiCompany
+     * 2) la entity usa company
+     * 3) siamo collegati (login) come developer
+     */
+    private void fixCompanyField() {
+        companyField = (AComboBox) getField(AService.FIELD_NAME_COMPANY);
+        if (companyField != null) {
+            List items = companyService.findAll();
+            companyField.setItems(items);
+            companyField.setEnabled(false);
+        }// end of if cycle
     }// end of method
 
 
@@ -307,6 +335,7 @@ public abstract class AViewDialog<T extends Serializable> extends Dialog impleme
 
 
         creaFields();
+        readCompanyField();
         readSpecificFields();
         binder.readBean(currentItem);
 
@@ -317,7 +346,17 @@ public abstract class AViewDialog<T extends Serializable> extends Dialog impleme
 
 
     /**
-     * Legge la entityBean ed inserisce nella UI i valori di eventuali fields NON associati al binder
+     * Regola in lettura l'eeventuale field company (un combo)
+     * Dal DB alla UI
+     * Sovrascritto
+     */
+    protected void readCompanyField() {
+    }// end of method
+
+
+    /**
+     * Regola in lettura eventuali valori NON associati al binder
+     * Dal DB alla UI
      * Sovrascritto
      */
     protected void readSpecificFields() {

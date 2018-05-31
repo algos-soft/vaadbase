@@ -342,8 +342,8 @@ public class AReflectionService {
      *
      * @return lista di fields della Entity e di tutte le supeclassi
      */
-    public List<String> getAllFieldsNameNoCrono(Class<? extends AEntity> entityClazz) {
-        List<String> listaNomi = new ArrayList<>();
+    public ArrayList<String> getAllFieldsNameNoCrono(Class<? extends AEntity> entityClazz) {
+        ArrayList<String> listaNomi = new ArrayList<>();
         Class<?> clazz = entityClazz;
         Field[] fieldsArray = null;
 

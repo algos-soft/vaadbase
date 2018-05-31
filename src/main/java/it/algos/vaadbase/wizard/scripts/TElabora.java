@@ -57,6 +57,7 @@ public class TElabora {
     private static final String SUPERCLASS_ENTITY_COMPANY = "ACEntity";
     private static final String PROPERTY = "Property";
     private static final String METHOD = "Method";
+    private static final String PROPERTY_COMPANY_NAME = "Company";
     private static final String PROPERTY_ORDINE_NAME = "Ordine";
     private static final String PROPERTY_CODE_NAME = "Code";
     private static final String PROPERTY_DESCRIZIONE_NAME = "Descrizione";
@@ -533,6 +534,9 @@ public class TElabora {
         String apici = "\"";
         String virgola = ", ";
 
+        if (flagCompany) {
+            propertiesText += apici + PROPERTY_COMPANY_NAME.toLowerCase() + apici + virgola;
+        }// end of if cycle
         if (flagOrdine) {
             propertiesText += apici + PROPERTY_ORDINE_NAME.toLowerCase() + apici + virgola;
         }// end of if cycle

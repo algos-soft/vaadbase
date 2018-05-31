@@ -16,6 +16,7 @@ import org.springframework.core.env.Environment;
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Size;
 import java.lang.reflect.Field;
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
@@ -278,8 +279,8 @@ public class AAnnotationService {
      *
      * @return lista di nomi di property, oppure null se non esiste l'Annotation specifica @AIList() nella Entity
      */
-    public List<String> getGridPropertiesName(final Class<? extends AEntity> entityClazz) {
-        List<String> lista = null;
+    public ArrayList<String> getGridPropertiesName(final Class<? extends AEntity> entityClazz) {
+        ArrayList<String> lista = null;
         String[] properties = null;
         AIList annotation = this.getAIList(entityClazz);
 
@@ -288,7 +289,7 @@ public class AAnnotationService {
         }// end of if cycle
 
         if (array.isValid(properties)) {
-            lista = Arrays.asList(properties);
+            lista = new ArrayList<String>(Arrays.asList(properties));
         }// end of if cycle
 
         return lista;
@@ -303,8 +304,8 @@ public class AAnnotationService {
      *
      * @return lista di nomi di property, oppure null se non esiste l'Annotation specifica @AIForm() nella Entity
      */
-    public List<String> getFormPropertiesName(final Class<? extends AEntity> entityClazz) {
-        List<String> lista = null;
+    public ArrayList<String> getFormPropertiesName(final Class<? extends AEntity> entityClazz) {
+        ArrayList<String> lista = null;
         String[] properties = null;
         AIForm annotation = this.getAIForm(entityClazz);
 
@@ -313,7 +314,7 @@ public class AAnnotationService {
         }// end of if cycle
 
         if (array.isValid(properties)) {
-            lista = Arrays.asList(properties);
+            lista = new ArrayList<String>(Arrays.asList(properties));
         }// end of if cycle
 
         if (array.isEmpty(lista)) {

@@ -18,6 +18,7 @@ import org.springframework.context.annotation.Scope;
 import org.springframework.data.domain.Sort;
 import org.springframework.data.mongodb.repository.MongoRepository;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;
@@ -35,9 +36,11 @@ import java.util.stream.Collectors;
 public class AService implements IAService {
 
 
-    protected final static String FIELD_NAME_ORDINE = "ordine";
-    protected final static String FIELD_NAME_CODE = "code";
-    protected final static String FIELD_NAME_DESCRIZIONE = "descrizione";
+    public final static String FIELD_NAME_ORDINE = "ordine";
+    public final static String FIELD_NAME_CODE = "code";
+    public final static String FIELD_NAME_DESCRIZIONE = "descrizione";
+    public final static String FIELD_NAME_COMPANY = "company";
+
     /**
      * Service iniettato da Spring (@Scope = 'singleton'). Unica per tutta l'applicazione. Usata come libreria.
      */
@@ -236,8 +239,14 @@ public class AService implements IAService {
      *
      * @return lista di nomi di property, oppure null se non esiste l'Annotation specifica @AIList() nella Entity
      */
-    public List<String> getGridPropertiesName() {
-        return annotation.getGridPropertiesName(entityClass);
+    public ArrayList<String> getGridPropertiesName() {
+        ArrayList<String> lista = annotation.getGridPropertiesName(entityClass);
+
+        if (lista.contains(FIELD_NAME_COMPANY) && !login.isDeveloper()) {
+            lista.remove(FIELD_NAME_COMPANY);
+        }// end of if cycle
+
+        return lista;
     }// end of method
 
     /**
@@ -250,8 +259,14 @@ public class AService implements IAService {
      * @return lista di nomi di property, oppure null se non esiste l'Annotation specifica @AIForm() nella Entity
      */
     @Override
-    public List<String> getFormPropertiesName() {
-        return annotation.getFormPropertiesName(entityClass);
+    public ArrayList<String> getFormPropertiesName() {
+        ArrayList<String> lista = annotation.getFormPropertiesName(entityClass);
+
+        if (lista.contains(FIELD_NAME_COMPANY) && !login.isDeveloper()) {
+            lista.remove(FIELD_NAME_COMPANY);
+        }// end of if cycle
+
+        return lista;
     }// end of method
 
 
