@@ -13,49 +13,41 @@ import lombok.extern.slf4j.Slf4j;
 public enum Task {
 
 
-    entity("Entity", ""),
-    list("ViewList", "ViewList"),
-    form("ViewDialog", "ViewDialog"),
-    presenter("Presenter", "Presenter"),
-    repository("Repository", "Repository"),
-    service("Service", "Service");
+    entity("Entity", "Entity", ""),
+    list("ViewList", "ViewList", "ViewList"),
+    form("ViewDialog", "ViewDialog", "ViewDialog"),
+    presenter("Presenter", "Presenter", "Presenter"),
+    repository("Repository", "Repository", "Repository"),
+    service("Service", "ServiceCompany", "Service");
 
 
-    private String source;
-    private String suffix;
+    private String sourceSenzaCompany;
+    private String sourceConCompany;
+    private String destinationSuffix;
 
 
-    Task(String source, String suffix) {
-        this.setSource(source);
-        this.setSuffix(suffix);
+    Task(String sourceSenzaCompany, String sourceConCompany, String destinationSuffix) {
+        this.sourceSenzaCompany = sourceSenzaCompany;
+        this.sourceConCompany = sourceConCompany;
+        this.destinationSuffix = destinationSuffix;
     }// fine del costruttore
 
 
-    public String getSourceName() {
+    public String getSourceName(boolean flagCompany) {
         String txt = ".txt";
-        return getSource() + txt;
+
+        if (flagCompany) {
+            return sourceConCompany + txt;
+        } else {
+            return sourceSenzaCompany + txt;
+        }// end of if/else cycle
     }// end of method
 
 
     public String getJavaClassName() {
         String java = ".java";
-        return getSuffix() + java;
+        return destinationSuffix + java;
     }// end of method
 
 
-    public void setSuffix(String suffix) {
-        this.suffix = suffix;
-    }// end of method
-
-    public String getSource() {
-        return source;
-    }
-
-    public void setSource(String source) {
-        this.source = source;
-    }
-
-    public String getSuffix() {
-        return suffix;
-    }
 }// end of enumeration

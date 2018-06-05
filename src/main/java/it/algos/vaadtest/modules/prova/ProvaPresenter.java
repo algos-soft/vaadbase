@@ -2,20 +2,22 @@ package it.algos.vaadtest.modules.prova;
 
 import com.vaadin.flow.spring.annotation.SpringComponent;
 import it.algos.vaadbase.annotation.AIScript;
-import it.algos.vaadbase.backend.service.IAService;
 import it.algos.vaadbase.presenter.APresenter;
+import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
-import org.springframework.beans.factory.config.ConfigurableBeanFactory;
+import org.springframework.context.annotation.Lazy;
 import org.springframework.context.annotation.Scope;
-
+import org.springframework.beans.factory.config.ConfigurableBeanFactory;
+import it.algos.vaadbase.backend.service.IAService;
+import it.algos.vaadbase.ui.IAView;
 import static it.algos.vaadtest.application.AppCost.TAG_PRO;
 
 /**
  * Project vaadtest <br>
  * Created by Algos <br>
  * User: Gac <br>
- * Date: 29-mag-2018 22.50.44 <br>
+ * Date: 5-giu-2018 16.50.06 <br>
  * <br>
  * Estende la classe astratta APresenter che gestisce la business logic del package <br>
  * <br>
@@ -41,7 +43,7 @@ public class ProvaPresenter extends APresenter {
     @Autowired
     public ProvaPresenter(@Qualifier(TAG_PRO) IAService service) {
         super(Prova.class, service);
-    }// end of Spring constructor
+     }// end of Spring constructor
 
 
 }// end of class

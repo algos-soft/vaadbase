@@ -2,6 +2,7 @@ package it.algos.@MODULELOWER@.modules.@PACKAGE@;
 
 import com.vaadin.flow.spring.annotation.SpringComponent;
 import it.algos.vaadbase.annotation.AIScript;
+import it.algos.vaadbase.modules.company.Company;
 import org.bson.types.ObjectId;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.beans.factory.config.ConfigurableBeanFactory;

@@ -2,6 +2,7 @@ package it.algos.vaadtest.modules.prova;
 
 import com.vaadin.flow.spring.annotation.SpringComponent;
 import it.algos.vaadbase.annotation.AIScript;
+import it.algos.vaadbase.modules.company.Company;
 import org.bson.types.ObjectId;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.beans.factory.config.ConfigurableBeanFactory;
@@ -14,7 +15,7 @@ import static it.algos.vaadtest.application.AppCost.TAG_PRO;
  * Project vaadtest <br>
  * Created by Algos <br>
  * User: Gac <br>
- * Date: 29-mag-2018 22.50.44 <br>
+ * Date: 5-giu-2018 16.50.06 <br>
  * <br>
  * Estende la l'interaccia MongoRepository col casting alla Entity relativa di questa repository <br>
  * <br>
@@ -34,16 +35,6 @@ public interface ProvaRepository extends MongoRepository<Prova, String> {
 
 	public Prova findByCode(String code);
 
-	public List<Prova> findAllByOrderByCodeAsc();
-
-	public Prova findByDescrizione(String descrizione);
-
-	public List<Prova> findAllByOrderByDescrizioneAsc();
-
-	public Prova findByOrdine(int ordine);
-
-	public List<Prova> findAllByOrderByOrdineAsc();
-
-	public List<Prova> findTop1AllByOrderByOrdineDesc();
+	public List<Prova> findAll();
 
 }// end of class

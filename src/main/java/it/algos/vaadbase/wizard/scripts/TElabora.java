@@ -65,9 +65,9 @@ public class TElabora {
     private static final String PROPERTY_CODE_SOURCE_NAME = PROPERTY + PROPERTY_CODE_NAME + SOURCE_SUFFIX;
     private static final String PROPERTY_DESCRIZIONE_SOURCE_NAME = PROPERTY + PROPERTY_DESCRIZIONE_NAME + SOURCE_SUFFIX;
     private static final String METHOD_FIND = METHOD + "Find" + SOURCE_SUFFIX;
-    private static final String METHOD_NEW_ENTITY = METHOD + "NewEntity" + SOURCE_SUFFIX;
     private static final String METHOD_NEW_ORDINE = METHOD + "NewOrdine" + SOURCE_SUFFIX;
     private static final String METHOD_ID_KEY_SPECIFICA = METHOD + "IdKeySpecifica" + SOURCE_SUFFIX;
+    private static final String METHOD_READ_COMPANY = METHOD + "ReadCompany" + SOURCE_SUFFIX;
     private static final String VIEW_SUFFIX = "ViewList";
     private static final String POM = "pom";
     private static final String COST_NAME = "AppCost";
@@ -85,26 +85,23 @@ public class TElabora {
      */
     @Autowired
     public ATextService text;
-
+    public String newEntityName;           //--dal dialogo di input
+    public boolean flagOrdine;             //--dal dialogo di input
+    public boolean flagCode;               //--dal dialogo di input
+    public boolean flagDescrizione;        //--dal dialogo di input
+    public boolean flagKeyCode;            //--dal dialogo di input
+    public boolean flagCompany;            //--dal dialogo di input
     //--regolate indipendentemente dai risultati del dialogo
     private String userDir;                 //--di sistema
     private String ideaProjectRootPath;     //--userDir meno PROJECT_BASE_NAME
     private String projectBasePath;         //--ideaProjectRootPath più PROJECT_BASE_NAME
     private String sourcePath;              //--projectBasePath più DIR_SOURCES
-
-
     //--risultati del dialogo
     private String targetProjectName;       //--dal dialogo di input
     private String targetModuleName;        //--dal dialogo di input
     private String newProjectName;          //--dal dialogo di input
     private String newPackageName;          //--dal dialogo di input
-    private String newEntityName;           //--dal dialogo di input
     private String newEntityTag;            //--dal dialogo di input
-    private boolean flagOrdine;             //--dal dialogo di input
-    private boolean flagCode;               //--dal dialogo di input
-    private boolean flagDescrizione;        //--dal dialogo di input
-    private boolean flagKeyCode;            //--dal dialogo di input
-    private boolean flagCompany;            //--dal dialogo di input
     private boolean flagSovrascrive;        //--dal dialogo di input
 
 
@@ -136,9 +133,11 @@ public class TElabora {
     private String methodNewOrdineText;
     private String methodIdKeySpecificaText;
     private String methodKeyUnicaText;
+    private String methodEstendeText;
     private String methodUsaCompanyText;
     private String methodAddCompanyText;
     private String methodBuilderText;
+    private String methodReadCompanyText;
     private String superClassEntity;
     private String importCost;
 
@@ -255,13 +254,6 @@ public class TElabora {
             this.qualifier = TAG + newEntityTag;
         }// end of if cycle
 
-//        if (mappaInput.containsKey(Chiave.targetProjectName)) {
-//            progetto = (Progetto) mappaInput.get(Chiave.targetProjectName);
-//            if (text.isValid(progetto)) {
-//            }// end of if cycle
-//        }// end of if cycle
-
-
         if (mappaInput.containsKey(Chiave.flagOrdine)) {
             this.flagOrdine = (boolean) mappaInput.get(Chiave.flagOrdine);
         }// end of if cycle
@@ -319,7 +311,7 @@ public class TElabora {
 
         if (mappaInput.containsKey(Chiave.newEntityName)) {
             this.newEntityName = (String) mappaInput.get(Chiave.newEntityName);
-            nomeFileTextSorgente = task.getSourceName();
+            nomeFileTextSorgente = task.getSourceName(flagCompany);
         } else {
             return;
         }// end of if/else cycle
@@ -416,13 +408,18 @@ public class TElabora {
         mappa.put(Token.qualifier, qualifier != null ? qualifier : "");
         mappa.put(Token.tagView, "");
         mappa.put(Token.entity, newEntityName);
+        mappa.put(Token.estendeEntity, creaEstendeEntity());
         mappa.put(Token.superClassEntity, superClassEntity);
         mappa.put(Token.usaCompany, creaUsaCompany());
+        mappa.put(Token.readCompany, creaReadCompany());
         mappa.put(Token.methodFind, creaFind());
-        mappa.put(Token.parametersNewEntity, creaParametersNewEntity());
-        mappa.put(Token.methodNewEntity, creaNewEntity());
+        mappa.put(Token.parametersDoc, creaParametersDoc());
+        mappa.put(Token.keyUnica, creaKeyUnica());
+        mappa.put(Token.builder, creaBuilder());
         mappa.put(Token.methodNewOrdine, creaNewOrdine());
         mappa.put(Token.methodIdKeySpecifica, creaIdKeySpecifica());
+        mappa.put(Token.parameters, creaParameters());
+        mappa.put(Token.parametersNewEntity, creaParametersNewEntity());
         mappa.put(Token.query, creaQuery());
         mappa.put(Token.findAll, creaFindAll());
         mappa.put(Token.properties, creaProperties());
@@ -441,27 +438,11 @@ public class TElabora {
         if (flagCode) {
             methodFindText += leggeFile(METHOD_FIND);
             methodFindText = Token.replace(Token.entity, methodFindText, newEntityName);
-            methodFindText = Token.replace(Token.parametersFind, methodFindText, creaParametersFind());
             methodFindText = Token.replace(Token.parameters, methodFindText, creaParameters());
+            methodFindText = Token.replace(Token.parametersFind, methodFindText, creaParametersFind());
         }// end of if cycle
 
         return methodFindText;
-    }// end of method
-
-
-    private String creaNewEntity() {
-        methodNewEntityText = "";
-
-        methodNewEntityText += leggeFile(METHOD_NEW_ENTITY);
-        methodNewEntityText = Token.replace(Token.entity, methodNewEntityText, newEntityName);
-        methodNewEntityText = Token.replace(Token.parametersDoc, methodNewEntityText, creaParametersDoc());
-        methodNewEntityText = Token.replace(Token.parameters, methodNewEntityText, creaParameters());
-        methodNewEntityText = Token.replace(Token.keyUnica, methodNewEntityText, creaKeyUnica());
-        methodNewEntityText = Token.replace(Token.addCompany, methodNewEntityText, creaAddCompany());
-        methodNewEntityText = Token.replace(Token.builder, methodNewEntityText, creaBuilder());
-        methodNewEntityText = Token.replace(Token.builder, methodNewEntityText, creaBuilder());
-
-        return methodNewEntityText;
     }// end of method
 
 
@@ -489,28 +470,49 @@ public class TElabora {
     }// end of method
 
 
-    private String creaQuery() {
+    private String creaReadCompany() {
+        methodReadCompanyText = "";
+
+        if (flagCompany) {
+            methodReadCompanyText += leggeFile(METHOD_READ_COMPANY);
+            methodReadCompanyText = Token.replace(Token.entity, methodReadCompanyText, newEntityName);
+        }// end of if cycle
+
+        return methodReadCompanyText;
+    }// end of method
+
+
+    public String creaQuery() {
         queryText = "";
         String aCapo = "\n\n\t";
+        String parVuoto = "();";
+        String parCompany = "(Company company);";
+        String companyText = flagCompany ? "ByCompany" : "";
+        String companyBy = flagCompany ? "" : "By";
         String entity = aCapo + "public " + newEntityName + " findBy";
-        String list = aCapo + "public List<" + newEntityName + "> findAllByOrderBy";
-        String listFirst = aCapo + "public List<" + newEntityName + "> findTop1AllByOrderBy";
+        String entityCompany = entity + "CompanyAnd";
+        String listBase = aCapo + "public List<" + newEntityName + "> findAll" + companyText;
+        String listOrdine = listBase + companyBy + "OrderByOrdineAsc";
 
-        if (flagCode) {
-            queryText += entity + PROPERTY_CODE_NAME + "(String " + PROPERTY_CODE_NAME.toLowerCase() + ");";
-            queryText += list + PROPERTY_CODE_NAME + "Asc();";
-        }// end of if cycle
-
-        if (flagDescrizione) {
-            queryText += entity + PROPERTY_DESCRIZIONE_NAME + "(String " + PROPERTY_DESCRIZIONE_NAME.toLowerCase() + ");";
-            queryText += list + PROPERTY_DESCRIZIONE_NAME + "Asc();";
-        }// end of if cycle
-
-        if (flagOrdine) {
-            queryText += entity + PROPERTY_ORDINE_NAME + "(int " + PROPERTY_ORDINE_NAME.toLowerCase() + ");";
-            queryText += list + PROPERTY_ORDINE_NAME + "Asc();";
-            queryText += listFirst + PROPERTY_ORDINE_NAME + "Desc();";
-        }// end of if cycle
+        if (flagCompany) {
+            if (flagCode) {
+                queryText += entityCompany + PROPERTY_CODE_NAME + "(Company company, String " + PROPERTY_CODE_NAME.toLowerCase() + ");";
+            }// end of if cycle
+            if (flagOrdine) {
+                queryText += listOrdine + parCompany;
+            } else {
+                queryText += listBase + parCompany;
+            }// end of if/else cycle
+        } else {
+            if (flagCode) {
+                queryText += entity + PROPERTY_CODE_NAME + "(String " + PROPERTY_CODE_NAME.toLowerCase() + ");";
+            }// end of if cycle
+            if (flagOrdine) {
+                queryText += listOrdine + parVuoto;
+            } else {
+                queryText += listBase + parVuoto;
+            }// end of if/else cycle
+        }// end of if/else cycle
 
         return queryText;
     }// end of method
@@ -554,10 +556,14 @@ public class TElabora {
 
     private String creaParametersFind() {
         parametersEntityText = "";
+        String tagCompany = "(Company) null";
         String tagOrdine = "0";
         String tagDescrizione = "\"\"";
         String virgola = ", ";
 
+        if (flagCompany) {
+            parametersEntityText += tagCompany + virgola;
+        }// end of if cycle
         if (flagOrdine) {
             parametersEntityText += tagOrdine + virgola;
         }// end of if cycle
@@ -595,10 +601,14 @@ public class TElabora {
 
     private String creaParametersNewEntity() {
         String testo = "";
+        String tagCompany = "(Company) null";
         String tagNumerico = "0";
         String tagTesto = "\"\"";
         String virgola = ", ";
 
+        if (flagCompany) {
+            testo += tagCompany + virgola;
+        }// end of if cycle
         if (flagOrdine) {
             testo += tagNumerico + virgola;
         }// end of if cycle
@@ -621,6 +631,9 @@ public class TElabora {
         String spazio = " ";
         String virgola = ", ";
 
+        if (flagCompany) {
+            parametersText += "Company" + spazio + PROPERTY_COMPANY_NAME.toLowerCase() + virgola;
+        }// end of if cycle
         if (flagOrdine) {
             parametersText += intero + spazio + PROPERTY_ORDINE_NAME.toLowerCase() + virgola;
         }// end of if cycle
@@ -655,6 +668,18 @@ public class TElabora {
     }// end of method
 
 
+    private String creaEstendeEntity() {
+        methodEstendeText = "";
+
+        if (flagCompany) {
+            methodEstendeText = "Estende la entity astratta ACEntity che contiene il riferimento alla property Company";
+        } else {
+            methodEstendeText = "Estende la entity astratta AEntity che contiene la key property ObjectId";
+        }// end of if/else cycle
+
+        return methodEstendeText;
+    }// end of method
+
     private String creaUsaCompany() {
         methodUsaCompanyText = "";
 
@@ -668,17 +693,17 @@ public class TElabora {
     }// end of method
 
 
-    private String creaAddCompany() {
-        methodAddCompanyText = "";
-
-        if (flagCompany) {
-            methodAddCompanyText = "(" + newEntityName + ") addCompany(entity)";
-        } else {
-            methodAddCompanyText = "entity";
-        }// end of if/else cycle
-
-        return methodAddCompanyText;
-    }// end of method
+//    private String creaAddCompany() {
+//        methodAddCompanyText = "";
+//
+//        if (flagCompany) {
+//            methodAddCompanyText = "(" + newEntityName + ") addCompany(entity, company)";
+//        } else {
+//            methodAddCompanyText = "entity";
+//        }// end of if/else cycle
+//
+//        return methodAddCompanyText;
+//    }// end of method
 
 
     private String creaBuilder() {

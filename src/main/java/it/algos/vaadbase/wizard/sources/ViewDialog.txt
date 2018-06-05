@@ -53,17 +53,6 @@ public class @ENTITY@ViewDialog extends AViewDialog<@ENTITY@> {
         super(presenter);
     }// end of constructor
 
-
-    /**
-     * Regola in lettura l'eeventuale field company (un combo)
-     * Dal DB alla UI
-     * Sovrascritto
-     */
-    protected void readCompanyField() {
-        if (companyField != null) {
-            companyField.setValue(((@ENTITY@) getCurrentItem()).getCompany());
-        }// end of if cycle
-    }// end of method
-
+    @READCOMPANY@
 }// end of class
 

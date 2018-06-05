@@ -77,7 +77,30 @@ public class @ENTITY@Service extends AService {
     }// end of method
 
 
-    @NEWENTITY@
+    /**
+     * Creazione in memoria di una nuova entity che NON viene salvata <br>
+     * Eventuali regolazioni iniziali delle property <br>
+     * All properties <br>
+     * Gli argomenti (parametri) della new Entity DEVONO essere ordinati come nella Entity (costruttore lombok) <br>
+     *
+     @PARAMETERSDOC@
+     *
+     * @return la nuova entity appena creata (non salvata)
+     */
+    public @ENTITY@ newEntity(@PARAMETERS@) {
+        @ENTITY@ entity = null;
+
+        @KEYUNICA@
+        entity = @ENTITY@.builder()@BUILDER@
+                .build();
+
+        return entity;
+    }// end of method
+
+    @Override
+    public List<Prova> findAll() {
+        return repository.@FINDALL@();
+    }// end of method
 
     /**
      * Recupera una istanza della Entity usando la query della property specifica (obbligatoria ed unica) <br>

@@ -11,12 +11,12 @@ import it.algos.vaadbase.modules.preferenza.PreferenzaService;
 import it.algos.vaadbase.service.APreferenzaService;
 import it.algos.vaadbase.wizard.ui.WizardView;
 import it.algos.vaadtest.modules.bolla.BollaViewList;
-import it.algos.vaadtest.modules.prova.ProvaViewList;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.config.ConfigurableBeanFactory;
 import org.springframework.context.annotation.Scope;
 import org.springframework.context.event.ContextRefreshedEvent;
 import org.springframework.context.event.EventListener;
+import it.algos.vaadtest.modules.prova.ProvaViewList;
 
 /**
  * Project vaadbase
@@ -116,9 +116,9 @@ public class VaadtestBoot extends ABoot {
      * Verranno lette da MainLayout la prima volta che il browser 'chiama' una view
      */
     private void addRouteSpecifiche() {
+		BaseCost.MENU_CLAZZ_LIST.add(ProvaViewList.class);
         BaseCost.MENU_CLAZZ_LIST.add(HomeView.class);
         BaseCost.MENU_CLAZZ_LIST.add(BollaViewList.class);
-        BaseCost.MENU_CLAZZ_LIST.add(ProvaViewList.class);
     }// end of method
 
 

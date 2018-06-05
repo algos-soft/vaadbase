@@ -185,8 +185,9 @@ public abstract class AViewDialog<T extends Serializable> extends Dialog impleme
      * Inizializza le properties grafiche (caption, visible, editable, width, ecc)
      * Aggiunge i fields al binder
      * Aggiunge i fields alla mappa fieldMap
-     * Aggiunge al binder ed alla fieldMap, eventuali fields specifici (costruiti non come standard type)
-     * Aggiunge i fields al layout
+     * Aggiunge eventuali fields specifici (costruiti non come standard type) al binder ed alla fieldMap
+     * Aggiunge i fields della fieldMap al layout grafico
+     * Aggiunge eventuali fields specifici direttamente al layout grafico (senza binder e senza fieldMap)
      */
     protected void creaFields() {
         List<String> properties;
@@ -208,7 +209,7 @@ public abstract class AViewDialog<T extends Serializable> extends Dialog impleme
 
         //--Costruisce ogni singolo field
         //--Aggiunge il field al binder, nel metodo create() del fieldService
-        //--Aggiunge il field una fieldMap, per recuperare i fields dal nome
+        //--Aggiunge il field ad una fieldMap, per recuperare i fields dal nome
         for (String fieldName : properties) {
             newField = fieldService.create(binder, binderClass, fieldName);
             if (newField != null) {
@@ -216,11 +217,15 @@ public abstract class AViewDialog<T extends Serializable> extends Dialog impleme
             }// end of if cycle
         }// end of for cycle
 
-        //--Aggiunge al binder ed alla fieldMap, eventuali fields specifici (costruiti non come standard type)
+        //--Aggiunge eventuali fields specifici (costruiti non come standard type) al binder ed alla fieldMap
         addSpecificAlgosFields();
 
         //--Aggiunge ogni singolo field al layout grafico
         addFieldsToLayout();
+
+        //--Eventuali aggiustamenti finali al layout
+        //--Aggiunge eventuali altri componenti direttamente al layout grafico (senza binder e senza fieldMap)
+        fixLayout();
 
         //--Controlla l'esistenza del field company e ne regola i valori
         fixCompanyField();
@@ -291,6 +296,7 @@ public abstract class AViewDialog<T extends Serializable> extends Dialog impleme
 
     /**
      * Eventuali aggiustamenti finali al layout
+     * Aggiunge eventuali altri componenti direttamente al layout grafico (senza binder e senza fieldMap)
      */
     protected void fixLayout() {
     }// end of method

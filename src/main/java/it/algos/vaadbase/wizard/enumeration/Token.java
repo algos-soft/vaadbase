@@ -22,15 +22,15 @@ public enum Token {
     qualifier("QUALIFIER"),
     tagView("TAG_VIEW"),
     entity("ENTITY"),
+    estendeEntity("ESTENDEENTITY"),
     superClassEntity("SUPERCLASSENTITY"),
-    methodFind("FIND"),
-    methodNewEntity("NEWENTITY"),
-    methodNewOrdine("NEWORDINE"),
-    methodIdKeySpecifica("IDKEYSPECIFICA"),
     parametersFind("PARAMETERSFIND"),
-    parametersNewEntity("PARAMETERSNEWENTITY"),
     parameters("PARAMETERS"),
     parametersDoc("PARAMETERSDOC"),
+    parametersNewEntity("PARAMETERSNEWENTITY"),
+    methodFind("FIND"),
+    methodNewOrdine("NEWORDINE"),
+    methodIdKeySpecifica("IDKEYSPECIFICA"),
     keyUnica("KEYUNICA"),
     builder("BUILDER"),
     query("QUERY"),
@@ -41,7 +41,8 @@ public enum Token {
     propertyDescrizione("DESCRIZIONE"),
     toString("TOSTRING"),
     usaCompany("USACOMPANY"),
-    addCompany("ADDCOMPANY");
+    readCompany("READCOMPANY"),
+    ;
 
     private String tokenTag;
 

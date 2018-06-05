@@ -11,6 +11,7 @@ import it.algos.vaadbase.modules.preferenza.PreferenzaViewList;
 import it.algos.vaadbase.modules.role.RoleData;
 import it.algos.vaadbase.modules.role.RoleViewList;
 import it.algos.vaadbase.service.APreferenzaService;
+import it.algos.vaadbase.wizard.ui.WizardView;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.event.ContextRefreshedEvent;
 import org.springframework.context.event.EventListener;
@@ -148,6 +149,9 @@ public abstract class ABoot implements ServletContextListener {
         }// end of if cycle
         if (pref.isBool(EAPreferenza.showDeveloper.getCode())) {
             BaseCost.MENU_CLAZZ_LIST.add(DeveloperView.class);
+        }// end of if cycle
+        if (pref.isBool(EAPreferenza.showWizard.getCode())) {
+            BaseCost.MENU_CLAZZ_LIST.add(WizardView.class);
         }// end of if cycle
     }// end of method
 

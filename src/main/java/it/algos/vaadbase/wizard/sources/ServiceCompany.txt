@@ -1,4 +1,4 @@
-package it.algos.vaadtest.modules.prova;
+package it.algos.@MODULELOWER@.modules.@PACKAGE@;
 
 import com.vaadin.flow.spring.annotation.SpringComponent;
 import lombok.extern.slf4j.Slf4j;
@@ -15,13 +15,14 @@ import org.springframework.data.domain.Sort;
 import it.algos.vaadbase.annotation.AIScript;
 import it.algos.vaadbase.backend.service.AService;
 import it.algos.vaadbase.backend.entity.AEntity;
-import static it.algos.vaadtest.application.AppCost.TAG_PRO;
+import it.algos.vaadbase.modules.company.Company;
+import static it.algos.@MODULELOWER@.application.@APPCOST@.@QUALIFIER@;
 
 /**
- * Project vaadtest <br>
+ * Project @MODULELOWER@ <br>
  * Created by Algos <br>
- * User: Gac <br>
- * Date: 5-giu-2018 16.50.06 <br>
+ * User: @USER@ <br>
+ * Date: @TODAY@ <br>
  * <br>
  * Estende la classe astratta AService. Layer di collegamento per la Repository. <br>
  * <br>
@@ -35,10 +36,10 @@ import static it.algos.vaadtest.application.AppCost.TAG_PRO;
 @SpringComponent
 @Service
 @Scope(ConfigurableBeanFactory.SCOPE_SINGLETON)
-@Qualifier(TAG_PRO)
+@Qualifier(@QUALIFIER@)
 @Slf4j
 @AIScript(sovrascrivibile = false)
-public class ProvaService extends AService {
+public class @ENTITY@Service extends AService {
 
 
     /**
@@ -46,7 +47,7 @@ public class ProvaService extends AService {
      * Spring costruisce una implementazione concreta dell'interfaccia MongoRepository (come previsto dal @Qualifier) <br>
      * Qui si una una interfaccia locale (col casting nel costruttore) per usare i metodi specifici <br>
      */
-    private ProvaRepository repository;
+    private @ENTITY@Repository repository;
 
 
     /**
@@ -56,42 +57,13 @@ public class ProvaService extends AService {
      *
      * @param repository per la persistenza dei dati
      */
-    public ProvaService(@Qualifier(TAG_PRO) MongoRepository repository) {
+    public @ENTITY@Service(@Qualifier(@QUALIFIER@) MongoRepository repository) {
         super(repository);
-        this.repository = (ProvaRepository) repository;
+        this.repository = (@ENTITY@Repository) repository;
    }// end of Spring constructor
 
 
-    /**
-     * Ricerca di una entity (la crea se non la trova) <br>
-     *
-     * @param code di riferimento (obbligatorio ed unico)
-     *
-     * @return la entity trovata o appena creata
-     */
-    public Prova findOrCrea(String code) {
-        Prova entity = findByKeyUnica(code);
-
-        if (entity == null) {
-            entity = newEntity(code);
-            save(entity);
-        }// end of if cycle
-
-        return entity;
-    }// end of method
-
-    /**
-     * Crea una entity e la registra <br>
-     *
-     * @param code di riferimento (obbligatorio ed unico)
-     *
-     * @return la entity appena creata
-     */
-    public Prova crea(String code) {
-        Prova entity = newEntity(code);
-        save(entity);
-        return entity;
-    }// end of method
+    @FIND@
 
     /**
      * Creazione in memoria di una nuova entity che NON viene salvata
@@ -101,8 +73,8 @@ public class ProvaService extends AService {
      * @return la nuova entity appena creata (non salvata)
      */
     @Override
-    public Prova newEntity() {
-        return newEntity("");
+    public @ENTITY@ newEntity() {
+        return newEntity(@PARAMETERSNEWENTITY@);
     }// end of method
 
 
@@ -112,29 +84,54 @@ public class ProvaService extends AService {
      * All properties <br>
      * Gli argomenti (parametri) della new Entity DEVONO essere ordinati come nella Entity (costruttore lombok) <br>
      *
-     * @param code        codice di riferimento (obbligatorio)
+     @PARAMETERSDOC@
      *
      * @return la nuova entity appena creata (non salvata)
      */
-    public Prova newEntity(String code) {
-        Prova entity = null;
+    public @ENTITY@ newEntity(@PARAMETERS@) {
+        @ENTITY@ entity = null;
 
-        entity = findByKeyUnica(code);
-		if (entity != null) {
-			return findByKeyUnica(code);
-		}// end of if cycle
-		
-        entity = Prova.builder()
-				.code(code.equals("") ? null : code)
+        @KEYUNICA@
+        entity = @ENTITY@.builder()@BUILDER@
                 .build();
 
-        return entity;
+        return (@ENTITY@) addCompany(entity, company);
     }// end of method
 
-    @Override
-    public List<Prova> findAll() {
-        return repository.findAll();
+
+    /**
+     * Returns instances of the company <br>
+     * Lista ordinata <br>
+     *
+     * @return lista ordinata di tutte le entities
+     */
+    public List<@ENTITY@> findAllByCompany() {
+        List<@ENTITY@> lista = null;
+        Company company = null;
+
+        if (login != null) {
+            company = (Company) login.getCompany();
+        }// end of if cycle
+
+        if (company != null) {
+            lista = findAllByCompany(company);
+        }// end of if cycle
+
+        return lista;
     }// end of method
+
+
+    /**
+     * Returns instances of the company <br>
+     * Lista ordinata <br>
+     *
+     * @return lista ordinata di tutte le entities
+     */
+    public List<@ENTITY@> findAllByCompany(Company company) {
+        return repository.findAllByCompany(company);
+    }// end of method
+
+
 
     /**
      * Recupera una istanza della Entity usando la query della property specifica (obbligatoria ed unica) <br>
@@ -143,12 +140,35 @@ public class ProvaService extends AService {
      *
      * @return istanza della Entity, null se non trovata
      */
-    public Prova findByKeyUnica(String code) {
-        return repository.findByCode(code);
+    public @ENTITY@ findByKeyUnica(String code) {
+        @ENTITY@ entity = null;
+        Company company = null;
+
+        if (login != null) {
+            company = login.getCompany();
+        }// end of if cycle
+
+        if (company != null) {
+            entity = findByKeyUnica(company, code);
+        }// end of if cycle
+
+        return entity;
     }// end of method
 
-    
 
-    
+    /**
+     * Recupera una istanza della Entity usando la query della property specifica (obbligatoria ed unica) <br>
+     *
+     * @param code di riferimento (obbligatorio)
+     *
+     * @return istanza della Entity, null se non trovata
+     */
+    public @ENTITY@ findByKeyUnica(Company company, String code) {
+        return repository.findByCompanyAndCode(company, code);
+    }// end of method
+
+    @IDKEYSPECIFICA@
+
+    @NEWORDINE@
 
 }// end of class

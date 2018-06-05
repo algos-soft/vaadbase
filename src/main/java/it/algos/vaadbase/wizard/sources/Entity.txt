@@ -29,7 +29,7 @@ import static it.algos.@MODULELOWER@.application.@APPCOST@.@QUALIFIER@;
  * User: @USER@ <br>
  * Date: @TODAY@ <br>
  * <p>
- * Estende la entity astratta AEntity che contiene la key property ObjectId <br>
+ * @ESTENDEENTITY@ <br>
  * <p>
  * Annotated with @SpringComponent (obbligatorio) <br>
  * Annotated with @Document (facoltativo) per avere un nome della collection (DB Mongo) diverso dal nome della Entity <br>

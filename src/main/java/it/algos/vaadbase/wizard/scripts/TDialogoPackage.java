@@ -562,7 +562,7 @@ public class TDialogoPackage extends TDialogo {
     private String getPackage() {
         String pack = "";
 
-        if (newPackage) {
+      if (newPackage) {
             pack = fieldTextPackage.getValue();
         } else {
             pack = fieldComboPackage.getValue() != null ? fieldComboPackage.getValue().toLowerCase() : "";
