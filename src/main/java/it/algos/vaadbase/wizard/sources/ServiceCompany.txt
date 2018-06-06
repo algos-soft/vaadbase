@@ -128,7 +128,7 @@ public class @ENTITY@Service extends AService {
      * @return lista ordinata di tutte le entities
      */
     public List<@ENTITY@> findAllByCompany(Company company) {
-        return repository.findAllByCompany(company);
+        return repository.@FINDALL@;
     }// end of method
 
 

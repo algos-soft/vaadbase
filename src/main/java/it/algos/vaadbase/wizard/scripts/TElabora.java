@@ -33,6 +33,7 @@ import java.util.Map;
 public class TElabora {
 
 
+    public static final String PROPERTY_ORDINE_NAME = "Ordine";
     private static final String A_CAPO = "\n";
     private static final String TAB = "\t";
     private static final String SEP = "/";
@@ -58,7 +59,6 @@ public class TElabora {
     private static final String PROPERTY = "Property";
     private static final String METHOD = "Method";
     private static final String PROPERTY_COMPANY_NAME = "Company";
-    private static final String PROPERTY_ORDINE_NAME = "Ordine";
     private static final String PROPERTY_CODE_NAME = "Code";
     private static final String PROPERTY_DESCRIZIONE_NAME = "Descrizione";
     private static final String PROPERTY_ORDINE_SOURCE_NAME = PROPERTY + PROPERTY_ORDINE_NAME + SOURCE_SUFFIX;
@@ -66,6 +66,7 @@ public class TElabora {
     private static final String PROPERTY_DESCRIZIONE_SOURCE_NAME = PROPERTY + PROPERTY_DESCRIZIONE_NAME + SOURCE_SUFFIX;
     private static final String METHOD_FIND = METHOD + "Find" + SOURCE_SUFFIX;
     private static final String METHOD_NEW_ORDINE = METHOD + "NewOrdine" + SOURCE_SUFFIX;
+    private static final String METHOD_NEW_ORDINE_COMPANY = METHOD + "NewOrdineCompany" + SOURCE_SUFFIX;
     private static final String METHOD_ID_KEY_SPECIFICA = METHOD + "IdKeySpecifica" + SOURCE_SUFFIX;
     private static final String METHOD_READ_COMPANY = METHOD + "ReadCompany" + SOURCE_SUFFIX;
     private static final String VIEW_SUFFIX = "ViewList";
@@ -448,9 +449,10 @@ public class TElabora {
 
     private String creaNewOrdine() {
         methodNewOrdineText = "";
+        String nomeFileSorgente = flagCompany ? METHOD_NEW_ORDINE_COMPANY : METHOD_NEW_ORDINE;
 
         if (flagOrdine) {
-            methodNewOrdineText += leggeFile(METHOD_NEW_ORDINE);
+            methodNewOrdineText += leggeFile(nomeFileSorgente);
             methodNewOrdineText = Token.replace(Token.entity, methodNewOrdineText, newEntityName);
         }// end of if cycle
 
@@ -510,7 +512,7 @@ public class TElabora {
             if (flagOrdine) {
                 queryText += listOrdine + parVuoto;
             } else {
-                queryText += listBase + parVuoto;
+//                queryText += listBase + parVuoto;
             }// end of if/else cycle
         }// end of if/else cycle
 
@@ -518,13 +520,21 @@ public class TElabora {
     }// end of method
 
 
-    private String creaFindAll() {
+    public String creaFindAll() {
         String findAll = "";
 
         if (flagOrdine) {
-            findAll += "repository.findAllByOrderBy" + PROPERTY_ORDINE_NAME + "Asc()";
+            if (flagCompany) {
+                findAll = "findAllByCompanyOrderBy" + PROPERTY_ORDINE_NAME + "Asc(company)";
+            } else {
+                findAll = "findAllByOrderBy" + PROPERTY_ORDINE_NAME + "Asc()";
+            }// end of if/else cycle
         } else {
-            findAll += "repository.findAll()";
+            if (flagCompany) {
+                findAll = "findAllByCompany(company)";
+            } else {
+                findAll = "findAll()";
+            }// end of if/else cycle
         }// end of if/else cycle
 
         return findAll;
@@ -712,9 +722,10 @@ public class TElabora {
         String intero = "int";
         String tab4 = "\t\t\t\t";
         String aCapo = "\n" + tab4;
+        String companyText = flagCompany ? "company" : "";
 
         if (flagOrdine) {
-            methodBuilderText += aCapo + ".ordine(ordine != 0 ? ordine : this.getNewOrdine())";
+            methodBuilderText += aCapo + ".ordine(ordine != 0 ? ordine : this.getNewOrdine(" + companyText + "))";
         }// end of if cycle
         if (flagCode) {
             methodBuilderText += aCapo + ".code(code.equals(\"\") ? null : code)";

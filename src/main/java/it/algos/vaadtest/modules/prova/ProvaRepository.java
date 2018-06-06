@@ -15,7 +15,7 @@ import static it.algos.vaadtest.application.AppCost.TAG_PRO;
  * Project vaadtest <br>
  * Created by Algos <br>
  * User: Gac <br>
- * Date: 5-giu-2018 16.50.06 <br>
+ * Date: 6-giu-2018 15.46.15 <br>
  * <br>
  * Estende la l'interaccia MongoRepository col casting alla Entity relativa di questa repository <br>
  * <br>
@@ -33,8 +33,8 @@ public interface ProvaRepository extends MongoRepository<Prova, String> {
     //@TODO
     // Le query riportate sono INDICATIVE e possono essere sostituite
 
-	public Prova findByCode(String code);
+	public Prova findByCompanyAndCode(Company company, String code);
 
-	public List<Prova> findAll();
+	public List<Prova> findAllByCompanyOrderByOrdineAsc(Company company);
 
 }// end of class

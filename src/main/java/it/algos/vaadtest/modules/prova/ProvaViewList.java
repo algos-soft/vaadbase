@@ -37,7 +37,7 @@ import static it.algos.vaadtest.application.AppCost.TAG_PRO;
  * Project vaadtest <br>
  * Created by Algos <br>
  * User: Gac <br>
- * Date: 5-giu-2018 16.50.06 <br>
+ * Date: 6-giu-2018 15.46.15 <br>
  * <br>
  * Estende la classe astratta AViewList per visualizzare la Grid <br>
  * <p>

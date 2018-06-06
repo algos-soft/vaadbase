@@ -8,8 +8,6 @@ import org.mockito.InjectMocks;
 import org.mockito.MockitoAnnotations;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.junit.jupiter.api.Assertions.assertNotNull;
-import static org.junit.jupiter.api.Assertions.assertNull;
 
 /**
  * Project vaadbase
@@ -27,6 +25,7 @@ public class ATElaboraTest extends ATest {
     @InjectMocks
     public TElabora elabora;
 
+    private static final String PROPERTY_ORDINE_NAME = "Ordine";
 
     @BeforeAll
     public void setUp() {
@@ -42,7 +41,18 @@ public class ATElaboraTest extends ATest {
 
     @Test
     public void creaQuery() {
-        previsto="\n\n\tpublic List<Prova> findAll();";
+        elabora.flagCode = false;
+        elabora.flagCompany = false;
+        elabora.flagDescrizione = false;
+        elabora.flagKeyCode = false;
+        elabora.flagOrdine = false;
+        System.out.println();
+        System.out.println();
+        System.out.println("==========");
+        System.out.println("Crea query");
+        System.out.println("==========");
+
+        previsto = "";
         ottenuto = elabora.creaQuery();
         assertEquals(previsto, ottenuto);
         System.out.println("flags falsi:" + ottenuto);
@@ -78,6 +88,53 @@ public class ATElaboraTest extends ATest {
         System.out.println();
         System.out.println();
         System.out.println("flagCompany=true and flagOrdine=true and flagCode=true:" + ottenuto);
+    }// end of single test
+
+
+    @Test
+    public void creaFindAll() {
+        elabora.flagCode = false;
+        elabora.flagCompany = false;
+        elabora.flagDescrizione = false;
+        elabora.flagKeyCode = false;
+        elabora.flagOrdine = false;
+        System.out.println();
+        System.out.println();
+        System.out.println("==========");
+        System.out.println("Crea creaFindAll");
+        System.out.println("==========");
+
+        elabora.flagOrdine = false;
+        elabora.flagCompany = false;
+        ottenuto = elabora.creaFindAll();
+        System.out.println();
+        System.out.println();
+        System.out.println("flagOrdine=false and flagCompany=false:" );
+        System.out.println(ottenuto);
+
+        elabora.flagOrdine = true;
+        elabora.flagCompany = false;
+        ottenuto = elabora.creaFindAll();
+        System.out.println();
+        System.out.println();
+        System.out.println("flagOrdine=true and flagCompany=false:" );
+        System.out.println(ottenuto);
+
+        elabora.flagOrdine = false;
+        elabora.flagCompany = true;
+        ottenuto = elabora.creaFindAll();
+        System.out.println();
+        System.out.println();
+        System.out.println("flagOrdine=false and flagCompany=true:" );
+        System.out.println(ottenuto);
+
+        elabora.flagOrdine = true;
+        elabora.flagCompany = true;
+        ottenuto = elabora.creaFindAll();
+        System.out.println();
+        System.out.println();
+        System.out.println("flagOrdine=true and flagCompany=true:" );
+        System.out.println(ottenuto);
     }// end of single test
 
 }// end of class

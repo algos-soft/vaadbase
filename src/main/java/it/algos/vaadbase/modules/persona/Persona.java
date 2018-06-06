@@ -3,6 +3,7 @@ package it.algos.vaadbase.modules.persona;
 import com.vaadin.flow.spring.annotation.SpringComponent;
 import it.algos.vaadbase.annotation.AIScript;
 import it.algos.vaadbase.backend.annotation.EACompanyRequired;
+import it.algos.vaadbase.backend.entity.ACEntity;
 import it.algos.vaadbase.backend.entity.AEntity;
 import it.algos.vaadbase.modules.address.Address;
 import it.algos.vaadbase.modules.address.AddressPresenter;
@@ -59,7 +60,7 @@ import static it.algos.vaadbase.application.BaseCost.TAG_PER;
 @AIList(fields = {"nome", "cognome"})
 @AIForm(fields = {"nome", "cognome", "telefono", "email", "indirizzo"})
 @AIScript(sovrascrivibile = false)
-public class Persona extends AEntity {
+public class Persona extends ACEntity {
 
 
     /**

@@ -27,9 +27,9 @@ import static it.algos.vaadtest.application.AppCost.TAG_PRO;
  * Project vaadtest <br>
  * Created by Algos <br>
  * User: Gac <br>
- * Date: 29-mag-2018 22.50.44 <br>
+ * Date: 6-giu-2018 15.46.15 <br>
  * <p>
- * Estende la entity astratta AEntity che contiene la key property ObjectId <br>
+ * Estende la entity astratta ACEntity che contiene il riferimento alla property Company <br>
  * <p>
  * Annotated with @SpringComponent (obbligatorio) <br>
  * Annotated with @Document (facoltativo) per avere un nome della collection (DB Mongo) diverso dal nome della Entity <br>
@@ -59,8 +59,8 @@ import static it.algos.vaadtest.application.AppCost.TAG_PRO;
 @EqualsAndHashCode(callSuper = false)
 @Qualifier(TAG_PRO)
 @AIEntity(company = EACompanyRequired.obbligatoria)
-@AIList(fields = {"ordine", "code", "descrizione"})
-@AIForm(fields = {"ordine", "code", "descrizione"})
+@AIList(fields = {"company", "ordine", "code"})
+@AIForm(fields = {"company", "ordine", "code"})
 @AIScript(sovrascrivibile = false)
 public class Prova extends ACEntity {
 
@@ -91,14 +91,6 @@ public class Prova extends ACEntity {
     @AIColumn(width = 210)
     private String code;
     
-	/**
-     * descrizione (obbligatoria, non unica) <br>
-     */
-    @NotNull(message = "La descrizione è obbligatoria")
-    @Size(min = 2, max = 50)
-    @AIField(type = EAFieldType.text, firstCapital = true, widthEM = 24)
-    @AIColumn(width = 370)
-    private String descrizione;
 
     /**
      * @return a string representation of the object.

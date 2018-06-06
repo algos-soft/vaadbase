@@ -15,13 +15,14 @@ import org.springframework.data.domain.Sort;
 import it.algos.vaadbase.annotation.AIScript;
 import it.algos.vaadbase.backend.service.AService;
 import it.algos.vaadbase.backend.entity.AEntity;
+import it.algos.vaadbase.modules.company.Company;
 import static it.algos.vaadtest.application.AppCost.TAG_PRO;
 
 /**
  * Project vaadtest <br>
  * Created by Algos <br>
  * User: Gac <br>
- * Date: 5-giu-2018 16.50.06 <br>
+ * Date: 6-giu-2018 15.46.15 <br>
  * <br>
  * Estende la classe astratta AService. Layer di collegamento per la Repository. <br>
  * <br>
@@ -73,7 +74,7 @@ public class ProvaService extends AService {
         Prova entity = findByKeyUnica(code);
 
         if (entity == null) {
-            entity = newEntity(code);
+            entity = newEntity((Company) null, 0, code);
             save(entity);
         }// end of if cycle
 
@@ -88,7 +89,7 @@ public class ProvaService extends AService {
      * @return la entity appena creata
      */
     public Prova crea(String code) {
-        Prova entity = newEntity(code);
+        Prova entity = newEntity((Company) null, 0, code);
         save(entity);
         return entity;
     }// end of method
@@ -102,7 +103,7 @@ public class ProvaService extends AService {
      */
     @Override
     public Prova newEntity() {
-        return newEntity("");
+        return newEntity((Company) null, 0, "");
     }// end of method
 
 
@@ -112,11 +113,12 @@ public class ProvaService extends AService {
      * All properties <br>
      * Gli argomenti (parametri) della new Entity DEVONO essere ordinati come nella Entity (costruttore lombok) <br>
      *
-     * @param code        codice di riferimento (obbligatorio)
+     * @param ordine      di presentazione (obbligatorio con inserimento automatico se è zero)
+	* @param code        codice di riferimento (obbligatorio)
      *
      * @return la nuova entity appena creata (non salvata)
      */
-    public Prova newEntity(String code) {
+    public Prova newEntity(Company company, int ordine, String code) {
         Prova entity = null;
 
         entity = findByKeyUnica(code);
@@ -125,16 +127,47 @@ public class ProvaService extends AService {
 		}// end of if cycle
 		
         entity = Prova.builder()
+				.ordine(ordine != 0 ? ordine : this.getNewOrdine(company))
 				.code(code.equals("") ? null : code)
                 .build();
 
-        return entity;
+        return (Prova) addCompany(entity, company);
     }// end of method
 
-    @Override
-    public List<Prova> findAll() {
-        return repository.findAll();
+
+    /**
+     * Returns instances of the company <br>
+     * Lista ordinata <br>
+     *
+     * @return lista ordinata di tutte le entities
+     */
+    public List<Prova> findAllByCompany() {
+        List<Prova> lista = null;
+        Company company = null;
+
+        if (login != null) {
+            company = (Company) login.getCompany();
+        }// end of if cycle
+
+        if (company != null) {
+            lista = findAllByCompany(company);
+        }// end of if cycle
+
+        return lista;
     }// end of method
+
+
+    /**
+     * Returns instances of the company <br>
+     * Lista ordinata <br>
+     *
+     * @return lista ordinata di tutte le entities
+     */
+    public List<Prova> findAllByCompany(Company company) {
+        return repository.findAllByCompanyOrderByOrdineAsc(company);
+    }// end of method
+
+
 
     /**
      * Recupera una istanza della Entity usando la query della property specifica (obbligatoria ed unica) <br>
@@ -144,11 +177,49 @@ public class ProvaService extends AService {
      * @return istanza della Entity, null se non trovata
      */
     public Prova findByKeyUnica(String code) {
-        return repository.findByCode(code);
+        Prova entity = null;
+        Company company = null;
+
+        if (login != null) {
+            company = login.getCompany();
+        }// end of if cycle
+
+        if (company != null) {
+            entity = findByKeyUnica(company, code);
+        }// end of if cycle
+
+        return entity;
+    }// end of method
+
+
+    /**
+     * Recupera una istanza della Entity usando la query della property specifica (obbligatoria ed unica) <br>
+     *
+     * @param code di riferimento (obbligatorio)
+     *
+     * @return istanza della Entity, null se non trovata
+     */
+    public Prova findByKeyUnica(Company company, String code) {
+        return repository.findByCompanyAndCode(company, code);
     }// end of method
 
     
 
-    
+    /**
+     * Ordine di presentazione (obbligatorio, unico per tutte le company), <br>
+     * Viene calcolato in automatico alla creazione della entity <br>
+     * Recupera dal DB il valore massimo pre-esistente della property <br>
+     * Incrementa di uno il risultato <br>
+     */
+    public int getNewOrdine(Company company) {
+        int ordine = 0;
+        List<Prova> lista = findAllByCompany(company);
+
+        if (lista != null && lista.size() > 0) {
+            ordine = lista.get(lista.size() - 1).getOrdine();
+        }// end of if cycle
+
+        return ordine + 1;
+    }// end of method
 
 }// end of class

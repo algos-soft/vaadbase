@@ -99,7 +99,7 @@ public class @ENTITY@Service extends AService {
 
     @Override
     public List<Prova> findAll() {
-        return repository.@FINDALL@();
+        return repository.@FINDALL@;
     }// end of method
 
     /**
