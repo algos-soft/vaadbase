@@ -463,7 +463,8 @@ public class AService implements IAService {
      * @param entityBean da salvare
      */
     public void creaIdKeySpecifica(AEntity entityBean) {
-        entityBean.id = getKeyUnica(entityBean);
+        String keyID = getKeyUnica(entityBean);
+        entityBean.id = keyID.equals("") ? null : keyID;
     }// end of method
 
 

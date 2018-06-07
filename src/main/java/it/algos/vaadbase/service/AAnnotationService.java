@@ -36,6 +36,10 @@ import java.util.List;
 @Scope(ConfigurableBeanFactory.SCOPE_SINGLETON)
 public class AAnnotationService {
 
+    public final static String TESTO_NULL = " non può essere vuoto";
+    public final static String INT_NULL = " deve contenere solo caratteri numerici";
+    public final static String INT_ZERO = " deve essere maggiore di zero";
+
     /**
      * Service iniettato da Spring (@Scope = 'singleton'). Unica per tutta l'applicazione. Usata come libreria.
      */
@@ -790,20 +794,13 @@ public class AAnnotationService {
 
         if (message.equals("{javax.validation.constraints.NotNull.message}")) {
             message = "";
-
-//            type = getFormType(reflectionJavaField);
-//            switch (type) {
-//                case text:
-//                    message = env.getProperty("javax.validation.constraints.NotNull.message.string");
-//                    break;
-//                case integer:
-//                    message = env.getProperty("javax.validation.constraints.NotNull.message.integer");
-//                    break;
-//                default:
-//                    message = env.getProperty("javax.validation.constraints.NotNull.message.string");
-//                    break;
-//            } // end of switch statement
-
+            type = getFormType(reflectionJavaField);
+            if (type == EAFieldType.text) {
+                message = text.primaMaiuscola(reflectionJavaField.getName()) + TESTO_NULL;
+            }// end of if cycle
+            if (type == EAFieldType.integer) {
+                message = text.primaMaiuscola(reflectionJavaField.getName()) + INT_NULL;
+            }// end of if cycle
         }// end of if cycle
 
         return message;
@@ -819,28 +816,25 @@ public class AAnnotationService {
     public String getMessageSize(Field reflectionJavaField) {
         String message = "";
         Size annotation = this.getSize(reflectionJavaField);
+        EAFieldType type = getFormType(reflectionJavaField);
+        int min = 0;
 
-        if (annotation != null) {
+        if (type != EAFieldType.text) {
+            return "";
+        }// end of if cycle
+
+        if (annotation == null) {
+            message = this.getMessage(reflectionJavaField);
+        } else {
             message = annotation.message();
-        }// end of if cycle
+            if (message.equals("{javax.validation.constraints.Size.message}")) {
+                min = annotation.min();
+                if (min > 0) {
+                    message = text.primaMaiuscola(reflectionJavaField.getName()) + " deve contenere almeno " + min + " caratteri";
+                }// end of if cycle
+            }// end of if cycle
+        }// end of if/else cycle
 
-        if (message.equals("{javax.validation.constraints.Size.message}")) {
-            message = "";
-
-//            type = getFormType(reflectionJavaField);
-//            switch (type) {
-//                case text:
-//                    message = env.getProperty("javax.validation.constraints.NotNull.message.string");
-//                    break;
-//                case integer:
-//                    message = env.getProperty("javax.validation.constraints.NotNull.message.integer");
-//                    break;
-//                default:
-//                    message = env.getProperty("javax.validation.constraints.NotNull.message.string");
-//                    break;
-//            } // end of switch statement
-
-        }// end of if cycle
 
         return message;
     }// end of method
@@ -857,9 +851,9 @@ public class AAnnotationService {
 
         message = getMessageNull(reflectionJavaField);
 
-        if (text.isEmpty(message)) {
-            message = getMessageSize(reflectionJavaField);
-        }// end of if cycle
+//        if (text.isEmpty(message)) {
+//            message = getMessageSize(reflectionJavaField);
+//        }// end of if cycle
 
         return message;
     }// end of method
@@ -881,6 +875,17 @@ public class AAnnotationService {
         }// end of if cycle
 
         return status;
+    }// end of method
+
+    /**
+     * Get the status required of the property.
+     *
+     * @param reflectionJavaField di riferimento per estrarre la Annotation
+     *
+     * @return status of field
+     */
+    public boolean isNotNull(Field reflectionJavaField) {
+        return getNotNull(reflectionJavaField) != null;
     }// end of method
 
 

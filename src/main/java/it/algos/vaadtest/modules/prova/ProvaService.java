@@ -63,36 +63,36 @@ public class ProvaService extends AService {
    }// end of Spring constructor
 
 
-    /**
-     * Ricerca di una entity (la crea se non la trova) <br>
-     *
-     * @param code di riferimento (obbligatorio ed unico)
-     *
-     * @return la entity trovata o appena creata
-     */
-    public Prova findOrCrea(String code) {
-        Prova entity = findByKeyUnica(code);
-
-        if (entity == null) {
-            entity = newEntity((Company) null, 0, code);
-            save(entity);
-        }// end of if cycle
-
-        return entity;
-    }// end of method
-
-    /**
-     * Crea una entity e la registra <br>
-     *
-     * @param code di riferimento (obbligatorio ed unico)
-     *
-     * @return la entity appena creata
-     */
-    public Prova crea(String code) {
-        Prova entity = newEntity((Company) null, 0, code);
-        save(entity);
-        return entity;
-    }// end of method
+//    /**
+//     * Ricerca di una entity (la crea se non la trova) <br>
+//     *
+//     * @param code di riferimento (obbligatorio ed unico)
+//     *
+//     * @return la entity trovata o appena creata
+//     */
+//    public Prova findOrCrea(String code) {
+//        Prova entity = findByKeyUnica(code);
+//
+//        if (entity == null) {
+//            entity = newEntity((Company) null, 0, code);
+//            save(entity);
+//        }// end of if cycle
+//
+//        return entity;
+//    }// end of method
+//
+//    /**
+//     * Crea una entity e la registra <br>
+//     *
+//     * @param code di riferimento (obbligatorio ed unico)
+//     *
+//     * @return la entity appena creata
+//     */
+//    public Prova crea(String code) {
+//        Prova entity = newEntity((Company) null, 0, code);
+//        save(entity);
+//        return entity;
+//    }// end of method
 
     /**
      * Creazione in memoria di una nuova entity che NON viene salvata
@@ -103,36 +103,36 @@ public class ProvaService extends AService {
      */
     @Override
     public Prova newEntity() {
-        return newEntity((Company) null, 0, "");
+        return Prova.builder().build();
     }// end of method
 
 
-    /**
-     * Creazione in memoria di una nuova entity che NON viene salvata <br>
-     * Eventuali regolazioni iniziali delle property <br>
-     * All properties <br>
-     * Gli argomenti (parametri) della new Entity DEVONO essere ordinati come nella Entity (costruttore lombok) <br>
-     *
-     * @param ordine      di presentazione (obbligatorio con inserimento automatico se è zero)
-	* @param code        codice di riferimento (obbligatorio)
-     *
-     * @return la nuova entity appena creata (non salvata)
-     */
-    public Prova newEntity(Company company, int ordine, String code) {
-        Prova entity = null;
-
-        entity = findByKeyUnica(code);
-		if (entity != null) {
-			return findByKeyUnica(code);
-		}// end of if cycle
-		
-        entity = Prova.builder()
-				.ordine(ordine != 0 ? ordine : this.getNewOrdine(company))
-				.code(code.equals("") ? null : code)
-                .build();
-
-        return (Prova) addCompany(entity, company);
-    }// end of method
+//    /**
+//     * Creazione in memoria di una nuova entity che NON viene salvata <br>
+//     * Eventuali regolazioni iniziali delle property <br>
+//     * All properties <br>
+//     * Gli argomenti (parametri) della new Entity DEVONO essere ordinati come nella Entity (costruttore lombok) <br>
+//     *
+//     * @param ordine      di presentazione (obbligatorio con inserimento automatico se è zero)
+//	* @param code        codice di riferimento (obbligatorio)
+//     *
+//     * @return la nuova entity appena creata (non salvata)
+//     */
+//    public Prova newEntity(Company company, int ordine, String code) {
+//        Prova entity = null;
+//
+//        entity = findByKeyUnica(code);
+//		if (entity != null) {
+//			return findByKeyUnica(code);
+//		}// end of if cycle
+//
+//        entity = Prova.builder()
+//				.ordine(ordine != 0 ? ordine : this.getNewOrdine(company))
+//				.code(code.equals("") ? null : code)
+//                .build();
+//
+//        return (Prova) addCompany(entity, company);
+//    }// end of method
 
 
     /**

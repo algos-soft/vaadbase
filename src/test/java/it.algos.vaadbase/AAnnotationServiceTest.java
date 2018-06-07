@@ -16,9 +16,9 @@ import org.mockito.MockitoAnnotations;
 
 import java.util.Arrays;
 
-import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.junit.jupiter.api.Assertions.assertNotEquals;
-import static org.junit.jupiter.api.Assertions.assertNotNull;
+import static it.algos.vaadbase.service.AAnnotationService.INT_NULL;
+import static it.algos.vaadbase.service.AAnnotationService.TESTO_NULL;
+import static org.junit.jupiter.api.Assertions.*;
 
 /**
  * Project springvaadin
@@ -437,7 +437,7 @@ public class AAnnotationServiceTest extends ATest {
      */
     @Test
     public void getMessage() {
-        previsto = "Deve contenere un numero";
+        previsto = FIELD_NAME_ORDINE + INT_NULL;
 
         ottenuto = service.getMessage(FIELD_ORDINE);
         assertEquals(previsto, ottenuto);
@@ -449,14 +449,13 @@ public class AAnnotationServiceTest extends ATest {
         ottenuto = service.getMessageSize(FIELD_ORDINE);
         assertEquals(previsto, ottenuto);
 
-
-        previsto = "Il codice è obbligatorio";
+        previsto = FIELD_NAME_CODE + TESTO_NULL;
         ottenuto = service.getMessage(FIELD_CODE);
         assertEquals(previsto, ottenuto);
         ottenuto = service.getMessageNull(FIELD_CODE);
         assertEquals(previsto, ottenuto);
 
-        previsto = "Deve contenere almeno 3 caratteri";
+        previsto = FIELD_NAME_CODE + " deve contenere almeno 3 caratteri";
         ottenuto = service.getMessage(FIELD_CODE);
         assertNotEquals(previsto, ottenuto);
         ottenuto = service.getMessageSize(FIELD_CODE);
