@@ -27,7 +27,7 @@ import static it.algos.vaadtest.application.AppCost.TAG_PRO;
  * Project vaadtest <br>
  * Created by Algos <br>
  * User: Gac <br>
- * Date: 8-giu-2018 17.46.52 <br>
+ * Date: 8-giu-2018 18.05.40 <br>
  * <p>
  * Estende la entity astratta AEntity che contiene la key property ObjectId <br>
  * <p>
@@ -59,8 +59,8 @@ import static it.algos.vaadtest.application.AppCost.TAG_PRO;
 @EqualsAndHashCode(callSuper = false)
 @Qualifier(TAG_PRO)
 @AIEntity(company = EACompanyRequired.nonUsata)
-@AIList(fields = {"descrizione"})
-@AIForm(fields = {"descrizione"})
+@AIList(fields = {"ordine", "code", "descrizione"})
+@AIForm(fields = {"ordine", "code", "descrizione"})
 @AIScript(sovrascrivibile = false)
 public class Prova extends AEntity {
 
@@ -71,7 +71,26 @@ public class Prova extends AEntity {
     private final static long serialVersionUID = 1L;
 
     
+	/**
+     * ordine di presentazione (obbligatorio, unico) <br>
+     * il più importante per primo <br>
+     * public, perché deve essere letto da 'reflection'
+     */
+    @NotNull
+    @Indexed()
+    @AIField(type = EAFieldType.integer, widthEM = 3)
+    @AIColumn(name = "#", width = 55)
+    public int ordine;
     
+	/**
+     * codice di riferimento (obbligatorio, unico) <br>
+     */
+    @NotNull
+    @Indexed()
+    @Size(min = 3)
+    @AIField(type = EAFieldType.text, required = true, focus = true, widthEM = 12)
+    @AIColumn(width = 210)
+    private String code;
     
 	/**
      * descrizione (obbligatoria, non unica) <br>
@@ -87,7 +106,7 @@ public class Prova extends AEntity {
      */
     @Override
     public String toString() {
-        return descrizione;
+        return code;
     }// end of method
 
 

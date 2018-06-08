@@ -572,14 +572,25 @@ public class AService implements IAService {
 
 
     /**
-     * Property unica (se esiste).
+     * Property unica (se esiste) <br>
+     * <p>
+     * Se esiste la property 'code', utilizza il valore di questa property <br>
+     * Altrimenti, se esiste la property 'descrizione', utilizza il valore di questa property <br>
+     * Altrimenti, se esiste un metodo sovrascritto nella sottoclasse concreta, utilizza quello <br>
+     * Altrimenti, restituisce un valore vuoto <br>
      */
     public String getPropertyUnica(AEntity entityBean) {
+        String propertyUnica = "";
+
         if (reflection.isEsiste(entityClass, FIELD_NAME_CODE)) {
-            return "";
+            propertyUnica = (String) reflection.getPropertyValue(entityBean, FIELD_NAME_CODE);
         } else {
-            return "";
+            if (reflection.isEsiste(entityClass, FIELD_NAME_DESCRIZIONE)) {
+                propertyUnica = (String) reflection.getPropertyValue(entityBean, FIELD_NAME_DESCRIZIONE);
+            }// end of if cycle
         }// end of if/else cycle
+
+        return propertyUnica;
     }// end of method
 
 
