@@ -1,5 +1,5 @@
     /**
-     * Property unica (se esiste).
+     * Property unica (se esiste) <br>
      */
     @Override
     public String getPropertyUnica(AEntity entityBean) {

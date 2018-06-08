@@ -22,7 +22,7 @@ import static it.algos.vaadtest.application.AppCost.TAG_PRO;
  * Project vaadtest <br>
  * Created by Algos
  * User: Gac
- * Date: 6-giu-2018 15.46.15
+ * Date: 7-giu-2018 20.46.21
  * <p>
  * Estende la classe astratta AViewDialog per visualizzare i fields <br>
  * <p>
@@ -53,14 +53,5 @@ public class ProvaViewDialog extends AViewDialog<Prova> {
         super(presenter);
     }// end of constructor
 
-    /**
-     * Regola in lettura l'eeventuale field company (un combo)
-     * Dal DB alla UI
-     * Sovrascritto
-     */
-    protected void readCompanyField() {
-        if (companyField != null) {
-            companyField.setValue(((Prova) getCurrentItem()).getCompany());
-        }// end of if cycle
-    }// end of method
+    
 }// end of class

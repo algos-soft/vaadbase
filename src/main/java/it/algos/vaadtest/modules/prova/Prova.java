@@ -27,9 +27,9 @@ import static it.algos.vaadtest.application.AppCost.TAG_PRO;
  * Project vaadtest <br>
  * Created by Algos <br>
  * User: Gac <br>
- * Date: 6-giu-2018 15.46.15 <br>
+ * Date: 7-giu-2018 20.46.21 <br>
  * <p>
- * Estende la entity astratta ACEntity che contiene il riferimento alla property Company <br>
+ * Estende la entity astratta AEntity che contiene la key property ObjectId <br>
  * <p>
  * Annotated with @SpringComponent (obbligatorio) <br>
  * Annotated with @Document (facoltativo) per avere un nome della collection (DB Mongo) diverso dal nome della Entity <br>
@@ -59,10 +59,10 @@ import static it.algos.vaadtest.application.AppCost.TAG_PRO;
 @EqualsAndHashCode(callSuper = false)
 @Qualifier(TAG_PRO)
 @AIEntity(company = EACompanyRequired.nonUsata)
-@AIList(fields = {"company", "ordine", "code"})
-@AIForm(fields = {"company", "ordine", "code"})
+@AIList(fields = {"ordine", "code"})
+@AIForm(fields = {"ordine", "code"})
 @AIScript(sovrascrivibile = false)
-public class Prova extends ACEntity {
+public class Prova extends AEntity {
 
 
     /**

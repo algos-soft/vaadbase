@@ -724,14 +724,17 @@ public class TElabora {
         String aCapo = "\n" + tab4;
         String companyText = flagCompany ? "company" : "";
 
+//        if (flagOrdine) {
+//            methodBuilderText += aCapo + ".ordine(ordine != 0 ? ordine : this.getNewOrdine(" + companyText + "))";
+//        }// end of if cycle
+//        if (flagCode) {
+//            methodBuilderText += aCapo + ".code(code.equals(\"\") ? null : code)";
+//        }// end of if cycle
+//        if (flagDescrizione) {
+//            methodBuilderText += aCapo + ".descrizione(descrizione.equals(\"\") ? null : descrizione)";
+//        }// end of if cycle
         if (flagOrdine) {
-            methodBuilderText += aCapo + ".ordine(ordine != 0 ? ordine : this.getNewOrdine(" + companyText + "))";
-        }// end of if cycle
-        if (flagCode) {
-            methodBuilderText += aCapo + ".code(code.equals(\"\") ? null : code)";
-        }// end of if cycle
-        if (flagDescrizione) {
-            methodBuilderText += aCapo + ".descrizione(descrizione.equals(\"\") ? null : descrizione)";
+            methodBuilderText =".ordine(getNewOrdine())";
         }// end of if cycle
 
         return methodBuilderText;

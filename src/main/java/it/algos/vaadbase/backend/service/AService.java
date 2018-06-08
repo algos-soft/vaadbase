@@ -7,10 +7,7 @@ import it.algos.vaadbase.backend.entity.AEntity;
 import it.algos.vaadbase.backend.login.ALogin;
 import it.algos.vaadbase.modules.company.Company;
 import it.algos.vaadbase.modules.preferenza.EAPreferenza;
-import it.algos.vaadbase.service.AAnnotationService;
-import it.algos.vaadbase.service.APreferenzaService;
-import it.algos.vaadbase.service.AReflectionService;
-import it.algos.vaadbase.service.ATextService;
+import it.algos.vaadbase.service.*;
 import it.algos.vaadbase.ui.AFieldService;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -18,6 +15,7 @@ import org.springframework.context.annotation.Scope;
 import org.springframework.data.domain.Sort;
 import org.springframework.data.mongodb.repository.MongoRepository;
 
+import java.lang.reflect.Field;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
@@ -54,6 +52,9 @@ public class AService implements IAService {
 
     @Autowired
     public AReflectionService reflection;
+
+    @Autowired
+    public AArrayService array;
 
 
     //    @Autowired
@@ -449,10 +450,15 @@ public class AService implements IAService {
      * Opportunità di controllare (per le nuove schede) che la key unica non esista già.
      * Invocato appena prima del save(), solo per una nuova entity
      *
-     * @param entityBean nuova da creare
+     * @param newEntityBean nuova da creare
      */
-    public boolean isEsisteEntityKeyUnica(AEntity entityBean) {
-        return findById(getKeyUnica(entityBean)) != null;
+    public boolean isEsisteEntityKeyUnica(AEntity newEntityBean) {
+        String keyID = getKeyUnica(newEntityBean);
+        if (text.isValid(keyID)) {
+            return findById(keyID) != null;
+        } else {
+            return false;
+        }// end of if/else cycle
     }// end of method
 
 
@@ -464,7 +470,11 @@ public class AService implements IAService {
      */
     public void creaIdKeySpecifica(AEntity entityBean) {
         String keyID = getKeyUnica(entityBean);
-        entityBean.id = keyID.equals("") ? null : keyID;
+        if (text.isValid(keyID)) {
+            entityBean.id = keyID;
+        } else {
+            entityBean.id = null;
+        }// end of if/else cycle
     }// end of method
 
 
@@ -475,22 +485,19 @@ public class AService implements IAService {
      * Se usa la company, questa deve SEMPRE esserci
      */
     public String getKeyUnica(AEntity entityBean) {
-        String keyUnica = "";
+        String keyUnica = getPropertyUnica(entityBean);
         Company company;
         String companyCode = "";
 
-        if (entityBean instanceof ACEntity) {
-            company = ((ACEntity) entityBean).getCompany();
-        } else {
-            company = login.getCompany();
-        }// end of if/else cycle
-        companyCode = company != null ? company.getCode() : "";
-
-        if (annotation.getCompanyRequired(entityBean.getClass()) == EACompanyRequired.nonUsata) {
-            keyUnica = getPropertyUnica(entityBean);
-        } else {
-            keyUnica = companyCode + getPropertyUnica(entityBean);
-        }// end of if/else cycle
+        if (annotation.getCompanyRequired(entityBean.getClass()) != EACompanyRequired.nonUsata) {
+            if (entityBean instanceof ACEntity) {
+                company = ((ACEntity) entityBean).getCompany();
+            } else {
+                company = login.getCompany();
+            }// end of if/else cycle
+            companyCode = company != null ? company.getCode() : "";
+            keyUnica = keyUnica == null ? keyUnica : companyCode + keyUnica;
+        }// end of if cycle
 
         return keyUnica;
     }// end of method
@@ -505,6 +512,45 @@ public class AService implements IAService {
         } else {
             return "";
         }// end of if/else cycle
+    }// end of method
+
+
+    /**
+     * Ordine di presentazione (obbligatorio, unico per tutte le eventuali company), <br>
+     * Viene calcolato in automatico alla creazione della entity <br>
+     * Recupera dal DB il valore massimo pre-esistente della property <br>
+     * Incrementa di uno il risultato <br>
+     */
+    public int getNewOrdine() {
+        int ordine = 0;
+        AEntity entityBean = null;
+        Sort sort;
+        List lista = null;
+        Field field;
+        Object value;
+
+        if (reflection.isEsiste(entityClass, FIELD_NAME_ORDINE)) {
+            sort = new Sort(Sort.Direction.DESC, FIELD_NAME_ORDINE);
+            lista = repository.findAll(sort);
+        }// end of if/else cycle
+
+        if (array.isValid(lista)) {
+            entityBean = (AEntity) lista.get(0);
+        }// end of if cycle
+
+        if (entityBean != null) {
+            field = reflection.getField(entityClass, FIELD_NAME_ORDINE);
+            try { // prova ad eseguire il codice
+                value = field.get(entityBean);
+                if (value instanceof Integer) {
+                    ordine = (Integer) value;
+                }// end of if cycle
+            } catch (Exception unErrore) { // intercetta l'errore
+                log.error(unErrore.toString());
+            }// fine del blocco try-catch
+        }// end of if cycle
+
+        return ordine + 1;
     }// end of method
 
 

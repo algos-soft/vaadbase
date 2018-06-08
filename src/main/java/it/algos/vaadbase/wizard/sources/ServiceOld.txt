@@ -42,49 +42,79 @@ public class @ENTITY@Service extends AService {
 
 
     /**
-     * versione della classe per la serializzazione
+     * La repository viene iniettata dal costruttore e passata al costruttore della superclasse, <br>
+     * Spring costruisce una implementazione concreta dell'interfaccia MongoRepository (come previsto dal @Qualifier) <br>
+     * Qui si una una interfaccia locale (col casting nel costruttore) per usare i metodi specifici <br>
      */
-    private final static long serialVersionUID = 1L;
+    private @ENTITY@Repository repository;
 
 
     /**
-     * Costruttore <br>
+     * Costruttore @Autowired <br>
      * Si usa un @Qualifier(), per avere la sottoclasse specifica <br>
      * Si usa una costante statica, per essere sicuri di scrivere sempre uguali i riferimenti <br>
      *
      * @param repository per la persistenza dei dati
      */
-    @Autowired
     public @ENTITY@Service(@Qualifier(@QUALIFIER@) MongoRepository repository) {
         super(repository);
-    }// end of Spring constructor
+        this.repository = (@ENTITY@Repository) repository;
+   }// end of Spring constructor
 
+
+    @FIND@
 
     /**
-     * Creazione in memoria di una nuova entity che NON viene salvata <br>
-     * Eventuali regolazioni iniziali delle properties <br>
-     * Senza parametri per compatibilità con la superclasse <br>
+     * Creazione in memoria di una nuova entity che NON viene salvata
+     * Eventuali regolazioni iniziali delle property
+     * Senza properties per compatibilità con la superclasse
      *
      * @return la nuova entity appena creata (non salvata)
      */
     @Override
-    public AEntity newEntity() {
-        return @ENTITY@.builder()@BUILDER@.build();
+    public @ENTITY@ newEntity() {
+        return newEntity(@PARAMETERSNEWENTITY@);
     }// end of method
 
 
     /**
-     * Returns all entities of the type <br>
-     * Se esiste la company, filtrate secondo la company <br>
-     * Se esiste la property 'ordine', ordinate secondo la property <br>
+     * Creazione in memoria di una nuova entity che NON viene salvata <br>
+     * Eventuali regolazioni iniziali delle property <br>
+     * All properties <br>
+     * Gli argomenti (parametri) della new Entity DEVONO essere ordinati come nella Entity (costruttore lombok) <br>
      *
-     * @return all entities
+     @PARAMETERSDOC@
+     *
+     * @return la nuova entity appena creata (non salvata)
      */
+    public @ENTITY@ newEntity(@PARAMETERS@) {
+        @ENTITY@ entity = null;
+
+        @KEYUNICA@
+        entity = @ENTITY@.builder()@BUILDER@
+                .build();
+
+        return entity;
+    }// end of method
+
     @Override
     public List<Prova> findAll() {
-        return ((@ENTITY@Repository) repository).@FINDALL@;
+        return repository.@FINDALL@;
+    }// end of method
+
+    /**
+     * Recupera una istanza della Entity usando la query della property specifica (obbligatoria ed unica) <br>
+     *
+     * @param code di riferimento (obbligatorio)
+     *
+     * @return istanza della Entity, null se non trovata
+     */
+    public @ENTITY@ findByKeyUnica(String code) {
+        return repository.findByCode(code);
     }// end of method
 
     @IDKEYSPECIFICA@
+
+    @NEWORDINE@
 
 }// end of class
