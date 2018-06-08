@@ -564,7 +564,7 @@ public class AService implements IAService {
                 company = login.getCompany();
             }// end of if/else cycle
             companyCode = company != null ? company.getCode() : "";
-            keyUnica = keyUnica == null ? keyUnica : companyCode + keyUnica;
+            keyUnica = text.isValid(keyUnica) ? companyCode + keyUnica : null;
         }// end of if cycle
 
         return keyUnica;
@@ -614,7 +614,7 @@ public class AService implements IAService {
 
         sort = new Sort(Sort.Direction.DESC, FIELD_NAME_ORDINE);
         if (usaCompany()) {
-//            lista = findAllByCompany(sort);
+            lista = findAllByCompany(sort);
         } else {
             lista = findAll(sort);
         }// end of if/else cycle
@@ -639,26 +639,44 @@ public class AService implements IAService {
     }// end of method
 
 
-//    /**
-//     * Returns instances of the company <br>
-//     * Lista ordinata <br>
-//     *
-//     * @return lista ordinata di tutte le entities
-//     */
-//    public List<Prova> findAllByCompany(Sort sort) {
-//        List<Prova> lista = null;
-//        Company company = null;
-//
-//        if (login != null) {
-//            company = (Company) login.getCompany();
-//        }// end of if cycle
-//
-//        if (company != null) {
-//            lista = findAllByCompany();
-//        }// end of if cycle
-//
-//        return lista;
-//    }// end of method
+    /**
+     * Instances of the current company <br>
+     * Lista ordinata <br>
+     * Può essere sovrascritta nella sottoclasse <br>
+     * Adatta SOLO per collections non troppo lunghe <br>
+     * Per colelctions con centinaia o migliaia di entities, usare una chiamata nella repository specifica <br>
+     *
+     * @return lista ordinata delle entities della company corrente
+     */
+    private List<? extends AEntity> findAllByCompany(Sort sort) {
+        List<AEntity> listByCompany = null;
+        List<? extends AEntity> listAllEntities = null;
+        Company company = null;
+        ACEntity companyEntity;
+        String companyCode;
+
+        if (login != null) {
+            company = login.getCompany();
+        }// end of if cycle
+
+        if (company != null) {
+            companyCode = company.getCode();
+            listAllEntities = findAll(sort);
+            if (array.isValid(listAllEntities)) {
+                listByCompany = new ArrayList<>();
+                for (AEntity entity : listAllEntities) {
+                    if (entity instanceof ACEntity) {
+                        companyEntity = (ACEntity) entity;
+                        if (companyEntity.getCompany().getCode().equals(companyCode)) {
+                            listByCompany.add(entity);
+                        }// end of if cycle
+                    }// end of if cycle
+                }// end of for cycle
+            }// end of if cycle
+        }// end of if cycle
+
+        return listByCompany;
+    }// end of method
 
 
 //    public void logNewBean(AEntity modifiedBean) {

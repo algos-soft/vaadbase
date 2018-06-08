@@ -460,7 +460,7 @@ public abstract class AViewDialog<T extends Serializable> extends Dialog impleme
     }
 
     protected void confirmDelete() {
-        openConfirmationDialog("Vuoi veramente eliminare “" + getCurrentItem() + "” ?", "L'operazione non è reversibile.", "");
+        openConfirmationDialog("Vuoi veramente eliminare “" + getCurrentItem() .toString()+ "” ?", "L'operazione non è reversibile.", "");
     }// end of method
 
     private void deleteConfirmed(T item) {
