@@ -19,6 +19,7 @@ import java.lang.reflect.Field;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
+import java.util.function.Predicate;
 import java.util.stream.Collectors;
 
 /**
@@ -218,17 +219,49 @@ public class AService implements IAService {
             lista = lista.stream()
                     .filter(entity -> ((ACEntity) entity).company != null)
                     .filter(entity -> ((ACEntity) entity).company.getCode().equals(company.getCode()))
-                    .filter(entity -> getKeyUnica(entity).toLowerCase().contains(normalizedFilter))
+                    .filter(entity -> {
+                        if (isEsisteEntityKeyUnica(entity)) {
+                            return getKeyUnica(entity).toLowerCase().contains(normalizedFilter);
+                        } else {
+                            if (reflection.isEsiste(entityClass, FIELD_NAME_CODE)) {
+                                return ((String)reflection.getPropertyValue(entity,FIELD_NAME_CODE)).contains(normalizedFilter);
+                            } else {
+                                if (reflection.isEsiste(entityClass, FIELD_NAME_DESCRIZIONE)) {
+                                    return ((String)reflection.getPropertyValue(entity,FIELD_NAME_DESCRIZIONE)).contains(normalizedFilter);
+                                } else {
+                                    return true;
+                                }// end of if/else cycle
+                            }// end of if/else cycle
+                        }// end of if/else cycle
+                    })
                     .collect(Collectors.toList());
         } else {
             lista = findAll();
             lista = lista.stream()
-                    .filter(entity -> getKeyUnica(entity).toLowerCase().contains(normalizedFilter))
+                    .filter(entity -> {
+                        if (isEsisteEntityKeyUnica(entity)) {
+                            return getKeyUnica(entity).toLowerCase().contains(normalizedFilter);
+                        } else {
+                            if (reflection.isEsiste(entityClass, FIELD_NAME_CODE)) {
+                                return ((String)reflection.getPropertyValue(entity,FIELD_NAME_CODE)).contains(normalizedFilter);
+                            } else {
+                                if (reflection.isEsiste(entityClass, FIELD_NAME_DESCRIZIONE)) {
+                                    return ((String)reflection.getPropertyValue(entity,FIELD_NAME_DESCRIZIONE)).contains(normalizedFilter);
+                                } else {
+                                    return true;
+                                }// end of if/else cycle
+                            }// end of if/else cycle
+                        }// end of if/else cycle
+                    })
                     .collect(Collectors.toList());
         }// end of if/else cycle
 
         return lista;
     }// end of method
+
+    private Predicate<? extends AEntity> getPredicate(String normalizedFilter) {
+        return entity -> getKeyUnica(entity).toLowerCase().contains(normalizedFilter);
+    }
 
 
     /**

@@ -27,7 +27,7 @@ import static it.algos.vaadtest.application.AppCost.TAG_PRO;
  * Project vaadtest <br>
  * Created by Algos <br>
  * User: Gac <br>
- * Date: 7-giu-2018 20.46.21 <br>
+ * Date: 8-giu-2018 8.56.15 <br>
  * <p>
  * Estende la entity astratta AEntity che contiene la key property ObjectId <br>
  * <p>
@@ -74,12 +74,13 @@ public class Prova extends AEntity {
 	/**
      * ordine di presentazione (obbligatorio, unico) <br>
      * il più importante per primo <br>
+     * public, perché deve essere letto da 'reflection'
      */
     @NotNull
     @Indexed()
     @AIField(type = EAFieldType.integer, widthEM = 3)
     @AIColumn(name = "#", width = 55)
-    private int ordine;
+    public int ordine;
     
 	/**
      * codice di riferimento (obbligatorio, unico) <br>

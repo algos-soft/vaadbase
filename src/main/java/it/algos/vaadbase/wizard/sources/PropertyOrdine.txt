@@ -1,9 +1,10 @@
     /**
      * ordine di presentazione (obbligatorio, unico) <br>
      * il più importante per primo <br>
+     * public, perché deve essere letto da 'reflection'
      */
     @NotNull
     @Indexed()
     @AIField(type = EAFieldType.integer, widthEM = 3)
     @AIColumn(name = "#", width = 55)
-    private int ordine;
+    public int ordine;
