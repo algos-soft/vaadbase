@@ -22,7 +22,7 @@ import static it.algos.vaadtest.application.AppCost.TAG_PRO;
  * Project vaadtest <br>
  * Created by Algos
  * User: Gac
- * Date: 8-giu-2018 8.56.15
+ * Date: 8-giu-2018 17.46.52
  * <p>
  * Estende la classe astratta AViewDialog per visualizzare i fields <br>
  * <p>

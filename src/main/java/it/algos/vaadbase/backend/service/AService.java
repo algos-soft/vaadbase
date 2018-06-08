@@ -146,16 +146,15 @@ public class AService implements IAService {
 
 
     /**
-     * Returns all entities of the type.
+     * Returns all entities of the type <br>
      * <p>
-     * Senza filtri
-     * Ordinati per ID
-     * <p>
-     * Methods of this library return Iterable<T>, while the rest of my code expects Collection<T>
-     * L'annotation standard di JPA prevede un ritorno di tipo Iterable, mentre noi usiamo List
-     * Eseguo qui la conversione, che rimane trasparente al resto del programma
+     * Se esiste la property 'ordine', ordinate secondo questa property <br>
+     * Altrimenti, se esiste la property 'code', ordinate secondo questa property <br>
+     * Altrimenti, se esiste la property 'descrizione', ordinate secondo questa property <br>
+     * Altrimenti, ordinate secondo il metodo sovrascritto nella sottoclasse concreta <br>
+     * Altrimenti, ordinate in ordine di inserimento nel DB Mongo <br>
      *
-     * @return all entities
+     * @return all ordered entities
      */
     @Override
     public List<? extends AEntity> findAll() {
@@ -175,12 +174,34 @@ public class AService implements IAService {
             }// end of if/else cycle
         }// end of if/else cycle
 
+        if (text.isValid(sortName)) {
+            sort = new Sort(Sort.Direction.ASC, sortName);
+            lista = findAll(sort);
+        } else {
+            lista = findAll((Sort) null);
+        }// end of if/else cycle
+
+        return lista;
+    }// end of method
+
+
+    /**
+     * Returns all entities of the type <br>
+     * <p>
+     * Ordinate secondo l'ordinamento previsto
+     *
+     * @param sort ordinamento previsto
+     *
+     * @return all ordered entities
+     */
+    private List<? extends AEntity> findAll(Sort sort) {
+        List<? extends AEntity> lista = null;
+
         try { // prova ad eseguire il codice
-            if (sortName.equals("")) {
-                lista = repository.findAll();
-            } else {
-                sort = new Sort(Sort.Direction.ASC, sortName);
+            if (sort != null) {
                 lista = repository.findAll(sort);
+            } else {
+                lista = repository.findAll();
             }// end of if/else cycle
         } catch (Exception unErrore) { // intercetta l'errore
             log.error(unErrore.toString());
@@ -192,6 +213,7 @@ public class AService implements IAService {
     /**
      * Fetches the entities whose 'main text property' matches the given filter text.
      * <p>
+     * Se esiste la company, filtrate secondo la company <br>
      * The matching is case insensitive. When passed an empty filter text,
      * the method returns all categories. The returned list is ordered by name.
      * The 'main text property' is different in each entity class and chosen in the specific subclass
@@ -224,10 +246,10 @@ public class AService implements IAService {
                             return getKeyUnica(entity).toLowerCase().contains(normalizedFilter);
                         } else {
                             if (reflection.isEsiste(entityClass, FIELD_NAME_CODE)) {
-                                return ((String)reflection.getPropertyValue(entity,FIELD_NAME_CODE)).contains(normalizedFilter);
+                                return ((String) reflection.getPropertyValue(entity, FIELD_NAME_CODE)).contains(normalizedFilter);
                             } else {
                                 if (reflection.isEsiste(entityClass, FIELD_NAME_DESCRIZIONE)) {
-                                    return ((String)reflection.getPropertyValue(entity,FIELD_NAME_DESCRIZIONE)).contains(normalizedFilter);
+                                    return ((String) reflection.getPropertyValue(entity, FIELD_NAME_DESCRIZIONE)).contains(normalizedFilter);
                                 } else {
                                     return true;
                                 }// end of if/else cycle
@@ -243,10 +265,10 @@ public class AService implements IAService {
                             return getKeyUnica(entity).toLowerCase().contains(normalizedFilter);
                         } else {
                             if (reflection.isEsiste(entityClass, FIELD_NAME_CODE)) {
-                                return ((String)reflection.getPropertyValue(entity,FIELD_NAME_CODE)).contains(normalizedFilter);
+                                return ((String) reflection.getPropertyValue(entity, FIELD_NAME_CODE)).contains(normalizedFilter);
                             } else {
                                 if (reflection.isEsiste(entityClass, FIELD_NAME_DESCRIZIONE)) {
-                                    return ((String)reflection.getPropertyValue(entity,FIELD_NAME_DESCRIZIONE)).contains(normalizedFilter);
+                                    return ((String) reflection.getPropertyValue(entity, FIELD_NAME_DESCRIZIONE)).contains(normalizedFilter);
                                 } else {
                                     return true;
                                 }// end of if/else cycle
@@ -334,7 +356,7 @@ public class AService implements IAService {
      * @param company    da utilizzare se valida (può essere nulla)
      */
     protected AEntity addCompany(AEntity entityBean, Company company) {
-        EACompanyRequired tableCompanyRequired = EACompanyRequired.obbligatoria;//@todo provvisorio - va letto dall'annotation della Entity
+        EACompanyRequired tableCompanyRequired;
 
         //--se la EntityClass non estende ACCompany, nopn deve fare nulla
         if (!(entityBean instanceof ACEntity)) {
@@ -373,6 +395,19 @@ public class AService implements IAService {
 
         return entityBean;
     }// end of method
+
+
+    protected boolean usaCompany() {
+        boolean status = false;
+        EACompanyRequired tableCompanyRequired = null;
+
+        //--se la EntityClass non estende ACCompany, nopn deve fare nulla
+        tableCompanyRequired = annotation.getCompanyRequired(entityClass);
+        status = tableCompanyRequired == EACompanyRequired.obbligatoria || tableCompanyRequired == EACompanyRequired.facoltativa;
+
+        return status;
+    }// end of method
+
 
     /**
      * Saves a given entity.
@@ -562,9 +597,15 @@ public class AService implements IAService {
         Field field;
         Object value;
 
-        if (reflection.isEsiste(entityClass, FIELD_NAME_ORDINE)) {
-            sort = new Sort(Sort.Direction.DESC, FIELD_NAME_ORDINE);
-            lista = repository.findAll(sort);
+        if (!reflection.isEsiste(entityClass, FIELD_NAME_ORDINE)) {
+            return 0;
+        }// end of if/else cycle
+
+        sort = new Sort(Sort.Direction.DESC, FIELD_NAME_ORDINE);
+        if (usaCompany()) {
+//            lista = findAllByCompany(sort);
+        } else {
+            lista = findAll(sort);
         }// end of if/else cycle
 
         if (array.isValid(lista)) {
@@ -585,6 +626,28 @@ public class AService implements IAService {
 
         return ordine + 1;
     }// end of method
+
+
+//    /**
+//     * Returns instances of the company <br>
+//     * Lista ordinata <br>
+//     *
+//     * @return lista ordinata di tutte le entities
+//     */
+//    public List<Prova> findAllByCompany(Sort sort) {
+//        List<Prova> lista = null;
+//        Company company = null;
+//
+//        if (login != null) {
+//            company = (Company) login.getCompany();
+//        }// end of if cycle
+//
+//        if (company != null) {
+//            lista = findAllByCompany();
+//        }// end of if cycle
+//
+//        return lista;
+//    }// end of method
 
 
 //    public void logNewBean(AEntity modifiedBean) {
