@@ -27,7 +27,7 @@ import static it.algos.vaadtest.application.AppCost.TAG_PRO;
  * Project vaadtest <br>
  * Created by Algos <br>
  * User: Gac <br>
- * Date: 8-giu-2018 18.42.14 <br>
+ * Date: 9-giu-2018 11.41.15 <br>
  * <p>
  * Estende la entity astratta ACEntity che contiene il riferimento alla property Company <br>
  * <p>

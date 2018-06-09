@@ -15,14 +15,13 @@ import org.springframework.data.domain.Sort;
 import it.algos.vaadbase.annotation.AIScript;
 import it.algos.vaadbase.backend.service.AService;
 import it.algos.vaadbase.backend.entity.AEntity;
-import it.algos.vaadbase.modules.company.Company;
 import static it.algos.vaadtest.application.AppCost.TAG_PRO;
 
 /**
  * Project vaadtest <br>
  * Created by Algos <br>
  * User: Gac <br>
- * Date: 8-giu-2018 18.42.14 <br>
+ * Date: 9-giu-2018 11.41.15 <br>
  * <br>
  * Estende la classe astratta AService. Layer di collegamento per la Repository. <br>
  * <br>
@@ -72,75 +71,5 @@ public class ProvaService extends AService {
     public AEntity newEntity() {
         return addCompany(Prova.builder().ordine(getNewOrdine()).build());
     }// end of method
-
-
-//    /**
-//     * Returns instances of the company <br>
-//     * Lista ordinata <br>
-//     *
-//     * @return lista ordinata di tutte le entities
-//     */
-//    public List<Prova> findAllByCompany() {
-//        List<Prova> lista = null;
-//        Company company = null;
-//
-//        if (login != null) {
-//            company = (Company) login.getCompany();
-//        }// end of if cycle
-//
-//        if (company != null) {
-//            lista = findAllByCompany(company);
-//        }// end of if cycle
-//
-//        return lista;
-//    }// end of method
-//
-//
-//    /**
-//     * Returns instances of the company <br>
-//     * Lista ordinata <br>
-//     *
-//     * @return lista ordinata di tutte le entities
-//     */
-//    public List<Prova> findAllByCompany(Company company) {
-//        return ((ProvaRepository) repository).findAllByCompanyOrderByOrdineAsc(company);
-//    }// end of method
-//
-//
-//    /**
-//     * Recupera una istanza della Entity usando la query della property specifica (obbligatoria ed unica) <br>
-//     *
-//     * @param code di riferimento (obbligatorio)
-//     *
-//     * @return istanza della Entity, null se non trovata
-//     */
-//    public Prova findByKeyUnica(String code) {
-//        Prova entity = null;
-//        Company company = null;
-//
-//        if (login != null) {
-//            company = login.getCompany();
-//        }// end of if cycle
-//
-//        if (company != null) {
-//            entity = findByKeyUnica(company, code);
-//        }// end of if cycle
-//
-//        return entity;
-//    }// end of method
-//
-//
-//    /**
-//     * Recupera una istanza della Entity usando la query della property specifica (obbligatoria ed unica) <br>
-//     *
-//     * @param code di riferimento (obbligatorio)
-//     *
-//     * @return istanza della Entity, null se non trovata
-//     */
-//    public Prova findByKeyUnica(Company company, String code) {
-//        return ((ProvaRepository) repository).findByCompanyAndCode(company, code);
-//    }// end of method
-
-    
 
 }// end of class

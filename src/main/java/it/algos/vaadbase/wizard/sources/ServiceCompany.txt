@@ -41,7 +41,7 @@ import static it.algos.@MODULELOWER@.application.@APPCOST@.@QUALIFIER@;
 @AIScript(sovrascrivibile = false)
 public class @ENTITY@Service extends AService {
 
-
+DEPRECATED
     /**
      * versione della classe per la serializzazione
      */

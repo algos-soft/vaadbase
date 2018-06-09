@@ -219,13 +219,13 @@ public class PreferenzaService extends AService {
 //    }// end of method
 
 
-    /**
-     * Property unica (se esiste).
-     */
-    @Override
-    public String getPropertyUnica(AEntity entityBean) {
-        return ((Preferenza) entityBean).getCode();
-    }// end of method
+//    /**
+//     * Property unica (se esiste).
+//     */
+//    @Override
+//    public String getPropertyUnica(AEntity entityBean) {
+//        return ((Preferenza) entityBean).getCode();
+//    }// end of method
 
 //    /**
 //     * Opportunità di controllare (per le nuove schede) che la key unica non esista già. <br>

@@ -285,6 +285,21 @@ public class AService implements IAService {
         return entity -> getKeyUnica(entity).toLowerCase().contains(normalizedFilter);
     }
 
+    public boolean mancaCompanyNecessaria() {
+        boolean status = false;
+        boolean appUsaCompany = pref.isBool(EAPreferenza.usaCompany.getCode());
+        boolean entityUsaCompany = annotation.getCompanyRequired(entityClass) == EACompanyRequired.obbligatoria;
+        Company company = login.getCompany();
+        boolean nonEsisteCompany = company == null;
+        boolean notDeveloper = !login.isDeveloper();
+
+        if (appUsaCompany && entityUsaCompany && nonEsisteCompany) {
+            status = true;
+        }// end of if cycle
+
+        return status;
+    }// end of method
+
 
     /**
      * Nomi delle properties della Grid, estratti dalle @Annotation della Entity
@@ -397,7 +412,7 @@ public class AService implements IAService {
     }// end of method
 
 
-    protected boolean usaCompany() {
+    public boolean usaCompany() {
         boolean status = false;
         EACompanyRequired tableCompanyRequired = null;
 
@@ -514,8 +529,25 @@ public class AService implements IAService {
     }// end of method
 
 
+    /*
+     * Opportunità di usare una idKey specifica. <br>
+     * Invocato appena prima del save(), solo per una nuova entity (vuol dire che arriva con entityBean.id=null) <br>
+     * Se idKey è vuota, uso la standard random Mongo (lasciando entityBean.id = null) <br>
+     *
+     * @param entityBean da salvare
+     */
+    public void creaIdKeySpecifica(AEntity entityBean) {
+        String idKey = getKeyUnica(entityBean);
+        if (text.isValid(idKey)) {
+            entityBean.id = idKey;
+        } else {
+            entityBean.id = null;
+        }// end of if/else cycle
+    }// end of method
+
+
     /**
-     * Opportunità di controllare (per le nuove schede) che la key unica non esista già.
+     * Opportunità di controllare (per le nuove schede) che la key unica non esista già
      * Invocato appena prima del save(), solo per una nuova entity
      *
      * @param newEntityBean nuova da creare
@@ -530,68 +562,120 @@ public class AService implements IAService {
     }// end of method
 
 
-    /*
-     * Opportunità di usare una idKey specifica. <br>
-     * Invocato appena prima del save(), solo per una nuova entity <br>
-     *
-     * @param entityBean da salvare
-     */
-    public void creaIdKeySpecifica(AEntity entityBean) {
-        String keyID = getKeyUnica(entityBean);
-        if (text.isValid(keyID)) {
-            entityBean.id = keyID;
-        } else {
-            entityBean.id = null;
-        }// end of if/else cycle
-    }// end of method
-
-
     /**
-     * Formula univoca per costruire la key unica (se esiste).
+     * Formula univoca per costruire una (eventuale) idKey
      * Può essere costruita liberamente
      * La utilizza sia in scrittura che in lettura
-     * Se usa la company, questa deve SEMPRE esserci
+     * Se usa la company, questa deve esserci (eventualmente vuota)
+     * <p>
+     * Se esiste la property 'code', usa questa property come idKey <br>
+     * Altrimenti, se esiste la property 'ordine', usa questa property come idKey <br>
+     * Altrimenti, se esiste un metodo sovrascritto nella sottoclasse concreta, utilizza quello <br>
+     * Altrimenti, restituisce un valore vuoto <br>
+     * <p>
+     * Se è prevista la company obbligatoria, antepone company.code a quanto sopra (se non è vuoto)
+     * Se manca la company obbligatoria, non registra
+     * <p>
+     * Se è prevista la company facoltativa, antepone company.code a quanto sopra (se non è vuoto)
+     * Se manca la company facoltativa, registra con idKey regolata come sopra
+     * <p>
+     * Per codifiche diverse, sovrascrivere il metodo
+     *
+     * @param entityBean da regolare
+     *
+     * @return chiave univoca da usare come idKey nel DB Mongo
      */
     public String getKeyUnica(AEntity entityBean) {
-        String keyUnica = getPropertyUnica(entityBean);
-        Company company;
+        String keyUnica = "";
+        String keyCode = "";
         String companyCode = "";
 
-        if (annotation.getCompanyRequired(entityBean.getClass()) != EACompanyRequired.nonUsata) {
-            if (entityBean instanceof ACEntity) {
-                company = ((ACEntity) entityBean).getCompany();
+        if (reflection.isEsiste(entityClass, FIELD_NAME_CODE)) {
+            keyCode = (String) reflection.getPropertyValue(entityBean, FIELD_NAME_CODE);
+        } else {
+            if (reflection.isEsiste(entityClass, FIELD_NAME_ORDINE)) {
+                keyCode = (String) reflection.getPropertyValue(entityBean, FIELD_NAME_ORDINE);
+            }// end of if cycle
+        }// end of if/else cycle
+
+        if (text.isEmpty(keyCode)) {
+            return keyCode;
+        }// end of if cycle
+
+        if (usaCompany()) {
+            companyCode = getCompanyCode(entityBean);
+
+            if (text.isValid(companyCode)) {
+                keyUnica = companyCode + keyCode;
             } else {
-                company = login.getCompany();
+                if (annotation.getCompanyRequired(entityClass) == EACompanyRequired.obbligatoria) {
+                    keyUnica = null;
+                } else {
+                    keyUnica = keyCode;
+                }// end of if/else cycle
             }// end of if/else cycle
-            companyCode = company != null ? company.getCode() : "";
-            keyUnica = text.isValid(keyUnica) ? companyCode + keyUnica : null;
         }// end of if cycle
 
         return keyUnica;
     }// end of method
 
 
-    /**
-     * Property unica (se esiste) <br>
-     * <p>
-     * Se esiste la property 'code', utilizza il valore di questa property <br>
-     * Altrimenti, se esiste la property 'descrizione', utilizza il valore di questa property <br>
-     * Altrimenti, se esiste un metodo sovrascritto nella sottoclasse concreta, utilizza quello <br>
-     * Altrimenti, restituisce un valore vuoto <br>
-     */
-    public String getPropertyUnica(AEntity entityBean) {
-        String propertyUnica = "";
+    public String getCompanyCode(AEntity entityBean) {
+        String code = "";
+        Company company = getCompany(entityBean);
 
-        if (reflection.isEsiste(entityClass, FIELD_NAME_CODE)) {
-            propertyUnica = (String) reflection.getPropertyValue(entityBean, FIELD_NAME_CODE);
+        if (company != null) {
+            code = company.getCode();
+        }// end of if cycle
+
+        return code;
+    }// end of method
+
+
+    public Company getCompany(AEntity entityBean) {
+        Company company = null;
+
+        if (entityBean instanceof ACEntity) {
+            company = ((ACEntity) entityBean).getCompany();
         } else {
-            if (reflection.isEsiste(entityClass, FIELD_NAME_DESCRIZIONE)) {
-                propertyUnica = (String) reflection.getPropertyValue(entityBean, FIELD_NAME_DESCRIZIONE);
-            }// end of if cycle
+            company = getCompany();
         }// end of if/else cycle
 
-        return propertyUnica;
+        return company;
     }// end of method
+
+
+    public Company getCompany() {
+        Company company = null;
+
+        if (login != null) {
+            company = login.getCompany();
+        }// end of if cycle
+
+        return company;
+    }// end of method
+
+//    /**
+//     * Property unica (se esiste) <br>
+//     * <p>
+//     * Se esiste la property 'code', utilizza il valore di questa property <br>
+//     * Altrimenti, se esiste la property 'descrizione', utilizza il valore di questa property <br>
+//     * Altrimenti, se esiste un metodo sovrascritto nella sottoclasse concreta, utilizza quello <br>
+//     * Altrimenti, restituisce un valore vuoto <br>
+//     */
+//    public String getPropertyUnica(AEntity entityBean) {
+//        String propertyUnica = "";
+//
+//        if (reflection.isEsiste(entityClass, FIELD_NAME_CODE)) {
+//            propertyUnica = (String) reflection.getPropertyValue(entityBean, FIELD_NAME_CODE);
+//        } else {
+//            if (reflection.isEsiste(entityClass, FIELD_NAME_DESCRIZIONE)) {
+//                propertyUnica = (String) reflection.getPropertyValue(entityBean, FIELD_NAME_DESCRIZIONE);
+//            }// end of if cycle
+//        }// end of if/else cycle
+//
+//        return propertyUnica;
+//    }// end of method
 
 
     /**

@@ -718,11 +718,24 @@ public class TElabora {
 
     private String creaBuilder() {
         methodBuilderText = "";
-        String stringa = "String";
-        String intero = "int";
-        String tab4 = "\t\t\t\t";
-        String aCapo = "\n" + tab4;
-        String companyText = flagCompany ? "company" : "";
+//        String stringa = "String";
+//        String intero = "int";
+//        String tab4 = "\t\t\t\t";
+//        String aCapo = "\n" + tab4;
+//        String companyText = flagCompany ? "company" : "";
+
+
+        methodBuilderText += text.primaMaiuscola(newEntityName);
+        methodBuilderText += ".builder()";
+        if (flagOrdine) {
+            methodBuilderText += ".ordine(getNewOrdine())";
+        }// end of if cycle
+        methodBuilderText += ".build()";
+
+        if (flagCompany) {
+            methodBuilderText = "addCompany(" + methodBuilderText + ")";
+        }// end of if cycle
+
 
 //        if (flagOrdine) {
 //            methodBuilderText += aCapo + ".ordine(ordine != 0 ? ordine : this.getNewOrdine(" + companyText + "))";
@@ -733,9 +746,9 @@ public class TElabora {
 //        if (flagDescrizione) {
 //            methodBuilderText += aCapo + ".descrizione(descrizione.equals(\"\") ? null : descrizione)";
 //        }// end of if cycle
-        if (flagOrdine) {
-            methodBuilderText =".ordine(getNewOrdine())";
-        }// end of if cycle
+//        if (flagOrdine) {
+//            methodBuilderText = ".ordine(getNewOrdine())";
+//        }// end of if cycle
 
         return methodBuilderText;
     }// end of method

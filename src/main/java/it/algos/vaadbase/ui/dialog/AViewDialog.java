@@ -328,6 +328,11 @@ public abstract class AViewDialog<T extends Serializable> extends Dialog impleme
             Notification.show("Qualcosa non ha funzionato in AViewDialog.open()", 3000, Notification.Position.BOTTOM_START);
             return;
         }// end of if cycle
+        if (((AService)service).mancaCompanyNecessaria()) {
+            Notification.show("Non è stata selezionata nessuna company in AViewDialog.open()", 3000, Notification.Position.BOTTOM_START);
+            return;
+        }// end of if cycle
+
         this.operation = operation;
         currentItem = (T) item;
         this.itemType = presenter.getView().getName();

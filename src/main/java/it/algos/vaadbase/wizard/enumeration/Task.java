@@ -18,7 +18,7 @@ public enum Task {
     form("ViewDialog", "ViewDialog", "ViewDialog"),
     presenter("Presenter", "Presenter", "Presenter"),
     repository("Repository", "Repository", "Repository"),
-    service("Service", "ServiceCompany", "Service");
+    service("Service", "Service", "Service");
 
 
     private String sourceSenzaCompany;
