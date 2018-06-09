@@ -3,7 +3,6 @@ package it.algos.vaadbase.modules.preferenza;
 import com.vaadin.flow.component.AbstractField;
 import com.vaadin.flow.spring.annotation.SpringComponent;
 import it.algos.vaadbase.annotation.AIScript;
-import it.algos.vaadbase.converter.AConverterPrefByte;
 import it.algos.vaadbase.enumeration.EAPrefType;
 import it.algos.vaadbase.modules.company.CompanyService;
 import it.algos.vaadbase.presenter.IAPresenter;
@@ -80,7 +79,9 @@ public class PreferenzaViewDialog extends AViewDialog<Preferenza> {
         companyField = (AComboBox) getField("company");
 
         List items = companyService.findAll();
-        companyField.setItems(items);
+        if (items != null) {
+            companyField.setItems(items);
+        }// end of if cycle
         companyField.setEnabled(false);
     }// end of method
 

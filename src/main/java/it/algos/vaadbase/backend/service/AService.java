@@ -226,37 +226,74 @@ public class AService implements IAService {
     public List<? extends AEntity> findFilter(String filter) {
         List<? extends AEntity> lista = null;
         String normalizedFilter = filter.toLowerCase();
-        boolean appUsaCompany = pref.isBool(EAPreferenza.usaCompany.getCode());
-        boolean entityUsaCompany = annotation.getCompanyRequired(entityClass) != EACompanyRequired.nonUsata;
-        Company company = login.getCompany();
-        boolean nonEsisteCompany = company == null;
+//        boolean appUsaCompany = pref.isBool(EAPreferenza.usaCompany.getCode());
+        boolean entityUsaCompanyObbligatoria = annotation.getCompanyRequired(entityClass) == EACompanyRequired.obbligatoria;
+        boolean entityUsaCompanyFacoltativa = annotation.getCompanyRequired(entityClass) == EACompanyRequired.facoltativa;
+//        boolean entityUsaCompany = ();
+        boolean mancaCompany = mancaCompanyNecessaria();
+        Company companyLoggata = login.getCompany();
+        boolean nonEsisteCompany = companyLoggata == null;
         boolean notDeveloper = !login.isDeveloper();
+        String companyCode = companyLoggata != null ? companyLoggata.getCode() : "";
 
-        if (appUsaCompany && entityUsaCompany && nonEsisteCompany) {
+        if (mancaCompany) {
             return lista;
         }// end of if cycle
 
-        if (appUsaCompany && entityUsaCompany && notDeveloper) {
-            lista = findAll();
-            lista = lista.stream()
-                    .filter(entity -> ((ACEntity) entity).company != null)
-                    .filter(entity -> ((ACEntity) entity).company.getCode().equals(company.getCode()))
-                    .filter(entity -> {
-                        if (isEsisteEntityKeyUnica(entity)) {
-                            return getKeyUnica(entity).toLowerCase().contains(normalizedFilter);
-                        } else {
-                            if (reflection.isEsiste(entityClass, FIELD_NAME_CODE)) {
-                                return ((String) reflection.getPropertyValue(entity, FIELD_NAME_CODE)).contains(normalizedFilter);
+        if (entityUsaCompanyObbligatoria || entityUsaCompanyFacoltativa) {
+            if (entityUsaCompanyObbligatoria) {
+                lista = findAll();
+                lista = lista.stream()
+                        .filter(entity -> ((ACEntity) entity).company != null)
+                        .filter(entity -> ((ACEntity) entity).company.getCode().equals(companyCode))
+                        .filter(entity -> {
+                            if (isEsisteEntityKeyUnica(entity)) {
+                                return getKeyUnica(entity).toLowerCase().contains(normalizedFilter);
                             } else {
-                                if (reflection.isEsiste(entityClass, FIELD_NAME_DESCRIZIONE)) {
-                                    return ((String) reflection.getPropertyValue(entity, FIELD_NAME_DESCRIZIONE)).contains(normalizedFilter);
+                                if (reflection.isEsiste(entityClass, FIELD_NAME_CODE)) {
+                                    return ((String) reflection.getPropertyValue(entity, FIELD_NAME_CODE)).contains(normalizedFilter);
                                 } else {
-                                    return true;
+                                    if (reflection.isEsiste(entityClass, FIELD_NAME_DESCRIZIONE)) {
+                                        return ((String) reflection.getPropertyValue(entity, FIELD_NAME_DESCRIZIONE)).contains(normalizedFilter);
+                                    } else {
+                                        return true;
+                                    }// end of if/else cycle
                                 }// end of if/else cycle
                             }// end of if/else cycle
-                        }// end of if/else cycle
-                    })
-                    .collect(Collectors.toList());
+                        })
+                        .collect(Collectors.toList());
+            } else {
+                lista = findAll();
+                lista = lista.stream()
+                        .filter(entity -> {
+                            boolean status = false;
+                            boolean esisteCompany = ((ACEntity) entity).company != null;
+                            if (esisteCompany) {
+                                status = ((ACEntity) entity).company.getCode().equals(companyCode);
+                            } else {
+                                status = companyCode.equals("");
+                            }// end of if/else cycle
+
+                            return status;
+//                            return ((ACEntity) entity).company != null && ((ACEntity) entity).company.getCode().equals(company.getCode());
+                        })
+                        .filter(entity -> {
+                            if (isEsisteEntityKeyUnica(entity)) {
+                                return getKeyUnica(entity).toLowerCase().contains(normalizedFilter);
+                            } else {
+                                if (reflection.isEsiste(entityClass, FIELD_NAME_CODE)) {
+                                    return ((String) reflection.getPropertyValue(entity, FIELD_NAME_CODE)).contains(normalizedFilter);
+                                } else {
+                                    if (reflection.isEsiste(entityClass, FIELD_NAME_DESCRIZIONE)) {
+                                        return ((String) reflection.getPropertyValue(entity, FIELD_NAME_DESCRIZIONE)).contains(normalizedFilter);
+                                    } else {
+                                        return true;
+                                    }// end of if/else cycle
+                                }// end of if/else cycle
+                            }// end of if/else cycle
+                        })
+                        .collect(Collectors.toList());
+            }// end of if/else cycle
         } else {
             lista = findAll();
             lista = lista.stream()

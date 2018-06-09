@@ -30,7 +30,6 @@ import static it.algos.@MODULELOWER@.application.@APPCOST@.@QUALIFIER@;
 @AIScript(sovrascrivibile = false)
 public interface @ENTITY@Repository extends MongoRepository<@ENTITY@, String> {
 
-    //@TODO
-    // Le query riportate sono INDICATIVE e possono essere sostituite@QUERY@
+@QUERY@
 
 }// end of class
