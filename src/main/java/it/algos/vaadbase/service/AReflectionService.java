@@ -137,7 +137,7 @@ public class AReflectionService {
         String iconNameProperty = "VIEW_ICON";
         Object genericValue = getPropertyValue(viewClazz, iconNameProperty);
 
-        if (genericValue != null && genericValue instanceof Icon) {
+        if (genericValue != null && genericValue instanceof VaadinIcon) {
             icon = (VaadinIcon) genericValue;
         }// end of if cycle
 
