@@ -1,6 +1,7 @@
 package it.algos.vaadbase.service;
 
-import com.vaadin.flow.component.icon.VaadinIcons;
+import com.vaadin.flow.component.icon.Icon;
+import com.vaadin.flow.component.icon.VaadinIcon;
 import com.vaadin.flow.spring.annotation.SpringComponent;
 import it.algos.vaadbase.application.BaseCost;
 import it.algos.vaadbase.backend.entity.AEntity;
@@ -127,17 +128,17 @@ public class AReflectionService {
 
 
     /**
-     * Valore della VaadinIcons di una view
+     * Valore della VaadinIcon di una view
      *
      * @param viewClazz classe view su cui operare la riflessione
      */
-    public VaadinIcons getIconView(final Class<?> viewClazz) {
-        VaadinIcons icon = null;
+    public VaadinIcon getIconView(final Class<?> viewClazz) {
+        VaadinIcon icon = null;
         String iconNameProperty = "VIEW_ICON";
         Object genericValue = getPropertyValue(viewClazz, iconNameProperty);
 
-        if (genericValue != null && genericValue instanceof VaadinIcons) {
-            icon = (VaadinIcons) genericValue;
+        if (genericValue != null && genericValue instanceof Icon) {
+            icon = (VaadinIcon) genericValue;
         }// end of if cycle
 
         return icon;

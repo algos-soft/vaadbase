@@ -2,7 +2,7 @@ package it.algos.vaadbase.modules.company;
 
 import com.vaadin.flow.component.button.Button;
 import com.vaadin.flow.component.icon.Icon;
-import com.vaadin.flow.component.icon.VaadinIcons;
+import com.vaadin.flow.component.icon.VaadinIcon;
 import com.vaadin.flow.data.renderer.ComponentRenderer;
 import com.vaadin.flow.router.Route;
 import com.vaadin.flow.spring.annotation.SpringComponent;
@@ -46,7 +46,7 @@ public class CompanyViewList extends AViewList {
     /**
      * Icona visibile nel menu (facoltativa)
      */
-    public static final VaadinIcons VIEW_ICON = VaadinIcons.FACTORY;
+    public static final VaadinIcon VIEW_ICON = VaadinIcon.FACTORY;
 
 
     /**

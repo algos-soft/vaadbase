@@ -21,23 +21,20 @@
         <!-- Standard -->
         <webapp.directory>src/main/webapp</webapp.directory>
 
-        <!-- Dependencies -->
-        <!-- Va tenuta aggiornata la versione  di VAADIN  10.0.0 -->
-        <vaadin.version>10.0.0.beta9</vaadin.version>
-        <spring-boot.version>2.0.0.RELEASE</spring-boot.version>
+        <!-- Va tenuta aggiornata la versione di VAADIN 10.0.0 -->
+        <vaadin.version>10.0.0</vaadin.version>
+
+        <!-- Va tenuta aggiornata la versione di spring-boot -->
+        <spring-boot.version>2.0.2.RELEASE</spring-boot.version>
+
     </properties>
 
-    <!-- Questo blocco sembra consolidato in tutte le demo recuperate -->
-    <pluginRepositories>
-        <pluginRepository>
-            <id>spring-milestone</id>
-            <url>https://repo.spring.io/milestone/</url>
-        </pluginRepository>
-        <pluginRepository>
-            <id>vaadin-prereleases</id>
-            <url>https://maven.vaadin.com/vaadin-prereleases</url>
-        </pluginRepository>
-    </pluginRepositories>
+    <parent>
+        <!-- Va tenuta aggiornata la versione di spring-boot -->
+        <groupId>org.springframework.boot</groupId>
+        <artifactId>spring-boot-starter-parent</artifactId>
+        <version>2.0.2.RELEASE</version>
+    </parent>
 
     <!-- Questo blocco sembra consolidato in tutte le demo recuperate -->
     <repositories>
@@ -46,10 +43,18 @@
             <url>https://maven.vaadin.com/vaadin-prereleases</url>
         </repository>
         <repository>
-            <id>spring-milestone</id>
-            <url>https://repo.spring.io/milestone/</url>
+            <id>Vaadin Directory</id>
+            <url>http://maven.vaadin.com/vaadin-addons</url>
         </repository>
     </repositories>
+
+    <!-- Questo blocco sembra consolidato in tutte le demo recuperate -->
+    <pluginRepositories>
+        <pluginRepository>
+            <id>vaadin-prereleases</id>
+            <url>https://maven.vaadin.com/vaadin-prereleases</url>
+        </pluginRepository>
+    </pluginRepositories>
 
     <!-- Questo blocco sembra consolidato in tutte le demo recuperate -->
     <dependencyManagement>
@@ -72,31 +77,23 @@
     </dependencyManagement>
 
     <dependencies>
-        <!-- Vaadin core -->
-        <dependency>
-            <groupId>com.vaadin</groupId>
-            <artifactId>vaadin-core</artifactId>
-            <version>${vaadin.version}</version>
-        </dependency>
-
-        <!-- Forse no -->
         <dependency>
             <groupId>com.vaadin</groupId>
             <artifactId>flow-spring-boot-starter</artifactId>
         </dependency>
 
-
         <!-- Spring -->
         <dependency>
             <groupId>com.vaadin</groupId>
             <artifactId>vaadin-spring-boot-starter</artifactId>
+            <version>${vaadin.version}</version>
         </dependency>
 
-        <dependency>
-            <groupId>org.springframework.boot</groupId>
-            <artifactId>spring-boot-devtools</artifactId>
-            <optional>true</optional>
-        </dependency>
+        <!--<dependency>-->
+            <!--<groupId>org.springframework.boot</groupId>-->
+            <!--<artifactId>spring-boot-devtools</artifactId>-->
+            <!--<optional>true</optional>-->
+        <!--</dependency>-->
 
         <!-- Spring MONGO -->
         <dependency>
@@ -109,67 +106,6 @@
             <groupId>mysql</groupId>
             <artifactId>mysql-connector-java</artifactId>
         </dependency>
-
-
-        <!--&lt;!&ndash; Spring &ndash;&gt;-->
-        <!--<dependency>-->
-        <!--<groupId>org.springframework.boot</groupId>-->
-        <!--<artifactId>spring-boot-devtools</artifactId>-->
-        <!--<optional>true</optional>-->
-        <!--</dependency>-->
-        <!--<dependency>-->
-        <!--<groupId>org.springframework.boot</groupId>-->
-        <!--<artifactId>spring-boot</artifactId>-->
-        <!--</dependency>-->
-        <!--<dependency>-->
-        <!--<groupId>org.springframework.boot</groupId>-->
-        <!--<artifactId>spring-boot-autoconfigure</artifactId>-->
-        <!--</dependency>-->
-        <!--<dependency>-->
-        <!--<groupId>org.springframework.boot</groupId>-->
-        <!--<artifactId>spring-boot-starter-data-jpa</artifactId>-->
-        <!--<exclusions>-->
-        <!--<exclusion>-->
-        <!--<groupId>org.apache.tomcat</groupId>-->
-        <!--<artifactId>tomcat-juli</artifactId>-->
-        <!--</exclusion>-->
-        <!--<exclusion>-->
-        <!--<groupId>org.apache.tomcat</groupId>-->
-        <!--<artifactId>tomcat-jdbc</artifactId>-->
-        <!--</exclusion>-->
-        <!--</exclusions>-->
-        <!--</dependency>-->
-        <!--<dependency>-->
-        <!--<groupId>org.springframework</groupId>-->
-        <!--<artifactId>spring-web</artifactId>-->
-        <!--</dependency>-->
-
-        <!--<dependency>-->
-        <!--<groupId>org.springframework.boot</groupId>-->
-        <!--<artifactId>spring-boot-starter-tomcat</artifactId>-->
-        <!--<scope>provided</scope>-->
-        <!--</dependency>-->
-        <!--<dependency>-->
-        <!--<groupId>org.springframework.security</groupId>-->
-        <!--<artifactId>spring-security-web</artifactId>-->
-        <!--</dependency>-->
-        <!--<dependency>-->
-        <!--<groupId>org.springframework.security</groupId>-->
-        <!--<artifactId>spring-security-config</artifactId>-->
-        <!--</dependency>-->
-        <!--<dependency>-->
-        <!--<groupId>org.springframework.boot</groupId>-->
-        <!--<artifactId>spring-boot-starter-web</artifactId>-->
-        <!--</dependency>-->
-        <!--&lt;!&ndash; End Spring &ndash;&gt;-->
-
-
-        <!-- ELIMINATO perché già compreso in lombok-->
-        <!-- gac 21-3-18 -->
-        <!--<dependency>-->
-        <!--<groupId>org.slf4j</groupId>-->
-        <!--<artifactId>slf4j-simple</artifactId>-->
-        <!--</dependency>-->
 
         <!-- https://mvnrepository.com/artifact/org.eclipse.persistence/eclipselink -->
         <dependency>
@@ -186,12 +122,7 @@
             <optional>true</optional>
         </dependency>
 
-        <!--<dependency>-->
-        <!--<groupId>org.junit.jupiter</groupId>-->
-        <!--<artifactId>junit-jupiter-api</artifactId>-->
-        <!--<scope>test</scope>-->
-        <!--</dependency>-->
-        <!--&lt;!&ndash; https://mvnrepository.com/artifact/name.falgout.jeffrey.testing.junit5/mockito-extension &ndash;&gt;-->
+        <!-- https://mvnrepository.com/artifact/name.falgout.jeffrey.testing.junit5/mockito-extension -->
         <dependency>
             <groupId>name.falgout.jeffrey.testing.junit5</groupId>
             <artifactId>mockito-extension</artifactId>
@@ -231,6 +162,13 @@
             <version>2.17.0</version>
         </dependency>
 
+        <!-- Cron4j -->
+        <!-- https://mvnrepository.com/artifact/it.sauronsoftware.cron4j/cron4j -->
+        <dependency>
+            <groupId>it.sauronsoftware.cron4j</groupId>
+            <artifactId>cron4j</artifactId>
+            <version>2.2.5</version>
+        </dependency>
         <!-- End Algos -->
 
     </dependencies>

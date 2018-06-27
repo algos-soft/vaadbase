@@ -17,6 +17,7 @@ import it.algos.vaadbase.backend.service.IAService;
 import it.algos.vaadbase.modules.company.CompanyService;
 import it.algos.vaadbase.presenter.IAPresenter;
 import it.algos.vaadbase.ui.AFieldService;
+import it.algos.vaadbase.ui.IAView;
 import it.algos.vaadbase.ui.fields.AComboBox;
 import it.algos.vaadbase.ui.fields.ATextArea;
 import it.algos.vaadbase.ui.fields.ATextField;
@@ -334,8 +335,10 @@ public abstract class AViewDialog<T extends Serializable> extends Dialog impleme
         }// end of if cycle
 
         this.operation = operation;
-        currentItem = (T) item;
-        this.itemType = presenter.getView().getName();
+        Object view = presenter.getView();
+        if (view != null) {
+            this.itemType = presenter.getView().getName();
+        }// end of if cycle
         title = title.equals("") ? itemType : title;
         titleField.setText(operation.getNameInTitle() + " " + title);
 
@@ -444,7 +447,10 @@ public abstract class AViewDialog<T extends Serializable> extends Dialog impleme
      */
     public void close() {
         super.close();
-        presenter.getView().updateView();
+        IAView vista = presenter.getView();
+        if (vista != null) {
+            vista.updateView();
+        }// end of if cycle
     }// end of method
 
     /**

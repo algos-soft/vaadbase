@@ -1,6 +1,5 @@
 package it.algos.vaadbase.enumeration;
 
-import com.vaadin.flow.component.icon.VaadinIcons;
 import com.vaadin.flow.theme.lumo.Lumo;
 import it.algos.vaadbase.application.BaseCost;
 

@@ -6,7 +6,7 @@ import com.vaadin.flow.component.checkbox.Checkbox;
 import com.vaadin.flow.component.grid.Grid;
 import com.vaadin.flow.component.html.Label;
 import com.vaadin.flow.component.icon.Icon;
-import com.vaadin.flow.component.icon.VaadinIcons;
+import com.vaadin.flow.component.icon.VaadinIcon;
 import com.vaadin.flow.data.renderer.ComponentRenderer;
 import com.vaadin.flow.router.Route;
 import it.algos.vaadbase.annotation.AIScript;
@@ -51,7 +51,7 @@ public class PreferenzaViewList extends AViewList {
     /**
      * Icona visibile nel menu (facoltativa)
      */
-    public static final VaadinIcons VIEW_ICON = VaadinIcons.ASTERISK;
+    public static final VaadinIcon VIEW_ICON = VaadinIcon.ASTERISK;
 
 
     /**

@@ -5,7 +5,7 @@ import com.vaadin.flow.component.UI;
 import com.vaadin.flow.component.button.Button;
 import com.vaadin.flow.component.html.Div;
 import com.vaadin.flow.component.html.NativeButton;
-import com.vaadin.flow.component.icon.VaadinIcons;
+import com.vaadin.flow.component.icon.Icon;
 import com.vaadin.flow.component.orderedlayout.HorizontalLayout;
 import com.vaadin.flow.component.orderedlayout.VerticalLayout;
 import com.vaadin.flow.router.RouterLink;
@@ -73,7 +73,7 @@ public class AMenu extends VerticalLayout implements IAMenu {
      * @param tagMenu
      */
     @Override
-    public RouterLink addView(Class<? extends AView> viewClazz, VaadinIcons icon, String tagMenu) {
+    public RouterLink addView(Class<? extends AView> viewClazz, Icon icon, String tagMenu) {
         return null;
     }// end of method
 

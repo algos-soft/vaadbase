@@ -21,23 +21,16 @@
         <!-- Standard -->
         <webapp.directory>src/main/webapp</webapp.directory>
 
-        <!-- Dependencies -->
-        <!-- Va tenuta aggiornata la versione  di VAADIN  10.0.0 -->
-        <vaadin.version>10.0.0.beta9</vaadin.version>
-        <spring-boot.version>2.0.0.RELEASE</spring-boot.version>
+        <!-- Va tenuta aggiornata la versione di VAADIN 10.0.0 -->
+        <vaadin.version>10.0.0</vaadin.version>
     </properties>
 
-    <!-- Questo blocco sembra consolidato in tutte le demo recuperate -->
-    <pluginRepositories>
-        <pluginRepository>
-            <id>spring-milestone</id>
-            <url>https://repo.spring.io/milestone/</url>
-        </pluginRepository>
-        <pluginRepository>
-            <id>vaadin-prereleases</id>
-            <url>https://maven.vaadin.com/vaadin-prereleases</url>
-        </pluginRepository>
-    </pluginRepositories>
+    <parent>
+        <!-- Va tenuta aggiornata la versione di spring-boot -->
+        <groupId>org.springframework.boot</groupId>
+        <artifactId>spring-boot-starter-parent</artifactId>
+        <version>2.0.2.RELEASE</version>
+    </parent>
 
     <!-- Questo blocco sembra consolidato in tutte le demo recuperate -->
     <repositories>
@@ -46,10 +39,18 @@
             <url>https://maven.vaadin.com/vaadin-prereleases</url>
         </repository>
         <repository>
-            <id>spring-milestone</id>
-            <url>https://repo.spring.io/milestone/</url>
+            <id>Vaadin Directory</id>
+            <url>http://maven.vaadin.com/vaadin-addons</url>
         </repository>
     </repositories>
+
+    <!-- Questo blocco sembra consolidato in tutte le demo recuperate -->
+    <pluginRepositories>
+        <pluginRepository>
+            <id>vaadin-prereleases</id>
+            <url>https://maven.vaadin.com/vaadin-prereleases</url>
+        </pluginRepository>
+    </pluginRepositories>
 
     <!-- Questo blocco sembra consolidato in tutte le demo recuperate -->
     <dependencyManagement>

@@ -78,11 +78,14 @@ public class PreferenzaViewDialog extends AViewDialog<Preferenza> {
 
         companyField = (AComboBox) getField("company");
 
-        List items = companyService.findAll();
-        if (items != null) {
-            companyField.setItems(items);
+        if (companyField != null) {
+            List items = companyService.findAll();
+
+            if (items != null) {
+                companyField.setItems(items);
+            }// end of if cycle
+            companyField.setEnabled(false);
         }// end of if cycle
-        companyField.setEnabled(false);
     }// end of method
 
     /**
@@ -92,7 +95,10 @@ public class PreferenzaViewDialog extends AViewDialog<Preferenza> {
     @Override
     protected void readSpecificFields() {
         super.readSpecificFields();
-        companyField.setValue(((Preferenza) getCurrentItem()).getCompany());
+        if (companyField!=null) {
+            companyField.setValue(((Preferenza) getCurrentItem()).getCompany());
+        }// end of if cycle
+
         AbstractField valueField = getField(VALUE_FIELD_NAME);
         byte[] byteValue;
         Object genericValue;

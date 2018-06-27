@@ -3,7 +3,7 @@ package it.algos.vaadtest.application;
 import com.vaadin.flow.component.button.Button;
 import com.vaadin.flow.component.html.Label;
 import com.vaadin.flow.component.html.Paragraph;
-import com.vaadin.flow.component.icon.VaadinIcons;
+import com.vaadin.flow.component.icon.VaadinIcon;
 import com.vaadin.flow.router.*;
 import com.vaadin.flow.spring.annotation.SpringComponent;
 import it.algos.vaadbase.annotation.AIScript;
@@ -42,7 +42,7 @@ public class HomeView extends AView {
      * Nella menuBar appare invece visibile il MENU_NAME, indicato qui
      * Se manca il MENU_NAME, di default usa il 'name' della view
      */
-    public static final VaadinIcons VIEW_ICON = VaadinIcons.HOME;
+    public static final VaadinIcon VIEW_ICON = VaadinIcon.HOME;
 
     /**
      * Label del menu (facoltativa)

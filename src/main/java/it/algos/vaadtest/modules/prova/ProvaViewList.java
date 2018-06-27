@@ -5,11 +5,11 @@ import com.vaadin.flow.component.grid.Grid;
 import com.vaadin.flow.component.html.Div;
 import com.vaadin.flow.component.icon.Icon;
 import com.vaadin.flow.component.html.Label;
+import com.vaadin.flow.component.icon.VaadinIcon;
 import com.vaadin.flow.component.textfield.TextField;
 import com.vaadin.flow.data.renderer.ComponentRenderer;
 import it.algos.vaadbase.ui.dialog.IADialog;
 import it.algos.vaadbase.ui.dialog.AViewDialog;
-import com.vaadin.flow.component.icon.VaadinIcons;
 import com.vaadin.flow.component.notification.Notification;
 import com.vaadin.flow.router.BeforeEnterEvent;
 import it.algos.vaadbase.presenter.IAPresenter;
@@ -60,7 +60,7 @@ public class ProvaViewList extends AViewList {
     /**
      * Icona visibile nel menu (facoltativa)
      */
-    public static final VaadinIcons VIEW_ICON = VaadinIcons.ASTERISK;
+    public static final VaadinIcon VIEW_ICON = VaadinIcon.ASTERISK;
 
 
     /**

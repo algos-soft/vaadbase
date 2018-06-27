@@ -2,7 +2,7 @@ package it.algos.vaadbase.ui.menu;
 
 import com.vaadin.flow.component.Component;
 import com.vaadin.flow.component.HasComponents;
-import com.vaadin.flow.component.icon.VaadinIcons;
+import com.vaadin.flow.component.icon.Icon;
 import com.vaadin.flow.router.RouterLink;
 import com.vaadin.flow.spring.annotation.SpringComponent;
 import it.algos.vaadbase.ui.AView;
@@ -25,7 +25,7 @@ public interface IAMenu  {
      *
      * @param viewClazz the view class to instantiate
      */
-    public RouterLink addView(Class<? extends AView> viewClazz, VaadinIcons icon, String tagMenu);
+    public RouterLink addView(Class<? extends AView> viewClazz, Icon icon, String tagMenu);
 
     public Component getComponent();
 

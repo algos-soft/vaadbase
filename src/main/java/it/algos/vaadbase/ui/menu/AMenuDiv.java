@@ -5,7 +5,6 @@ import com.vaadin.flow.component.Text;
 import com.vaadin.flow.component.html.Div;
 import com.vaadin.flow.component.html.H2;
 import com.vaadin.flow.component.icon.Icon;
-import com.vaadin.flow.component.icon.VaadinIcons;
 import com.vaadin.flow.router.RouterLink;
 import com.vaadin.flow.spring.annotation.SpringComponent;
 import it.algos.vaadbase.ui.AView;
@@ -78,7 +77,7 @@ public class AMenuDiv extends Div implements IAMenu {
      *
      * @param viewClazz the view class to instantiate
      */
-    public RouterLink addView(Class<? extends AView> viewClazz, VaadinIcons icon, String tagMenu) {
+    public RouterLink addView(Class<? extends AView> viewClazz, Icon icon, String tagMenu) {
         RouterLink routerLink = null;
 
         try { // prova ad eseguire il codice
@@ -89,7 +88,7 @@ public class AMenuDiv extends Div implements IAMenu {
         }// fine del blocco try-catch
 
         if (routerLink != null) {
-            routerLink.add(new Icon(icon), new Text(tagMenu));
+            routerLink.add(icon, new Text(tagMenu));
             routerLink.addClassName("main-layout__nav-item");
             arrayRouterLink.add(routerLink);
         }// end of if cycle

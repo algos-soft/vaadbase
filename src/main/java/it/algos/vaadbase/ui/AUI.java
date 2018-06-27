@@ -3,7 +3,7 @@ package it.algos.vaadbase.ui;
 import com.vaadin.flow.component.Text;
 import com.vaadin.flow.component.UI;
 import com.vaadin.flow.component.icon.Icon;
-import com.vaadin.flow.component.icon.VaadinIcons;
+import com.vaadin.flow.component.icon.VaadinIcon;
 import com.vaadin.flow.router.RouterLink;
 import com.vaadin.flow.spring.annotation.SpringComponent;
 import it.algos.vaadbase.ui.menu.IAMenu;
@@ -70,7 +70,7 @@ public class AUI extends UI {
      *
      * @param viewClazz the view class to instantiate
      */
-    public RouterLink addView(Class<? extends AView> viewClazz, VaadinIcons icon, String tagMenu) {
+    public RouterLink addView(Class<? extends AView> viewClazz, VaadinIcon icon, String tagMenu) {
         RouterLink routerLink = null;
 
         try { // prova ad eseguire il codice

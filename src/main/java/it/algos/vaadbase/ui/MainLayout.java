@@ -5,7 +5,7 @@ import com.vaadin.flow.component.dependency.HtmlImport;
 import com.vaadin.flow.component.html.Div;
 import com.vaadin.flow.component.html.H2;
 import com.vaadin.flow.component.icon.Icon;
-import com.vaadin.flow.component.icon.VaadinIcons;
+import com.vaadin.flow.component.icon.VaadinIcon;
 import com.vaadin.flow.component.page.BodySize;
 import com.vaadin.flow.component.page.Viewport;
 import com.vaadin.flow.router.AfterNavigationEvent;
@@ -162,8 +162,8 @@ public class MainLayout extends Div implements RouterLayout, AfterNavigationObse
     protected RouterLink addView(Class<? extends AViewList> viewClazz) {
         RouterLink routerLink = null;
         String tagMenu = annotation.getViewName(viewClazz);
-        VaadinIcons vaadIcon = reflection.getIconView(viewClazz);
-        Icon icona = vaadIcon != null ? new Icon(vaadIcon) : new Icon(VaadinIcons.ASTERISK);
+        VaadinIcon vaadIcon = reflection.getIconView(viewClazz);
+        Icon icona = vaadIcon != null ? new Icon(vaadIcon) : new Icon(VaadinIcon.ASTERISK);
 
         try { // prova ad eseguire il codice
             routerLink = new RouterLink("", viewClazz);
@@ -186,7 +186,7 @@ public class MainLayout extends Div implements RouterLayout, AfterNavigationObse
      *
      * @param viewClazz the view class to instantiate
      */
-    protected RouterLink addViewOld(Class<? extends AView> viewClazz, VaadinIcons icon) {
+    protected RouterLink addViewOld(Class<? extends AView> viewClazz,VaadinIcon icon) {
         RouterLink routerLink = null;
         String tagMenu = annotation.getViewName(viewClazz);
 

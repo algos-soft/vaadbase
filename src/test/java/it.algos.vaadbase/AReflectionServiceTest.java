@@ -1,6 +1,6 @@
 package it.algos.vaadbase;
 
-import com.vaadin.flow.component.icon.VaadinIcons;
+import com.vaadin.flow.component.icon.VaadinIcon;
 import it.algos.vaadbase.modules.role.Role;
 import it.algos.vaadbase.modules.role.RoleService;
 import it.algos.vaadbase.service.AArrayService;
@@ -272,8 +272,8 @@ public class AReflectionServiceTest extends ATest {
      */
     @Test
     public void getIconView() {
-        VaadinIcons iconaPrevista = VaadinIcons.ASTERISK;
-        VaadinIcons iconaOttenuta = service.getIconView(ROLE_VIEW_CLASS);
+        VaadinIcon iconaPrevista = VaadinIcon.ASTERISK;
+        VaadinIcon iconaOttenuta = service.getIconView(ROLE_VIEW_CLASS);
         assertNotNull(iconaOttenuta);
         assertEquals(iconaPrevista, iconaOttenuta);
     }// end of single test

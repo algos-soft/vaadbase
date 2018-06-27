@@ -1,8 +1,6 @@
 package it.algos.vaadtest;
 
-import it.algos.vaadbase.SpringVaadinFlowApplication;
 import it.algos.vaadbase.ui.MainLayout;
-import it.algos.vaadtest.application.AppCost;
 import it.algos.vaadtest.application.VaadtestBoot;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;

@@ -6,7 +6,7 @@ import com.vaadin.flow.component.checkbox.Checkbox;
 import com.vaadin.flow.component.combobox.ComboBox;
 import com.vaadin.flow.component.html.Label;
 import com.vaadin.flow.component.html.NativeButton;
-import com.vaadin.flow.component.icon.VaadinIcons;
+import com.vaadin.flow.component.icon.VaadinIcon;
 import com.vaadin.flow.component.orderedlayout.HorizontalLayout;
 import com.vaadin.flow.component.textfield.TextField;
 import com.vaadin.flow.router.BeforeEnterEvent;
@@ -52,7 +52,7 @@ public class WizardView extends AView {
      * Nella menuBar appare invece visibile il MENU_NAME, indicato qui
      * Se manca il MENU_NAME, di default usa il 'name' della view
      */
-    public static final VaadinIcons VIEW_ICON = VaadinIcons.MAGIC;
+    public static final VaadinIcon VIEW_ICON = VaadinIcon.MAGIC;
     private static final String PROJECT_BASE_NAME = "vaadbase";
     private static Progetto PROGETTO_STANDARD_SUGGERITO = Progetto.test;
     private static String NOME_PACKAGE_STANDARD_SUGGERITO = "prova";
