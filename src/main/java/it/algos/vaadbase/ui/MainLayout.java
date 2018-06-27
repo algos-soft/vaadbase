@@ -103,6 +103,10 @@ public class MainLayout extends Div implements RouterLayout, AfterNavigationObse
 
         Router router = UI.getCurrent().getRouter();
         List<RouteData> routes = router.getRoutes();
+        log.warn("Sono state trovate: " + routes.size() + " routes");
+        if (listaStatica.size() > routes.size()) {
+            log.error("Ne mancano " + (listaStatica.size() - routes.size()));
+        }// end of if cycle
 
         for (Class viewClazz : listaStatica) {
             addView(viewClazz);
@@ -186,7 +190,7 @@ public class MainLayout extends Div implements RouterLayout, AfterNavigationObse
      *
      * @param viewClazz the view class to instantiate
      */
-    protected RouterLink addViewOld(Class<? extends AView> viewClazz,VaadinIcon icon) {
+    protected RouterLink addViewOld(Class<? extends AView> viewClazz, VaadinIcon icon) {
         RouterLink routerLink = null;
         String tagMenu = annotation.getViewName(viewClazz);
 
