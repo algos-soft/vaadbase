@@ -5,7 +5,6 @@ import com.vaadin.flow.component.icon.Icon;
 import com.vaadin.flow.component.icon.VaadinIcon;
 import com.vaadin.flow.data.renderer.ComponentRenderer;
 import com.vaadin.flow.router.Route;
-import com.vaadin.flow.spring.annotation.SpringComponent;
 import it.algos.vaadbase.annotation.AIScript;
 import it.algos.vaadbase.presenter.IAPresenter;
 import it.algos.vaadbase.ui.AViewList;
@@ -18,7 +17,6 @@ import org.springframework.beans.factory.config.ConfigurableBeanFactory;
 import org.springframework.context.annotation.Scope;
 
 import static it.algos.vaadbase.application.BaseCost.TAG_COM;
-import static it.algos.vaadbase.application.BaseCost.TAG_PER;
 
 /**
  * Project vaadbase <br>
@@ -30,6 +28,9 @@ import static it.algos.vaadbase.application.BaseCost.TAG_PER;
  * <p>
  * Not annotated with @SpringView (sbagliato) perché usa la @Route di VaadinFlow <br>
  * Not annotated with @SpringComponent (sbagliato) perché usa la @Route di VaadinFlow <br>
+ * The only thing that is new here for Spring is the possibility to use dependency injection in the components annotated with @Route. <br>
+ * Such a component is instantiated by Spring and becomes a Spring initialized bean. <br>
+ * In particular it means that you may autowire other Spring managed beans.
  * Annotated with @Scope (obbligatorio = 'singleton') <br>
  * Annotated with @Route (obbligatorio) per la selezione della vista. @Route(value = "") per la vista iniziale <br>
  * Annotated with @Qualifier (obbligatorio) per permettere a Spring di istanziare la sottoclasse specifica <br>

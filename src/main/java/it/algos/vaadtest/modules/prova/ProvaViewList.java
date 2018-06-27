@@ -49,7 +49,6 @@ import static it.algos.vaadtest.application.AppCost.TAG_PRO;
  * Annotated with @Slf4j (facoltativo) per i logs automatici <br>
  * Annotated with @AIScript (facoltativo Algos) per controllare la ri-creazione di questo file dal Wizard <br>
  */
-@SpringComponent
 @Scope(ConfigurableBeanFactory.SCOPE_SINGLETON)
 @Route(value = TAG_PRO, layout = MainLayout.class)
 @Qualifier(TAG_PRO)

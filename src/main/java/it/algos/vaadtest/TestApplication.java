@@ -1,5 +1,6 @@
 package it.algos.vaadtest;
 
+import it.algos.vaadbase.modules.company.CompanyViewList;
 import it.algos.vaadbase.ui.MainLayout;
 import it.algos.vaadtest.application.VaadtestBoot;
 import org.springframework.boot.SpringApplication;

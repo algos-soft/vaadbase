@@ -1,6 +1,7 @@
 package it.algos.vaadbase.ui;
 
 import com.vaadin.flow.component.Text;
+import com.vaadin.flow.component.UI;
 import com.vaadin.flow.component.dependency.HtmlImport;
 import com.vaadin.flow.component.html.Div;
 import com.vaadin.flow.component.html.H2;
@@ -8,10 +9,7 @@ import com.vaadin.flow.component.icon.Icon;
 import com.vaadin.flow.component.icon.VaadinIcon;
 import com.vaadin.flow.component.page.BodySize;
 import com.vaadin.flow.component.page.Viewport;
-import com.vaadin.flow.router.AfterNavigationEvent;
-import com.vaadin.flow.router.AfterNavigationObserver;
-import com.vaadin.flow.router.RouterLayout;
-import com.vaadin.flow.router.RouterLink;
+import com.vaadin.flow.router.*;
 import com.vaadin.flow.server.InitialPageSettings;
 import com.vaadin.flow.server.PageConfigurator;
 import com.vaadin.flow.theme.Theme;
@@ -103,6 +101,9 @@ public class MainLayout extends Div implements RouterLayout, AfterNavigationObse
     private void addAllRouteView() {
         List<Class> listaStatica = BaseCost.MENU_CLAZZ_LIST;
 
+        Router router = UI.getCurrent().getRouter();
+        List<RouteData> routes = router.getRoutes();
+
         for (Class viewClazz : listaStatica) {
             addView(viewClazz);
         }// end of for cycle
@@ -167,7 +168,6 @@ public class MainLayout extends Div implements RouterLayout, AfterNavigationObse
 
         try { // prova ad eseguire il codice
             routerLink = new RouterLink("", viewClazz);
-
         } catch (Exception unErrore) { // intercetta l'errore
             log.error(unErrore.toString());
         }// fine del blocco try-catch

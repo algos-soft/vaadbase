@@ -32,6 +32,7 @@ import it.algos.vaadbase.annotation.AIScript;
 import it.algos.vaadbase.ui.annotation.AIView;
 import it.algos.vaadbase.ui.MainLayout;
 import static it.algos.vaadbase.application.BaseCost.TAG_PER;
+import static it.algos.vaadtest.application.AppCost.TAG_PRO;
 
 /**
  * Project vaadbase <br>
@@ -50,7 +51,7 @@ import static it.algos.vaadbase.application.BaseCost.TAG_PER;
  * Annotated with @AIScript (facoltativo Algos) per controllare la ri-creazione di questo file dal Wizard <br>
  */
 @Scope(ConfigurableBeanFactory.SCOPE_SINGLETON)
-@Route(value = TAG_PER, layout = MainLayout.class)
+@Route(value = "", layout = MainLayout.class)
 @Qualifier(TAG_PER)
 @Slf4j
 @AIScript(sovrascrivibile = true)
