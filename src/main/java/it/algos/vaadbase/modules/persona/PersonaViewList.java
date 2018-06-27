@@ -51,7 +51,7 @@ import static it.algos.vaadtest.application.AppCost.TAG_PRO;
  * Annotated with @AIScript (facoltativo Algos) per controllare la ri-creazione di questo file dal Wizard <br>
  */
 @Scope(ConfigurableBeanFactory.SCOPE_SINGLETON)
-@Route(value = "", layout = MainLayout.class)
+@Route(value = TAG_PER, layout = MainLayout.class)
 @Qualifier(TAG_PER)
 @Slf4j
 @AIScript(sovrascrivibile = true)

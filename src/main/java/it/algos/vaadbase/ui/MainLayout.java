@@ -103,7 +103,7 @@ public class MainLayout extends Div implements RouterLayout, AfterNavigationObse
 
         Router router = UI.getCurrent().getRouter();
         List<RouteData> routes = router.getRoutes();
-        log.warn("Sono state trovate: " + routes.size() + " routes");
+        log.info("Sono state trovate: " + routes.size() + " routes");
         if (listaStatica.size() > routes.size()) {
             log.error("Ne mancano " + (listaStatica.size() - routes.size()));
         }// end of if cycle
