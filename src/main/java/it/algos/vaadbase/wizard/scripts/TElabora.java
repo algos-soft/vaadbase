@@ -889,14 +889,20 @@ public class TElabora {
 
 
     private void copiaDirectoriesBase() {
+        boolean progettoCancellato = false;
         boolean progettoCopiato = false;
         String tag = DIR_JAVA + "/" + PROJECT_BASE_NAME;
         String srcPath = projectBasePath;
         String destPath = ideaProjectRootPath + "/" + newProjectName;
 
         if (text.isValid(newProjectName)) {
+            progettoCancellato = file.deleteDirectory(destPath + tag);
+        }// end of if cycle
+
+        if (progettoCancellato) {
             progettoCopiato = file.copyDirectory(srcPath + tag, destPath + tag);
         }// end of if cycle
+
     }// end of method
 
 

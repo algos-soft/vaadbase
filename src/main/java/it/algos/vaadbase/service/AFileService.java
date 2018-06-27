@@ -267,12 +267,12 @@ public class AFileService {
         File srcDir = new File(srcPath);
         File destDir = new File(destPath);
 
-        try {
+        try { // prova ad eseguire il codice
             FileUtils.copyDirectory(srcDir, destDir);
             copiata = true;
         } catch (IOException e) {
             e.printStackTrace();
-        }
+        }// fine del blocco try-catch
 
         return copiata;
     }// end of method
