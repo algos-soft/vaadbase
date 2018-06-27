@@ -19,7 +19,6 @@ import org.springframework.context.annotation.Scope;
 @Scope(ConfigurableBeanFactory.SCOPE_SINGLETON)
 @Slf4j
 public class AStringNullValidator implements Validator {
-
     private static final long serialVersionUID = 1L;
 
     @Override
