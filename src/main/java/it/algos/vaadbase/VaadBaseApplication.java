@@ -28,36 +28,18 @@ import org.springframework.data.mongodb.repository.config.EnableMongoRepositorie
  * Senza @ComponentScan, SpringBoot non 'vede' le classi con @SpringView
  * che sono in una directory diversa da questo package
  * <p>
- * Questa classe non fa praticamente niente se non avere le Annotation riportate qui
+ * Questa classe non fa nulla se non avere le Annotation riportate qui
  * Annotated with @SpringBootApplication (obbligatorio)
- * Annotated with @ComponentScan (obbligatorio, se non già specificato il path in @SpringBootApplication)
  * Annotated with @EntityScan (obbligatorio, se non già specificato il path in @SpringBootApplication)
  * Annotated with @EnableMongoRepositories (obbligatorio, se non già specificato il path in @SpringBootApplication)
  * <p>
  * Tutte le view devono essere comprese nel path di questa classe (directory interne incluse)
  * Una sola view può avere @Route("")
- * The @SpringBootApplication annotation is equivalent to using @Configuration, @EnableAutoConfiguration and @ComponentScan with their default attributes:
+ * The @SpringBootApplication annotation is equivalent to using @Configuration, @EnableAutoConfiguration
+ * and @ComponentScan with their default attributes:
  */
-@Slf4j
 @SpringBootApplication(scanBasePackageClasses = {MainLayout.class, VaadBaseApplication.class})
-@ComponentScan({"it.algos.vaadbase", "it.algos.vaadtest.modules"})
 @EntityScan({"it.algos.vaadbase.modules", "it.algos.vaadtest.modules"})
 @EnableMongoRepositories({"it.algos.vaadbase.modules", "it.algos.vaadtest.modules"})
-public class VaadBaseApplication extends SpringBootServletInitializer {
-
-    /**
-     * Constructor
-     *
-     * @param args eventuali parametri in ingresso
-     */
-    public static void main(String[] args) {
-        ApplicationContext context = SpringApplication.run(VaadBaseApplication.class, args);
-    }// end of constructor
-
-
-    @Override
-    protected SpringApplicationBuilder configure(SpringApplicationBuilder applicationBuilder) {
-        return applicationBuilder.sources(VaadBaseApplication.class);
-    }// end of method
-
+public class VaadBaseApplication  {
 }// end of main class

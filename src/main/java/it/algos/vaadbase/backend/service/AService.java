@@ -302,7 +302,11 @@ public class AService implements IAService {
                             return getKeyUnica(entity).toLowerCase().contains(normalizedFilter);
                         } else {
                             if (reflection.isEsiste(entityClass, FIELD_NAME_CODE)) {
-                                return ((String) reflection.getPropertyValue(entity, FIELD_NAME_CODE)).contains(normalizedFilter);
+                                if (reflection.getPropertyValue(entity, FIELD_NAME_CODE) == null) {
+                                    return true;
+                                } else {
+                                    return ((String) reflection.getPropertyValue(entity, FIELD_NAME_CODE)).contains(normalizedFilter);
+                                }// end of if/else cycle
                             } else {
                                 if (reflection.isEsiste(entityClass, FIELD_NAME_DESCRIZIONE)) {
                                     return ((String) reflection.getPropertyValue(entity, FIELD_NAME_DESCRIZIONE)).contains(normalizedFilter);

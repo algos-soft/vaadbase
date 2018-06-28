@@ -5,7 +5,7 @@
     <groupId>it.algos.vaadbase</groupId>
     <artifactId>vaadbase</artifactId>
     <name>vaadbase</name>
-    <version>1.0-SNAPSHOT</version>
+    <version>1</version>
     <packaging>jar</packaging>
 
     <!-- @AIScript(sovrascrivibile = false) -->
@@ -21,7 +21,7 @@
         <!-- Standard -->
         <webapp.directory>src/main/webapp</webapp.directory>
 
-        <!-- Va tenuta aggiornata la versione di VAADIN 10.0.0 -->
+        <!-- Va tenuta aggiornata la versione di VAADIN 10.0.x -->
         <vaadin.version>10.0.0</vaadin.version>
 
         <!-- Va tenuta aggiornata la versione di spring-boot -->
@@ -29,7 +29,7 @@
     </properties>
 
     <parent>
-        <!-- Va tenuta aggiornata la versione di spring-boot -->
+        <!-- Va tenuta aggiornata la versione di spring-boot anche qui, perchè nel <parent> non accetta properties -->
         <groupId>org.springframework.boot</groupId>
         <artifactId>spring-boot-starter-parent</artifactId>
         <version>2.0.3.RELEASE</version>
@@ -52,6 +52,10 @@
         <pluginRepository>
             <id>vaadin-prereleases</id>
             <url>https://maven.vaadin.com/vaadin-prereleases</url>
+        </pluginRepository>
+        <pluginRepository>
+            <id>Vaadin Directory</id>
+            <url>https://mvnrepository.com/artifact/com.vaadin/vaadin-maven-plugin</url>
         </pluginRepository>
     </pluginRepositories>
 

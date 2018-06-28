@@ -246,7 +246,7 @@ public class AFileService {
     public boolean creaDirectory(String nomeCompletoDirectory) {
         boolean creata = false;
 
-        creata = new File(nomeCompletoDirectory).mkdir();
+        creata = new File(nomeCompletoDirectory).mkdirs();
         if (creata) {
             System.out.println("La directory " + nomeCompletoDirectory + " è stata creata");
         } else {
@@ -276,6 +276,28 @@ public class AFileService {
 
         return copiata;
     }// end of method
+
+    /**
+     * Copia un file
+     *
+     * @param srcPath  nome completo del file sorgente
+     * @param destPath nome completo del file destinazione
+     */
+    public boolean copyFile(String srcPath, String destPath) {
+        boolean copiato = false;
+        File srcFile = new File(srcPath);
+        File destFile = new File(destPath);
+
+        try { // prova ad eseguire il codice
+            FileUtils.copyFile(srcFile, destFile);
+            copiato = true;
+        } catch (IOException e) {
+            e.printStackTrace();
+        }// fine del blocco try-catch
+
+        return copiato;
+    }// end of method
+
 
     /**
      * Scrive un file

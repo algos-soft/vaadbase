@@ -70,8 +70,9 @@ public class TDialogoNewProject extends TDialogo {
 
         layout.add(new Label("Creazione di un nuovo project"));
         layout.add(new Label("Devi prima creare un project idea"));
-        layout.add(new Label("Di tipo 'MAVEN' col POM vuoto"));
-        layout.add(new Label("Poi selezionalo dalla lista sottostante"));
+        layout.add(new Label("Di tipo 'MAVEN' senza selezionare archetype"));
+        layout.add(new Label("Rimane il POM vuoto, ma verrà sovrascritto"));
+        layout.add(new Label("Poi seleziona il progetto dalla lista sottostante"));
         this.add(layout);
 
         this.add(creaBody());
@@ -158,6 +159,7 @@ public class TDialogoNewProject extends TDialogo {
     protected void setMappa() {
         if (mappaInput != null) {
             mappaInput.put(Chiave.newProjectName, fieldComboProgetti.getValue());
+            mappaInput.put(Chiave.targetProjectName, fieldComboProgetti.getValue());
         }// end of if cycle
     }// end of method
 

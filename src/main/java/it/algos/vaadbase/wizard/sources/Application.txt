@@ -1,6 +1,6 @@
 package it.algos.@MODULELOWER@;
 
-import it.algos.vaadbase.SpringVaadinFlowApplication;
+import it.algos.vaadbase.VaadBaseApplication;
 import it.algos.vaadbase.ui.MainLayout;
 import it.algos.@MODULELOWER@.application.@MODULEUPPER@Boot;
 import it.algos.vaadbase.annotation.AIScript;

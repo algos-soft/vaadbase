@@ -58,6 +58,7 @@ public class TElabora {
     private static final String SUPERCLASS_ENTITY_COMPANY = "ACEntity";
     private static final String PROPERTY = "Property";
     private static final String METHOD = "Method";
+    private static final String READ = "README";
     private static final String PROPERTY_COMPANY_NAME = "Company";
     private static final String PROPERTY_CODE_NAME = "Code";
     private static final String PROPERTY_DESCRIZIONE_NAME = "Descrizione";
@@ -74,6 +75,8 @@ public class TElabora {
     private static final String COST_NAME = "AppCost";
     private static final String BOOT_NAME = "Boot";
     private static final String HOME_NAME = "HomeView";
+    private static final String DIR_DOC = "documentation";
+    private static final String GIT = ".gitignore";
 
     /**
      * Libreria di servizio. Inietta da Spring come 'singleton'
@@ -151,24 +154,45 @@ public class TElabora {
      * Creazione di un nuovo project
      */
     public void newProject(Map<Chiave, Object> mappaInput) {
-        updateProject(mappaInput);
+        this.regolazioni(mappaInput);
+        this.directoryBase(mappaInput);
+        this.directorySpecifica(mappaInput);
     }// end of method
+
 
     /**
      * Update di un project esistente
      */
     public void updateProject(Map<Chiave, Object> mappaInput) {
-        this.regola();
-        this.regolaProgetto(mappaInput);
+        this.regolazioni(mappaInput);
+        this.directoryBase(mappaInput);
+        this.directorySpecifica(mappaInput);
+    }// end of method
+
+
+    /**
+     * Directory vaadbase
+     */
+    public void directoryBase(Map<Chiave, Object> mappaInput) {
         this.copiaDirectoriesBase();
-        this.copiaResources();
-        this.copiaPom();
+    }// end of method
+
+
+    /**
+     * Directory specifica
+     */
+    public void directorySpecifica(Map<Chiave, Object> mappaInput) {
         this.creaProjectModule();
         this.creaApplicationMain();
         this.creaApplicationDirectory();
-        this.creaApplicationFolder();
+        this.creaApplicationFolderContent();
         this.creaModulesDirectory();
+        this.copiaResources();
+        this.copiaPom();
+        this.copiaRead();
         this.copiaWebapp();
+        this.copiaDocumentation();
+        this.copiaGit();
     }// end of method
 
 
@@ -178,13 +202,22 @@ public class TElabora {
      * Crea i files previsti nella enumeration
      */
     public void newPackage(Map<Chiave, Object> mappaInput) {
-        this.regola();
-        this.regolaProgetto(mappaInput);
+        this.regolazioni(mappaInput);
         this.regolaTag(mappaInput);
         this.creaDirectory();
         this.creaTasks(mappaInput);
         this.addPackageMenu();
         this.addTagCostanti();
+    }// end of method
+
+
+    /**
+     * Regolazioni iniziali indipendenti dal dialogo di input
+     * Regolazioni iniziali con i valori del dialogo di input
+     */
+    public void regolazioni(Map<Chiave, Object> mappaInput) {
+        this.regola();
+        this.regolaProgetto(mappaInput);
     }// end of method
 
 
@@ -890,7 +923,6 @@ public class TElabora {
 
     private void copiaDirectoriesBase() {
         boolean progettoCancellato = false;
-        boolean progettoCopiato = false;
         String tag = DIR_JAVA + "/" + PROJECT_BASE_NAME;
         String srcPath = projectBasePath;
         String destPath = ideaProjectRootPath + "/" + newProjectName;
@@ -899,12 +931,24 @@ public class TElabora {
             progettoCancellato = file.deleteDirectory(destPath + tag);
         }// end of if cycle
 
-        if (progettoCancellato) {
-            progettoCopiato = file.copyDirectory(srcPath + tag, destPath + tag);
+        if (progettoCancellato || !file.isEsisteDirectory(destPath + tag)) {
+            file.copyDirectory(srcPath + tag, destPath + tag);
         }// end of if cycle
-
     }// end of method
 
+    private void copiaDocumentation() {
+        boolean dirCancellata = false;
+        String srcPath = projectBasePath+"/" + DIR_DOC;
+        String destPath = projectPath + "/" + DIR_DOC;
+
+        if (text.isValid(newProjectName)) {
+            dirCancellata = file.deleteDirectory(destPath);
+        }// end of if cycle
+
+        if (dirCancellata || !file.isEsisteDirectory(destPath)) {
+            file.copyDirectory(srcPath, destPath);
+        }// end of if cycle
+    }// end of method
 
     private void copiaPom() {
         String destPath = ideaProjectRootPath + "/" + newProjectName + "/" + POM + ".xml";
@@ -912,6 +956,14 @@ public class TElabora {
 
         sourceText = Token.replace(Token.moduleNameMinuscolo, sourceText, newProjectName);
         checkAndWriteFile(destPath, sourceText);
+    }// end of method
+
+
+    private void copiaRead() {
+        String fileName = "/" + READ + SOURCE_SUFFIX;
+        String srcPath = sourcePath + fileName;
+        String destPath = projectPath + fileName;
+        file.copyFile(srcPath, destPath);
     }// end of method
 
     private void copiaResources() {
@@ -930,6 +982,20 @@ public class TElabora {
 
         if (text.isValid(newProjectName)) {
             webCopiato = file.copyDirectory(srcPath, destPath);
+        }// end of if cycle
+    }// end of method
+
+    private void copiaGit() {
+        boolean dirCancellata = false;
+        String srcPath = projectBasePath+"/" + GIT;
+        String destPath = projectPath + "/" + GIT;
+
+        if (text.isValid(newProjectName)) {
+            dirCancellata = file.deleteFile(destPath);
+        }// end of if cycle
+
+        if (dirCancellata || !file.isEsisteFile(destPath)) {
+            file.copyFile(srcPath, destPath);
         }// end of if cycle
     }// end of method
 
@@ -957,7 +1023,7 @@ public class TElabora {
         file.creaDirectory(projectJavaPath + "/" + ENTITIES_NAME);
     }// end of method
 
-    private void creaApplicationFolder() {
+    private void creaApplicationFolderContent() {
         creaCost();
         creaBoot();
         creaHome();

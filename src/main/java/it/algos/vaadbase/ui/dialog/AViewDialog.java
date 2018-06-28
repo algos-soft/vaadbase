@@ -67,10 +67,10 @@ public abstract class AViewDialog<T extends Serializable> extends Dialog impleme
     protected T currentItem;
     protected Operation operation;
     protected BiConsumer<T, AViewDialog.Operation> itemSaver;
+    protected AComboBox companyField;
     private Consumer<T> itemDeleter;
     private String itemType;
     private Registration registrationForSave;
-    protected AComboBox companyField;
 
     /**
      * Constructs a new instance.
@@ -325,15 +325,16 @@ public abstract class AViewDialog<T extends Serializable> extends Dialog impleme
      */
     @Override
     public void open(Object item, AViewDialog.Operation operation, String title) {
+        if (((AService) service).mancaCompanyNecessaria()) {
+            Notification.show("Non è stata selezionata nessuna company in AViewDialog.open()", 3000, Notification.Position.BOTTOM_START);
+            return;
+        }// end of if cycle
         if (item == null) {
             Notification.show("Qualcosa non ha funzionato in AViewDialog.open()", 3000, Notification.Position.BOTTOM_START);
             return;
         }// end of if cycle
-        if (((AService)service).mancaCompanyNecessaria()) {
-            Notification.show("Non è stata selezionata nessuna company in AViewDialog.open()", 3000, Notification.Position.BOTTOM_START);
-            return;
-        }// end of if cycle
 
+        this.currentItem = (T)item;
         this.operation = operation;
         Object view = presenter.getView();
         if (view != null) {
@@ -417,7 +418,10 @@ public abstract class AViewDialog<T extends Serializable> extends Dialog impleme
      * Inizio delle operazioni di registrazione
      */
     protected void saveClicked(AViewDialog.Operation operation) {
-        boolean isValid = binder.writeBeanIfValid(currentItem);
+        boolean isValid = false;
+        if (currentItem != null) {
+            isValid = binder.writeBeanIfValid(currentItem);
+        }// end of if cycle
 
         if (isValid) {
             writeSpecificFields();
@@ -471,7 +475,7 @@ public abstract class AViewDialog<T extends Serializable> extends Dialog impleme
     }
 
     protected void confirmDelete() {
-        openConfirmationDialog("Vuoi veramente eliminare “" + getCurrentItem() .toString()+ "” ?", "L'operazione non è reversibile.", "");
+        openConfirmationDialog("Vuoi veramente eliminare “" + getCurrentItem().toString() + "” ?", "L'operazione non è reversibile.", "");
     }// end of method
 
     private void deleteConfirmed(T item) {

@@ -57,7 +57,7 @@ import static it.algos.vaadtest.application.AppCost.TAG_PRO;
 @Builder
 @EqualsAndHashCode(callSuper = false)
 @Qualifier(TAG_PRO)
-@AIEntity(company = EACompanyRequired.obbligatoria)
+@AIEntity(company = EACompanyRequired.facoltativa)
 @AIList(fields = {"company", "ordine", "code"})
 @AIForm(fields = {"company", "ordine", "code"})
 @AIScript(sovrascrivibile = false)

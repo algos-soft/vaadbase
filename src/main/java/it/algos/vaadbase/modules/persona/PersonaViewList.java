@@ -32,7 +32,6 @@ import it.algos.vaadbase.annotation.AIScript;
 import it.algos.vaadbase.ui.annotation.AIView;
 import it.algos.vaadbase.ui.MainLayout;
 import static it.algos.vaadbase.application.BaseCost.TAG_PER;
-import static it.algos.vaadtest.application.AppCost.TAG_PRO;
 
 /**
  * Project vaadbase <br>
