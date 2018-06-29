@@ -3,6 +3,7 @@ package it.algos.vaadbase.developer;
 import com.vaadin.flow.component.button.Button;
 import com.vaadin.flow.component.combobox.ComboBox;
 import com.vaadin.flow.component.html.Label;
+import com.vaadin.flow.component.icon.VaadinIcon;
 import com.vaadin.flow.router.BeforeEnterEvent;
 import com.vaadin.flow.router.Route;
 import it.algos.vaadbase.backend.login.ALogin;
@@ -44,6 +45,11 @@ public class DeveloperView extends AView {
     private RoleData roleData;
     @Autowired
     private PreferenzaData prefData;
+
+    /**
+     * Icona visibile nel menu (facoltativa)
+     */
+    public static final VaadinIcon VIEW_ICON = VaadinIcon.DOCTOR;
 
     public DeveloperView() {
     }// end of Spring constructor

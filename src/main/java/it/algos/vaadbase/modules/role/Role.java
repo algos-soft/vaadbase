@@ -79,7 +79,8 @@ public class Role extends AEntity {
     @AIField(type = EAFieldType.integer, widthEM = 3)
     @AIColumn(name = "#", width = 55)
     private int ordine;
-    
+
+
 	/**
      * codice di riferimento (obbligatorio, unico) <br>
      */

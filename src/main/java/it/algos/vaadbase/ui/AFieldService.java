@@ -146,6 +146,10 @@ public class AFieldService {
                         binder.forField(field).bind(fieldName);
                     }// end of if/else cycle
                 }// end of if/else cycle
+
+                if (focus) {
+                    ((ATextField) field).focus();
+                }// end of if cycle
                 break;
             case textarea:
                 field = new ATextArea(caption);
@@ -161,6 +165,10 @@ public class AFieldService {
                         .withConverter(integerConverter)
                         .withValidator(zeroValidator)
                         .bind(fieldName);
+
+                if (focus) {
+                    ((AIntegerField) field).focus();
+                }// end of if cycle
                 break;
             case combo:
                 field = new AComboBox(caption);

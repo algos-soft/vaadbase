@@ -16,9 +16,11 @@ import it.algos.vaadbase.backend.service.AService;
 import it.algos.vaadbase.backend.service.IAService;
 import it.algos.vaadbase.modules.company.CompanyService;
 import it.algos.vaadbase.presenter.IAPresenter;
+import it.algos.vaadbase.service.AAnnotationService;
 import it.algos.vaadbase.ui.AFieldService;
 import it.algos.vaadbase.ui.IAView;
 import it.algos.vaadbase.ui.fields.AComboBox;
+import it.algos.vaadbase.ui.fields.AIntegerField;
 import it.algos.vaadbase.ui.fields.ATextArea;
 import it.algos.vaadbase.ui.fields.ATextField;
 import lombok.extern.slf4j.Slf4j;
@@ -52,6 +54,13 @@ public abstract class AViewDialog<T extends Serializable> extends Dialog impleme
     private final HorizontalLayout buttonBar = new HorizontalLayout(saveButton, cancelButton, deleteButton);
     private final ConfirmationDialog<T> confirmationDialog = new ConfirmationDialog<>();
     public Consumer<T> itemAnnulla;
+
+    /**
+     * Service iniettato da Spring (@Scope = 'singleton'). Unica per tutta l'applicazione. Usata come libreria.
+     */
+    @Autowired
+    public AAnnotationService annotation;
+
     /**
      * Service iniettato da Spring (@Scope = 'singleton'). Unica per tutta l'applicazione. Usata come libreria.
      */
@@ -165,7 +174,6 @@ public abstract class AViewDialog<T extends Serializable> extends Dialog impleme
     }// end of method
 
     private void initButtonBar() {
-        saveButton.setAutofocus(true);
         saveButton.getElement().setAttribute("theme", "primary");
         cancelButton.addClickListener(e -> close());
         deleteButton.addClickListener(e -> deleteClicked());
@@ -230,6 +238,9 @@ public abstract class AViewDialog<T extends Serializable> extends Dialog impleme
 
         //--Controlla l'esistenza del field company e ne regola i valori
         fixCompanyField();
+
+        //--Regola il focus iniziale
+        fixFocus();
     }// end of method
 
 
@@ -259,23 +270,6 @@ public abstract class AViewDialog<T extends Serializable> extends Dialog impleme
 
 
     /**
-     * Controlla l'esistenza del field company e ne regola i valori
-     * Il field company esiste solo se si verificano contemporaneamente i seguenti:
-     * 1) l'applicazione usa multiCompany
-     * 2) la entity usa company
-     * 3) siamo collegati (login) come developer
-     */
-    private void fixCompanyField() {
-        companyField = (AComboBox) getField(AService.FIELD_NAME_COMPANY);
-        if (companyField != null) {
-            List items = companyService.findAll();
-            companyField.setItems(items);
-            companyField.setEnabled(false);
-        }// end of if cycle
-    }// end of method
-
-
-    /**
      * Aggiunge eventuali fields specifici (costruiti non come standard type)
      * Aggiunge i fields al binder
      * Aggiunge i fields alla fieldMap
@@ -301,6 +295,63 @@ public abstract class AViewDialog<T extends Serializable> extends Dialog impleme
      */
     protected void fixLayout() {
     }// end of method
+
+
+    /**
+     * Controlla l'esistenza del field company e ne regola i valori
+     * Il field company esiste solo se si verificano contemporaneamente i seguenti:
+     * 1) l'applicazione usa multiCompany
+     * 2) la entity usa company
+     * 3) siamo collegati (login) come developer
+     */
+    private void fixCompanyField() {
+        companyField = (AComboBox) getField(AService.FIELD_NAME_COMPANY);
+        if (companyField != null) {
+            List items = companyService.findAll();
+            companyField.setItems(items);
+            companyField.setEnabled(false);
+        }// end of if cycle
+    }// end of method
+
+    /**
+     * Regola il focus iniziale
+     * Spazzola tuti i fields e legge le @annotation per vedere se c'è un field col focus
+     * Se manca, prende il primo field
+     */
+    private void fixFocus() {
+        boolean hasFocus = false;
+        AbstractField field;
+        AbstractField firstField = null;
+
+        for (String fieldName : fieldMap.keySet()) {
+            if (firstField == null) {
+                firstField = fieldMap.get(fieldName);
+            }// end of if cycle
+
+            hasFocus = annotation.isFocus(binderClass, fieldName);
+            if (hasFocus) {
+                field = fieldMap.get(fieldName);
+                if (field instanceof ATextField) {
+                    ((ATextField) field).focus();
+                }// end of if cycle
+                if (field instanceof AIntegerField) {
+                    ((AIntegerField) field).focus();
+                }// end of if cycle
+                break;
+            }// end of if cycle
+        }// end of for cycle
+
+        if (!hasFocus && firstField != null) {
+            if (firstField instanceof ATextField) {
+                ((ATextField) firstField).focus();
+            }// end of if cycle
+            if (firstField instanceof AIntegerField) {
+                ((AIntegerField) firstField).focus();
+            }// end of if cycle
+        }// end of if cycle
+
+    }// end of method
+
 
     /**
      * Opens the given item for editing in the dialog.
@@ -334,7 +385,7 @@ public abstract class AViewDialog<T extends Serializable> extends Dialog impleme
             return;
         }// end of if cycle
 
-        this.currentItem = (T)item;
+        this.currentItem = (T) item;
         this.operation = operation;
         Object view = presenter.getView();
         if (view != null) {
@@ -356,7 +407,6 @@ public abstract class AViewDialog<T extends Serializable> extends Dialog impleme
 
         deleteButton.setEnabled(operation.isDeleteEnabled());
         open();
-
     }// end of method
 
 

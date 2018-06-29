@@ -1,4 +1,5 @@
-
+Icons:
+https://github.com/vaadin/vaadin-icons/blob/master/docs/vaadin-icons-overview.adoc
 
 
 

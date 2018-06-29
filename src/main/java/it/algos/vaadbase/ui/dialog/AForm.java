@@ -114,7 +114,7 @@ public abstract class AForm<T extends Serializable> extends Dialog {
     }
 
     private void initButtonBar() {
-        saveButton.setAutofocus(true);
+//        saveButton.setAutofocus(true);
         saveButton.getElement().setAttribute("theme", "primary");
         cancelButton.addClickListener(e -> close());
         deleteButton.addClickListener(e -> deleteClicked());

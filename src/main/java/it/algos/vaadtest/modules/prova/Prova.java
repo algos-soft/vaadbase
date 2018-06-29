@@ -5,6 +5,7 @@ import it.algos.vaadbase.ui.annotation.*;
 import it.algos.vaadbase.ui.enumeration.EAListButton;
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Size;
+import org.hibernate.validator.constraints.NotEmpty;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.beans.factory.config.ConfigurableBeanFactory;
 import org.springframework.data.mongodb.core.index.Indexed;
@@ -26,9 +27,9 @@ import static it.algos.vaadtest.application.AppCost.TAG_PRO;
  * Project vaadtest <br>
  * Created by Algos <br>
  * User: Gac <br>
- * Date: 9-giu-2018 11.41.15 <br>
+ * Date: 29-giu-2018 11.06.14 <br>
  * <p>
- * Estende la entity astratta ACEntity che contiene il riferimento alla property Company <br>
+ * Estende la entity astratta AEntity che contiene la key property ObjectId <br>
  * <p>
  * Annotated with @SpringComponent (obbligatorio) <br>
  * Annotated with @Document (facoltativo) per avere un nome della collection (DB Mongo) diverso dal nome della Entity <br>
@@ -57,11 +58,11 @@ import static it.algos.vaadtest.application.AppCost.TAG_PRO;
 @Builder
 @EqualsAndHashCode(callSuper = false)
 @Qualifier(TAG_PRO)
-@AIEntity(company = EACompanyRequired.facoltativa)
-@AIList(fields = {"company", "ordine", "code"})
-@AIForm(fields = {"company", "ordine", "code"})
+@AIEntity(company = EACompanyRequired.nonUsata)
+@AIList(fields = {"ordine", "code", "descrizione"})
+@AIForm(fields = {"ordine", "code", "descrizione"})
 @AIScript(sovrascrivibile = false)
-public class Prova extends ACEntity {
+public class Prova extends AEntity {
 
 
     /**
@@ -87,10 +88,18 @@ public class Prova extends ACEntity {
     @NotNull
     @Indexed()
     @Size(min = 3)
-    @AIField(type = EAFieldType.text, required = true, focus = true, widthEM = 12)
+    @AIField(type = EAFieldType.text, required = true, widthEM = 12)
     @AIColumn(width = 210)
     private String code;
     
+	/**
+     * descrizione (obbligatoria, non unica) <br>
+     */
+    @NotNull(message = "La descrizione è obbligatoria")
+    @Size(min = 2, max = 50)
+    @AIField(type = EAFieldType.text, firstCapital = true, widthEM = 24)
+    @AIColumn(width = 370)
+    private String descrizione;
 
     /**
      * @return a string representation of the object.

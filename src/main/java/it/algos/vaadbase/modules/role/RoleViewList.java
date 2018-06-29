@@ -60,7 +60,7 @@ public class RoleViewList extends AViewList {
     /**
      * Icona visibile nel menu (facoltativa)
      */
-    public static final VaadinIcon VIEW_ICON = VaadinIcon.ASTERISK;
+    public static final VaadinIcon VIEW_ICON = VaadinIcon.KEY;
 
 
     /**

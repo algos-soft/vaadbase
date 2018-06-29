@@ -21,7 +21,7 @@ import static it.algos.vaadtest.application.AppCost.TAG_PRO;
  * Project vaadtest <br>
  * Created by Algos <br>
  * User: Gac <br>
- * Date: 9-giu-2018 11.41.15 <br>
+ * Date: 29-giu-2018 11.06.14 <br>
  * <br>
  * Estende la classe astratta AService. Layer di collegamento per la Repository. <br>
  * <br>
@@ -69,7 +69,7 @@ public class ProvaService extends AService {
      */
     @Override
     public AEntity newEntity() {
-        return addCompany(Prova.builder().ordine(getNewOrdine()).build());
+        return Prova.builder().ordine(getNewOrdine()).build();
     }// end of method
 
 }// end of class

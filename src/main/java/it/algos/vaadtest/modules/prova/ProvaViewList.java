@@ -5,11 +5,11 @@ import com.vaadin.flow.component.grid.Grid;
 import com.vaadin.flow.component.html.Div;
 import com.vaadin.flow.component.icon.Icon;
 import com.vaadin.flow.component.html.Label;
-import com.vaadin.flow.component.icon.VaadinIcon;
 import com.vaadin.flow.component.textfield.TextField;
 import com.vaadin.flow.data.renderer.ComponentRenderer;
 import it.algos.vaadbase.ui.dialog.IADialog;
 import it.algos.vaadbase.ui.dialog.AViewDialog;
+import com.vaadin.flow.component.icon.VaadinIcon;
 import com.vaadin.flow.component.notification.Notification;
 import com.vaadin.flow.router.BeforeEnterEvent;
 import it.algos.vaadbase.presenter.IAPresenter;
@@ -37,12 +37,15 @@ import static it.algos.vaadtest.application.AppCost.TAG_PRO;
  * Project vaadtest <br>
  * Created by Algos <br>
  * User: Gac <br>
- * Date: 9-giu-2018 11.41.15 <br>
+ * Date: 29-giu-2018 11.06.14 <br>
  * <br>
  * Estende la classe astratta AViewList per visualizzare la Grid <br>
  * <p>
  * Not annotated with @SpringView (sbagliato) perché usa la @Route di VaadinFlow <br>
  * Not annotated with @SpringComponent (sbagliato) perché usa la @Route di VaadinFlow <br>
+ * The only thing that is new here for Spring is the possibility to use dependency injection in the components annotated with @Route. <br>
+ * Such a component is instantiated by Spring and becomes a Spring initialized bean. <br>
+ * In particular it means that you may autowire other Spring managed beans.
  * Annotated with @Scope (obbligatorio = 'singleton') <br>
  * Annotated with @Route (obbligatorio) per la selezione della vista. @Route(value = "") per la vista iniziale <br>
  * Annotated with @Qualifier (obbligatorio) per permettere a Spring di istanziare la sottoclasse specifica <br>
@@ -60,7 +63,7 @@ public class ProvaViewList extends AViewList {
     /**
      * Icona visibile nel menu (facoltativa)
      */
-    public static final VaadinIcon VIEW_ICON = VaadinIcon.REFRESH;
+    public static final VaadinIcon VIEW_ICON = VaadinIcon.ASTERISK;
 
 
     /**

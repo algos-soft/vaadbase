@@ -719,6 +719,26 @@ public class AAnnotationService {
 
 
     /**
+     * Get the status focus of the property.
+     *
+     * @param entityClazz the entity class
+     * @param fieldName   the property name
+     *
+     * @return status of field
+     */
+    public boolean isFocus(Class<? extends AEntity> entityClazz, String fieldName) {
+        boolean status = true;
+        Field field = reflection.getField(entityClazz, fieldName);
+
+        if (field != null) {
+            status = isFocus(field);
+        }// end of if cycle
+
+        return status;
+    }// end of method
+
+
+    /**
      * Get the class of the property.
      *
      * @param reflectionJavaField di riferimento per estrarre la Annotation
