@@ -438,6 +438,7 @@ public class AAnnotationServiceTest extends ATest {
     @Test
     public void getMessage() {
         previsto = FIELD_NAME_ORDINE + INT_NULL;
+        previsto = text.primaMaiuscola(previsto);
 
         ottenuto = service.getMessage(FIELD_ORDINE);
         assertEquals(previsto, ottenuto);
@@ -450,12 +451,14 @@ public class AAnnotationServiceTest extends ATest {
         assertEquals(previsto, ottenuto);
 
         previsto = FIELD_NAME_CODE + TESTO_NULL;
+        previsto = text.primaMaiuscola(previsto);
         ottenuto = service.getMessage(FIELD_CODE);
         assertEquals(previsto, ottenuto);
         ottenuto = service.getMessageNull(FIELD_CODE);
         assertEquals(previsto, ottenuto);
 
         previsto = FIELD_NAME_CODE + " deve contenere almeno 3 caratteri";
+        previsto = text.primaMaiuscola(previsto);
         ottenuto = service.getMessage(FIELD_CODE);
         assertNotEquals(previsto, ottenuto);
         ottenuto = service.getMessageSize(FIELD_CODE);
