@@ -252,16 +252,23 @@ public class AAnnotationService {
     }// end of method
 
 
+
     /**
-     * Get the name of the spring-view.
+     * Get the name of the route-view.
+     * Cerca nella classe la property statica MENU_NAME
+     * Se non la trova, di default usa l'annotation @Route
      *
      * @param clazz the entity class
      *
      * @return the name of the spring-view
      */
     public String getViewName(final Class<? extends IAView> clazz) {
-        String name = "";
-        Route annotation = this.getRoute(clazz);
+        String name = reflection.getMenuName(clazz);
+        Route annotation = null;
+
+        if (text.isEmpty(name)) {
+            annotation = this.getRoute(clazz);
+        }// end of if cycle
 
         if (annotation != null) {
             name = annotation.value();

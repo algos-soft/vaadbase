@@ -1,5 +1,6 @@
 package it.algos.vaadbase.modules.persona;
 
+import com.vaadin.flow.component.confirmdialog.ConfirmDialog;
 import com.vaadin.flow.component.notification.Notification;
 import com.vaadin.flow.spring.annotation.SpringComponent;
 import it.algos.vaadbase.annotation.AIScript;
@@ -18,6 +19,7 @@ import org.springframework.context.annotation.Scope;
 
 import java.util.function.Consumer;
 
+import static it.algos.vaadbase.application.BaseCost.FLASH;
 import static it.algos.vaadbase.application.BaseCost.TAG_PER;
 
 /**
@@ -72,7 +74,9 @@ public class PersonaViewDialog extends AViewDialog<Persona> {
     protected void addSpecificAlgosFields() {
         addressPresenter = StaticContextAccessor.getBean(AddressPresenter.class);
         addressService = (AddressService) addressPresenter.getService();
-        addressDialog = new AddressViewDialog(addressPresenter);
+
+        addressDialog = StaticContextAccessor.getBean(AddressViewDialog.class);
+        addressDialog.setPresenter(addressPresenter);
         addressDialog.fixFunzioni(this::saveUpdate, this::deleteUpdate, this::annullaUpdate);
         addressDialog.fixConfermaAndNotRegistrazione();
 
@@ -109,7 +113,7 @@ public class PersonaViewDialog extends AViewDialog<Persona> {
         indirizzoTemporaneo = entityBean;
         indirizzoField.setValue(entityBean.toString());
         focusOnPost(INDIRIZZO);
-        Notification.show("La modifica di indirizzo è stata confermata ma devi registrare questa persona per renderla definitiva", 3000, Notification.Position.BOTTOM_START);
+        Notification.show("La modifica di indirizzo è stata confermata ma devi registrare questa persona per renderla definitiva", FLASH, Notification.Position.BOTTOM_START);
     }// end of method
 
 
@@ -117,7 +121,10 @@ public class PersonaViewDialog extends AViewDialog<Persona> {
         indirizzoTemporaneo = null;
         indirizzoField.setValue("");
         focusOnPost(INDIRIZZO);
-        Notification.show("La cancellazione di indirizzo è stata confermata ma devi registrare questa persona per renderla definitiva", 3000, Notification.Position.BOTTOM_START);
+//        ConfirmDialog dialog = new ConfirmDialog("Unsaved changes",
+//                "Do you want to save or discard your changes before navigating away?",
+//                "Save", this::onSave, "Discard", this::onDiscard, "Cancel",
+//                this::onCancel);      Notification.show("La cancellazione di indirizzo è stata confermata ma devi registrare questa persona per renderla definitiva", FLASH, Notification.Position.BOTTOM_START);
     }// end of method
 
 

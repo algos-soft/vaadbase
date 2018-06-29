@@ -16,6 +16,8 @@ public class BaseCost {
     public final static Class<? extends RouterLayout> LAYOUT = MainLayout.class;
     public final static String LAYOUT_NAME = "MainLayout";
 
+    public final static int FLASH = 2000;
+
     public final static String TAG_HOM = "home";
     public final static String TAG_WIZ = "wizard";
     public final static String TAG_DEV = "developer";

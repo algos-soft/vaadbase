@@ -67,6 +67,15 @@ public class ProvaViewList extends AViewList {
 
 
     /**
+     * Label del menu (facoltativa)
+     * Vaadin usa il 'name' della Annotation @Route per identificare (internamente) e recuperare la view
+     * Nella menuBar appare invece visibile il MENU_NAME, indicato qui
+     * Se manca il MENU_NAME, di default usa il 'name' della view
+     */
+    public static final String MENU_NAME = "PippozProva";
+
+
+    /**
      * Costruttore @Autowired <br>
      * Si usa un @Qualifier(), per avere la sottoclasse specifica <br>
      * Si usa una costante statica, per essere sicuri di scrivere sempre uguali i riferimenti <br>

@@ -145,6 +145,24 @@ public class AReflectionService {
     }// end of method
 
 
+    /**
+     * Valore della MENU_NAME di una view
+     *
+     * @param viewClazz classe view su cui operare la riflessione
+     */
+    public String getMenuName(final Class<?> viewClazz) {
+        String menuName = "";
+        String iconNameProperty = "MENU_NAME";
+        Object genericValue = getPropertyValue(viewClazz, iconNameProperty);
+
+        if (genericValue != null && genericValue instanceof String) {
+            menuName = (String) genericValue;
+        }// end of if cycle
+
+        return menuName;
+    }// end of method
+
+
 //    /**
 //     * Valore della property statica di una classe
 //     *

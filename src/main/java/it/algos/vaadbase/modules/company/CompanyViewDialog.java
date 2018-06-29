@@ -20,11 +20,7 @@ import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.beans.factory.config.ConfigurableBeanFactory;
 import org.springframework.context.annotation.Scope;
 
-import java.util.function.BiConsumer;
-import java.util.function.Consumer;
-
 import static it.algos.vaadbase.application.BaseCost.TAG_COM;
-import static it.algos.vaadbase.application.BaseCost.TAG_PER;
 
 /**
  * Project vaadbase <br>
@@ -86,7 +82,9 @@ public class CompanyViewDialog extends AViewDialog<Company> {
     protected void addSpecificAlgosFields() {
         contattoPresenter = StaticContextAccessor.getBean(PersonaPresenter.class);
         contattoService = (PersonaService) contattoPresenter.getService();
-        contattoDialog = new PersonaViewDialog(contattoPresenter);
+
+        contattoDialog = StaticContextAccessor.getBean(PersonaViewDialog.class);
+        contattoDialog.setPresenter(contattoPresenter);
         contattoDialog.fixFunzioni(this::saveUpdateCon, this::deleteUpdateCon, this::annullaCon);
         contattoDialog.fixConfermaAndNotRegistrazione();
 
@@ -97,7 +95,9 @@ public class CompanyViewDialog extends AViewDialog<Company> {
 
         indirizzoPresenter = StaticContextAccessor.getBean(AddressPresenter.class);
         indirizzoService = (AddressService) indirizzoPresenter.getService();
-        indirizzoDialog = new AddressViewDialog(indirizzoPresenter);
+
+        indirizzoDialog = StaticContextAccessor.getBean(AddressViewDialog.class);
+        indirizzoDialog.setPresenter(indirizzoPresenter);
         indirizzoDialog.fixFunzioni(this::saveUpdateInd, this::deleteUpdateInd, this::annullaInd);
         indirizzoDialog.fixConfermaAndNotRegistrazione();
 
