@@ -157,11 +157,7 @@ public class RoleService extends AService {
      */
     @Override
     public List<Role> findAll() {
-        List<Role> lista = null;
-
-        lista = repository.findAllByOrderByOrdineAsc();
-
-        return lista;
+        return repository.findAllByOrderByOrdineAsc();
     }// end of method
 
 

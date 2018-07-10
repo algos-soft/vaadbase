@@ -753,35 +753,32 @@ public class TElabora {
         methodBuilderText = "";
 //        String stringa = "String";
 //        String intero = "int";
-//        String tab4 = "\t\t\t\t";
-//        String aCapo = "\n" + tab4;
-//        String companyText = flagCompany ? "company" : "";
+        String tab4 = "\t\t\t\t";
+        String aCapo = "\n" + tab4;
+        String companyText = flagCompany ? "company" : "";
 
 
-        methodBuilderText += text.primaMaiuscola(newEntityName);
-        methodBuilderText += ".builder()";
+//        methodBuilderText += text.primaMaiuscola(newEntityName);
+//        methodBuilderText += ".builder()";
+//        if (flagOrdine) {
+//            methodBuilderText += ".ordine(getNewOrdine())";
+//        }// end of if cycle
+
+//        if (flagCompany) {
+//            methodBuilderText = "addCompany(" + methodBuilderText + ")";
+//        }// end of if cycle
+
+
         if (flagOrdine) {
-            methodBuilderText += ".ordine(getNewOrdine())";
+            methodBuilderText += aCapo + ".ordine(ordine != 0 ? ordine : this.getNewOrdine(" + companyText + "))";
         }// end of if cycle
-        methodBuilderText += ".build()";
-
-        if (flagCompany) {
-            methodBuilderText = "addCompany(" + methodBuilderText + ")";
+        if (flagCode) {
+            methodBuilderText += aCapo + ".code(code.equals(\"\") ? null : code)";
         }// end of if cycle
-
-
-//        if (flagOrdine) {
-//            methodBuilderText += aCapo + ".ordine(ordine != 0 ? ordine : this.getNewOrdine(" + companyText + "))";
-//        }// end of if cycle
-//        if (flagCode) {
-//            methodBuilderText += aCapo + ".code(code.equals(\"\") ? null : code)";
-//        }// end of if cycle
-//        if (flagDescrizione) {
-//            methodBuilderText += aCapo + ".descrizione(descrizione.equals(\"\") ? null : descrizione)";
-//        }// end of if cycle
-//        if (flagOrdine) {
-//            methodBuilderText = ".ordine(getNewOrdine())";
-//        }// end of if cycle
+        if (flagDescrizione) {
+            methodBuilderText += aCapo + ".descrizione(descrizione.equals(\"\") ? null : descrizione)";
+        }// end of if cycle
+        methodBuilderText += aCapo + ".build()";
 
         return methodBuilderText;
     }// end of method
@@ -855,7 +852,7 @@ public class TElabora {
     private void addRouteSpecifichePackage(String layoutPath, String viewClass) {
         String aCapo = "\n\t\t";
         String tagPackage = "";
-        String tagMethod = "private void addRouteSpecifiche() {";
+        String tagMethod = "protected void addRouteSpecifiche() {";
         String textUIClass = file.leggeFile(layoutPath);
 
         if (isEsisteMetodo(targetModuleCapitalName + BOOT_SUFFIX, textUIClass, tagMethod)) {
@@ -938,7 +935,7 @@ public class TElabora {
 
     private void copiaDocumentation() {
         boolean dirCancellata = false;
-        String srcPath = projectBasePath+"/" + DIR_DOC;
+        String srcPath = projectBasePath + "/" + DIR_DOC;
         String destPath = projectPath + "/" + DIR_DOC;
 
         if (text.isValid(newProjectName)) {
@@ -987,7 +984,7 @@ public class TElabora {
 
     private void copiaGit() {
         boolean dirCancellata = false;
-        String srcPath = projectBasePath+"/" + GIT;
+        String srcPath = projectBasePath + "/" + GIT;
         String destPath = projectPath + "/" + GIT;
 
         if (text.isValid(newProjectName)) {

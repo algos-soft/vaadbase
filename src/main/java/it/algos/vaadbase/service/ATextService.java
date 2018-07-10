@@ -8,7 +8,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.config.ConfigurableBeanFactory;
 import org.springframework.context.annotation.Scope;
 
-import java.util.ArrayList;
 import java.util.List;
 
 /**
@@ -255,7 +254,7 @@ public class ATextService {
      * @return vero se ne contiene nessuno
      */
     public boolean nonContiene(final String testoIn, List<String> listaTags) {
-        return !isContiene(testoIn,listaTags);
+        return !isContiene(testoIn, listaTags);
     }// end of method
 
 
@@ -414,5 +413,24 @@ public class ATextService {
         return "";
     }// end of method
 
+    public String estrae(String valueIn, String tagIni) {
+        return estrae(valueIn, tagIni, tagIni);
+    }// end of method
+
+    public String estrae(String valueIn, String tagIni, String tagEnd) {
+        String valueOut = valueIn;
+        int length = 0;
+        int posIni = 0;
+        int posEnd = 0;
+
+        if (isValid(valueIn) && valueIn.contains(tagIni) && valueIn.contains(tagEnd)) {
+            length = tagIni.length();
+            posIni = valueIn.indexOf(tagIni);
+            posEnd = valueIn.indexOf(tagEnd, posIni + length);
+            valueOut = valueIn.substring(posIni + length, posEnd);
+        }// end of if cycle
+
+        return valueOut.trim();
+    }// end of method
 
 }// end of class

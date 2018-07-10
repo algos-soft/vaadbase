@@ -31,11 +31,11 @@ public class ATextServiceTest extends ATest {
 
     @InjectMocks
     public AArrayService array;
-    private String sorgente = "";
-    private String previsto = "";
-    private String ottenuto = "";
-    private boolean previstoBooleano;
-    private boolean ottenutoBooleano;
+    //    private String sorgente = "";
+//    private String previsto = "";
+//    private String ottenuto = "";
+//    private boolean previstoBooleano;
+//    private boolean ottenutoBooleano;
     private String tag = "";
     private String oldTag = "";
     private String newTag = "";
@@ -486,6 +486,23 @@ public class ATextServiceTest extends ATest {
         previstoBooleano = true;
         ottenutoBooleano = service.isContiene(sorgente, tags);
         assertEquals(previstoBooleano, ottenutoBooleano);
+    }// end of single test
+
+
+    @Test
+    public void estrae() {
+        String tagIni = "{";
+        String tagEnd = "}";
+        previsto = "non comprende ancora";
+        sorgente = "Questo testo {non comprende ancora} e manca la fine";
+        ottenuto = service.estrae(sorgente, tagIni, tagEnd);
+        assertEquals(previsto, ottenuto);
+
+        tag="\"";
+        sorgente = "Questo testo \"non comprende ancora\" e manca la fine";
+        ottenuto = service.estrae(sorgente, tag);
+        assertEquals(previsto, ottenuto);
+
     }// end of single test
 
 }// end of class

@@ -53,7 +53,11 @@
             <id>vaadin-prereleases</id>
             <url>https://maven.vaadin.com/vaadin-prereleases</url>
         </pluginRepository>
-    </pluginRepositories>
+         <pluginRepository>
+             <id>Vaadin Directory</id>
+             <url>https://mvnrepository.com/artifact/com.vaadin/vaadin-maven-plugin</url>
+         </pluginRepository>
+   </pluginRepositories>
 
     <!-- Questo blocco sembra consolidato in tutte le demo recuperate -->
     <dependencyManagement>
@@ -80,7 +84,8 @@
         <dependency>
             <groupId>com.vaadin</groupId>
             <artifactId>vaadin-spring-boot-starter</artifactId>
-        </dependency>
+             <version>${vaadin.version}</version>
+       </dependency>
 
          <!-- Vaadin -->
         <dependency>
@@ -163,6 +168,21 @@
             <groupId>it.sauronsoftware.cron4j</groupId>
             <artifactId>cron4j</artifactId>
             <version>2.2.5</version>
+        </dependency>
+        <!-- End Algos -->
+
+        <!-- https://mvnrepository.com/artifact/org.json/json -->
+        <dependency>
+            <groupId>org.json</groupId>
+            <artifactId>json</artifactId>
+            <version>20180130</version>
+        </dependency>
+
+        <!-- https://mvnrepository.com/artifact/com.googlecode.json-simple/json-simple -->
+        <dependency>
+            <groupId>com.googlecode.json-simple</groupId>
+            <artifactId>json-simple</artifactId>
+            <version>1.1</version>
         </dependency>
         <!-- End Algos -->
 

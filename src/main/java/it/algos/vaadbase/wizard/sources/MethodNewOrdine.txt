@@ -6,7 +6,6 @@
      */
     public int getNewOrdine() {
         int ordine = 0;
-        Sort sort;
         List<@ENTITY@> lista = repository.findAllByOrderByOrdineAsc();
 
         if (lista != null && lista.size() > 0) {

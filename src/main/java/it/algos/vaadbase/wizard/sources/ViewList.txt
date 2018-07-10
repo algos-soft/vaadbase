@@ -66,7 +66,14 @@ public class @ENTITY@ViewList extends AViewList {
     public static final VaadinIcon VIEW_ICON = VaadinIcon.ASTERISK;
 
 
-    /**
+     /**
+      * Il service (singleton) viene recuperatp dal presenter <br>
+      * Qui si una effettua un casting per usare i metodi specifici <br>
+      */
+     private @ENTITY@Service service;
+
+
+   /**
      * Costruttore @Autowired <br>
      * Si usa un @Qualifier(), per avere la sottoclasse specifica <br>
      * Si usa una costante statica, per essere sicuri di scrivere sempre uguali i riferimenti <br>
@@ -78,28 +85,9 @@ public class @ENTITY@ViewList extends AViewList {
     public @ENTITY@ViewList(@Qualifier(@QUALIFIER@) IAPresenter presenter, @Qualifier(@QUALIFIER@) IADialog dialog) {
         super(presenter, dialog);
         ((@ENTITY@ViewDialog) dialog).fixFunzioni(this::save, this::delete);
+        this.service = (@ENTITY@Service) presenter.getService();
     }// end of Spring constructor
 
-
-     /**
-      * Crea il corpo centrale della view
-      * Componente grafico obbligatorio
-      */
-     protected void addGrid() {
-         super.addGrid();
-         ComponentRenderer renderer = new ComponentRenderer<>(this::createEditButton);
-         grid.addColumn(renderer);
-         this.setFlexGrow(0);
-     }// end of method
-
-
-   private Button createEditButton(@ENTITY@ entityBean) {
-        Button edit = new Button(EDIT_NAME, event -> dialog.open(entityBean, AViewDialog.Operation.EDIT));
-        edit.setIcon(new Icon("lumo", "edit"));
-        edit.addClassName("review__edit");
-        edit.getElement().setAttribute("theme", "tertiary");
-        return edit;
-    }// end of method
 
 
 }// end of class

@@ -90,6 +90,7 @@ public class AService implements IAService {
 
 
     /**
+     *
      * In the newest Spring release, it’s constructor does not need to be annotated with @Autowired annotation
      * Si usa un @Qualifier(), per avere la sottoclasse specifica
      * Si usa una costante statica, per essere sicuri di scrivere sempre uguali i riferimenti
@@ -194,7 +195,7 @@ public class AService implements IAService {
      *
      * @return all ordered entities
      */
-    private List<? extends AEntity> findAll(Sort sort) {
+    protected List<? extends AEntity> findAll(Sort sort) {
         List<? extends AEntity> lista = null;
 
         try { // prova ad eseguire il codice
@@ -628,16 +629,18 @@ public class AService implements IAService {
      */
     public String getKeyUnica(AEntity entityBean) {
         String keyUnica = "";
-        String keyCode = "";
+        String keyCode = getPropertyUnica(entityBean);
         String companyCode = "";
 
-        if (reflection.isEsiste(entityClass, FIELD_NAME_CODE)) {
-            keyCode = (String) reflection.getPropertyValue(entityBean, FIELD_NAME_CODE);
-        } else {
-            if (reflection.isEsiste(entityClass, FIELD_NAME_ORDINE)) {
-                keyCode = (String) reflection.getPropertyValue(entityBean, FIELD_NAME_ORDINE);
-            }// end of if cycle
-        }// end of if/else cycle
+        if (text.isEmpty(keyCode)) {
+            if (reflection.isEsiste(entityClass, FIELD_NAME_CODE)) {
+                keyCode = (String) reflection.getPropertyValue(entityBean, FIELD_NAME_CODE);
+            } else {
+                if (reflection.isEsiste(entityClass, FIELD_NAME_ORDINE)) {
+                    keyCode = reflection.getPropertyValue(entityBean, FIELD_NAME_ORDINE).toString();
+                }// end of if cycle
+            }// end of if/else cycle
+        }// end of if cycle
 
         if (text.isEmpty(keyCode)) {
             return keyCode;
@@ -655,9 +658,19 @@ public class AService implements IAService {
                     keyUnica = keyCode;
                 }// end of if/else cycle
             }// end of if/else cycle
-        }// end of if cycle
+        } else {
+            keyUnica = keyCode;
+        }// end of if/else cycle
 
         return keyUnica;
+    }// end of method
+
+
+    /**
+     * Property unica (se esiste).
+     */
+    public String getPropertyUnica(AEntity entityBean) {
+        return "";
     }// end of method
 
 

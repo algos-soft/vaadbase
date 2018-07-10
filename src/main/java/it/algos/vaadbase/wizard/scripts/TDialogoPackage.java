@@ -154,7 +154,7 @@ public class TDialogoPackage extends TDialogo {
         layoutCheck.add(creaOrdine());
         layoutCheck.add(creaCode());
         layoutCheck.add(creaDescrizione());
-//        layoutCheck.add(creaKeyIdCode());
+        layoutCheck.add(creaKeyIdCode());
         layoutCheck.add(creaCompany());
         layoutCheck.add(creaSovrascrive());
 
@@ -584,6 +584,7 @@ public class TDialogoPackage extends TDialogo {
             mappaInput.put(Chiave.newEntityTag, fieldTextTag.getValue());
             mappaInput.put(Chiave.flagOrdine, fieldCheckBoxPropertyOrdine.getValue());
             mappaInput.put(Chiave.flagCode, fieldCheckBoxPropertyCode.getValue());
+            mappaInput.put(Chiave.flagKeyCode, fieldCheckBoxUsaKeyIdCode.getValue());
             mappaInput.put(Chiave.flagDescrizione, fieldCheckBoxPropertyDescrizione.getValue());
             mappaInput.put(Chiave.flagCompany, fieldCheckBoxCompany.getValue());
             mappaInput.put(Chiave.flagSovrascrive, fieldCheckBoxSovrascrive.getValue());

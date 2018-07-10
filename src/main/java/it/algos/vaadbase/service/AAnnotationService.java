@@ -252,7 +252,6 @@ public class AAnnotationService {
     }// end of method
 
 
-
     /**
      * Get the name of the route-view.
      * Cerca nella classe la property statica MENU_NAME
@@ -516,6 +515,27 @@ public class AAnnotationService {
         return name;
     }// end of method
 
+
+    /**
+     * Get the name (column) of the property.
+     * Se manca, usa il nome del Field
+     * Se manca, usa il nome della property
+     *
+     * @param entityClazz the entity class
+     * @param fieldName   the property name
+     *
+     * @return the name (column) of the field
+     */
+    public String getColumnName(Class<? extends AEntity> entityClazz, String fieldName) {
+        String name = "";
+        Field field = reflection.getField(entityClazz, fieldName);
+
+        if (field != null) {
+            name = getColumnName(field);
+        }// end of if cycle
+
+        return name;
+    }// end of method
 
 //    /**
 //     * Get the type (column) of the property.

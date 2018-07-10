@@ -11,6 +11,7 @@ import it.algos.vaadbase.modules.preferenza.PreferenzaViewList;
 import it.algos.vaadbase.modules.role.RoleData;
 import it.algos.vaadbase.modules.role.RoleViewList;
 import it.algos.vaadbase.service.APreferenzaService;
+import it.algos.vaadbase.ui.footer.AFooter;
 import it.algos.vaadbase.wizard.ui.WizardView;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.event.ContextRefreshedEvent;
@@ -52,6 +53,12 @@ public abstract class ABoot implements ServletContextListener {
     @Autowired
     private PreferenzaData prefData;
 
+    /**
+     * Layout iniettato da Spring
+     */
+    @Autowired
+    protected AFooter footer;
+
 //    /**
 //     * Inietta da Spring come 'singleton'
 //     */
@@ -92,18 +99,12 @@ public abstract class ABoot implements ServletContextListener {
      */
     @EventListener
     public void onApplicationEvent(ContextRefreshedEvent event) {
-    }// end of method
-
-
-    /**
-     * Executed on container shutdown
-     * <p>
-     * Clean stuff here <br>
-     * Può essere sovrascritta dalla sottoclasse <br>
-     * Deve (DEVE) richiamare anche il metodo della superclasse (questo) <br>
-     */
-    @Override
-    public void contextDestroyed(ServletContextEvent servletContextEvent) {
+        this.iniziaDataStandard();
+        this.iniziaData();
+        this.regolaInfo();
+        this.regolaPreferenze();
+        this.addRouteStandard();
+        this.addRouteSpecifiche();
     }// end of method
 
     /**
@@ -117,6 +118,21 @@ public abstract class ABoot implements ServletContextListener {
 //        this.stato.findOrCrea();
     }// end of method
 
+
+    /**
+     * Inizializzazione dei dati standard di alcune collections sul DB
+     */
+    protected void iniziaData() {
+    }// end of method
+
+
+    /**
+     * Regola alcune informazioni dell'applicazione
+     */
+    protected void regolaInfo() {
+    }// end of method
+
+
     /**
      * Regola alcune preferenze iniziali
      * Se non esistono, le crea
@@ -124,6 +140,7 @@ public abstract class ABoot implements ServletContextListener {
      */
     protected void regolaPreferenze() {
     }// end of method
+
 
     /**
      * Aggiunge le @Route (view) standard
@@ -154,5 +171,29 @@ public abstract class ABoot implements ServletContextListener {
             BaseCost.MENU_CLAZZ_LIST.add(WizardView.class);
         }// end of if cycle
     }// end of method
+
+
+    /**
+     * Aggiunge le @Route (view) specifiche di questa applicazione
+     * Le @Route vengono aggiunte ad una Lista statica mantenuta in BaseCost
+     * Vengono aggiunte dopo quelle standard
+     * Verranno lette da MainLayout la prima volta che il browser 'chiama' una view
+     */
+    protected void addRouteSpecifiche() {
+    }// end of method
+
+
+
+    /**
+     * Executed on container shutdown
+     * <p>
+     * Clean stuff here <br>
+     * Può essere sovrascritta dalla sottoclasse <br>
+     * Deve (DEVE) richiamare anche il metodo della superclasse (questo) <br>
+     */
+    @Override
+    public void contextDestroyed(ServletContextEvent servletContextEvent) {
+    }// end of method
+
 
 }// end of class

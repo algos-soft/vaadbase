@@ -27,7 +27,7 @@ import static it.algos.vaadtest.application.AppCost.TAG_PRO;
  * Project vaadtest <br>
  * Created by Algos <br>
  * User: Gac <br>
- * Date: 29-giu-2018 11.06.14 <br>
+ * Date: 9-lug-2018 15.16.54 <br>
  * <p>
  * Estende la entity astratta AEntity che contiene la key property ObjectId <br>
  * <p>
@@ -46,6 +46,7 @@ import static it.algos.vaadtest.application.AppCost.TAG_PRO;
  * Annotated with @AIForm (facoltativo Algos) per i fields automatici del Dialog e del Form <br>
  * Annotated with @AIScript (facoltativo Algos) per controllare la ri-creazione di questo file dal Wizard <br>
  * Inserisce SEMPRE la versione di serializzazione <br>
+ * Le singole property sono pubbliche in modo da poterne leggere il valore tramite 'reflection'
  * Le singole property sono annotate con @AIField (obbligatorio Algos) per il tipo di Field nel Dialog e nel Form <br>
  * Le singole property sono annotate con @AIColumn (facoltativo Algos) per il tipo di Column nella Grid <br>
  */
@@ -59,8 +60,8 @@ import static it.algos.vaadtest.application.AppCost.TAG_PRO;
 @EqualsAndHashCode(callSuper = false)
 @Qualifier(TAG_PRO)
 @AIEntity(company = EACompanyRequired.nonUsata)
-@AIList(fields = {"ordine", "code", "descrizione"})
-@AIForm(fields = {"ordine", "code", "descrizione"})
+@AIList(fields = {"ordine", "code"})
+@AIForm(fields = {"ordine", "code"})
 @AIScript(sovrascrivibile = false)
 public class Prova extends AEntity {
 
@@ -88,18 +89,10 @@ public class Prova extends AEntity {
     @NotNull
     @Indexed()
     @Size(min = 3)
-    @AIField(type = EAFieldType.text, required = true, widthEM = 12)
+    @AIField(type = EAFieldType.text, required = true, focus = true, widthEM = 12)
     @AIColumn(width = 210)
-    private String code;
+    public String code;
     
-	/**
-     * descrizione (obbligatoria, non unica) <br>
-     */
-    @NotNull(message = "La descrizione è obbligatoria")
-    @Size(min = 2, max = 50)
-    @AIField(type = EAFieldType.text, firstCapital = true, widthEM = 24)
-    @AIColumn(width = 370)
-    private String descrizione;
 
     /**
      * @return a string representation of the object.

@@ -1,6 +1,7 @@
 package it.algos.vaadbase.ui;
 
 import com.vaadin.flow.component.AbstractField;
+import com.vaadin.flow.component.checkbox.Checkbox;
 import com.vaadin.flow.data.binder.Binder;
 import com.vaadin.flow.data.binder.ValidationResult;
 import com.vaadin.flow.data.converter.StringToIntegerConverter;
@@ -182,6 +183,7 @@ public class AFieldService {
                     }// fine del blocco try-catch
                 }// end of if cycle
                 field.setReadOnly(false);
+                binder.forField(field).bind(fieldName);
                 break;
             case enumeration:
                 field = new AComboBox(caption);
@@ -191,6 +193,10 @@ public class AFieldService {
                         ((AComboBox) field).setItems(items);
                     }// end of if cycle
                 }// end of if cycle
+                binder.forField(field).bind(fieldName);
+                break;
+            case checkbox:
+                field = new Checkbox(caption);
                 binder.forField(field).bind(fieldName);
                 break;
             case link:

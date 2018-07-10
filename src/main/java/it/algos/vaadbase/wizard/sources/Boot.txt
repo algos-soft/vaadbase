@@ -72,7 +72,7 @@ public class @MODULEUPPER@Boot extends ABoot {
      * Vengono aggiunte dopo quelle standard
      * Verranno lette da MainLayout la prima volta che il browser 'chiama' una view
      */
-    private void addRouteSpecifiche() {
+    protected void addRouteSpecifiche() {
         BaseCost.MENU_CLAZZ_LIST.add(HomeView.class);
         BaseCost.MENU_CLAZZ_LIST.add(WizardView.class);
     }// end of method

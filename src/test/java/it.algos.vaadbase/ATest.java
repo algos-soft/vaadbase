@@ -42,6 +42,7 @@ public class ATest {
     protected static Class<? extends AEntity> ROLE_ENTITY_CLASS = Role.class;
 
     protected Field reflectionJavaField;
+    protected String sorgente = "";
     protected String previsto = "";
     protected String ottenuto = "";
     protected boolean previstoBooleano;
@@ -59,6 +60,8 @@ public class ATest {
 //    protected EACompanyRequired previstoCompany;
 //    protected EACompanyRequired ottenutoCompany;
 
+    protected static String TITOLO_WEB = "http://www.algos.it/estudio";
+    protected static String TITOLO_WEB_ERRATO = "http://www.pippozbelloz.it/";
 
     private static String SEP1 = ": ";
     private static String SEP2 = " -> ";

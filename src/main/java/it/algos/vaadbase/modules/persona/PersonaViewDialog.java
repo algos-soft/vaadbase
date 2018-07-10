@@ -121,10 +121,6 @@ public class PersonaViewDialog extends AViewDialog<Persona> {
         indirizzoTemporaneo = null;
         indirizzoField.setValue("");
         focusOnPost(INDIRIZZO);
-//        ConfirmDialog dialog = new ConfirmDialog("Unsaved changes",
-//                "Do you want to save or discard your changes before navigating away?",
-//                "Save", this::onSave, "Discard", this::onDiscard, "Cancel",
-//                this::onCancel);      Notification.show("La cancellazione di indirizzo è stata confermata ma devi registrare questa persona per renderla definitiva", FLASH, Notification.Position.BOTTOM_START);
     }// end of method
 
 

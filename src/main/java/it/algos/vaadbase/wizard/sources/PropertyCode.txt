@@ -6,4 +6,4 @@
     @Size(min = 3)
     @AIField(type = EAFieldType.text, required = true, focus = true, widthEM = 12)
     @AIColumn(width = 210)
-    private String code;
+    public String code;
