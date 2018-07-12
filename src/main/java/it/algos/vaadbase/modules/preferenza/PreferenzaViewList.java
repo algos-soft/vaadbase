@@ -74,7 +74,7 @@ public class PreferenzaViewList extends AViewList {
      * Componente grafico obbligatorio
      */
     protected void addGrid() {
-        super.addGrid();
+        super.creaGrid();
         ComponentRenderer renderValue = new ComponentRenderer<>(this::renderedValue);
         Grid.Column<Preferenza> colonna = grid.addColumn(renderValue);
         colonna.setHeader("Valore");

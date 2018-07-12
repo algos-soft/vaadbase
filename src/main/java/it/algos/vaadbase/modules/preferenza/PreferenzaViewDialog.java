@@ -1,6 +1,7 @@
 package it.algos.vaadbase.modules.preferenza;
 
 import com.vaadin.flow.component.AbstractField;
+import com.vaadin.flow.component.datepicker.DatePicker;
 import com.vaadin.flow.spring.annotation.SpringComponent;
 import it.algos.vaadbase.annotation.AIScript;
 import it.algos.vaadbase.enumeration.EAPrefType;
@@ -17,6 +18,7 @@ import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.beans.factory.config.ConfigurableBeanFactory;
 import org.springframework.context.annotation.Scope;
 
+import java.time.LocalDateTime;
 import java.util.List;
 
 import static it.algos.vaadbase.application.BaseCost.TAG_PRE;
@@ -95,7 +97,7 @@ public class PreferenzaViewDialog extends AViewDialog<Preferenza> {
     @Override
     protected void readSpecificFields() {
         super.readSpecificFields();
-        if (companyField!=null) {
+        if (companyField != null) {
             companyField.setValue(((Preferenza) getCurrentItem()).getCompany());
         }// end of if cycle
 
@@ -123,6 +125,12 @@ public class PreferenzaViewDialog extends AViewDialog<Preferenza> {
                 break;
             case bool:
                 valueField.setValue((boolean) genericValue);
+                break;
+            case date:
+                if (genericValue instanceof LocalDateTime) {
+                    genericValue = date.localDateTimeToLocalDate((LocalDateTime) genericValue);
+                }// end of if cycle
+                valueField.setValue((LocalDateTime) genericValue);
                 break;
             default:
                 log.warn("Switch - caso non definito");
@@ -165,6 +173,9 @@ public class PreferenzaViewDialog extends AViewDialog<Preferenza> {
                 break;
             case bool:
                 valueField = new ACheckBox(caption + "(vero/falso)");
+                break;
+            case date:
+                valueField = new DatePicker(caption + "(giorno)");
                 break;
             default:
                 log.warn("Switch - caso non definito");

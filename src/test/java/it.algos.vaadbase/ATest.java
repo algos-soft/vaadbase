@@ -7,6 +7,9 @@ import it.algos.vaadbase.ui.IAView;
 import it.algos.vaadbase.ui.enumeration.EAFieldType;
 
 import java.lang.reflect.Field;
+import java.time.LocalDate;
+import java.time.LocalDateTime;
+import java.util.Date;
 import java.util.List;
 
 /**
@@ -66,6 +69,19 @@ public class ATest {
     private static String SEP1 = ": ";
     private static String SEP2 = " -> ";
     protected static String SEP3 = "/";
+
+
+    // alcune date di riferimento
+    protected final static Date DATE_UNO = new Date(1413868320000L); // 21 ottobre 2014, 7 e 12
+    protected final static Date DATE_DUE = new Date(1398057120000L); // 21 aprile 2014, 7 e 12
+    protected final static Date DATE_TRE = new Date(1412485920000L); // 5 ottobre 2014, 7 e 12
+    protected final static Date DATE_QUATTRO = new Date(1394259124000L); // 8 marzo 2014, 7 e 12 e 4
+    protected final static LocalDate LOCAL_DATE_UNO = LocalDate.of(2014, 10, 21);
+    protected final static LocalDate LOCAL_DATE_DUE = LocalDate.of(2014, 4, 21);
+    protected final static LocalDate LOCAL_DATE_TRE = LocalDate.of(2014, 10, 5);
+    protected final static LocalDate LOCAL_DATE_QUATTRO = LocalDate.of(2014, 3, 8);
+    protected final static LocalDateTime LOCAL_DATE_TIME_UNO = LocalDateTime.of(2014, 10, 21, 7, 12);
+    protected final static LocalDateTime LOCAL_DATE_TIME_DUE = LocalDateTime.of(2014, 4, 21, 7, 12);
 
     protected void print(String message, String sorgente, Object ottenuto) {
         System.out.println(message + SEP1 + sorgente + SEP2 + ottenuto);

@@ -26,32 +26,15 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 @ExtendWith(MockitoExtension.class)
 @TestInstance(TestInstance.Lifecycle.PER_CLASS)
 @Tag("data")
-@DisplayName("Test sul service di elaborazione stringhe")
+@DisplayName("Test sul service di elaborazione date")
 public class ADateServiceTest extends ATest {
 
-
-    @InjectMocks
-    public ADateService service;
-
-
-    // alcune date di riferimento
-    private final static Date DATE_UNO = new Date(1413868320000L); // 21 ottobre 2014, 7 e 12
-    private final static Date DATE_DUE = new Date(1398057120000L); // 21 aprile 2014, 7 e 12
-    private final static Date DATE_TRE = new Date(1412485920000L); // 5 ottobre 2014, 7 e 12
-    private final static Date DATE_QUATTRO = new Date(1394259124000L); // 8 marzo 2014, 7 e 12 e 4
-
-    private final static LocalDate LOCAL_DATE_UNO = LocalDate.of(2014, 10, 21);
-    private final static LocalDate LOCAL_DATE_DUE = LocalDate.of(2014, 4, 21);
-    private final static LocalDate LOCAL_DATE_TRE = LocalDate.of(2014, 10, 5);
-    private final static LocalDate LOCAL_DATE_QUATTRO = LocalDate.of(2014, 3, 8);
-
-    private final static LocalDateTime LOCAL_DATE_TIME_UNO = LocalDateTime.of(2014, 10, 21, 7, 12);
-    private final static LocalDateTime LOCAL_DATE_TIME_DUE = LocalDateTime.of(2014, 4, 21, 0, 0);
 
     private static int GIORNO = 12;
     private static int MESE = 7;
     private static int ANNO = 2004;
-
+    @InjectMocks
+    public ADateService service;
     // alcuni parametri utilizzati
     private Date dataPrevista = null;
     private Date dataOttenuta = null;
@@ -71,9 +54,8 @@ public class ADateServiceTest extends ATest {
     public void tearDown() {
         System.out.println("");
         System.out.println("");
-        System.out.println("Data settimanale lunga: "+service.getWeekLong(LOCAL_DATE_UNO));
-        System.out.println("Data settimanale breve: "+service.getDayWeekShort(LOCAL_DATE_UNO));
-        System.out.println("");
+        System.out.println("Data settimanale lunga: " + service.getWeekLong(LOCAL_DATE_TIME_DUE));
+        System.out.println("Data settimanale breve: " + service.getDayWeekShort(LOCAL_DATE_TIME_DUE));
         System.out.println("");
     }// end of method
 
@@ -95,7 +77,7 @@ public class ADateServiceTest extends ATest {
         localDataOttenuta = service.dateToLocalDate(DATE_UNO);
         assertEquals(localDataOttenuta, localDataPrevista);
         System.out.println("");
-        System.out.println("dateToLocalDate: " + DATE_UNO + " -> " + localDataOttenuta);
+        System.out.println("Convert java.util.Date to java.time.LocalDate: " + DATE_UNO + " -> " + localDataOttenuta);
         System.out.println("");
     }// end of single test
 
@@ -117,7 +99,7 @@ public class ADateServiceTest extends ATest {
         dataOttenuta = service.localDateToDate(LOCAL_DATE_UNO);
 //        assertEquals(dataOttenuta, dataPrevista);
         System.out.println("");
-        System.out.println("localDateToDate: " + LOCAL_DATE_UNO + " -> " + dataOttenuta);
+        System.out.println("Convert java.time.LocalDate to java.util.Date: " + LOCAL_DATE_UNO + " -> " + dataOttenuta);
         System.out.println("");
     }// end of single test
 
@@ -135,11 +117,11 @@ public class ADateServiceTest extends ATest {
      */
     @Test
     public void dateToLocalDateTime() {
-        localDateTimePrevista = LOCAL_DATE_TIME_UNO;
+        localDateTimePrevista = LOCAL_DATE_TIME_DUE;
         localDateTimeOttenuta = service.dateToLocalDateTime(DATE_UNO);
         assertEquals(localDataOttenuta, localDataPrevista);
         System.out.println("");
-        System.out.println("dateToLocalDateTime: " + DATE_UNO + " -> " + localDateTimeOttenuta);
+        System.out.println("Convert java.util.Date to java.time.LocalDateTime: " + DATE_UNO + " -> " + localDateTimeOttenuta);
         System.out.println("");
     }// end of single test
 
@@ -157,11 +139,11 @@ public class ADateServiceTest extends ATest {
      */
     @Test
     public void localDateTimeToDate() {
-        dataPrevista = DATE_UNO;
-        dataOttenuta = service.localDateTimeToDate(LOCAL_DATE_TIME_UNO);
+        dataPrevista = DATE_DUE;
+        dataOttenuta = service.localDateTimeToDate(LOCAL_DATE_TIME_DUE);
         assertEquals(dataOttenuta, dataPrevista);
         System.out.println("");
-        System.out.println("localDateTimeToDate: " + LOCAL_DATE_TIME_UNO + " -> " + dataOttenuta);
+        System.out.println("Convert java.time.LocalDateTime to java.util.Date: " + LOCAL_DATE_TIME_DUE + " -> " + dataOttenuta);
         System.out.println("");
     }// end of single test
 
@@ -179,11 +161,11 @@ public class ADateServiceTest extends ATest {
      */
     @Test
     public void localDateToLocalDateTime() {
-        localDateTimePrevista = LOCAL_DATE_TIME_UNO;
-        localDateTimeOttenuta = service.localDateToLocalDateTime(LOCAL_DATE_UNO);
+        localDateTimePrevista = LOCAL_DATE_TIME_DUE;
+        localDateTimeOttenuta = service.localDateToLocalDateTime(LOCAL_DATE_DUE);
 //        assertEquals(localDateTimeOttenuta, localDateTimePrevista);
         System.out.println("");
-        System.out.println("localDateToLocalDateTime: " + LOCAL_DATE_UNO + " -> " + localDateTimeOttenuta);
+        System.out.println("Convert java.time.LocalDate to java.time.LocalDateTime: " + LOCAL_DATE_UNO + " -> " + localDateTimeOttenuta);
         System.out.println("");
     }// end of single test
 
@@ -201,11 +183,11 @@ public class ADateServiceTest extends ATest {
      */
     @Test
     public void localDateTimeToLocalDate() {
-        localDataPrevista = LOCAL_DATE_UNO;
-        localDataOttenuta = service.localDateTimeToLocalDate(LOCAL_DATE_TIME_UNO);
+        localDataPrevista = LOCAL_DATE_DUE;
+        localDataOttenuta = service.localDateTimeToLocalDate(LOCAL_DATE_TIME_DUE);
         assertEquals(localDataOttenuta, localDataPrevista);
         System.out.println("");
-        System.out.println("localDateTimeToLocalDate: " + LOCAL_DATE_TIME_UNO + " -> " + localDataOttenuta);
+        System.out.println("Convert java.time.LocalDateTime to java.time.LocalDate: " + LOCAL_DATE_TIME_DUE + " -> " + localDataOttenuta);
         System.out.println("");
     }// end of single test
 
@@ -224,10 +206,86 @@ public class ADateServiceTest extends ATest {
      */
     @Test
     public void getWeekLong() {
-        previsto = "martedì 21";
+        previsto = "lunedì 21";
 
-        ottenuto = service.getWeekLong(LOCAL_DATE_UNO);
+        ottenuto = service.getWeekLong(LOCAL_DATE_TIME_DUE);
         assertEquals(ottenuto, previsto);
+        System.out.println("");
+        System.out.println("Restituisce il giorno della settimana in forma estesa: " + LOCAL_DATE_TIME_DUE + " -> " + ottenuto);
+        System.out.println("");
+    }// end of single test
+
+
+    @SuppressWarnings("javadoc")
+    /**
+     * Restituisce la data (senza tempo) in forma breve
+     * <p>
+     * Returns a string representation of the date <br>
+     * Not using leading zeroes in day <br>
+     * Two numbers for year <b>
+     *
+     * @param localDateTime da rappresentare
+     *
+     * @return la data sotto forma di stringa
+     */
+    @Test
+    public void getShort() {
+        previsto = "21-12-14";
+
+        ottenuto = service.getShort(LOCAL_DATE_TIME_DUE);
+        assertEquals(ottenuto, previsto);
+        System.out.println("");
+        System.out.println("Restituisce la data (senza tempo) in forma breve: " + LOCAL_DATE_TIME_DUE + " -> " + ottenuto);
+        System.out.println("");
+    }// end of single test
+
+
+
+    @SuppressWarnings("javadoc")
+    /**
+     * Restituisce la data (senza tempo) in forma normale
+     * <p>
+     * Returns a string representation of the date <br>
+     * Not using leading zeroes in day <br>
+     * Two numbers for year <b>
+     *
+     * @param localDateTime da rappresentare
+     *
+     * @return la data sotto forma di stringa
+     */
+    @Test
+    public void getDate() {
+        previsto = "21-apr-14";
+
+        ottenuto = service.getDate(LOCAL_DATE_TIME_DUE);
+        assertEquals(ottenuto, previsto);
+        System.out.println("");
+        System.out.println("Restituisce la data (senza tempo) in forma normale: " + LOCAL_DATE_TIME_DUE + " -> " + ottenuto);
+        System.out.println("");
+    }// end of single test
+
+
+    @SuppressWarnings("javadoc")
+    /**
+     * Restituisce la data completa di tempo
+     * <p>
+     * Returns a string representation of the date <br>
+     * Not using leading zeroes in day <br>
+     * Two numbers for year <b>
+     *
+     * @param localDateTime da rappresentare
+     *
+     * @return la data sotto forma di stringa
+     */
+    @Test
+    public void getTime() {
+        previsto = "21-apr-14 7:12";
+
+        ottenuto = service.getTime(LOCAL_DATE_TIME_DUE);
+        assertEquals(ottenuto, previsto);
+        System.out.println("");
+        System.out.println("Restituisce la data completa di tempo: " + LOCAL_DATE_TIME_DUE + " -> " + ottenuto);
+        System.out.println("");
     }// end of single test
 
 
@@ -503,7 +561,7 @@ public class ADateServiceTest extends ATest {
     @Test
     public void getLocalDateByDay() {
         localDataPrevista = LocalDate.now();
-        int numGiorno=LocalDate.now().getDayOfYear();
+        int numGiorno = LocalDate.now().getDayOfYear();
         localDataOttenuta = service.getLocalDateByDay(numGiorno);
         assertEquals(localDataOttenuta, localDataPrevista);
     }// end of single test
@@ -511,15 +569,12 @@ public class ADateServiceTest extends ATest {
 
     @Test
     public void formattazione() {
-        System.out.println("");
-        System.out.println("");
-        System.out.println(service.getWeekLong(LOCAL_DATE_UNO));
+        System.out.println("LocalDate di riferimento " + LOCAL_DATE_DUE);
     }// end of single test
 
     @Test
     public void formattazione2() {
-        System.out.println("");
-        System.out.println(LOCAL_DATE_TIME_UNO.format(DateTimeFormatter.ofLocalizedDateTime(FormatStyle.MEDIUM)));
+        System.out.println("LocalDateTime di riferimento " + LOCAL_DATE_TIME_DUE);
     }// end of single test
 
 }// end of class

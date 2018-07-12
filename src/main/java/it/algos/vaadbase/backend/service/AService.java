@@ -249,13 +249,13 @@ public class AService implements IAService {
                         .filter(entity -> ((ACEntity) entity).company.getCode().equals(companyCode))
                         .filter(entity -> {
                             if (isEsisteEntityKeyUnica(entity)) {
-                                return getKeyUnica(entity).toLowerCase().contains(normalizedFilter);
+                                return getKeyUnica(entity).toLowerCase().startsWith(normalizedFilter);
                             } else {
                                 if (reflection.isEsiste(entityClass, FIELD_NAME_CODE)) {
-                                    return ((String) reflection.getPropertyValue(entity, FIELD_NAME_CODE)).contains(normalizedFilter);
+                                    return ((String) reflection.getPropertyValue(entity, FIELD_NAME_CODE)).startsWith(normalizedFilter);
                                 } else {
                                     if (reflection.isEsiste(entityClass, FIELD_NAME_DESCRIZIONE)) {
-                                        return ((String) reflection.getPropertyValue(entity, FIELD_NAME_DESCRIZIONE)).contains(normalizedFilter);
+                                        return ((String) reflection.getPropertyValue(entity, FIELD_NAME_DESCRIZIONE)).startsWith(normalizedFilter);
                                     } else {
                                         return true;
                                     }// end of if/else cycle
@@ -280,13 +280,13 @@ public class AService implements IAService {
                         })
                         .filter(entity -> {
                             if (isEsisteEntityKeyUnica(entity)) {
-                                return getKeyUnica(entity).toLowerCase().contains(normalizedFilter);
+                                return getKeyUnica(entity).toLowerCase().startsWith(normalizedFilter);
                             } else {
                                 if (reflection.isEsiste(entityClass, FIELD_NAME_CODE)) {
-                                    return ((String) reflection.getPropertyValue(entity, FIELD_NAME_CODE)).contains(normalizedFilter);
+                                    return ((String) reflection.getPropertyValue(entity, FIELD_NAME_CODE)).startsWith(normalizedFilter);
                                 } else {
                                     if (reflection.isEsiste(entityClass, FIELD_NAME_DESCRIZIONE)) {
-                                        return ((String) reflection.getPropertyValue(entity, FIELD_NAME_DESCRIZIONE)).contains(normalizedFilter);
+                                        return ((String) reflection.getPropertyValue(entity, FIELD_NAME_DESCRIZIONE)).startsWith(normalizedFilter);
                                     } else {
                                         return true;
                                     }// end of if/else cycle
@@ -300,17 +300,17 @@ public class AService implements IAService {
             lista = lista.stream()
                     .filter(entity -> {
                         if (isEsisteEntityKeyUnica(entity)) {
-                            return getKeyUnica(entity).toLowerCase().contains(normalizedFilter);
+                            return getKeyUnica(entity).toLowerCase().startsWith(normalizedFilter);
                         } else {
                             if (reflection.isEsiste(entityClass, FIELD_NAME_CODE)) {
                                 if (reflection.getPropertyValue(entity, FIELD_NAME_CODE) == null) {
                                     return true;
                                 } else {
-                                    return ((String) reflection.getPropertyValue(entity, FIELD_NAME_CODE)).contains(normalizedFilter);
+                                    return ((String) reflection.getPropertyValue(entity, FIELD_NAME_CODE)).startsWith(normalizedFilter);
                                 }// end of if/else cycle
                             } else {
                                 if (reflection.isEsiste(entityClass, FIELD_NAME_DESCRIZIONE)) {
-                                    return ((String) reflection.getPropertyValue(entity, FIELD_NAME_DESCRIZIONE)).contains(normalizedFilter);
+                                    return ((String) reflection.getPropertyValue(entity, FIELD_NAME_DESCRIZIONE)).startsWith(normalizedFilter);
                                 } else {
                                     return true;
                                 }// end of if/else cycle

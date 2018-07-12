@@ -4,7 +4,6 @@ import com.vaadin.flow.component.icon.VaadinIcon;
 import com.vaadin.flow.router.Route;
 import it.algos.vaadbase.annotation.AIScript;
 import it.algos.vaadbase.presenter.IAPresenter;
-import it.algos.vaadbase.service.ADateService;
 import it.algos.vaadbase.ui.AViewList;
 import it.algos.vaadbase.ui.MainLayout;
 import it.algos.vaadbase.ui.dialog.IADialog;
@@ -68,9 +67,13 @@ public class ProvaViewList extends AViewList {
         ((ProvaViewDialog) dialog).fixFunzioni(this::save, this::delete);
     }// end of Spring constructor
 
-    protected void addSearchBar() {
-        super.addSearchBar();
-        viewToolbar.remove(newButton);
+    /**
+     * Le preferenze sovrascritte nella sottoclasse
+     */
+    protected void fixPreferenzeSpecifiche() {
+        super.usaSearchBar = false;
+        super.usaBottoneNew = false;
+        super.usaBottoneEdit=false;
     }// end of method
 
 }// end of class

@@ -9,6 +9,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.config.ConfigurableBeanFactory;
 import org.springframework.context.annotation.Scope;
 
+import java.time.LocalDateTime;
+
 /**
  * Project vaadbase
  * Created by Algos
@@ -92,6 +94,17 @@ public class APreferenzaService {
         return value;
     } // end of static method
 
+    public LocalDateTime getDate(String code) {
+        LocalDateTime value = null;
+        Object genericValue = getValue(code);
+
+        if (genericValue instanceof LocalDateTime) {
+            value = (LocalDateTime) genericValue;
+        }// end of if cycle
+
+        return value;
+    } // end of method
+
 //    public void setValue(String code, Object value) {
 //        Preferenza pref = get(code);
 //        ;
@@ -119,6 +132,17 @@ public class APreferenzaService {
 
     } // end of method
 
+    public void setDate(String code, LocalDateTime value) {
+        Preferenza pref = get(code);
+        EAPrefType type = null;
+
+        if (pref == null) {
+            pref = prefService.findOrCrea(code, "", EAPrefType.date, value);
+        } else {
+            pref.setValue(pref.getType().objectToBytes(value));
+            prefService.save(pref);
+            }// end of if/else cycle
+        } // end of method
 
 //    public static String getString(String code, Object defaultValue) {
 //        return getString(code, CompanySessionLib.getCompany(), defaultValue);

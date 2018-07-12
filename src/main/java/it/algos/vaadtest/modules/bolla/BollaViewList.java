@@ -78,25 +78,25 @@ public class BollaViewList extends AViewList {
     }// end of Spring constructor
 
 
-     /**
-      * Crea il corpo centrale della view
-      * Componente grafico obbligatorio
-      */
-     protected void addGrid() {
-         super.addGrid();
-         ComponentRenderer renderer = new ComponentRenderer<>(this::createEditButton);
-         grid.addColumn(renderer);
-         this.setFlexGrow(0);
-     }// end of method
-
-
-   private Button createEditButton(Bolla entityBean) {
-        Button edit = new Button(EDIT_NAME, event -> dialog.open(entityBean, AViewDialog.Operation.EDIT));
-        edit.setIcon(new Icon("lumo", "edit"));
-        edit.addClassName("review__edit");
-        edit.getElement().setAttribute("theme", "tertiary");
-        return edit;
-    }// end of method
+//     /**
+//      * Crea il corpo centrale della view
+//      * Componente grafico obbligatorio
+//      */
+//     protected void addGrid() {
+//         super.addGrid();
+//         ComponentRenderer renderer = new ComponentRenderer<>(this::createEditButton);
+//         grid.addColumn(renderer);
+//         this.setFlexGrow(0);
+//     }// end of method
+//
+//
+//   private Button createEditButton(Bolla entityBean) {
+//        Button edit = new Button(EDIT_NAME, event -> dialog.open(entityBean, AViewDialog.Operation.EDIT));
+//        edit.setIcon(new Icon("lumo", "edit"));
+//        edit.addClassName("review__edit");
+//        edit.getElement().setAttribute("theme", "tertiary");
+//        return edit;
+//    }// end of method
 
 
 }// end of class

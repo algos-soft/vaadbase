@@ -15,6 +15,7 @@ import org.springframework.context.event.ContextRefreshedEvent;
 import org.springframework.context.event.EventListener;
 
 import java.time.LocalDate;
+import it.algos.vaadtest.modules.prova2.Prova2ViewList;
 
 /**
  * Project vaadbase
@@ -117,6 +118,7 @@ public class VaadtestBoot extends ABoot {
      */
     @Override
     protected void addRouteSpecifiche() {
+		BaseCost.MENU_CLAZZ_LIST.add(Prova2ViewList.class);
         BaseCost.MENU_CLAZZ_LIST.add(ProvaViewList.class);
         BaseCost.MENU_CLAZZ_LIST.add(HomeView.class);
         BaseCost.MENU_CLAZZ_LIST.add(BollaViewList.class);

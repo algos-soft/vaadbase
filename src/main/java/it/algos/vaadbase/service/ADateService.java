@@ -132,7 +132,7 @@ public class ADateService {
 
 
     /**
-     * Restituisce una stringa nel formato d-M-yy
+     * Restituisce il giorno della settimana in forma estesa
      * <p>
      * Returns a string representation of the date <br>
      * Not using leading zeroes in day <br>
@@ -142,10 +142,95 @@ public class ADateService {
      *
      * @return la data sotto forma di stringa
      */
+    @Deprecated
     public String getWeekLong(LocalDate localDate) {
         SimpleDateFormat format = new SimpleDateFormat();
         format.applyPattern("EEEE d");
         return format.format(localDateToDate(localDate));
+    }// end of method
+
+
+    /**
+     * Restituisce il giorno della settimana in forma estesa
+     * <p>
+     * Returns a string representation of the date <br>
+     * Not using leading zeroes in day <br>
+     * Two numbers for year <b>
+     *
+     * @param localDateTime da rappresentare
+     *
+     * @return la data sotto forma di stringa
+     */
+    public String getWeekLong(LocalDateTime localDateTime) {
+        SimpleDateFormat format = new SimpleDateFormat();
+        format.applyPattern("EEEE d");
+        return format.format(localDateTimeToDate(localDateTime));
+    }// end of method
+
+
+    /**
+     * Restituisce la data (senza tempo) in forma breve
+     * <p>
+     * Returns a string representation of the date <br>
+     * Not using leading zeroes in day <br>
+     * Two numbers for year <b>
+     *
+     * @param localDateTime da rappresentare
+     *
+     * @return la data sotto forma di stringa
+     */
+    public String getShort(LocalDateTime localDateTime) {
+        SimpleDateFormat format = new SimpleDateFormat();
+        format.applyPattern("dd-mm-yy");
+        return format.format(localDateTimeToDate(localDateTime));
+    }// end of method
+
+
+    /**
+     * Restituisce la data (senza tempo) in forma normale
+     * <p>
+     * Returns a string representation of the date <br>
+     * Not using leading zeroes in day <br>
+     * Two numbers for year <b>
+     *
+     * @param localDateTime da rappresentare
+     *
+     * @return la data sotto forma di stringa
+     */
+    public String getDate(LocalDateTime localDateTime) {
+        String testo = "";
+
+        testo += localDateTime.getDayOfMonth();
+        testo += "-";
+        testo += localDateTime.getMonth().getDisplayName(TextStyle.SHORT,Locale.ITALIAN);
+        testo += "-";
+        testo += localDateTime.getYear() > 2000 ? localDateTime.getYear() - 2000 : localDateTime.getYear();
+
+        return testo;
+
+    }// end of method
+
+
+    /**
+     * Restituisce la data completa di tempo
+     * <p>
+     * Returns a string representation of the date <br>
+     * Not using leading zeroes in day <br>
+     * Two numbers for year <b>
+     *
+     * @param localDateTime da rappresentare
+     *
+     * @return la data sotto forma di stringa
+     */
+    public String getTime(LocalDateTime localDateTime) {
+        String testo = getDate(localDateTime);
+
+        testo += " ";
+        testo += localDateTime.getHour();
+        testo += ":";
+        testo += localDateTime.getMinute();
+
+        return testo;
     }// end of method
 
 
@@ -219,6 +304,18 @@ public class ADateService {
     public int getDayWeek(Date data) {
         Calendar calendario = getCal(data);
         return calendario.get(Calendar.DAY_OF_WEEK);
+    }// end of method
+
+
+    /**
+     * Ritorna il giorno (testo) della settimana di una data fornita.
+     *
+     * @param localDateTime fornita
+     *
+     * @return il giorno della settimana in forma breve
+     */
+    public String getDayWeekShort(LocalDateTime localDateTime) {
+        return localDateTime.getDayOfWeek().getDisplayName(TextStyle.SHORT, Locale.getDefault());
     }// end of method
 
 

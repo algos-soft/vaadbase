@@ -19,6 +19,7 @@ import it.algos.vaadbase.backend.service.IAService;
 import it.algos.vaadbase.modules.company.CompanyService;
 import it.algos.vaadbase.presenter.IAPresenter;
 import it.algos.vaadbase.service.AAnnotationService;
+import it.algos.vaadbase.service.ADateService;
 import it.algos.vaadbase.ui.AFieldService;
 import it.algos.vaadbase.ui.IAView;
 import it.algos.vaadbase.ui.fields.AComboBox;
@@ -62,6 +63,9 @@ public abstract class AViewDialog<T extends Serializable> extends Dialog impleme
      */
     @Autowired
     public AAnnotationService annotation;
+
+    @Autowired
+    public ADateService date;
 
     /**
      * Service iniettato da Spring (@Scope = 'singleton'). Unica per tutta l'applicazione. Usata come libreria.
@@ -408,6 +412,12 @@ public abstract class AViewDialog<T extends Serializable> extends Dialog impleme
         binder.readBean(currentItem);
 
         deleteButton.setEnabled(operation.isDeleteEnabled());
+
+        if (this.operation == Operation.SHOW) {
+            saveButton.setVisible(false);
+            deleteButton.setVisible(false);
+        }// end of if cycle
+
         open();
     }// end of method
 
@@ -604,12 +614,13 @@ public abstract class AViewDialog<T extends Serializable> extends Dialog impleme
     }// end of method
 
     /**
-     * The operations supported by this dialog. Delete is enabled when editing
-     * an already existing item.
+     * The operations supported by this dialog.
+     * Delete is enabled when editing an already existing item.
      */
     public enum Operation {
         ADD("Add New", "add", false),
-        EDIT("Edit", "edit", true);
+        EDIT("Edit", "edit", true),
+        SHOW("Mostra", "mostra", false);
 
         private final String nameInTitle;
         private final String nameInText;
@@ -623,15 +634,15 @@ public abstract class AViewDialog<T extends Serializable> extends Dialog impleme
 
         public String getNameInTitle() {
             return nameInTitle;
-        }
+        }// end of method
 
         public String getNameInText() {
             return nameInText;
-        }
+        }// end of method
 
         public boolean isDeleteEnabled() {
             return deleteEnabled;
-        }
-    }
+        }// end of method
+    }// end of enum
 
 }// end of class

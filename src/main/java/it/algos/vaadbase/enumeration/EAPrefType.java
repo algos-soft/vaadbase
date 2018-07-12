@@ -1,9 +1,12 @@
 package it.algos.vaadbase.enumeration;
 
 
+import com.google.common.primitives.Longs;
 import it.algos.vaadbase.ui.enumeration.EAFieldType;
 
 import java.nio.charset.Charset;
+import java.time.LocalDateTime;
+import java.time.ZoneOffset;
 
 /**
  * Created by gac on 30 lug 2016.
@@ -91,7 +94,7 @@ public enum EAPrefType {
                 bytes = intToByteArray(num);
             }// end of if cycle
             if (obj instanceof String) {
-                bytes = intToByteArray(new Integer((String)obj));
+                bytes = intToByteArray(new Integer((String) obj));
             }// end of if cycle
 
             return bytes;
@@ -101,28 +104,38 @@ public enum EAPrefType {
         public Object bytesToObject(byte[] bytes) {
             return byteArrayToInt(bytes);
         }// end of method
-    };// end of single enumeration
+    },// end of single enumeration
 
-//    date("data", EAFieldType.localdatetime) {
-//        @todo RIMETTERE
-//
-//        @Override
-//        public byte[] objectToBytes(Object obj) {
-//            byte[] bytes = new byte[0];
-//            if (obj instanceof LocalDateTime) {
+    date("data", EAFieldType.localdatetime) {
+        @Override
+        public byte[] objectToBytes(Object obj) {
+            byte[] bytes = new byte[0];
+            if (obj instanceof LocalDateTime) {
+                LocalDateTime data = (LocalDateTime) obj;
+                long millis = data.toEpochSecond(ZoneOffset.UTC);
 //                long millis = LibDate.getLongSecs((LocalDateTime) obj);
-//                bytes = Longs.toByteArray(millis);
-//            }// end of if cycle
-//            return bytes;
-//        }// end of method
-//
-//        @Override
-//        public Object bytesToObject(byte[] bytes) {
-//            return bytes.length > 0 ? LibDate.dateToLocalDateTime(new Date(Longs.fromByteArray(bytes))) : null;
-//        }// end of method
-//    },// end of single enumeration
+//                long millis = ((LocalDateTime) obj).;
+                bytes = Longs.toByteArray(millis);
+            }// end of if cycle
+            return bytes;
+        }// end of method
 
-//    email("email", EAFieldType.email) {
+        @Override
+        public Object bytesToObject(byte[] bytes) {
+            LocalDateTime data = null;
+            long millis=0;
+
+//            return bytes.length > 0 ? LibDate.dateToLocalDateTime(new Date(Longs.fromByteArray(bytes))) : null;
+            if (bytes!=null&&bytes.length>0) {
+                 millis = Longs.fromByteArray(bytes);
+                data = bytes.length > 0 ? LocalDateTime.ofEpochSecond(millis, 0, ZoneOffset.UTC) : null;
+            }// end of if cycle
+
+            return data;
+        }// end of method
+    },// end of single enumeration
+
+    email("email", EAFieldType.email) {
 //        @Override
 //        public byte[] objectToBytes(Object obj) {
 //            byte[] bytes = new byte[0];
@@ -139,7 +152,7 @@ public enum EAPrefType {
 //            obj = new String(bytes, Charset.forName("UTF-8"));
 //            return obj;
 //        }// end of method
-//    },// end of single enumeration
+    };// end of single enumeration
 
 //    decimal("decimale", AFieldType.lungo) {
 //        @Override
@@ -199,66 +212,6 @@ public enum EAPrefType {
         this.setFieldType(tipoDiFieldPerVisualizzareQuestoTipoDiPreferenza);
     }// fine del costruttore
 
-
-    /**
-     * Converte un valore Object in ByteArray per questa preferenza.
-     * Sovrascritto
-     *
-     * @param obj il valore Object
-     *
-     * @return il valore convertito in byte[]
-     */
-    public byte[] objectToBytes(Object obj) {
-        return null;
-    }// end of method
-
-
-    /**
-     * Converte un byte[] in Object del tipo adatto per questa preferenza.
-     * Sovrascritto
-     *
-     * @param bytes il valore come byte[]
-     *
-     * @return il valore convertito nell'oggetto del tipo adeguato
-     */
-    public Object bytesToObject(byte[] bytes) {
-        return null;
-    }// end of method
-
-    /**
-     * Writes a value in the storage for this type of preference
-     * Sovrascritto
-     *
-     * @param value the value
-     */
-    public void put(Object value) {
-    }// end of method
-
-    /**
-     * Retrieves the value of this preference's type
-     * Sovrascritto
-     */
-    public Object get() {
-        return null;
-    }// end of method
-
-
-    public String getNome() {
-        return nome;
-    }// end of getter method
-
-    public void setNome(String nome) {
-        this.nome = nome;
-    }//end of setter method
-
-    public EAFieldType getFieldType() {
-        return fieldType;
-    }
-
-    public void setFieldType(EAFieldType fieldType) {
-        this.fieldType = fieldType;
-    }
-
     public static String[] getValues() {
         String[] valori;
         EAPrefType[] types = values();
@@ -290,5 +243,62 @@ public enum EAPrefType {
         }
         return num;
     }// end of static method
+
+    /**
+     * Converte un valore Object in ByteArray per questa preferenza.
+     * Sovrascritto
+     *
+     * @param obj il valore Object
+     *
+     * @return il valore convertito in byte[]
+     */
+    public byte[] objectToBytes(Object obj) {
+        return null;
+    }// end of method
+
+    /**
+     * Converte un byte[] in Object del tipo adatto per questa preferenza.
+     * Sovrascritto
+     *
+     * @param bytes il valore come byte[]
+     *
+     * @return il valore convertito nell'oggetto del tipo adeguato
+     */
+    public Object bytesToObject(byte[] bytes) {
+        return null;
+    }// end of method
+
+    /**
+     * Writes a value in the storage for this type of preference
+     * Sovrascritto
+     *
+     * @param value the value
+     */
+    public void put(Object value) {
+    }// end of method
+
+    /**
+     * Retrieves the value of this preference's type
+     * Sovrascritto
+     */
+    public Object get() {
+        return null;
+    }// end of method
+
+    public String getNome() {
+        return nome;
+    }// end of getter method
+
+    public void setNome(String nome) {
+        this.nome = nome;
+    }//end of setter method
+
+    public EAFieldType getFieldType() {
+        return fieldType;
+    }
+
+    public void setFieldType(EAFieldType fieldType) {
+        this.fieldType = fieldType;
+    }
 
 }// end of enumeration class
