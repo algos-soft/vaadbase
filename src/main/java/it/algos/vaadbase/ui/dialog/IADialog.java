@@ -1,6 +1,7 @@
 package it.algos.vaadbase.ui.dialog;
 
 import com.vaadin.flow.spring.annotation.SpringComponent;
+import it.algos.vaadbase.backend.entity.AEntity;
 
 /**
  * Project vaadbase
@@ -19,7 +20,7 @@ public interface IADialog<T> {
      *                  instance
      * @param operation The operation being performed on the item
      */
-    public void open(Object item, AViewDialog.Operation operation);
+    public void open(AEntity item, AViewDialog.Operation operation);
 
 
     /**
@@ -30,6 +31,6 @@ public interface IADialog<T> {
      * @param operation The operation being performed on the item
      * @param title of the window dialog
      */
-    public void open(Object item, AViewDialog.Operation operation, String title);
+    public void open(AEntity item, AViewDialog.Operation operation, String title);
 
 }// end of interface

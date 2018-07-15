@@ -30,6 +30,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 
 import javax.annotation.PostConstruct;
 import java.lang.reflect.Field;
+import java.time.LocalDateTime;
 import java.util.List;
 
 /**
@@ -411,6 +412,19 @@ public abstract class AViewList extends VerticalLayout implements IAView, Before
                     return new Checkbox(status);
                 }));
                 break;
+            case localdatetime:
+                colonna = grid.addColumn(new ComponentRenderer<>(entity -> {
+                    LocalDateTime timeStamp;
+                    String testo = "X";
+                    Field field = reflection.getField(entityClazz, property);
+                    try { // prova ad eseguire il codice
+                        timeStamp = (LocalDateTime) field.get(entity);
+                        testo = date.getTime(timeStamp);
+                    } catch (Exception unErrore) { // intercetta l'errore
+                        log.error(unErrore.toString());
+                    }// fine del blocco try-catch
+                    return new Label(testo);
+                }));
             default:
                 log.warn("Switch - caso non definito");
                 break;
@@ -457,7 +471,7 @@ public abstract class AViewList extends VerticalLayout implements IAView, Before
     private void apreDialogo(SingleSelectionEvent evento, AViewDialog.Operation operation) {
         if (evento != null && evento.getOldValue() != evento.getValue()) {
             if (evento.getValue().getClass().getName().equals(entityClazz.getName())) {
-                dialog.open(evento.getValue(), operation);
+                dialog.open((AEntity) evento.getValue(), operation);
             }// end of if cycle
         }// end of if cycle
     }// end of method

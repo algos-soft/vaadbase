@@ -99,13 +99,14 @@ public class VaadtestBoot extends ABoot {
     protected void regolaPreferenze() {
         super.regolaPreferenze();
 
-        pref.setBool(EAPreferenza.showCompany.getCode(), true);
-        pref.setBool(EAPreferenza.showRole.getCode(), true);
-        pref.setBool(EAPreferenza.showPreferenza.getCode(), true);
-        pref.setBool(EAPreferenza.showPerson.getCode(), true);
-        pref.setBool(EAPreferenza.showAddress.getCode(), true);
-        pref.setBool(EAPreferenza.showDeveloper.getCode(), true);
-        pref.setBool(EAPreferenza.showWizard.getCode(), true);
+//        pref.setBool(EAPreferenza.showCompany.getCode(), true);
+//        pref.setBool(EAPreferenza.showRole.getCode(), true);
+//        pref.setBool(EAPreferenza.showPreferenza.getCode(), true);
+//        pref.setBool(EAPreferenza.showPerson.getCode(), true);
+//        pref.setBool(EAPreferenza.showAddress.getCode(), true);
+//        pref.setBool(EAPreferenza.showDeveloper.getCode(), true);
+//        pref.setBool(EAPreferenza.showWizard.getCode(), true);
+//        pref.setBool(EAPreferenza.showVersione.getCode(), true);
     }// end of method
 
 

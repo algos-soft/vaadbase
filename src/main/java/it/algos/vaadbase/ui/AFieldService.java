@@ -2,6 +2,7 @@ package it.algos.vaadbase.ui;
 
 import com.vaadin.flow.component.AbstractField;
 import com.vaadin.flow.component.checkbox.Checkbox;
+import com.vaadin.flow.component.datepicker.DatePicker;
 import com.vaadin.flow.data.binder.Binder;
 import com.vaadin.flow.data.binder.ValidationResult;
 import com.vaadin.flow.data.converter.StringToIntegerConverter;
@@ -15,10 +16,7 @@ import it.algos.vaadbase.service.AReflectionService;
 import it.algos.vaadbase.service.ATextService;
 import it.algos.vaadbase.ui.annotation.AIField;
 import it.algos.vaadbase.ui.enumeration.EAFieldType;
-import it.algos.vaadbase.ui.fields.AComboBox;
-import it.algos.vaadbase.ui.fields.AIntegerField;
-import it.algos.vaadbase.ui.fields.ATextArea;
-import it.algos.vaadbase.ui.fields.ATextField;
+import it.algos.vaadbase.ui.fields.*;
 import it.algos.vaadbase.validator.AIntegerZeroValidator;
 import it.algos.vaadbase.validator.AStringNullValidator;
 import lombok.extern.slf4j.Slf4j;
@@ -198,6 +196,12 @@ public class AFieldService {
             case checkbox:
                 field = new Checkbox(caption);
                 binder.forField(field).bind(fieldName);
+                break;
+            case localdatetime:
+                //@todo andrà inserito quando ci sarà un DatePicker che accetti i LocalDateTime
+//                field = new ADatePicker(caption);
+//                field = new ATextField(caption);
+//                binder.forField(field).bind(fieldName);
                 break;
             case link:
                 field = new ATextField(caption);

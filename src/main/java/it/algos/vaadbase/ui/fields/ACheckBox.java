@@ -14,9 +14,9 @@ import org.springframework.beans.factory.config.ConfigurableBeanFactory;
  * Date: lun, 28-mag-2018
  * Time: 08:37
  */
-@Slf4j
 @SpringComponent
 @Scope(ConfigurableBeanFactory.SCOPE_PROTOTYPE)
+@Slf4j
 public class ACheckBox extends Checkbox implements IAField{
 
     public ACheckBox(String labelText) {

@@ -14,25 +14,26 @@ import com.vaadin.flow.data.binder.Binder;
 import com.vaadin.flow.data.binder.BinderValidationStatus;
 import com.vaadin.flow.data.binder.ValidationResult;
 import com.vaadin.flow.shared.Registration;
+import it.algos.vaadbase.backend.entity.AEntity;
 import it.algos.vaadbase.backend.service.AService;
 import it.algos.vaadbase.backend.service.IAService;
 import it.algos.vaadbase.modules.company.CompanyService;
+import it.algos.vaadbase.modules.versione.Versione;
 import it.algos.vaadbase.presenter.IAPresenter;
 import it.algos.vaadbase.service.AAnnotationService;
 import it.algos.vaadbase.service.ADateService;
 import it.algos.vaadbase.ui.AFieldService;
 import it.algos.vaadbase.ui.IAView;
-import it.algos.vaadbase.ui.fields.AComboBox;
-import it.algos.vaadbase.ui.fields.AIntegerField;
-import it.algos.vaadbase.ui.fields.ATextArea;
-import it.algos.vaadbase.ui.fields.ATextField;
+import it.algos.vaadbase.ui.fields.*;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 
 import java.io.Serializable;
+import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.LinkedHashMap;
 import java.util.List;
+import java.util.Map;
 import java.util.function.BiConsumer;
 import java.util.function.Consumer;
 import java.util.stream.Collectors;
@@ -367,7 +368,7 @@ public abstract class AViewDialog<T extends Serializable> extends Dialog impleme
      * @param operation The operation being performed on the item
      */
     @Override
-    public void open(Object item, AViewDialog.Operation operation) {
+    public void open(AEntity item, AViewDialog.Operation operation) {
         open(item, operation, "");
     }// end of method
 
@@ -381,7 +382,7 @@ public abstract class AViewDialog<T extends Serializable> extends Dialog impleme
      * @param operation The operation being performed on the item
      */
     @Override
-    public void open(Object item, AViewDialog.Operation operation, String title) {
+    public void open(AEntity item, AViewDialog.Operation operation, String title) {
         if (((AService) service).mancaCompanyNecessaria()) {
             Notification.show("Non è stata selezionata nessuna company in AViewDialog.open()", 3000, Notification.Position.BOTTOM_START);
             return;
@@ -407,9 +408,9 @@ public abstract class AViewDialog<T extends Serializable> extends Dialog impleme
 
 
         creaFields();
-        readCompanyField();
-        readSpecificFields();
         binder.readBean(currentItem);
+        readSpecificFields();
+        readCompanyField();
 
         deleteButton.setEnabled(operation.isDeleteEnabled());
 
@@ -423,20 +424,38 @@ public abstract class AViewDialog<T extends Serializable> extends Dialog impleme
 
 
     /**
-     * Regola in lettura l'eeventuale field company (un combo)
-     * Dal DB alla UI
-     * Sovrascritto
-     */
-    protected void readCompanyField() {
-    }// end of method
-
-
-    /**
      * Regola in lettura eventuali valori NON associati al binder
      * Dal DB alla UI
      * Sovrascritto
      */
     protected void readSpecificFields() {
+//        AbstractField field;
+//        Object genericValue;
+//
+//        for (Map.Entry<String, AbstractField> entry : fieldMap.entrySet()) {
+//            field = entry.getValue();
+//            genericValue = field.getValue();
+//            AEntity alfa=(AEntity) currentItem;
+//            if (field instanceof ADatePicker) {
+//                genericValue= ((Versione)currentItem).timestamp;
+////                genericValue = field.getValue();
+//                if (genericValue!=null) {
+//                    genericValue = date.localDateTimeToLocalDate((LocalDateTime) genericValue);
+//                    field.setValue(genericValue);
+//                }// end of if cycle
+//            }// end of if cycle
+//
+//        }// end of for cycle
+//
+    }// end of method
+
+
+    /**
+     * Regola in lettura l'eeventuale field company (un combo)
+     * Dal DB alla UI
+     * Sovrascritto
+     */
+    protected void readCompanyField() {
     }// end of method
 
 

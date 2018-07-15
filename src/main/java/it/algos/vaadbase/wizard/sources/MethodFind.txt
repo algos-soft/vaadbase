@@ -9,8 +9,7 @@
         @ENTITY@ entity = findByKeyUnica(code);
 
         if (entity == null) {
-            entity = newEntity(@PARAMETERSFIND@);
-            save(entity);
+            entity = crea(code);
         }// end of if cycle
 
         return entity;
@@ -24,7 +23,5 @@
      * @return la entity appena creata
      */
     public @ENTITY@ crea(String code) {
-        @ENTITY@ entity = newEntity(@PARAMETERSFIND@);
-        save(entity);
-        return entity;
+         return (@ENTITY@)save(newEntity(@PARAMETERSFIND@));
     }// end of method

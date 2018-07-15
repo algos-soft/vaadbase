@@ -78,12 +78,7 @@ public class PreferenzaService extends AService {
 
         if (entity == null) {
             entity = crea(code, descrizione, type, value);
-        } else {
-            entity.setDescrizione(descrizione);
-            entity.setType(type);
-            entity.setValue(type != null ? type.objectToBytes(value) : (byte[]) null);
-            save(entity);
-        }// end of if/else cycle
+        }// end of if cycle
 
         return entity;
     }// end of method

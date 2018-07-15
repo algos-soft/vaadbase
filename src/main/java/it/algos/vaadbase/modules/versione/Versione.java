@@ -1,10 +1,9 @@
-package it.algos.vaadbase.modules.preferenza;
+package it.algos.vaadbase.modules.versione;
 
 import com.vaadin.flow.spring.annotation.SpringComponent;
 import it.algos.vaadbase.annotation.AIScript;
 import it.algos.vaadbase.backend.annotation.EACompanyRequired;
-import it.algos.vaadbase.backend.entity.ACEntity;
-import it.algos.vaadbase.enumeration.EAPrefType;
+import it.algos.vaadbase.backend.entity.AEntity;
 import it.algos.vaadbase.ui.annotation.*;
 import it.algos.vaadbase.ui.enumeration.EAFieldType;
 import lombok.*;
@@ -16,14 +15,15 @@ import org.springframework.data.mongodb.core.mapping.Document;
 
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Size;
+import java.time.LocalDateTime;
 
-import static it.algos.vaadbase.application.BaseCost.TAG_PRE;
+import static it.algos.vaadbase.application.BaseCost.TAG_VER;
 
 /**
  * Project vaadbase <br>
  * Created by Algos <br>
  * User: Gac <br>
- * Date: 25-mag-2018 16.19.24 <br>
+ * Date: 13-lug-2018 6.50.39 <br>
  * <p>
  * Estende la entity astratta AEntity che contiene la key property ObjectId <br>
  * <p>
@@ -42,23 +42,24 @@ import static it.algos.vaadbase.application.BaseCost.TAG_PRE;
  * Annotated with @AIForm (facoltativo Algos) per i fields automatici del Dialog e del Form <br>
  * Annotated with @AIScript (facoltativo Algos) per controllare la ri-creazione di questo file dal Wizard <br>
  * Inserisce SEMPRE la versione di serializzazione <br>
+ * Le singole property sono pubbliche in modo da poterne leggere il valore tramite 'reflection'
  * Le singole property sono annotate con @AIField (obbligatorio Algos) per il tipo di Field nel Dialog e nel Form <br>
  * Le singole property sono annotate con @AIColumn (facoltativo Algos) per il tipo di Column nella Grid <br>
  */
 @SpringComponent
-@Document(collection = "preferenza")
+@Document(collection = "versione")
 @Scope(ConfigurableBeanFactory.SCOPE_SINGLETON)
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
 @Builder
 @EqualsAndHashCode(callSuper = false)
-@Qualifier(TAG_PRE)
-@AIEntity(company = EACompanyRequired.facoltativa)
-@AIList(fields = {"company", "ordine", "code", "descrizione", "type"})
-@AIForm(fields = {"company", "ordine", "code", "descrizione", "type"})
+@Qualifier(TAG_VER)
+@AIEntity(company = EACompanyRequired.nonUsata)
+@AIList(fields = {"id", "titolo", "nome", "timestamp"})
+@AIForm(fields = {"id", "titolo","nome", "timestamp"})
 @AIScript(sovrascrivibile = false)
-public class Preferenza extends ACEntity {
+public class Versione extends AEntity {
 
 
     /**
@@ -67,64 +68,62 @@ public class Preferenza extends ACEntity {
     private final static long serialVersionUID = 1L;
 
 
-    /**
-     * ordine di presentazione (obbligatorio, unico) <br>
-     * il più importante per primo <br>
-     */
-    @NotNull
-    @Indexed()
-    @AIField(type = EAFieldType.integer, widthEM = 3)
-    @AIColumn(name = "#", width = 55)
-    private int ordine;
+//    /**
+//     * sigla della versione (obbligatorio, unico) <br>
+//     * un solo carattere che identifica il progetto interessato <br>
+//     */
+//    @NotNull
+//    @Indexed()
+//    @Size(max = 1)
+//    @AIField(type = EAFieldType.text, required = true, widthEM = 12)
+//    @AIColumn(width = 50)
+//    public String sigla;
+
+//    /**
+//     * ordine di presentazione (obbligatorio, unico nel progetto, con controllo automatico prima del persist se è zero) <br>
+//     */
+//    @NotNull
+//    @Indexed()
+//    @AIField(type = EAFieldType.integer, widthEM = 3)
+//    @AIColumn(name = "#", width = 55)
+//    public int ordine;
 
     /**
-     * codice di riferimento (obbligatorio, unico) <br>
+     * titolo della versione (obbligatorio, non unico) <br>
      */
     @NotNull
     @Indexed()
     @Size(min = 3)
     @AIField(type = EAFieldType.text, required = true, focus = true, widthEM = 12)
     @AIColumn(width = 210)
-    private String code;
+    public String titolo;
 
     /**
-     * descrizione (obbligatoria, non unica) <br>
+     * nome descrittivo della versione (obbligatorio, unico) <br>
      */
     @NotNull(message = "La descrizione è obbligatoria")
     @Size(min = 2, max = 50)
     @AIField(type = EAFieldType.text, firstCapital = true, widthEM = 24)
     @AIColumn(width = 370)
-    private String descrizione;
-
+    public String nome;
 
     /**
-     * tipo di dato memorizzato (obbligatorio)
+     * momento in cui si effettua la modifica della versione (obbligatorio, non unica) <br>
+     * inserito automaticamente prima del persist <br>
      */
-    @NotNull
-    @AIField(type = EAFieldType.enumeration, clazz = EAPrefType.class, required = true, focus = true, widthEM = 12)
-    private EAPrefType type;
-
-
-    //--valore della preferenza (obbligatorio)
-    @NotNull
-    @AIField(type = EAFieldType.pref, required = true, name = "Valore", widthEM = 12)
-    private byte[] value;
-
+    @NotNull(message = "Il tempo è obbligatorio")
+    @Size(min = 2, max = 50)
+    @AIField(type = EAFieldType.localdatetime, firstCapital = true, widthEM = 24)
+    @AIColumn(width = 370)
+    public LocalDateTime timestamp;
 
     /**
      * @return a string representation of the object.
      */
     @Override
     public String toString() {
-        return code;
+        return id;
     }// end of method
 
-    public Object getAValue() {
-        return type.bytesToObject(value);
-    }// end of method
-
-    public void setAValue(Object value) {
-        this.value = type.objectToBytes(value);
-    }// end of method
 
 }// end of entity class

@@ -1,10 +1,7 @@
 package it.algos.vaadbase.modules.preferenza;
 
-import com.vaadin.flow.spring.annotation.SpringComponent;
 import it.algos.vaadbase.enumeration.EAPrefType;
-import lombok.extern.slf4j.Slf4j;
-import org.springframework.beans.factory.config.ConfigurableBeanFactory;
-import org.springframework.context.annotation.Scope;
+import it.algos.vaadtest.application.AppCost;
 
 /**
  * Project vaadbase
@@ -15,26 +12,29 @@ import org.springframework.context.annotation.Scope;
  */
 public enum EAPreferenza {
 
-    debug("debug", "Modalità di controllo del programma", EAPrefType.bool, true),
-    usaCompany("useCompany", "L'applicazione è multiCompany ", EAPrefType.bool, true),
-    showCompany("showCompany", show(), EAPrefType.bool, false),
-    showPreferenza("showPreferenza", show(), EAPrefType.bool, false),
-    showWizard("showWizard", show(), EAPrefType.bool, false),
-    showDeveloper("showDeveloper", show(), EAPrefType.bool, false),
-    showAddress("showAddress", show(), EAPrefType.bool, false),
-    showPerson("showPerson", show(), EAPrefType.bool, false),
-    showRole("showRole", show(), EAPrefType.bool, false),
+    usaDebug(AppCost.USA_DEBUG, "Flag generale di debug (ce ne possono essere di specifici, validi solo se questo è vero)", EAPrefType.bool, false),
+    usaLogDebug(AppCost.USA_LOG_DEBUG, "Uso del log di registrazione per il livello debug. Di default false", EAPrefType.bool, false),
+    usaCompany(AppCost.USA_COMPANY, "L'applicazione è multiCompany ", EAPrefType.bool, false),
+    showCompany(AppCost.SHOW_COMPANY, show(), EAPrefType.bool, false),
+    showPreferenza(AppCost.SHOW_PREFERENZA, show(), EAPrefType.bool, false),
+    showWizard(AppCost.SHOW_WIZARD, show(), EAPrefType.bool, false),
+    showDeveloper(AppCost.SHOW_DEVELOPER, show(), EAPrefType.bool, false),
+    showAddress(AppCost.SHOW_ADDRESS, show(), EAPrefType.bool, false),
+    showPerson(AppCost.SHOW_PERSON, show(), EAPrefType.bool, false),
+    showRole(AppCost.SHOW_ROLE, show(), EAPrefType.bool, false),
+    showVersione(AppCost.SHOW_VERSION, show(), EAPrefType.bool, true),
     ;
 
+
     private String code;
-    private String descrizione;
+    private String desc;
     private EAPrefType type;
     private Object value;
 
 
-    EAPreferenza(String code, String descrizione, EAPrefType type, Object value) {
+    EAPreferenza(String code, String desc, EAPrefType type, Object value) {
         this.setCode(code);
-        this.setDescrizione(descrizione);
+        this.setDesc(desc);
         this.setType(type);
         this.setValue(value);
     }// fine del costruttore
@@ -51,12 +51,12 @@ public enum EAPreferenza {
         this.code = code;
     }// end of method
 
-    public String getDescrizione() {
-        return descrizione;
+    public String getDesc() {
+        return desc;
     }// end of method
 
-    public void setDescrizione(String descrizione) {
-        this.descrizione = descrizione;
+    public void setDesc(String desc) {
+        this.desc = desc;
     }// end of method
 
     public EAPrefType getType() {

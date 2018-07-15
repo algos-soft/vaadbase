@@ -1,7 +1,6 @@
     /**
      * ordine di presentazione (obbligatorio, unico) <br>
      * il più importante per primo <br>
-     * public, perché deve essere letto da 'reflection'
      */
     @NotNull
     @Indexed()

@@ -130,7 +130,7 @@ public class PreferenzaViewDialog extends AViewDialog<Preferenza> {
                 if (genericValue instanceof LocalDateTime) {
                     genericValue = date.localDateTimeToLocalDate((LocalDateTime) genericValue);
                 }// end of if cycle
-                valueField.setValue((LocalDateTime) genericValue);
+                valueField.setValue(genericValue);
                 break;
             default:
                 log.warn("Switch - caso non definito");

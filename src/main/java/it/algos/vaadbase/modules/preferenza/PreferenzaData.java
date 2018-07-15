@@ -62,16 +62,22 @@ public class PreferenzaData extends AData {
      * Controlla se la collezione esiste già
      */
     public void findOrCrea() {
-        int numRec = 0;
 
-        if (nessunRecordEsistente()) {
-            this.crea();
-            numRec = service.count();
-            log.warn("Algos - Creazione dati iniziali ADataGenerator(@PostConstruct).loadData() -> roleData.loadData(): " + numRec + " schede");
-        } else {
-            numRec = service.count();
-            log.info("Algos - Data. La collezione Role è presente: " + numRec + " schede");
-        }// end of if/else cycle
+        for (EAPreferenza pref : EAPreferenza.values()) {
+            service.findOrCrea(pref.getCode(), pref.getDesc(), pref.getType(), pref.getValue());
+        }// end of for cycle
+        log.warn("Algos - Creazione dati iniziali ABoot(@EventListener).onApplicationEvent() -> prefData.findOrCrea()");
+
+//        int numRec = 0;
+//
+//        if (nessunRecordEsistente()) {
+//            this.crea();
+//            numRec = service.count();
+//            log.warn("Algos - Creazione dati iniziali ADataGenerator(@PostConstruct).loadData() -> roleData.loadData(): " + numRec + " schede");
+//        } else {
+//            numRec = service.count();
+//            log.info("Algos - Data. La collezione Role è presente: " + numRec + " schede");
+//        }// end of if/else cycle
     }// end of method
 
 
@@ -81,9 +87,9 @@ public class PreferenzaData extends AData {
     public void crea() {
         service.deleteAll();
 
-        for (EAPreferenza p : EAPreferenza.values()) {
-            service.crea(p.getCode(), p.getDescrizione(), p.getType(), p.getValue());
-        }// end of for cycle
+//        for (EAPreferenza p : EAPreferenza.values()) {
+//            service.crea(p.getCode(), p.getDesc(), p.getType(), p.getValue());
+//        }// end of for cycle
     }// end of method
 
 }// end of class
