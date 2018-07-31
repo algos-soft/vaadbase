@@ -9,8 +9,7 @@ import org.mockito.MockitoAnnotations;
 
 import java.time.LocalDate;
 import java.time.LocalDateTime;
-import java.time.format.DateTimeFormatter;
-import java.time.format.FormatStyle;
+import java.time.temporal.ChronoField;
 import java.util.Date;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
@@ -206,7 +205,7 @@ public class ADateServiceTest extends ATest {
      */
     @Test
     public void getWeekLong() {
-        previsto = "lunedì 21";
+        previsto = "domenica 5";
 
         ottenuto = service.getWeekLong(LOCAL_DATE_TIME_DUE);
         assertEquals(ottenuto, previsto);
@@ -230,7 +229,7 @@ public class ADateServiceTest extends ATest {
      */
     @Test
     public void getShort() {
-        previsto = "21-12-14";
+        previsto = "05-04-14";
 
         ottenuto = service.getShort(LOCAL_DATE_TIME_DUE);
         assertEquals(ottenuto, previsto);
@@ -238,7 +237,6 @@ public class ADateServiceTest extends ATest {
         System.out.println("Restituisce la data (senza tempo) in forma breve: " + LOCAL_DATE_TIME_DUE + " -> " + ottenuto);
         System.out.println("");
     }// end of single test
-
 
 
     @SuppressWarnings("javadoc")
@@ -255,12 +253,19 @@ public class ADateServiceTest extends ATest {
      */
     @Test
     public void getDate() {
-        previsto = "21-apr-14";
+        previsto = "5-ott-14";
 
         ottenuto = service.getDate(LOCAL_DATE_TIME_DUE);
         assertEquals(ottenuto, previsto);
         System.out.println("");
-        System.out.println("Restituisce la data (senza tempo) in forma normale: " + LOCAL_DATE_TIME_DUE + " -> " + ottenuto);
+        System.out.println("Restituisce la data/time (senza tempo) in forma normale: " + LOCAL_DATE_TIME_DUE + " -> " + ottenuto);
+        System.out.println("");
+
+        previsto = "21-ott-14";
+        ottenuto = service.getDate(LOCAL_DATE_UNO);
+        assertEquals(ottenuto, previsto);
+        System.out.println("");
+        System.out.println("Restituisce la data (senza tempo) in forma normale: " + LOCAL_DATE_UNO + " -> " + ottenuto);
         System.out.println("");
     }// end of single test
 
@@ -279,7 +284,15 @@ public class ADateServiceTest extends ATest {
      */
     @Test
     public void getTime() {
-        previsto = "21-apr-14 7:12";
+        previsto = "5-ott-14 7:04";
+
+
+//         Date pippo = new Date(1412485480000L); // 5 ottobre 2014, 7 e 12
+//long durata=pippo.getTime();
+////        Date prova= new Date
+//        Date b=DATE_UNO ;
+//        Date c=DATE_DUE ;
+//        Date a=DATE_TRE ;
 
         ottenuto = service.getTime(LOCAL_DATE_TIME_DUE);
         assertEquals(ottenuto, previsto);
@@ -576,5 +589,7 @@ public class ADateServiceTest extends ATest {
     public void formattazione2() {
         System.out.println("LocalDateTime di riferimento " + LOCAL_DATE_TIME_DUE);
     }// end of single test
+
+
 
 }// end of class

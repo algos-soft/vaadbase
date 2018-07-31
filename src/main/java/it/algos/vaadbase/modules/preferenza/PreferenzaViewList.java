@@ -22,6 +22,8 @@ import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.beans.factory.config.ConfigurableBeanFactory;
 import org.springframework.context.annotation.Scope;
 
+import java.time.LocalDateTime;
+
 import static it.algos.vaadbase.application.BaseCost.TAG_PRE;
 
 /**
@@ -73,7 +75,7 @@ public class PreferenzaViewList extends AViewList {
      * Crea il corpo centrale della view
      * Componente grafico obbligatorio
      */
-    protected void addGrid() {
+    protected void creaGrid() {
         super.creaGrid();
         ComponentRenderer renderValue = new ComponentRenderer<>(this::renderedValue);
         Grid.Column<Preferenza> colonna = grid.addColumn(renderValue);
@@ -89,6 +91,8 @@ public class PreferenzaViewList extends AViewList {
         Object genericValue = null;
         EAPrefType type = entityBean.getType();
         byte[] value = entityBean.getValue();
+        LocalDateTime time;
+        String txtTime = "";
 
         switch (type) {
             case string:
@@ -104,6 +108,13 @@ public class PreferenzaViewList extends AViewList {
                 } else {
                     comp = new Label("Errato");
                 }// end of if/else cycle
+                break;
+            case date:
+                time = (LocalDateTime) entityBean.getAValue();
+                if (time != null) {
+                    txtTime = date.getTime(time);
+                }// end of if cycle
+                comp = new Label(txtTime);
                 break;
             default:
                 log.warn("Switch - caso non definito");

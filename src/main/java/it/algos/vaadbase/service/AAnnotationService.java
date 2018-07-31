@@ -39,6 +39,8 @@ public class AAnnotationService {
     public final static String TESTO_NULL = " non può essere vuoto";
     public final static String INT_NULL = " deve contenere solo caratteri numerici";
     public final static String INT_ZERO = " deve essere maggiore di zero";
+    public final static String TAG_EM = "em";
+    public final static String TAG_PX = "px";
 
     /**
      * Service iniettato da Spring (@Scope = 'singleton'). Unica per tutta l'applicazione. Usata come libreria.
@@ -146,6 +148,7 @@ public class AAnnotationService {
         return entityClazz.getAnnotation(Route.class);
     }// end of method
 
+
     /**
      * Get the specific annotation of the field.
      *
@@ -193,6 +196,38 @@ public class AAnnotationService {
         try { // prova ad eseguire il codice
             reflectionJavaField = entityClazz.getDeclaredField(fieldName);
             annotation = getAIField(reflectionJavaField);
+        } catch (Exception unErrore) { // intercetta l'errore
+            log.error(unErrore.toString());
+        }// fine del blocco try-catch
+
+        return annotation;
+    }// end of method
+
+
+    /**
+     * Get the specific annotation of the field.
+     *
+     * @param entityClazz the entity class
+     * @param fieldName   the property name
+     *
+     * @return the Annotation for the specific field
+     */
+    public AIColumn getAIColumn(Class<? extends AEntity> entityClazz, String fieldName) {
+        AIColumn annotation = null;
+        List<Field> listaFields;
+
+        try { // prova ad eseguire il codice
+            listaFields = reflection.getAllFields(entityClazz);
+
+            if (array.isValid(listaFields)) {
+                for (Field reflectionJavaField : listaFields) {
+                    if (reflectionJavaField.getName().equals(fieldName)) {
+                        annotation = getAIColumn(reflectionJavaField);
+                        break;
+                    }// end of if cycle
+                }// end of for cycle
+
+            }// end of if cycle
         } catch (Exception unErrore) { // intercetta l'errore
             log.error(unErrore.toString());
         }// fine del blocco try-catch
@@ -633,6 +668,56 @@ public class AAnnotationService {
 
 
     /**
+     * Get the width of the property.
+     *
+     * @param entityClazz the entity class
+     * @param fieldName   the property name
+     *
+     * @return the name (column) of the field
+     */
+    public String getColumnWithEM(Class<? extends AEntity> entityClazz, String fieldName) {
+        String widthTxt = "";
+        int widthInt = 0;
+        AIColumn annotation = this.getAIColumn(entityClazz, fieldName);
+
+        if (annotation != null) {
+            widthInt = annotation.widthEM();
+        }// end of if cycle
+
+        if (widthInt > 0) {
+            widthTxt = widthInt + TAG_EM;
+        }// end of if cycle
+
+        return widthTxt;
+    }// end of method
+
+
+    /**
+     * Get the width of the property.
+     *
+     * @param entityClazz the entity class
+     * @param fieldName   the property name
+     *
+     * @return the name (column) of the field
+     */
+    public String getColumnWithPX(Class<? extends AEntity> entityClazz, String fieldName) {
+        String widthTxt = "";
+        int widthInt = 0;
+        AIColumn annotation = this.getAIColumn(entityClazz, fieldName);
+
+        if (annotation != null) {
+            widthInt = annotation.widthPX();
+        }// end of if cycle
+
+        if (widthInt > 0) {
+            widthTxt = widthInt + TAG_PX;
+        }// end of if cycle
+
+        return widthTxt;
+    }// end of method
+
+
+    /**
      * Get the type (field) of the property.
      *
      * @param reflectionJavaField di riferimento per estrarre la Annotation
@@ -682,6 +767,26 @@ public class AAnnotationService {
 
         if (annotation != null) {
             clazz = annotation.clazz();
+        }// end of if cycle
+
+        return clazz;
+    }// end of method
+
+
+    /**
+     * Get the clazz of the property.
+     *
+     * @param entityClazz the entity class
+     * @param fieldName   the property name
+     *
+     * @return the type for the specific column
+     */
+    public Class getClazz(Class<? extends AEntity> entityClazz, String fieldName) {
+        Class clazz = null;
+        Field field = reflection.getField(entityClazz, fieldName);
+
+        if (field != null) {
+            clazz = getClazz(field);
         }// end of if cycle
 
         return clazz;
@@ -779,6 +884,25 @@ public class AAnnotationService {
 
         if (annotation != null) {
             linkClazz = annotation.clazz();
+        }// end of if cycle
+
+        return linkClazz;
+    }// end of method
+
+    /**
+     * Get the class of the property.
+     *
+     * @param reflectionJavaField di riferimento per estrarre la Annotation
+     *
+     * @return the class for the specific column
+     */
+    @SuppressWarnings("all")
+    public Class getComboClass(Class<? extends AEntity> entityClazz, String fieldName) {
+        Class linkClazz = null;
+        Field field = reflection.getField(entityClazz, fieldName);
+
+        if (field != null) {
+            linkClazz = getComboClass(field);
         }// end of if cycle
 
         return linkClazz;

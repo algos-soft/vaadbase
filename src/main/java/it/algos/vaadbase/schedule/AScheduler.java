@@ -1,4 +1,4 @@
-package it.algos.vaadbase.daemons;
+package it.algos.vaadbase.schedule;
 
 import it.sauronsoftware.cron4j.Scheduler;
 import lombok.extern.slf4j.Slf4j;
@@ -6,19 +6,19 @@ import com.vaadin.flow.spring.annotation.SpringComponent;
 import org.springframework.context.annotation.Scope;
 import org.springframework.beans.factory.config.ConfigurableBeanFactory;
 
-import javax.servlet.ServletContext;
-
 /**
  * Project vaadbase
  * Created by Algos
  * User: gac
  * Date: gio, 12-lug-2018
  * Time: 11:55
+ *
+ * Layer per implememntare i metodi della superclasse
  */
-@Slf4j
 @SpringComponent
 @Scope(ConfigurableBeanFactory.SCOPE_SINGLETON)
-public class Daemon extends Scheduler {
+@Slf4j
+public abstract class AScheduler extends Scheduler {
 
 
     @Override
@@ -26,7 +26,7 @@ public class Daemon extends Scheduler {
         if (!isStarted()) {
             super.start();
 
-            // save daemons status flag into servlet context
+            // save schedule status flag into servlet context
 //            ServletContext svc = ABootStrap.getServletContext();
 //            svc.setAttribute(DAEMON_NAME, true);
 
@@ -44,7 +44,7 @@ public class Daemon extends Scheduler {
         if (isStarted()) {
             super.stop();
 
-            // save daemons status flag into servlet context
+            // save schedule status flag into servlet context
 //            ServletContext svc = ABootStrap.getServletContext();
 //            svc.setAttribute(DAEMON_NAME, false);
 

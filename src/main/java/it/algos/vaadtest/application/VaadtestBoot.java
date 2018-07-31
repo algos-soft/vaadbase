@@ -4,10 +4,18 @@ import com.vaadin.flow.spring.annotation.SpringComponent;
 import it.algos.vaadbase.annotation.AIScript;
 import it.algos.vaadbase.application.BaseCost;
 import it.algos.vaadbase.boot.ABoot;
-import it.algos.vaadbase.modules.preferenza.EAPreferenza;
-import it.algos.vaadbase.modules.preferenza.PreferenzaService;
+import it.algos.vaadbase.developer.DeveloperView;
+import it.algos.vaadbase.modules.address.AddressViewList;
+import it.algos.vaadbase.modules.company.CompanyViewList;
+import it.algos.vaadbase.modules.persona.PersonaViewList;
+import it.algos.vaadbase.modules.preferenza.PreferenzaViewList;
+import it.algos.vaadbase.modules.role.RoleViewList;
+import it.algos.vaadbase.modules.utente.UtenteViewList;
+import it.algos.vaadbase.modules.versione.VersioneViewList;
+import it.algos.vaadbase.wizard.ui.WizardView;
 import it.algos.vaadtest.modules.bolla.BollaViewList;
 import it.algos.vaadtest.modules.prova.ProvaViewList;
+import it.algos.vaadtest.modules.prova2.Prova2ViewList;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.config.ConfigurableBeanFactory;
 import org.springframework.context.annotation.Scope;
@@ -15,7 +23,6 @@ import org.springframework.context.event.ContextRefreshedEvent;
 import org.springframework.context.event.EventListener;
 
 import java.time.LocalDate;
-import it.algos.vaadtest.modules.prova2.Prova2ViewList;
 
 /**
  * Project vaadbase
@@ -40,12 +47,6 @@ public class VaadtestBoot extends ABoot {
 
     @Autowired
     protected CompanyData company;
-
-    /**
-     * Inietta da Spring come 'singleton'
-     */
-    @Autowired
-    private PreferenzaService prefService;
 
 
     /**
@@ -86,7 +87,7 @@ public class VaadtestBoot extends ABoot {
         super.regolaInfo();
         footer.project = "Vaadbase";
         footer.version = "1.0";
-        footer.data = LocalDate.of(2018, 6, 30);
+        footer.data = LocalDate.of(2018, 7, 25);
     }// end of method
 
 
@@ -98,17 +99,7 @@ public class VaadtestBoot extends ABoot {
     @Override
     protected void regolaPreferenze() {
         super.regolaPreferenze();
-
-//        pref.setBool(EAPreferenza.showCompany.getCode(), true);
-//        pref.setBool(EAPreferenza.showRole.getCode(), true);
-//        pref.setBool(EAPreferenza.showPreferenza.getCode(), true);
-//        pref.setBool(EAPreferenza.showPerson.getCode(), true);
-//        pref.setBool(EAPreferenza.showAddress.getCode(), true);
-//        pref.setBool(EAPreferenza.showDeveloper.getCode(), true);
-//        pref.setBool(EAPreferenza.showWizard.getCode(), true);
-//        pref.setBool(EAPreferenza.showVersione.getCode(), true);
     }// end of method
-
 
 
     /**
@@ -119,7 +110,17 @@ public class VaadtestBoot extends ABoot {
      */
     @Override
     protected void addRouteSpecifiche() {
-		BaseCost.MENU_CLAZZ_LIST.add(Prova2ViewList.class);
+        BaseCost.MENU_CLAZZ_LIST.add(CompanyViewList.class);
+        BaseCost.MENU_CLAZZ_LIST.add(PreferenzaViewList.class);
+        BaseCost.MENU_CLAZZ_LIST.add(RoleViewList.class);
+        BaseCost.MENU_CLAZZ_LIST.add(AddressViewList.class);
+        BaseCost.MENU_CLAZZ_LIST.add(PersonaViewList.class);
+        BaseCost.MENU_CLAZZ_LIST.add(DeveloperView.class);
+        BaseCost.MENU_CLAZZ_LIST.add(WizardView.class);
+        BaseCost.MENU_CLAZZ_LIST.add(VersioneViewList.class);
+        BaseCost.MENU_CLAZZ_LIST.add(UtenteViewList.class);
+
+        BaseCost.MENU_CLAZZ_LIST.add(Prova2ViewList.class);
         BaseCost.MENU_CLAZZ_LIST.add(ProvaViewList.class);
         BaseCost.MENU_CLAZZ_LIST.add(HomeView.class);
         BaseCost.MENU_CLAZZ_LIST.add(BollaViewList.class);

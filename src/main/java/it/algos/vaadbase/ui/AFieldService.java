@@ -2,9 +2,7 @@ package it.algos.vaadbase.ui;
 
 import com.vaadin.flow.component.AbstractField;
 import com.vaadin.flow.component.checkbox.Checkbox;
-import com.vaadin.flow.component.datepicker.DatePicker;
 import com.vaadin.flow.data.binder.Binder;
-import com.vaadin.flow.data.binder.ValidationResult;
 import com.vaadin.flow.data.converter.StringToIntegerConverter;
 import com.vaadin.flow.data.validator.StringLengthValidator;
 import com.vaadin.flow.spring.annotation.SpringComponent;
@@ -16,7 +14,10 @@ import it.algos.vaadbase.service.AReflectionService;
 import it.algos.vaadbase.service.ATextService;
 import it.algos.vaadbase.ui.annotation.AIField;
 import it.algos.vaadbase.ui.enumeration.EAFieldType;
-import it.algos.vaadbase.ui.fields.*;
+import it.algos.vaadbase.ui.fields.AComboBox;
+import it.algos.vaadbase.ui.fields.AIntegerField;
+import it.algos.vaadbase.ui.fields.ATextArea;
+import it.algos.vaadbase.ui.fields.ATextField;
 import it.algos.vaadbase.validator.AIntegerZeroValidator;
 import it.algos.vaadbase.validator.AStringNullValidator;
 import lombok.extern.slf4j.Slf4j;
@@ -117,8 +118,15 @@ public class AFieldService {
         boolean focus = annotation.isFocus(reflectionJavaField);
 //        boolean enabled = annotation.isFieldEnabled(reflectedJavaField, nuovaEntity);
         Class targetClazz = annotation.getComboClass(reflectionJavaField);
-        AStringNullValidator nullValidator= new AStringNullValidator();
-        AIntegerZeroValidator zeroValidator= new AIntegerZeroValidator();
+        AStringNullValidator nullValidator = new AStringNullValidator();
+        AIntegerZeroValidator zeroValidator = new AIntegerZeroValidator();
+
+        if (type == null) {
+            field = new ATextField(caption.equals("") ? "noname" : caption);
+            field.setReadOnly(false);
+            binder.forField(field).bind(fieldName);
+            return field;
+        }// end of if cycle
 
         switch (type) {
             case text:
@@ -172,13 +180,11 @@ public class AFieldService {
             case combo:
                 field = new AComboBox(caption);
                 if (clazz != null) {
-                    try { // prova ad eseguire il codice
-                        IAService service = (IAService) StaticContextAccessor.getBean(clazz);
-                        List items = ((IAService) service).findAll();
+                    IAService service = (IAService) StaticContextAccessor.getBean(clazz);
+                    List items = ((IAService) service).findAll();
+                    if (items != null) {
                         ((AComboBox) field).setItems(items);
-                    } catch (Exception unErrore) { // intercetta l'errore
-                        log.error(unErrore.toString());
-                    }// fine del blocco try-catch
+                    }// end of if cycle
                 }// end of if cycle
                 field.setReadOnly(false);
                 binder.forField(field).bind(fieldName);

@@ -1,12 +1,9 @@
 package it.algos.vaadbase.ui.fields;
 
-import com.vaadin.flow.component.AbstractField;
 import com.vaadin.flow.component.combobox.ComboBox;
-import com.vaadin.flow.component.textfield.TextField;
-import lombok.extern.slf4j.Slf4j;
 import com.vaadin.flow.spring.annotation.SpringComponent;
-import org.springframework.context.annotation.Scope;
 import org.springframework.beans.factory.config.ConfigurableBeanFactory;
+import org.springframework.context.annotation.Scope;
 
 import java.util.List;
 
@@ -38,4 +35,20 @@ public class AComboBox<T> extends ComboBox implements IAField {
         return null;
     }// end of method
 
+    @Override
+    public Object getEmptyValue() {
+        Object obj = super.getEmptyValue();
+        return super.getEmptyValue();
+    }
+
+    @Override
+    public Object getValue() {
+        Object obj = super.getValue();
+        return super.getValue();
+    }
+
+    @Override
+    public void setValue(Object value) {
+        super.setValue(value);
+    }
 }// end of class

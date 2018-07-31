@@ -1,20 +1,19 @@
 package it.algos.vaadbase.modules.role;
 
 import com.vaadin.flow.spring.annotation.SpringComponent;
+import it.algos.vaadbase.annotation.AIScript;
+import it.algos.vaadbase.backend.entity.AEntity;
+import it.algos.vaadbase.backend.service.AService;
 import lombok.extern.slf4j.Slf4j;
-import org.bson.types.ObjectId;
-import java.util.List;
-import java.util.stream.Collectors;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.beans.factory.config.ConfigurableBeanFactory;
+import org.springframework.context.annotation.Scope;
 import org.springframework.data.domain.Sort;
 import org.springframework.data.mongodb.repository.MongoRepository;
 import org.springframework.stereotype.Service;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.context.annotation.Scope;
-import it.algos.vaadbase.annotation.AIScript;
-import it.algos.vaadbase.backend.service.AService;
-import it.algos.vaadbase.backend.entity.AEntity;
+
+import java.util.List;
+
 import static it.algos.vaadbase.application.BaseCost.TAG_ROL;
 
 /**
@@ -59,7 +58,7 @@ public class RoleService extends AService {
     public RoleService(@Qualifier(TAG_ROL) MongoRepository repository) {
         super(repository);
         this.repository = (RoleRepository) repository;
-   }// end of Spring constructor
+    }// end of Spring constructor
 
 
     /**
@@ -73,8 +72,7 @@ public class RoleService extends AService {
         Role entity = findByKeyUnica(code);
 
         if (entity == null) {
-            entity = newEntity(0, code);
-            save(entity);
+            crea(code);
         }// end of if cycle
 
         return entity;
@@ -115,8 +113,8 @@ public class RoleService extends AService {
      * All properties <br>
      * Gli argomenti (parametri) della new Entity DEVONO essere ordinati come nella Entity (costruttore lombok) <br>
      *
-     * @param ordine      di presentazione (obbligatorio con inserimento automatico se è zero)
-	* @param code        codice di riferimento (obbligatorio)
+     * @param ordine di presentazione (obbligatorio con inserimento automatico se è zero)
+     * @param code   codice di riferimento (obbligatorio)
      *
      * @return la nuova entity appena creata (non salvata)
      */
@@ -124,13 +122,13 @@ public class RoleService extends AService {
         Role entity = null;
 
         entity = findByKeyUnica(code);
-		if (entity != null) {
-			return findByKeyUnica(code);
-		}// end of if cycle
-		
+        if (entity != null) {
+            return findByKeyUnica(code);
+        }// end of if cycle
+
         entity = Role.builder()
-				.ordine(ordine != 0 ? ordine : this.getNewOrdine())
-				.code(code)
+                .ordine(ordine != 0 ? ordine : this.getNewOrdine())
+                .code(code)
                 .build();
 
         return entity;
@@ -190,6 +188,27 @@ public class RoleService extends AService {
         }// end of if cycle
 
         return ordine + 1;
+    }// end of method
+
+    /**
+     * User role
+     */
+    public Role getUser() {
+        return findByKeyUnica(EARole.user.name());
+    }// end of method
+
+    /**
+     * Admin role
+     */
+    public Role getAdmin() {
+        return findByKeyUnica(EARole.admin.name());
+    }// end of method
+
+    /**
+     * Developer role
+     */
+    public Role getDeveloper() {
+        return findByKeyUnica(EARole.developer.name());
     }// end of method
 
 }// end of class

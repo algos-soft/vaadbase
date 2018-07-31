@@ -43,6 +43,20 @@ public @interface AIColumn {
      */
     int width() default 0;
 
+    /**
+     * (Optional) The width of the field.
+     * Expressed in int, to be converted in String ending with "em"
+     * Defaults to 0.
+     */
+    int widthEM() default 0;
+
+
+    /**
+     * (Optional) The width of the field.
+     * Expressed in int, to be converted in String ending with "px"
+     * Defaults to 0.
+     */
+    int widthPX() default 0;
 
 //    /**
 //     * (Optional) Visibilità a secondo del ruolo dell'User collegato

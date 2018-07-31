@@ -10,6 +10,7 @@ import java.util.List;
 import java.util.Locale;
 
 public class BaseCost {
+	public final static String TAG_UTE = "utente";
 	public final static String TAG_VER = "versione";
     public final static boolean USA_BAKERY_PAGES = false;
     public static final Locale APP_LOCALE = Locale.US;
@@ -110,5 +111,22 @@ public class BaseCost {
     public final static List<String> COMPANY_OPTIONAL = Arrays.asList(companyMatrice);
     public static List<Class> MENU_CLAZZ_LIST = new ArrayList<>();
 
+    // generali
+    public final static String USA_DEBUG = "usaDebug";
+    public final static String USA_LOG_DEBUG = "usaLogDebug";
+    public final static String USA_COMPANY = "usaCompany";
+
+
+    // moduli visibili
+    public final static String SHOW_COMPANY = "showCompany";
+    public final static String SHOW_PREFERENZA = "showPreferenza";
+    public final static String SHOW_WIZARD = "showWizard";
+    public final static String SHOW_DEVELOPER = "showDeveloper";
+    public final static String SHOW_ADDRESS = "showAddress";
+    public final static String SHOW_PERSON = "showPerson";
+    public final static String SHOW_ROLE = "showRole";
+    public final static String SHOW_VERSION = "showVersion";
+    public final static String SHOW_USER = "showUser";
+    public final static String SHOW_LOGGER = "showLogger";
 
 }// end of static class

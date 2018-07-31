@@ -50,6 +50,7 @@ public class ATest {
     protected String ottenuto = "";
     protected boolean previstoBooleano;
     protected boolean ottenutoBooleano;
+    protected int sorgenteIntero = 0;
     protected int previstoIntero = 0;
     protected int ottenutoIntero = 0;
     protected List<String> previstoList;
@@ -73,15 +74,15 @@ public class ATest {
 
     // alcune date di riferimento
     protected final static Date DATE_UNO = new Date(1413868320000L); // 21 ottobre 2014, 7 e 12
-    protected final static Date DATE_DUE = new Date(1398057120000L); // 21 aprile 2014, 7 e 12
+    protected final static Date DATE_DUE = new Date(1412485440000L); // 5 ottobre 2014, 7 e 04
     protected final static Date DATE_TRE = new Date(1412485920000L); // 5 ottobre 2014, 7 e 12
     protected final static Date DATE_QUATTRO = new Date(1394259124000L); // 8 marzo 2014, 7 e 12 e 4
     protected final static LocalDate LOCAL_DATE_UNO = LocalDate.of(2014, 10, 21);
-    protected final static LocalDate LOCAL_DATE_DUE = LocalDate.of(2014, 4, 21);
+    protected final static LocalDate LOCAL_DATE_DUE = LocalDate.of(2014, 10, 5);
     protected final static LocalDate LOCAL_DATE_TRE = LocalDate.of(2014, 10, 5);
     protected final static LocalDate LOCAL_DATE_QUATTRO = LocalDate.of(2014, 3, 8);
     protected final static LocalDateTime LOCAL_DATE_TIME_UNO = LocalDateTime.of(2014, 10, 21, 7, 12);
-    protected final static LocalDateTime LOCAL_DATE_TIME_DUE = LocalDateTime.of(2014, 4, 21, 7, 12);
+    protected final static LocalDateTime LOCAL_DATE_TIME_DUE = LocalDateTime.of(2014, 10, 5, 7, 4);
 
     protected void print(String message, String sorgente, Object ottenuto) {
         System.out.println(message + SEP1 + sorgente + SEP2 + ottenuto);

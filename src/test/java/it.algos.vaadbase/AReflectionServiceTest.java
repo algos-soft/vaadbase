@@ -272,7 +272,7 @@ public class AReflectionServiceTest extends ATest {
      */
     @Test
     public void getIconView() {
-        VaadinIcon iconaPrevista = VaadinIcon.ASTERISK;
+        VaadinIcon iconaPrevista = VaadinIcon.KEY;
         VaadinIcon iconaOttenuta = service.getIconView(ROLE_VIEW_CLASS);
         assertNotNull(iconaOttenuta);
         assertEquals(iconaPrevista, iconaOttenuta);

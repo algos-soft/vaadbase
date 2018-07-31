@@ -80,14 +80,6 @@
     </dependencyManagement>
 
     <dependencies>
-        <!-- Spring -->
-        <dependency>
-            <groupId>com.vaadin</groupId>
-            <artifactId>vaadin-spring-boot-starter</artifactId>
-            <version>${vaadin.version}</version>
-        </dependency>
-
-
         <!-- Vaadin -->
         <dependency>
             <groupId>com.vaadin</groupId>
@@ -95,6 +87,18 @@
             <version>1.0.0.beta2</version>
         </dependency>
 
+        <!-- Spring -->
+        <dependency>
+            <groupId>com.vaadin</groupId>
+            <artifactId>vaadin-spring-boot-starter</artifactId>
+            <version>${vaadin.version}</version>
+        </dependency>
+
+        <!-- Security -->
+        <dependency>
+            <groupId>org.springframework.boot</groupId>
+            <artifactId>spring-boot-starter-security</artifactId>
+        </dependency>
 
         <!-- Spring MONGO -->
         <dependency>

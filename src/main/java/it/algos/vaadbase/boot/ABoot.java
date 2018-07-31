@@ -10,6 +10,7 @@ import it.algos.vaadbase.modules.preferenza.PreferenzaData;
 import it.algos.vaadbase.modules.preferenza.PreferenzaViewList;
 import it.algos.vaadbase.modules.role.RoleData;
 import it.algos.vaadbase.modules.role.RoleViewList;
+import it.algos.vaadbase.modules.utente.UtenteViewList;
 import it.algos.vaadbase.modules.versione.VersioneViewList;
 import it.algos.vaadbase.service.APreferenzaService;
 import it.algos.vaadbase.ui.footer.AFooter;
@@ -43,16 +44,12 @@ public abstract class ABoot implements ServletContextListener {
      */
     @Autowired
     public RoleData roleData;
+
     /**
      * Inietta da Spring come 'singleton'
      */
     @Autowired
     protected APreferenzaService pref;
-    /**
-     * Inietta da Spring come 'singleton'
-     */
-    @Autowired
-    private PreferenzaData prefData;
 
     /**
      * Layout iniettato da Spring
@@ -60,11 +57,6 @@ public abstract class ABoot implements ServletContextListener {
     @Autowired
     protected AFooter footer;
 
-//    /**
-//     * Inietta da Spring come 'singleton'
-//     */
-//    @Autowired
-//    public StatoData stato;
 
     /**
      * Executed on container startup
@@ -149,30 +141,33 @@ public abstract class ABoot implements ServletContextListener {
      * Le @Route vengono aggiunte ad una Lista statica mantenuta in BaseCost
      * Verranno lette da MainLayout la prima volta che il browser 'chiama' una view
      */
-    protected void addRouteStandard() {
+    private void addRouteStandard() {
         if (pref.isBool(EAPreferenza.showCompany.getCode())) {
             BaseCost.MENU_CLAZZ_LIST.add(CompanyViewList.class);
         }// end of if cycle
-//        if (pref.isBool(EAPreferenza.showPreferenza.getCode())) {
+        if (pref.isBool(EAPreferenza.showPreferenza.getCode())) {
             BaseCost.MENU_CLAZZ_LIST.add(PreferenzaViewList.class);
-//        }// end of if cycle
-//        if (pref.isBool(EAPreferenza.showRole.getCode())) {
-//            BaseCost.MENU_CLAZZ_LIST.add(RoleViewList.class);
-//        }// end of if cycle
-//        if (pref.isBool(EAPreferenza.showAddress.getCode())) {
-//            BaseCost.MENU_CLAZZ_LIST.add(AddressViewList.class);
-//        }// end of if cycle
-//        if (pref.isBool(EAPreferenza.showPerson.getCode())) {
-//            BaseCost.MENU_CLAZZ_LIST.add(PersonaViewList.class);
-//        }// end of if cycle
-//        if (pref.isBool(EAPreferenza.showDeveloper.getCode())) {
-//            BaseCost.MENU_CLAZZ_LIST.add(DeveloperView.class);
-//        }// end of if cycle
-//        if (pref.isBool(EAPreferenza.showWizard.getCode())) {
-//            BaseCost.MENU_CLAZZ_LIST.add(WizardView.class);
-//        }// end of if cycle
+        }// end of if cycle
+        if (pref.isBool(EAPreferenza.showRole.getCode())) {
+            BaseCost.MENU_CLAZZ_LIST.add(RoleViewList.class);
+        }// end of if cycle
+        if (pref.isBool(EAPreferenza.showAddress.getCode())) {
+            BaseCost.MENU_CLAZZ_LIST.add(AddressViewList.class);
+        }// end of if cycle
+        if (pref.isBool(EAPreferenza.showPerson.getCode())) {
+            BaseCost.MENU_CLAZZ_LIST.add(PersonaViewList.class);
+        }// end of if cycle
+        if (pref.isBool(EAPreferenza.showDeveloper.getCode())) {
+            BaseCost.MENU_CLAZZ_LIST.add(DeveloperView.class);
+        }// end of if cycle
+        if (pref.isBool(EAPreferenza.showWizard.getCode())) {
+            BaseCost.MENU_CLAZZ_LIST.add(WizardView.class);
+        }// end of if cycle
         if (pref.isBool(EAPreferenza.showVersione.getCode())) {
             BaseCost.MENU_CLAZZ_LIST.add(VersioneViewList.class);
+        }// end of if cycle
+        if (pref.isBool(EAPreferenza.showUser.getCode())) {
+            BaseCost.MENU_CLAZZ_LIST.add(UtenteViewList.class);
         }// end of if cycle
     }// end of method
 

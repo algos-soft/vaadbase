@@ -30,7 +30,7 @@ import static org.junit.jupiter.api.Assertions.*;
 @ExtendWith(MockitoExtension.class)
 @TestInstance(TestInstance.Lifecycle.PER_CLASS)
 @Tag("annotation")
-@DisplayName("Test sulla annotazioni Algos")
+@DisplayName("Test sulle annotazioni Algos")
 public class AAnnotationServiceTest extends ATest {
 
 
@@ -180,7 +180,12 @@ public class AAnnotationServiceTest extends ATest {
      */
     @Test
     public void getAIColumn() {
-        AIColumn ottenuto = service.getAIColumn(FIELD_CODE);
+        AIColumn ottenuto;
+
+        ottenuto = service.getAIColumn(FIELD_CODE);
+        assertNotNull(ottenuto);
+
+        ottenuto = service.getAIColumn(ROLE_ENTITY_CLASS, FIELD_NAME_NOTE);
         assertNotNull(ottenuto);
     }// end of single test
 
@@ -211,7 +216,8 @@ public class AAnnotationServiceTest extends ATest {
      */
     @Test
     public void getAIField2() {
-        AIField ottenuto = service.getAIField(ROLE_ENTITY_CLASS, FIELD_NAME_CODE);
+        AIField ottenuto;
+        ottenuto = service.getAIField(ROLE_ENTITY_CLASS, FIELD_NAME_CODE);
         assertNotNull(ottenuto);
     }// end of method
 

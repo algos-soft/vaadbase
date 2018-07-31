@@ -24,26 +24,21 @@ import java.util.List;
 @Scope(ConfigurableBeanFactory.SCOPE_SINGLETON)
 public class ATextService {
 
-    private static final ATextService INSTANCE = new ATextService();
-
-
     /**
      * tag per il carattere punto
      */
     public static final String PUNTO = ".";
-
     /**
      * tag per il carattere barra
      */
     public static final String BARRA = "/";
-
     /**
      * tag per la stringa vuota
      */
     public static final String VUOTA = "";
     public static final String VIRGOLA = ",";
-
-   /**
+    private static final ATextService INSTANCE = new ATextService();
+    /**
      * Service iniettato da Spring (@Scope = 'singleton'). Unica per tutta l'applicazione. Usata come libreria.
      */
     @Autowired
@@ -458,9 +453,10 @@ public class ATextService {
      *
      * @param testoIn    in ingresso
      * @param subStringa da eliminare
+     *
      * @return testoOut stringa convertita
      */
-    public  String levaTesto(String testoIn, String subStringa) {
+    public String levaTesto(String testoIn, String subStringa) {
         String testoOut = testoIn;
 
         if (testoIn != null && subStringa != null) {
@@ -480,9 +476,10 @@ public class ATextService {
      * Se arriva un oggetto non stringa, restituisce l'oggetto
      *
      * @param entrata stringa in ingresso
+     *
      * @return uscita stringa convertita
      */
-    public  String levaVirgole(String entrata) {
+    public String levaVirgole(String entrata) {
         return levaTesto(entrata, VIRGOLA);
     }// end of method
 
@@ -493,6 +490,7 @@ public class ATextService {
      * Se arriva un oggetto non stringa, restituisce l'oggetto
      *
      * @param entrata stringa in ingresso
+     *
      * @return uscita stringa convertita
      */
     public String levaPunti(String entrata) {
@@ -510,6 +508,7 @@ public class ATextService {
      * Se arriva un oggetto non previsto, restituisce null
      *
      * @param numObj da formattare (stringa, intero, long o double)
+     *
      * @return stringa formattata
      */
     public String format(Object numObj) {
@@ -531,7 +530,7 @@ public class ATextService {
                 try { // prova ad eseguire il codice
                     numTmp = Integer.decode(numText);
                 } catch (Exception unErrore) { // intercetta l'errore
-                    return (String)numObj;
+                    return (String) numObj;
                 }// fine del blocco try-catch
             } else {
                 if (numObj instanceof Integer) {
@@ -577,6 +576,124 @@ public class ATextService {
 
         // valore di ritorno
         return formattato;
+    }// end of method
+
+
+    /**
+     * Formattazione di un numero giustificato a due cifre.
+     * <p>
+     * Il numero può arrivare come stringa, intero o double
+     * Se la stringa contiene punti e virgole, viene pulita
+     * Se la stringa non è convertibile in numero, viene restituita uguale
+     * Se arriva un oggetto non previsto, restituisce null
+     *
+     * @param numObj da formattare (stringa, intero, long o double)
+     *
+     * @return stringa formattata
+     */
+    public String format2(Object numObj) {
+        String numText = VUOTA;
+        String sep = PUNTO;
+        int num = 0;
+        int len;
+        String num3;
+        String num6;
+        String num9;
+        String num12;
+
+        if (numObj instanceof String || numObj instanceof Integer || numObj instanceof Long || numObj instanceof Double) {
+            if (numObj instanceof String) {
+                numText = (String) numObj;
+                numText = levaVirgole(numText);
+                numText = levaPunti(numText);
+                try { // prova ad eseguire il codice
+                    num = Integer.decode(numText);
+                } catch (Exception unErrore) { // intercetta l'errore
+                    return (String) numObj;
+                }// fine del blocco try-catch
+            } else {
+                if (numObj instanceof Integer) {
+                    num = (int) numObj;
+                }// fine del blocco if
+                if (numObj instanceof Long) {
+                    num = ((Long) numObj).intValue();
+                }// fine del blocco if
+                if (numObj instanceof Double) {
+                    num = ((Double) numObj).intValue();
+                }// fine del blocco if
+            }// fine del blocco if-else
+        } else {
+            return null;
+        }// fine del blocco if-else
+
+        numText = "" + num;
+        if (num < 10) {
+            return numText = "0" + numText;
+        }// end of if cycle
+
+        // valore di ritorno
+        return numText;
+    }// end of method
+
+
+    /**
+     * Formattazione di un numero giustificato a tre cifre.
+     * <p>
+     * Il numero può arrivare come stringa, intero o double
+     * Se la stringa contiene punti e virgole, viene pulita
+     * Se la stringa non è convertibile in numero, viene restituita uguale
+     * Se arriva un oggetto non previsto, restituisce null
+     *
+     * @param numObj da formattare (stringa, intero, long o double)
+     *
+     * @return stringa formattata
+     */
+    public String format3(Object numObj) {
+        String numText = VUOTA;
+        String sep = PUNTO;
+        int num = 0;
+        int len;
+        String num3;
+        String num6;
+        String num9;
+        String num12;
+
+        if (numObj instanceof String || numObj instanceof Integer || numObj instanceof Long || numObj instanceof Double) {
+            if (numObj instanceof String) {
+                numText = (String) numObj;
+                numText = levaVirgole(numText);
+                numText = levaPunti(numText);
+                try { // prova ad eseguire il codice
+                    num = Integer.decode(numText);
+                } catch (Exception unErrore) { // intercetta l'errore
+                    return (String) numObj;
+                }// fine del blocco try-catch
+            } else {
+                if (numObj instanceof Integer) {
+                    num = (int) numObj;
+                }// fine del blocco if
+                if (numObj instanceof Long) {
+                    num = ((Long) numObj).intValue();
+                }// fine del blocco if
+                if (numObj instanceof Double) {
+                    num = ((Double) numObj).intValue();
+                }// fine del blocco if
+            }// fine del blocco if-else
+        } else {
+            return null;
+        }// fine del blocco if-else
+
+        numText = "" + num;
+        if (num < 100) {
+            if (num < 10) {
+                return numText = "00" + numText;
+            } else {
+                return numText = "0" + numText;
+            }// end of if/else cycle
+        }// end of if cycle
+
+        // valore di ritorno
+        return numText;
     }// end of method
 
 }// end of class

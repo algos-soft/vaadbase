@@ -198,16 +198,31 @@ public class ADateService {
      * @return la data sotto forma di stringa
      */
     public String getDate(LocalDateTime localDateTime) {
+        return getDate(localDateTimeToLocalDate(localDateTime));
+    }// end of method
+
+
+    /**
+     * Restituisce la data (senza tempo) in forma normale
+     * <p>
+     * Returns a string representation of the date <br>
+     * Not using leading zeroes in day <br>
+     * Two numbers for year <b>
+     *
+     * @param localDate da rappresentare
+     *
+     * @return la data sotto forma di stringa
+     */
+    public String getDate(LocalDate localDate) {
         String testo = "";
 
-        testo += localDateTime.getDayOfMonth();
+        testo += localDate.getDayOfMonth();
         testo += "-";
-        testo += localDateTime.getMonth().getDisplayName(TextStyle.SHORT,Locale.ITALIAN);
+        testo += localDate.getMonth().getDisplayName(TextStyle.SHORT, Locale.ITALIAN);
         testo += "-";
-        testo += localDateTime.getYear() > 2000 ? localDateTime.getYear() - 2000 : localDateTime.getYear();
+        testo += localDate.getYear() > 2000 ? localDate.getYear() - 2000 : localDate.getYear();
 
         return testo;
-
     }// end of method
 
 
@@ -224,11 +239,17 @@ public class ADateService {
      */
     public String getTime(LocalDateTime localDateTime) {
         String testo = getDate(localDateTime);
+        int minuti;
+        String tag = "0";
 
         testo += " ";
         testo += localDateTime.getHour();
         testo += ":";
-        testo += localDateTime.getMinute();
+        minuti = localDateTime.getMinute();
+        if (minuti < 10) {
+            testo += tag;
+        }// end of if cycle
+        testo += minuti;
 
         return testo;
     }// end of method

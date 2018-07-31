@@ -1,6 +1,7 @@
 package it.algos.vaadbase.backend.service;
 
 import it.algos.vaadbase.backend.entity.AEntity;
+import it.algos.vaadbase.modules.company.Company;
 import it.algos.vaadbase.service.AAnnotationService;
 import it.algos.vaadbase.ui.AFieldService;
 
@@ -34,6 +35,22 @@ public interface IAService {
      * @return the number of entities
      */
     public int count();
+
+
+    /**
+     * Returns the number of entities available for the current company
+     *
+     * @return the number of selected entities
+     */
+    public int countByCompany() ;
+
+
+    /**
+     * Returns the number of entities available for the company
+     *
+     * @return the number of selected entities
+     */
+    public int countByCompany(Company company) ;
 
 
     /**

@@ -144,7 +144,7 @@ public class CompanyService extends AService {
             return findByKeyUnica(code);
         }// end of if cycle
 
-        entity = Company.builder()
+        entity = Company.builderCompany()
                 .code(code)
                 .descrizione(descrizione)
                 .contatto(contatto)

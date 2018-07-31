@@ -26,22 +26,6 @@ public class AppCost {
     public static final String TAG_HOME_MENU = "home";
 
 
-	// generali
-	public final static String USA_DEBUG = "usaDebug";
-	public final static String USA_LOG_DEBUG = "usaLogDebug";
-	public final static String USA_COMPANY = "usaCompany";
-
-
-	// moduli visibili
-	public final static String SHOW_COMPANY = "showCompany";
-	public final static String SHOW_PREFERENZA = "showPreferenza";
-	public final static String SHOW_WIZARD = "showWizard";
-	public final static String SHOW_DEVELOPER = "showDeveloper";
-	public final static String SHOW_ADDRESS = "showAddress";
-	public final static String SHOW_PERSON = "showPerson";
-	public final static String SHOW_ROLE = "showRole";
-	public final static String SHOW_VERSION = "showVersion";
-	public final static String SHOW_LOGGER = "showLogger";
 
 
 }// end of static class

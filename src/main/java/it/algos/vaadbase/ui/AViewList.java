@@ -2,6 +2,7 @@ package it.algos.vaadbase.ui;
 
 import com.vaadin.flow.component.button.Button;
 import com.vaadin.flow.component.checkbox.Checkbox;
+import com.vaadin.flow.component.combobox.ComboBox;
 import com.vaadin.flow.component.grid.Grid;
 import com.vaadin.flow.component.html.Div;
 import com.vaadin.flow.component.html.Label;
@@ -9,6 +10,7 @@ import com.vaadin.flow.component.icon.Icon;
 import com.vaadin.flow.component.icon.VaadinIcon;
 import com.vaadin.flow.component.notification.Notification;
 import com.vaadin.flow.component.orderedlayout.FlexComponent;
+import com.vaadin.flow.component.orderedlayout.FlexLayout;
 import com.vaadin.flow.component.orderedlayout.HorizontalLayout;
 import com.vaadin.flow.component.orderedlayout.VerticalLayout;
 import com.vaadin.flow.component.textfield.TextField;
@@ -17,8 +19,12 @@ import com.vaadin.flow.data.selection.SingleSelectionEvent;
 import com.vaadin.flow.data.value.ValueChangeMode;
 import com.vaadin.flow.router.BeforeEnterEvent;
 import com.vaadin.flow.router.BeforeEnterObserver;
+import it.algos.vaadbase.application.BaseCost;
+import it.algos.vaadbase.application.StaticContextAccessor;
 import it.algos.vaadbase.backend.entity.AEntity;
+import it.algos.vaadbase.backend.login.ALogin;
 import it.algos.vaadbase.backend.service.IAService;
+import it.algos.vaadbase.modules.company.Company;
 import it.algos.vaadbase.presenter.IAPresenter;
 import it.algos.vaadbase.service.*;
 import it.algos.vaadbase.ui.dialog.AViewDialog;
@@ -30,6 +36,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 
 import javax.annotation.PostConstruct;
 import java.lang.reflect.Field;
+import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.List;
 
@@ -75,45 +82,68 @@ public abstract class AViewList extends VerticalLayout implements IAView, Before
 
     /**
      * Questa classe viene costruita partendo da @Route e non da SprinBoot <br>
-     * La injection viene fatta da SpringBoot nel metodo @PostConstruct DOPO init() automatico <br>
+     * La injection viene fatta da SpringBoot solo DOPO init() automatico <br>
+     * Usare quindi un metodo @PostConstruct per averla disponibile <br>
+     */
+    @Autowired
+    public ALogin login;
+
+    /**
+     * Questa classe viene costruita partendo da @Route e non da SprinBoot <br>
+     * La injection viene fatta da SpringBoot solo DOPO init() automatico <br>
+     * Usare quindi un metodo @PostConstruct per averla disponibile <br>
      */
     @Autowired
     public AAnnotationService annotation;
 
     /**
      * Questa classe viene costruita partendo da @Route e non da SprinBoot <br>
-     * La injection viene fatta da SpringBoot nel metodo @PostConstruct DOPO init() automatico <br>
+     * La injection viene fatta da SpringBoot solo DOPO init() automatico <br>
+     * Usare quindi un metodo @PostConstruct per averla disponibile <br>
      */
     @Autowired
     public AReflectionService reflection;
 
     /**
      * Questa classe viene costruita partendo da @Route e non da SprinBoot <br>
-     * La injection viene fatta da SpringBoot nel metodo @PostConstruct DOPO init() automatico <br>
+     * La injection viene fatta da SpringBoot solo DOPO init() automatico <br>
+     * Usare quindi un metodo @PostConstruct per averla disponibile <br>
      */
     @Autowired
     public AArrayService array;
 
     /**
      * Questa classe viene costruita partendo da @Route e non da SprinBoot <br>
-     * La injection viene fatta da SpringBoot nel metodo @PostConstruct DOPO init() automatico <br>
+     * La injection viene fatta da SpringBoot solo DOPO init() automatico <br>
+     * Usare quindi un metodo @PostConstruct per averla disponibile <br>
      */
     @Autowired
     protected ATextService text;
 
     /**
      * Questa classe viene costruita partendo da @Route e non da SprinBoot <br>
-     * La injection viene fatta da SpringBoot nel metodo @PostConstruct DOPO init() automatico <br>
+     * La injection viene fatta da SpringBoot solo DOPO init() automatico <br>
+     * Usare quindi un metodo @PostConstruct per averla disponibile <br>
      */
     @Autowired
     protected APreferenzaService pref;
 
     /**
      * Questa classe viene costruita partendo da @Route e non da SprinBoot <br>
-     * La injection viene fatta da SpringBoot nel metodo @PostConstruct DOPO init() automatico <br>
+     * La injection viene fatta da SpringBoot solo DOPO init() automatico <br>
+     * Usare quindi un metodo @PostConstruct per averla disponibile <br>
      */
     @Autowired
     protected ADateService date;
+
+    /**
+     * Questa classe viene costruita partendo da @Route e non da SprinBoot <br>
+     * La injection viene fatta da SpringBoot solo DOPO init() automatico <br>
+     * Usare quindi un metodo @PostConstruct per averla disponibile <br>
+     */
+    @Autowired
+    protected AFooter footer;
+
 
     /**
      * Il presenter viene iniettato dal costruttore della sottoclasse concreta
@@ -136,12 +166,6 @@ public abstract class AViewList extends VerticalLayout implements IAView, Before
      */
     protected Class<? extends AEntity> entityClazz;
 
-    /**
-     * Questa classe viene costruita partendo da @Route e non da SprinBoot <br>
-     * La injection viene fatta da SpringBoot nel metodo @PostConstruct DOPO init() automatico <br>
-     */
-    @Autowired
-    protected AFooter footer;
 
     /**
      * Placeholder per (eventuali) bottoni SOPRA della Grid <br>
@@ -194,6 +218,11 @@ public abstract class AViewList extends VerticalLayout implements IAView, Before
      */
     protected String testoBottoneEdit;
 
+
+    /**
+     * Flag di preferenza per aggiungere una caption di info sopra la grid. Normalmente false.
+     */
+    protected boolean isEntityEmbadded;
 
     /**
      * Costruttore @Autowired (nella sottoclasse concreta) <br>
@@ -253,6 +282,9 @@ public abstract class AViewList extends VerticalLayout implements IAView, Before
 
         //--Flag di preferenza per il testo del bottone Edit. Normalmente 'Edit'.
         testoBottoneEdit = EDIT_NAME;
+
+        //--Flag di preferenza per aggiungere una caption di info sopra la grid. Normalmente false.
+        isEntityEmbadded = false;
 
         //--Le preferenze sovrascritte nella sottoclasse
         fixPreferenzeSpecifiche();
@@ -319,6 +351,7 @@ public abstract class AViewList extends VerticalLayout implements IAView, Before
         this.add(topLayout);
     }// end of method
 
+
     /**
      * Crea il corpo centrale della view
      * Componente grafico obbligatorio
@@ -326,6 +359,8 @@ public abstract class AViewList extends VerticalLayout implements IAView, Before
      * Facoltativo (presente di default) il bottone Edit (flag da Mongo eventualmente sovrascritto)
      */
     protected void creaGrid() {
+        FlexLayout layout = new FlexLayout();
+//        layout.setHeight("30em");
         List<String> gridPropertiesName = service.getGridPropertiesName();
 
         if (AEntity.class.isAssignableFrom(entityClazz)) {
@@ -355,36 +390,79 @@ public abstract class AViewList extends VerticalLayout implements IAView, Before
         grid.setHeightByRows(true);
         grid.addClassName("pippoz");
         grid.getElement().setAttribute("theme", "row-dividers");
-        add(grid);
+        layout.add(grid);
+//        layout.add(new Label("Pippoz"));
+//        layout.setSizeUndefined();
+        this.add(layout);
+        layout.setFlexGrow(1, grid);
+        this.setFlexGrow(1, layout);
     }// end of method
+
 
     /**
      * Eventuale caption sopra la grid
+     * Può essere sovrascritto, per aggiungere informazioni
+     * Invocare PRIMA il metodo della superclasse
      */
-    protected void creaCaption() {
-        String testo;
+    protected VerticalLayout creaCaption() {
+        VerticalLayout layout = new VerticalLayout();
+        layout.setPadding(false);
+        layout.setMargin(false);
+        layout.setSpacing(false);
+        String testo = entityClazz.getSimpleName() + " - ";
         int count = 0;
-        String tag = "";
+        String siglaCompany = "";
+        Company company = login.getCompany();
+        if (company != null) {
+            siglaCompany = " (" + company.getCode() + ")";
+        }// end of if cycle
 
         if (usaCaption) {
-            count = service.count();
+            if (pref.isBool(BaseCost.USA_COMPANY)) {
+                count = service.countByCompany(company);
+            } else {
+                count = service.count();
+            }// end of if/else cycle
 
             switch (count) {
                 case 0:
-                    tag = "Al momento non ci sono elementi in questa collezione";
+                    if (pref.isBool(BaseCost.USA_COMPANY)) {
+                        testo += "Non ci sono elementi di questa company";
+                    } else {
+                        testo += "Al momento non ci sono elementi in questa collezione";
+                    }// end of if/else cycle
                     break;
                 case 1:
-                    tag = "Collezione con un solo elemento";
+                    testo += "Collezione con un solo elemento";
                     break;
                 default:
-                    tag = "Collezione con " + count + " elementi";
+                    testo += "Collezione di " + text.format(count) + " elementi";
                     break;
             } // end of switch statement
+            testo += siglaCompany;
+            layout.add(new Label(testo));
 
-            testo = entityClazz.getSimpleName() + " - " + tag;
-            this.add(new Label(testo));
+            this.addCaption(layout);
+
+            this.add(layout);
         }// end of if cycle
 
+        return layout;
+    }// end of method
+
+
+    /**
+     * Eventuale aggiunta alla caption sopra la grid
+     */
+    protected VerticalLayout addCaption(VerticalLayout layout) {
+
+        if (isEntityEmbadded) {
+            layout.add(new Label("Lista visibile solo al developer"));
+            layout.add(new Label("Questa lista non dovrebbe mai essere usata (serve come test o per le sottoclassi specifiche)"));
+            layout.add(new Label("L'entity è 'embedded' nelle collezioni che la usano (no @Annotation property DbRef)"));
+        }// end of if cycle
+
+        return layout;
     }// end of method
 
 
@@ -392,6 +470,14 @@ public abstract class AViewList extends VerticalLayout implements IAView, Before
         Grid.Column<AEntity> colonna = null;
         EAFieldType type = annotation.getFormType(entityClazz, property);
         String header = annotation.getColumnName(entityClazz, property);
+        String width = annotation.getColumnWithPX(entityClazz, property);
+        Class clazz = annotation.getComboClass(entityClazz, property);
+
+        if (type == null) {
+            colonna = grid.addColumn(property);
+            colonna.setSortProperty(property);
+            return;
+        }// end of if cycle
 
         switch (type) {
             case text:
@@ -412,19 +498,54 @@ public abstract class AViewList extends VerticalLayout implements IAView, Before
                     return new Checkbox(status);
                 }));
                 break;
-            case localdatetime:
+            case combo:
                 colonna = grid.addColumn(new ComponentRenderer<>(entity -> {
-                    LocalDateTime timeStamp;
+                    ComboBox combo = new ComboBox();
+                    Object entityBean = reflection.getPropertyValue(entity, property);
+                    IAService service = (IAService) StaticContextAccessor.getBean(clazz);
+                    List items = ((IAService) service).findAll();
+                    if (array.isValid(items)) {
+                        combo.setItems(items);
+                        combo.setValue(entityBean);
+                    }// end of if cycle
+                    combo.setEnabled(false);
+                    return combo;
+                }));
+                break;
+            case localdate:
+                colonna = grid.addColumn(new ComponentRenderer<>(entity -> {
+                    LocalDate data;
                     String testo = "X";
                     Field field = reflection.getField(entityClazz, property);
                     try { // prova ad eseguire il codice
-                        timeStamp = (LocalDateTime) field.get(entity);
-                        testo = date.getTime(timeStamp);
+                        data = (LocalDate) field.get(entity);
+                        testo = date.getDayWeekShort(data);
                     } catch (Exception unErrore) { // intercetta l'errore
                         log.error(unErrore.toString());
                     }// fine del blocco try-catch
                     return new Label(testo);
                 }));
+                break;
+            case localdatetime:
+                colonna = grid.addColumn(new ComponentRenderer<>(entity -> {
+                    Object obj;
+                    LocalDateTime timeStamp;
+                    String testo = "Y";
+                    Field field = reflection.getField(entityClazz, property);
+                    try { // prova ad eseguire il codice
+                        obj = field.get(entity);
+                        if (obj instanceof LocalDateTime) {
+                            timeStamp = (LocalDateTime) obj;
+                            testo = date.getTime(timeStamp);
+                        } else {
+                            log.warn("localdatetime non definito");
+                        }// end of if/else cycle
+                    } catch (Exception unErrore) { // intercetta l'errore
+                        log.error(unErrore.toString());
+                    }// fine del blocco try-catch
+                    return new Label(testo);
+                }));
+                break;
             default:
                 log.warn("Switch - caso non definito");
                 break;
@@ -433,6 +554,14 @@ public abstract class AViewList extends VerticalLayout implements IAView, Before
         if (colonna != null) {
             colonna.setHeader(text.isValid(header) ? header : property);
             colonna.setSortProperty(property);
+//            if (property.equals("id")) {
+//                colonna.setWidth("1px");
+//            }// end of if cycle
+
+//            if (text.isValid(width)) {
+//                colonna.setWidth(width);
+//                colonna.setFlexGrow(0);
+//            }// end of if cycle
         }// end of if cycle
 
     }// end of method

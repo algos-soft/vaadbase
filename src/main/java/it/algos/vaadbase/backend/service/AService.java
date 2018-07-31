@@ -13,6 +13,9 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Scope;
 import org.springframework.data.domain.Sort;
+import org.springframework.data.mongodb.core.MongoOperations;
+import org.springframework.data.mongodb.core.query.Criteria;
+import org.springframework.data.mongodb.core.query.Query;
 import org.springframework.data.mongodb.repository.MongoRepository;
 
 import java.lang.reflect.Field;
@@ -29,9 +32,9 @@ import java.util.stream.Collectors;
  * Date: ven, 08-dic-2017
  * Time: 07:36
  */
-@Slf4j
 @SpringComponent
 @Scope("singleton")
+@Slf4j
 public class AService implements IAService {
 
 
@@ -79,6 +82,14 @@ public class AService implements IAService {
     @Autowired
     protected APreferenzaService pref;
 
+
+    /**
+     * Inietta da Spring
+     */
+    @Autowired
+    MongoOperations mongo;
+
+
 //    @Autowired
 //    private LogService logger;
 
@@ -90,7 +101,6 @@ public class AService implements IAService {
 
 
     /**
-     *
      * In the newest Spring release, it’s constructor does not need to be annotated with @Autowired annotation
      * Si usa un @Qualifier(), per avere la sottoclasse specifica
      * Si usa una costante statica, per essere sicuri di scrivere sempre uguali i riferimenti
@@ -117,6 +127,42 @@ public class AService implements IAService {
     @Override
     public int count() {
         return (int) repository.count();
+    }// end of method
+
+
+    /**
+     * Returns the number of entities available for the current company
+     *
+     * @return the number of selected entities
+     */
+    @Override
+    public int countByCompany() {
+        Company company = null;
+
+        if (login != null) {
+            company = login.getCompany();
+        }// end of if cycle
+
+        return countByCompany(company);
+    }// end of method
+
+
+    /**
+     * Returns the number of entities available for the company
+     *
+     * @return the number of selected entities
+     */
+    @Override
+    public int countByCompany(Company company) {
+        Long numRecords = 0L;
+        Query query = null;
+
+        if (company != null) {
+            query = new Query(Criteria.where("id").regex("^" + company.getCode()));
+            numRecords = mongo.count(query, entityClass);
+        }// end of if cycle
+
+        return numRecords.intValue();
     }// end of method
 
 

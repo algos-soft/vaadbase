@@ -119,10 +119,12 @@ public class Preferenza extends ACEntity {
         return code;
     }// end of method
 
+    @Deprecated
     public Object getAValue() {
         return type.bytesToObject(value);
     }// end of method
 
+    @Deprecated
     public void setAValue(Object value) {
         this.value = type.objectToBytes(value);
     }// end of method

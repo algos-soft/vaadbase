@@ -42,11 +42,9 @@ public class PersonaService extends AService {
 
 
     /**
-     * La repository viene iniettata dal costruttore e passata al costruttore della superclasse, <br>
-     * Spring costruisce una implementazione concreta dell'interfaccia MongoRepository (come previsto dal @Qualifier) <br>
-     * Qui si una una interfaccia locale (col casting nel costruttore) per usare i metodi specifici <br>
+     * versione della classe per la serializzazione
      */
-    private PersonaRepository repository;
+    private final static long serialVersionUID = 1L;
 
 
     /**
@@ -58,7 +56,6 @@ public class PersonaService extends AService {
      */
     public PersonaService(@Qualifier(TAG_PER) MongoRepository repository) {
         super(repository);
-        this.repository = (PersonaRepository) repository;
     }// end of Spring constructor
 
 
@@ -108,7 +105,7 @@ public class PersonaService extends AService {
     public Persona newEntity(String nome, String cognome, String telefono, String email, Address indirizzo) {
         Persona entity = null;
 
-        entity = Persona.builder()
+        entity = Persona.builderPersona()
                 .nome(nome)
                 .cognome(cognome)
                 .telefono(telefono)
@@ -119,7 +116,11 @@ public class PersonaService extends AService {
         return entity;
     }// end of method
 
-
-
+    /**
+     * Property unica (se esiste).
+     */
+    public String getPropertyUnica(AEntity entityBean) {
+        return ((Persona) entityBean).getNome()+((Persona) entityBean).getCognome();
+    }// end of method
 
 }// end of class

@@ -10,6 +10,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.config.ConfigurableBeanFactory;
 import org.springframework.context.annotation.Scope;
 
+import java.time.LocalDateTime;
+
 /**
  * Project vaadbio2
  * Created by Algos
@@ -62,23 +64,27 @@ public abstract class AVersBoot {
         //--se esistono, viene aggiornato il valore e la descrizione previsti dalla enumeration
         for (EAPreferenza prefTemp : EAPreferenza.values()) {
             String code = prefTemp.getCode();
-            String desc = prefTemp.getDesc();
+            String descNew = prefTemp.getDesc();
             EAPrefType type = prefTemp.getType();
-            Object value = prefTemp.getValue();
+            Object valueNew = prefTemp.getValue();
             Preferenza preferenza = (Preferenza) pref.findById(code);
+            String descOld = "";
+            Object valueOld;
 
             if (preferenza == null) {
-                vers.creaPref(codeProject, code, desc, type, value);
+                vers.creaPref(codeProject, code, descNew, type, valueNew);
                 k++;
             } else {
-                if (!preferenza.getDescrizione().equals(desc)) {
-                    vers.crea("Z","#" + code, "#desc: " + preferenza.getDescrizione() + " -> " + desc);
-                    preferenza.setDescrizione(desc);
+                descOld = preferenza.getDescrizione();
+                if (!descOld.equals(descNew)) {
+                    vers.crea("Z", "#" + code, "#desc: " + descOld + " -> " + descNew);
+                    preferenza.setDescrizione(descNew);
                     pref.save(preferenza);
                 } else {
-                    if (!preferenza.getAValue().equals(value)) {
-                        vers.crea("Z","#" + code, "#value: " + preferenza.getAValue() + " -> " + value);
-                        preferenza.setAValue(value);
+                    valueOld = preferenza.getAValue();
+                    if (!valueOld.equals(valueNew)) {
+                        vers.crea("Z", "#" + code, "#value: " + valueOld + " -> " + valueNew);
+                        preferenza.setAValue(valueNew);
                         pref.save(preferenza);
                     }// end of if cycle
                 }// end of if/else cycle
@@ -115,8 +121,92 @@ public abstract class AVersBoot {
      * @param codePref key code della preferenza (obbligatoria per Pref)
      * @param descPref dettagliata (obbligatoria per Pref)
      */
+    public void creaPrefTxt(String codePref, String descPref) {
+        vers.creaPrefTxt(codeProject, codePref, descPref);
+    }// end of method
+
+    /**
+     * Crea una entity di preferenze e la regiistra <br>
+     * Crea una entity di versione e la registra <br>
+     *
+     * @param codePref key code della preferenza (obbligatoria per Pref)
+     * @param descPref dettagliata (obbligatoria per Pref)
+     * @param value    di default della preferenza
+     */
+    public void creaPrefTxt(String codePref, String descPref, String value) {
+        vers.creaPrefTxt(codeProject, codePref, descPref, value);
+    }// end of method
+
+
+    /**
+     * Crea una entity di preferenze e la regiistra <br>
+     * Crea una entity di versione e la registra <br>
+     *
+     * @param codePref key code della preferenza (obbligatoria per Pref)
+     * @param descPref dettagliata (obbligatoria per Pref)
+     */
     public void creaPrefBool(String codePref, String descPref) {
         vers.creaPrefBool(codeProject, codePref, descPref);
+    }// end of method
+
+    /**
+     * Crea una entity di preferenze e la regiistra <br>
+     * Crea una entity di versione e la registra <br>
+     *
+     * @param codePref key code della preferenza (obbligatoria per Pref)
+     * @param descPref dettagliata (obbligatoria per Pref)
+     * @param value    di default della preferenza
+     */
+    public void creaPrefBool(String codePref, String descPref, boolean value) {
+        vers.creaPrefBool(codeProject, codePref, descPref, value);
+    }// end of method
+
+
+    /**
+     * Crea una entity di preferenze e la regiistra <br>
+     * Crea una entity di versione e la registra <br>
+     *
+     * @param codePref key code della preferenza (obbligatoria per Pref)
+     * @param descPref dettagliata (obbligatoria per Pref)
+     */
+    public void creaPrefInt(String codePref, String descPref) {
+        vers.creaPrefInt(codeProject, codePref, descPref);
+    }// end of method
+
+    /**
+     * Crea una entity di preferenze e la regiistra <br>
+     * Crea una entity di versione e la registra <br>
+     *
+     * @param codePref key code della preferenza (obbligatoria per Pref)
+     * @param descPref dettagliata (obbligatoria per Pref)
+     * @param value    di default della preferenza
+     */
+    public void creaPrefInt(String codePref, String descPref, int value) {
+        vers.creaPrefInt(codeProject, codePref, descPref, value);
+    }// end of method
+
+
+    /**
+     * Crea una entity di preferenze e la regiistra <br>
+     * Crea una entity di versione e la registra <br>
+     *
+     * @param codePref key code della preferenza (obbligatoria per Pref)
+     * @param descPref dettagliata (obbligatoria per Pref)
+     */
+    public void creaPrefDate(String codePref, String descPref) {
+        vers.creaPrefDate(codeProject, codePref, descPref);
+    }// end of method
+
+    /**
+     * Crea una entity di preferenze e la regiistra <br>
+     * Crea una entity di versione e la registra <br>
+     *
+     * @param codePref key code della preferenza (obbligatoria per Pref)
+     * @param descPref dettagliata (obbligatoria per Pref)
+     * @param value    di default della preferenza
+     */
+    public void creaPrefDate(String codePref, String descPref, LocalDateTime value) {
+        vers.creaPrefDate(codeProject, codePref, descPref, value);
     }// end of method
 
 }// end of class

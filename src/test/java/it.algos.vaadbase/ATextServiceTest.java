@@ -502,7 +502,45 @@ public class ATextServiceTest extends ATest {
         sorgente = "Questo testo \"non comprende ancora\" e manca la fine";
         ottenuto = service.estrae(sorgente, tag);
         assertEquals(previsto, ottenuto);
+    }// end of single test
 
+
+    @Test
+    public void format() {
+        sorgenteIntero = 5;
+        previsto = "5";
+        ottenuto = service.format(sorgenteIntero);
+        assertEquals(previsto, ottenuto);
+
+        sorgenteIntero = 857;
+        previsto = "857";
+        ottenuto = service.format(sorgenteIntero);
+        assertEquals(previsto, ottenuto);
+
+        sorgenteIntero = 1534;
+        previsto = "1.534";
+        ottenuto = service.format(sorgenteIntero);
+        assertEquals(previsto, ottenuto);
+
+        sorgenteIntero = 4;
+        previsto = "04";
+        ottenuto = service.format2(sorgenteIntero);
+        assertEquals(previsto, ottenuto);
+
+        sorgenteIntero = 4;
+        previsto = "004";
+        ottenuto = service.format3(sorgenteIntero);
+        assertEquals(previsto, ottenuto);
+
+        sorgenteIntero = 35;
+        previsto = "035";
+        ottenuto = service.format3(sorgenteIntero);
+        assertEquals(previsto, ottenuto);
+
+        sorgenteIntero = 135;
+        previsto = "135";
+        ottenuto = service.format3(sorgenteIntero);
+        assertEquals(previsto, ottenuto);
     }// end of single test
 
 }// end of class

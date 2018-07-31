@@ -311,7 +311,7 @@ public abstract class AViewDialog<T extends Serializable> extends Dialog impleme
      * 2) la entity usa company
      * 3) siamo collegati (login) come developer
      */
-    private void fixCompanyField() {
+    protected void fixCompanyField() {
         companyField = (AComboBox) getField(AService.FIELD_NAME_COMPANY);
         if (companyField != null) {
             List items = companyService.findAll();

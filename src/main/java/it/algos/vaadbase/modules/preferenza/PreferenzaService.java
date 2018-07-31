@@ -2,7 +2,6 @@ package it.algos.vaadbase.modules.preferenza;
 
 import com.vaadin.flow.spring.annotation.SpringComponent;
 import it.algos.vaadbase.annotation.AIScript;
-import it.algos.vaadbase.backend.entity.AEntity;
 import it.algos.vaadbase.backend.service.AService;
 import it.algos.vaadbase.enumeration.EAPrefType;
 import it.algos.vaadbase.modules.company.Company;
@@ -14,7 +13,6 @@ import org.springframework.data.mongodb.repository.MongoRepository;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
-import java.util.stream.Collectors;
 
 import static it.algos.vaadbase.application.BaseCost.TAG_PRE;
 
@@ -163,6 +161,7 @@ public class PreferenzaService extends AService {
         return (Preferenza) addCompany(entity, company);
     }// end of method
 
+
     /**
      * Recupera una istanza della Entity usando la query della property specifica (obbligatoria ed unica) <br>
      *
@@ -260,5 +259,71 @@ public class PreferenzaService extends AService {
         return ordine + 1;
     }// end of method
 
+
+    public Object getValue(String keyCode) {
+        Object value = null;
+        Preferenza pref = findByKeyUnica(keyCode);
+
+        if (pref != null) {
+            value = pref.getAValue();
+        }// end of if cycle
+
+        return value;
+    } // end of method
+
+
+    public Boolean isBool(String keyCode) {
+        boolean status = false;
+        Object value = getValue(keyCode);
+
+        if (value != null && value instanceof Boolean) {
+            status = (boolean) value;
+        }// end of if cycle
+
+        return status;
+    } // end of method
+
+
+    public Preferenza setValue(String keyCode, Object value) {
+        Preferenza pref = findByKeyUnica(keyCode);
+
+        if (pref != null) {
+            pref.setValue(pref.getType().objectToBytes(value));
+        }// end of if cycle
+
+        return pref;
+    } // end of method
+
+
+    public void saveValue(String keyCode, Object value) {
+        Preferenza pref = setValue(keyCode, value);
+
+        if (pref != null) {
+            this.save(pref);
+        }// end of if cycle
+
+    } // end of method
+
+//    public  Boolean getBool(String code, Object defaultValue) {
+//        return getBool(code, CompanySessionLib.getCompany(), defaultValue);
+//    } // end of method
+//
+//    public  Boolean getBool(String code, BaseCompany company) {
+//        return getBool(code, company, "");
+//    } // end of static method
+//
+//    public  Boolean getBool(String code, BaseCompany company, Object defaultValue) {
+//        Pref pref = Pref.findByCode(code, company);
+//
+//        if (pref != null) {
+//            return (boolean) pref.getValore();
+//        }// end of if cycle
+//
+//        if (defaultValue != null && defaultValue instanceof Boolean) {
+//            return (boolean) defaultValue;
+//        }// end of if cycle
+//
+//        return false;
+//    } // end of method
 
 }// end of class

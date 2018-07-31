@@ -36,8 +36,7 @@ import static it.algos.vaadbase.application.BaseCost.TAG_COM;
  * Annotated with @Data (Lombok) for automatic use of Getter and Setter <br>
  * Annotated with @NoArgsConstructor (Lombok) for JavaBean specifications <br>
  * Annotated with @AllArgsConstructor (Lombok) per usare il costruttore completo nel Service <br>
- * Annotated with @Builder (Lombok) lets you automatically produce the code required to have your class
- * be instantiable with code such as: Person.builder().name("Adam Savage").city("San Francisco").build(); <br>
+ * Annotated with @Builder (Lombok) con un metodo specifico, per usare quello standard nella (eventuale) sottoclasse <br>
  * Annotated with @EqualsAndHashCode (Lombok) per l'uguaglianza di due istanze dellaq classe <br>
  * Annotated with @Qualifier (obbligatorio) per permettere a Spring di istanziare la sottoclasse specifica <br>
  * Annotated with @AIEntity (facoltativo Algos) per alcuni parametri generali del modulo <br>
@@ -54,7 +53,7 @@ import static it.algos.vaadbase.application.BaseCost.TAG_COM;
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
-@Builder
+@Builder(builderMethodName = "builderCompany")
 @EqualsAndHashCode(callSuper = false)
 @Qualifier(TAG_COM)
 @AIEntity(company = EACompanyRequired.nonUsata)
