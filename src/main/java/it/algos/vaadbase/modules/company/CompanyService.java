@@ -247,5 +247,18 @@ public class CompanyService extends AService {
 //        entityBean.id = ((Company) entityBean).getCode();
 //    }// end of method
 
+    /**
+     * Recupera dal db mongo la company (se esiste)
+     */
+    public Company getAlgos() {
+        return findByKeyUnica("algos");
+    }// end of method
+
+    /**
+     * Recupera dal db mongo la company (se esiste)
+     */
+    public Company getDemo() {
+        return findByKeyUnica("demo");
+    }// end of method
 
 }// end of class

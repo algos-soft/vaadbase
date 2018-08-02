@@ -3,6 +3,7 @@ package it.algos.vaadbase.boot;
 import it.algos.vaadbase.application.BaseCost;
 import it.algos.vaadbase.developer.DeveloperView;
 import it.algos.vaadbase.modules.address.AddressViewList;
+import it.algos.vaadbase.modules.company.CompanyService;
 import it.algos.vaadbase.modules.company.CompanyViewList;
 import it.algos.vaadbase.modules.persona.PersonaViewList;
 import it.algos.vaadbase.modules.preferenza.EAPreferenza;
@@ -10,6 +11,7 @@ import it.algos.vaadbase.modules.preferenza.PreferenzaData;
 import it.algos.vaadbase.modules.preferenza.PreferenzaViewList;
 import it.algos.vaadbase.modules.role.RoleData;
 import it.algos.vaadbase.modules.role.RoleViewList;
+import it.algos.vaadbase.modules.utente.UtenteService;
 import it.algos.vaadbase.modules.utente.UtenteViewList;
 import it.algos.vaadbase.modules.versione.VersioneViewList;
 import it.algos.vaadbase.service.APreferenzaService;
@@ -44,6 +46,12 @@ public abstract class ABoot implements ServletContextListener {
      */
     @Autowired
     public RoleData roleData;
+
+    @Autowired
+    protected UtenteService utenteService;
+
+    @Autowired
+    protected CompanyService companyService;
 
     /**
      * Inietta da Spring come 'singleton'

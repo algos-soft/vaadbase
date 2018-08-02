@@ -108,8 +108,8 @@ public class PersonaService extends AService {
         entity = Persona.builderPersona()
                 .nome(nome)
                 .cognome(cognome)
-                .telefono(telefono)
-                .email(email)
+                .telefono(telefono.equals("") ? null : telefono)
+                .email(email.equals("") ? null : email)
                 .indirizzo(indirizzo)
                 .build();
 

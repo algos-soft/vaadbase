@@ -231,10 +231,12 @@ public abstract class AViewList extends VerticalLayout implements IAView, Before
      */
     public AViewList(IAPresenter presenter, IADialog dialog) {
         this.presenter = presenter;
-        this.presenter.setView(this);
         this.dialog = dialog;
-        this.service = presenter.getService();
-        this.entityClazz = presenter.getEntityClazz();
+        if (presenter != null) {
+            this.presenter.setView(this);
+            this.service = presenter.getService();
+            this.entityClazz = presenter.getEntityClazz();
+        }// end of if cycle
     }// end of Spring constructor
 
 
@@ -361,24 +363,28 @@ public abstract class AViewList extends VerticalLayout implements IAView, Before
     protected void creaGrid() {
         FlexLayout layout = new FlexLayout();
 //        layout.setHeight("30em");
-        List<String> gridPropertiesName = service.getGridPropertiesName();
+        List<String> gridPropertiesName = service != null ? service.getGridPropertiesName() : null;
 
-        if (AEntity.class.isAssignableFrom(entityClazz)) {
+        if (entityClazz != null && AEntity.class.isAssignableFrom(entityClazz)) {
             try { // prova ad eseguire il codice
                 grid = new Grid(entityClazz);
             } catch (Exception unErrore) { // intercetta l'errore
                 log.error(unErrore.toString());
                 return;
             }// fine del blocco try-catch
-        }// end of if cycle
+        } else {
+            grid = new Grid();
+        }// end of if/else cycle
 
         for (Grid.Column column : grid.getColumns()) {
             grid.removeColumn(column);
         }// end of for cycle
 
-        for (String property : gridPropertiesName) {
-            addColonna(property);
-        }// end of for cycle
+        if (gridPropertiesName != null) {
+            for (String property : gridPropertiesName) {
+                addColonna(property);
+            }// end of for cycle
+        }// end of if cycle
 
         //--Aggiunge eventuali colonne calcolate
         addSpecificColumns();
@@ -409,7 +415,7 @@ public abstract class AViewList extends VerticalLayout implements IAView, Before
         layout.setPadding(false);
         layout.setMargin(false);
         layout.setSpacing(false);
-        String testo = entityClazz.getSimpleName() + " - ";
+        String testo = entityClazz != null ? entityClazz.getSimpleName() + " - " : "";
         int count = 0;
         String siglaCompany = "";
         Company company = login.getCompany();
@@ -419,9 +425,9 @@ public abstract class AViewList extends VerticalLayout implements IAView, Before
 
         if (usaCaption) {
             if (pref.isBool(BaseCost.USA_COMPANY)) {
-                count = service.countByCompany(company);
+                count = service != null ? service.countByCompany(company) : 0;
             } else {
-                count = service.count();
+                count = service != null ? service.count() : 0;
             }// end of if/else cycle
 
             switch (count) {
@@ -661,7 +667,8 @@ public abstract class AViewList extends VerticalLayout implements IAView, Before
 
 
     public void updateView() {
-        List items = service.findFilter(searchField.getValue());
+        List items = service != null ? service.findFilter(searchField.getValue()) : null;
+
         if (items != null) {
             try { // prova ad eseguire il codice
                 grid.deselectAll();

@@ -76,6 +76,8 @@ public class VaadtestBoot extends ABoot {
         super.iniziaDataStandard();
         this.company.findOrCrea();
 //        this.utente.findOrCrea();
+        utenteService.crea(companyService.getAlgos(), "gac", "fulvia");
+
     }// end of method
 
 

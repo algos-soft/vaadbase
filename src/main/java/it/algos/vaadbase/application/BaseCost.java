@@ -10,14 +10,15 @@ import java.util.List;
 import java.util.Locale;
 
 public class BaseCost {
-	public final static String TAG_UTE = "utente";
-	public final static String TAG_VER = "versione";
+    public final static String TAG_UTE = "utente";
+    public final static String TAG_VER = "versione";
     public final static boolean USA_BAKERY_PAGES = false;
     public static final Locale APP_LOCALE = Locale.US;
     public final static boolean DEBUG = false;
 
     public final static Class<? extends RouterLayout> LAYOUT = MainLayout.class;
     public final static String LAYOUT_NAME = "MainLayout";
+    public static final String VIEWPORT = "width=device-width, minimum-scale=1, initial-scale=1, user-scalable=yes";
 
     public final static int FLASH = 2000;
 
@@ -99,24 +100,10 @@ public class BaseCost {
     public final static String COMPANY_CODE = "code";
     public final static String COMPANY_UNICO = "codeCompanyUnico";
     public final static String VIEW_ROL = "roleview";
-    private final static String[] esclusiAll = {PROPERTY_SERIAL, PROPERTY_CREAZIONE, PROPERTY_MODIFICA};
-    public final static List<String> ESCLUSI_ALL = Arrays.asList(esclusiAll);
-    private final static String[] esclusiList = {PROPERTY_ID, PROPERTY_SERIAL, PROPERTY_COMPANY, PROPERTY_NOTE, PROPERTY_CREAZIONE, PROPERTY_MODIFICA};
-    public final static List<String> ESCLUSI_LIST = Arrays.asList(esclusiList);
-    private final static String[] esclusiForm = {PROPERTY_ID, PROPERTY_SERIAL, PROPERTY_COMPANY, PROPERTY_CREAZIONE, PROPERTY_MODIFICA};
-    public final static List<String> ESCLUSI_FORM = Arrays.asList(esclusiForm);
-    private final static String[] esclusiMatrice = {PROPERTY_SERIAL, PROPERTY_ID, PROPERTY_COMPANY};
-    public final static List<String> ESCLUSI = Arrays.asList(esclusiMatrice);
-    private final static String[] companyMatrice = {COMPANY_CODE, COMPANY_UNICO};
-    public final static List<String> COMPANY_OPTIONAL = Arrays.asList(companyMatrice);
-    public static List<Class> MENU_CLAZZ_LIST = new ArrayList<>();
-
     // generali
     public final static String USA_DEBUG = "usaDebug";
     public final static String USA_LOG_DEBUG = "usaLogDebug";
     public final static String USA_COMPANY = "usaCompany";
-
-
     // moduli visibili
     public final static String SHOW_COMPANY = "showCompany";
     public final static String SHOW_PREFERENZA = "showPreferenza";
@@ -128,5 +115,16 @@ public class BaseCost {
     public final static String SHOW_VERSION = "showVersion";
     public final static String SHOW_USER = "showUser";
     public final static String SHOW_LOGGER = "showLogger";
+    private final static String[] esclusiAll = {PROPERTY_SERIAL, PROPERTY_CREAZIONE, PROPERTY_MODIFICA};
+    public final static List<String> ESCLUSI_ALL = Arrays.asList(esclusiAll);
+    private final static String[] esclusiList = {PROPERTY_ID, PROPERTY_SERIAL, PROPERTY_COMPANY, PROPERTY_NOTE, PROPERTY_CREAZIONE, PROPERTY_MODIFICA};
+    public final static List<String> ESCLUSI_LIST = Arrays.asList(esclusiList);
+    private final static String[] esclusiForm = {PROPERTY_ID, PROPERTY_SERIAL, PROPERTY_COMPANY, PROPERTY_CREAZIONE, PROPERTY_MODIFICA};
+    public final static List<String> ESCLUSI_FORM = Arrays.asList(esclusiForm);
+    private final static String[] esclusiMatrice = {PROPERTY_SERIAL, PROPERTY_ID, PROPERTY_COMPANY};
+    public final static List<String> ESCLUSI = Arrays.asList(esclusiMatrice);
+    private final static String[] companyMatrice = {COMPANY_CODE, COMPANY_UNICO};
+    public final static List<String> COMPANY_OPTIONAL = Arrays.asList(companyMatrice);
+    public static List<Class> MENU_CLAZZ_LIST = new ArrayList<>();
 
 }// end of static class

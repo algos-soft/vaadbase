@@ -1,5 +1,6 @@
 package it.algos.vaadbase.ui;
 
+import com.vaadin.flow.component.Tag;
 import com.vaadin.flow.component.Text;
 import com.vaadin.flow.component.UI;
 import com.vaadin.flow.component.dependency.HtmlImport;
@@ -9,6 +10,7 @@ import com.vaadin.flow.component.icon.Icon;
 import com.vaadin.flow.component.icon.VaadinIcon;
 import com.vaadin.flow.component.page.BodySize;
 import com.vaadin.flow.component.page.Viewport;
+import com.vaadin.flow.component.polymertemplate.Id;
 import com.vaadin.flow.router.*;
 import com.vaadin.flow.server.InitialPageSettings;
 import com.vaadin.flow.server.PageConfigurator;
@@ -18,11 +20,15 @@ import it.algos.vaadbase.application.BaseCost;
 import it.algos.vaadbase.service.AAnnotationService;
 import it.algos.vaadbase.service.AReflectionService;
 import it.algos.vaadbase.service.ATextService;
+import it.algos.vaadbase.ui.components.AppNavigation;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 
 import java.util.ArrayList;
 import java.util.List;
+
+import static it.algos.vaadbase.application.BaseCost.PAGE_DEFAULT;
+import static it.algos.vaadbase.application.BaseCost.PAGE_LOGOUT;
 
 /**
  * Project vaadbase
@@ -39,12 +45,13 @@ import java.util.List;
  * Anche le view NON vanno annotate con @SpringComponent
  * Si possono usare delle views che non richiamano questo layout ed hanno un proprio layout java che non usa html
  */
-@Slf4j
+@Tag("main-view")
 @Theme(Lumo.class)
-@HtmlImport("frontend://styles/shared-styles.html")
-//@HtmlImport("src/main-view.html")
+//@HtmlImport("frontend://styles/shared-styles.html")
+@HtmlImport("src/main-view.html")
 @BodySize(height = "100vh", width = "100vw")
 @Viewport("width=device-width, minimum-scale=1.0, initial-scale=1.0, user-scalable=yes")
+@Slf4j
 public class MainLayout extends Div implements RouterLayout, AfterNavigationObserver, PageConfigurator {
 
     protected static final String ACTIVE_ITEM_STYLE = "main-layout__nav-item--selected";
@@ -53,6 +60,9 @@ public class MainLayout extends Div implements RouterLayout, AfterNavigationObse
     protected AAnnotationService annotation;
     protected AReflectionService reflection;
     private ATextService text = ATextService.getInstance();
+
+    @Id("appNavigation")
+    private AppNavigation appNavigation;
 
     @Autowired
     public MainLayout(AAnnotationService annotation, AReflectionService reflection) {
@@ -173,6 +183,7 @@ public class MainLayout extends Div implements RouterLayout, AfterNavigationObse
         try { // prova ad eseguire il codice
             routerLink = new RouterLink("", viewClazz);
         } catch (Exception unErrore) { // intercetta l'errore
+
             log.error(unErrore.toString());
         }// fine del blocco try-catch
 
