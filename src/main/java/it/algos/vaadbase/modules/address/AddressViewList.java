@@ -8,6 +8,7 @@ import com.vaadin.flow.component.html.Label;
 import com.vaadin.flow.component.icon.VaadinIcon;
 import com.vaadin.flow.component.textfield.TextField;
 import com.vaadin.flow.data.renderer.ComponentRenderer;
+import com.vaadin.flow.spring.annotation.UIScope;
 import it.algos.vaadbase.ui.dialog.IADialog;
 import it.algos.vaadbase.ui.dialog.AViewDialog;
 import com.vaadin.flow.component.notification.Notification;
@@ -50,7 +51,7 @@ import static it.algos.vaadbase.application.BaseCost.TAG_ADD;
  * Annotated with @AIScript (facoltativo Algos) per controllare la ri-creazione di questo file dal Wizard <br>
  */
 @SpringComponent
-@Scope(ConfigurableBeanFactory.SCOPE_SINGLETON)
+@UIScope
 @Route(value = TAG_ADD, layout = MainLayout.class)
 @Qualifier(TAG_ADD)
 @Slf4j

@@ -38,12 +38,12 @@ public class BaseCost {
     public static final String PAGE_ADDRESS_EDIT = "address/edit";
     public static final String PAGE_STOREFRONT = "storefront";
     public static final String PAGE_STOREFRONT_EDIT = "storefront/edit";
-    public static final String PAGE_DASHBOARD = "dashboard";
+    public static final String PAGE_COMPANY = "company";
     public static final String PAGE_USERS = "users";
     public static final String PAGE_PRODUCTS = "products";
     public static final String PAGE_LOGOUT = "logout";
     public static final String PAGE_NOTFOUND = "404";
-    public static final String PAGE_DEFAULT = PAGE_USERS;
+    public static final String PAGE_DEFAULT = PAGE_COMPANY;
     public static final String PAGE_ACCESS_DENIED = "access-denied";
 
     public static final String ICON_WIZARD = "magic";

@@ -30,8 +30,20 @@ public class APreferenzaService {
     public PreferenzaService prefService;
 
 
-    private Preferenza get(String code) {
+    public Preferenza get(String code) {
         return prefService.findByKeyUnica(code);
+    } // end of method
+
+
+    public String getDesc(String code) {
+        String descrizione = "";
+        Preferenza pref = get(code);
+
+        if (pref != null) {
+            descrizione = pref.getDescrizione();
+        }// end of if cycle
+
+        return descrizione;
     } // end of method
 
 
@@ -132,6 +144,24 @@ public class APreferenzaService {
 
     } // end of method
 
+    public void setInt(String code, int value) {
+        Preferenza pref = get(code);
+        EAPrefType type = null;
+
+        if (pref != null) {
+            type = pref.getType();
+        } else {
+            pref = prefService.findOrCrea(code, "", EAPrefType.integer, value);
+        }// end of if/else cycle
+
+        if (pref != null && type == EAPrefType.bool) {
+            pref.setValue(type.objectToBytes(value));
+            prefService.save(pref);
+        }// end of if cycle
+
+    } // end of method
+
+
     public void setDate(String code, LocalDateTime value) {
         Preferenza pref = get(code);
         EAPrefType type = null;
@@ -141,8 +171,8 @@ public class APreferenzaService {
         } else {
             pref.setValue(pref.getType().objectToBytes(value));
             prefService.save(pref);
-            }// end of if/else cycle
-        } // end of method
+        }// end of if/else cycle
+    } // end of method
 
 //    public static String getString(String code, Object defaultValue) {
 //        return getString(code, CompanySessionLib.getCompany(), defaultValue);

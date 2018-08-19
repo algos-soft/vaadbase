@@ -8,6 +8,7 @@ import it.algos.vaadbase.developer.DeveloperView;
 import it.algos.vaadbase.modules.address.AddressViewList;
 import it.algos.vaadbase.modules.company.CompanyViewList;
 import it.algos.vaadbase.modules.persona.PersonaViewList;
+import it.algos.vaadbase.modules.preferenza.EAPreferenza;
 import it.algos.vaadbase.modules.preferenza.PreferenzaViewList;
 import it.algos.vaadbase.modules.role.RoleViewList;
 import it.algos.vaadbase.modules.utente.UtenteViewList;
@@ -105,6 +106,15 @@ public class VaadtestBoot extends ABoot {
 
 
     /**
+     * Aggiunge le @Route (view) standard
+     * Nella sottoclasse concreta che invoca questo metodo, aggiunge le @Route (view) specifiche dell'applicazione
+     * Le @Route vengono aggiunte ad una Lista statica mantenuta in BaseCost
+     * Verranno lette da MainLayout la prima volta che il browser 'chiama' una view
+     */
+    protected void addRouteStandard() {
+    }// end of method
+
+    /**
      * Aggiunge le @Route (view) specifiche di questa applicazione
      * Le @Route vengono aggiunte ad una Lista statica mantenuta in BaseCost
      * Vengono aggiunte dopo quelle standard
@@ -112,20 +122,20 @@ public class VaadtestBoot extends ABoot {
      */
     @Override
     protected void addRouteSpecifiche() {
-        BaseCost.MENU_CLAZZ_LIST.add(CompanyViewList.class);
-        BaseCost.MENU_CLAZZ_LIST.add(PreferenzaViewList.class);
-        BaseCost.MENU_CLAZZ_LIST.add(RoleViewList.class);
-        BaseCost.MENU_CLAZZ_LIST.add(AddressViewList.class);
-        BaseCost.MENU_CLAZZ_LIST.add(PersonaViewList.class);
-        BaseCost.MENU_CLAZZ_LIST.add(DeveloperView.class);
-        BaseCost.MENU_CLAZZ_LIST.add(WizardView.class);
-        BaseCost.MENU_CLAZZ_LIST.add(VersioneViewList.class);
-        BaseCost.MENU_CLAZZ_LIST.add(UtenteViewList.class);
-
-        BaseCost.MENU_CLAZZ_LIST.add(Prova2ViewList.class);
-        BaseCost.MENU_CLAZZ_LIST.add(ProvaViewList.class);
-        BaseCost.MENU_CLAZZ_LIST.add(HomeView.class);
-        BaseCost.MENU_CLAZZ_LIST.add(BollaViewList.class);
+//        BaseCost.MENU_CLAZZ_LIST.add(CompanyViewList.class);
+//        BaseCost.MENU_CLAZZ_LIST.add(PreferenzaViewList.class);
+//        BaseCost.MENU_CLAZZ_LIST.add(RoleViewList.class);
+//        BaseCost.MENU_CLAZZ_LIST.add(AddressViewList.class);
+//        BaseCost.MENU_CLAZZ_LIST.add(PersonaViewList.class);
+//        BaseCost.MENU_CLAZZ_LIST.add(DeveloperView.class);
+//        BaseCost.MENU_CLAZZ_LIST.add(WizardView.class);
+//        BaseCost.MENU_CLAZZ_LIST.add(VersioneViewList.class);
+//        BaseCost.MENU_CLAZZ_LIST.add(UtenteViewList.class);
+//
+//        BaseCost.MENU_CLAZZ_LIST.add(Prova2ViewList.class);
+//        BaseCost.MENU_CLAZZ_LIST.add(ProvaViewList.class);
+//        BaseCost.MENU_CLAZZ_LIST.add(HomeView.class);
+//        BaseCost.MENU_CLAZZ_LIST.add(BollaViewList.class);
     }// end of method
 
 

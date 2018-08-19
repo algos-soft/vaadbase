@@ -149,7 +149,7 @@ public abstract class ABoot implements ServletContextListener {
      * Le @Route vengono aggiunte ad una Lista statica mantenuta in BaseCost
      * Verranno lette da MainLayout la prima volta che il browser 'chiama' una view
      */
-    private void addRouteStandard() {
+    protected void addRouteStandard() {
         if (pref.isBool(EAPreferenza.showCompany.getCode())) {
             BaseCost.MENU_CLAZZ_LIST.add(CompanyViewList.class);
         }// end of if cycle

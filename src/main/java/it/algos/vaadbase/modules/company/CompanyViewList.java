@@ -10,6 +10,7 @@ import it.algos.vaadbase.annotation.AIScript;
 import it.algos.vaadbase.presenter.IAPresenter;
 import it.algos.vaadbase.ui.AViewList;
 import it.algos.vaadbase.ui.MainLayout;
+import it.algos.vaadbase.ui.MainView;
 import it.algos.vaadbase.ui.dialog.AViewDialog;
 import it.algos.vaadbase.ui.dialog.IADialog;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -38,9 +39,8 @@ import static it.algos.vaadbase.application.BaseCost.TAG_COM;
  * Annotated with @Slf4j (facoltativo) per i logs automatici <br>
  * Annotated with @AIScript (facoltativo Algos) per controllare la ri-creazione di questo file dal Wizard <br>
  */
-//@Scope("session")
-//@UIScope
-@Route(value = TAG_COM, layout = MainLayout.class)
+@UIScope
+@Route(value = TAG_COM)
 @Qualifier(TAG_COM)
 @AIScript(sovrascrivibile = true)
 public class CompanyViewList extends AViewList {

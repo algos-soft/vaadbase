@@ -44,7 +44,7 @@ import org.springframework.data.mongodb.repository.config.EnableMongoRepositorie
 @ComponentScan({"it.algos.vaadbase", "it.algos.@MODULELOWER@"})
 @EntityScan({"it.algos.vaadbase.modules", "it.algos.@MODULELOWER@.modules"})
 @EnableMongoRepositories({"it.algos.vaadbase.modules", "it.algos.@MODULELOWER@.modules"})
-@AIScript(sovrascrivibile = true)
+@AIScript(sovrascrivibile = false)
 public class @MODULEUPPER@Application extends SpringBootServletInitializer {
 
     /**

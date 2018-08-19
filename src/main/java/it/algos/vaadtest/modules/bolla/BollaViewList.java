@@ -7,6 +7,7 @@ import com.vaadin.flow.component.icon.Icon;
 import com.vaadin.flow.component.html.Label;
 import com.vaadin.flow.component.textfield.TextField;
 import com.vaadin.flow.data.renderer.ComponentRenderer;
+import com.vaadin.flow.spring.annotation.UIScope;
 import it.algos.vaadbase.ui.dialog.IADialog;
 import it.algos.vaadbase.ui.dialog.AViewDialog;
 import com.vaadin.flow.component.icon.VaadinIcon;
@@ -49,7 +50,7 @@ import static it.algos.vaadtest.application.AppCost.TAG_BOL;
  * Annotated with @Slf4j (facoltativo) per i logs automatici <br>
  * Annotated with @AIScript (facoltativo Algos) per controllare la ri-creazione di questo file dal Wizard <br>
  */
-@Scope(ConfigurableBeanFactory.SCOPE_SINGLETON)
+@UIScope
 @Route(value = TAG_BOL, layout = MainLayout.class)
 @Qualifier(TAG_BOL)
 @Slf4j

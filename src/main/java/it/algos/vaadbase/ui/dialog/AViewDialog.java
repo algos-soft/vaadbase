@@ -55,7 +55,7 @@ public abstract class AViewDialog<T extends Serializable> extends Dialog impleme
     protected final FormLayout formLayout = new FormLayout();
     private final H2 titleField = new H2();
     private final String confirmText = "Conferma";
-    private final HorizontalLayout buttonBar = new HorizontalLayout(saveButton, cancelButton, deleteButton);
+    protected final HorizontalLayout buttonBar = new HorizontalLayout(saveButton, cancelButton, deleteButton);
     private final ConfirmationDialog<T> confirmationDialog = new ConfirmationDialog<>();
     public Consumer<T> itemAnnulla;
 
@@ -180,7 +180,7 @@ public abstract class AViewDialog<T extends Serializable> extends Dialog impleme
         add(div);
     }// end of method
 
-    private void initButtonBar() {
+    protected void initButtonBar() {
         saveButton.getElement().setAttribute("theme", "primary");
         cancelButton.addClickListener(e -> close());
         deleteButton.addClickListener(e -> deleteClicked());
@@ -189,7 +189,7 @@ public abstract class AViewDialog<T extends Serializable> extends Dialog impleme
         buttonBar.setSpacing(true);
         buttonBar.setMargin(true);
         add(buttonBar);
-    }
+    }// end of method
 
     /**
      * Crea i fields (non esiste ancora la entityBean, che arriva nel metodo open())

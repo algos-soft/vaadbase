@@ -87,7 +87,7 @@ public class AService implements IAService {
      * Inietta da Spring
      */
     @Autowired
-    MongoOperations mongo;
+    protected MongoOperations mongo;
 
 
 //    @Autowired
@@ -311,25 +311,52 @@ public class AService implements IAService {
                         .collect(Collectors.toList());
             } else {
                 lista = findAll();
-                lista = lista.stream()
-                        .filter(entity -> {
-                            boolean status = false;
-                            boolean esisteCompany = ((ACEntity) entity).company != null;
-                            if (esisteCompany) {
-                                status = ((ACEntity) entity).company.getCode().equals(companyCode);
-                            } else {
-                                status = companyCode.equals("");
-                            }// end of if/else cycle
+                if (lista != null) {
+                    lista = lista.stream()
+                            .filter(entity -> {
+                                boolean status = false;
+                                boolean esisteCompany = ((ACEntity) entity).company != null;
+                                if (esisteCompany) {
+                                    status = ((ACEntity) entity).company.getCode().equals(companyCode);
+                                } else {
+                                    status = companyCode.equals("");
+                                }// end of if/else cycle
 
-                            return status;
+                                return status;
 //                            return ((ACEntity) entity).company != null && ((ACEntity) entity).company.getCode().equals(company.getCode());
-                        })
+                            })
+                            .filter(entity -> {
+                                if (isEsisteEntityKeyUnica(entity)) {
+                                    return getKeyUnica(entity).toLowerCase().startsWith(normalizedFilter);
+                                } else {
+                                    if (reflection.isEsiste(entityClass, FIELD_NAME_CODE)) {
+                                        return ((String) reflection.getPropertyValue(entity, FIELD_NAME_CODE)).startsWith(normalizedFilter);
+                                    } else {
+                                        if (reflection.isEsiste(entityClass, FIELD_NAME_DESCRIZIONE)) {
+                                            return ((String) reflection.getPropertyValue(entity, FIELD_NAME_DESCRIZIONE)).startsWith(normalizedFilter);
+                                        } else {
+                                            return true;
+                                        }// end of if/else cycle
+                                    }// end of if/else cycle
+                                }// end of if/else cycle
+                            })
+                            .collect(Collectors.toList());
+                }// end of if cycle
+            }// end of if/else cycle
+        } else {
+            lista = findAll();
+            if (lista != null) {
+                lista = lista.stream()
                         .filter(entity -> {
                             if (isEsisteEntityKeyUnica(entity)) {
                                 return getKeyUnica(entity).toLowerCase().startsWith(normalizedFilter);
                             } else {
                                 if (reflection.isEsiste(entityClass, FIELD_NAME_CODE)) {
-                                    return ((String) reflection.getPropertyValue(entity, FIELD_NAME_CODE)).startsWith(normalizedFilter);
+                                    if (reflection.getPropertyValue(entity, FIELD_NAME_CODE) == null) {
+                                        return true;
+                                    } else {
+                                        return ((String) reflection.getPropertyValue(entity, FIELD_NAME_CODE)).startsWith(normalizedFilter);
+                                    }// end of if/else cycle
                                 } else {
                                     if (reflection.isEsiste(entityClass, FIELD_NAME_DESCRIZIONE)) {
                                         return ((String) reflection.getPropertyValue(entity, FIELD_NAME_DESCRIZIONE)).startsWith(normalizedFilter);
@@ -340,30 +367,7 @@ public class AService implements IAService {
                             }// end of if/else cycle
                         })
                         .collect(Collectors.toList());
-            }// end of if/else cycle
-        } else {
-            lista = findAll();
-            lista = lista.stream()
-                    .filter(entity -> {
-                        if (isEsisteEntityKeyUnica(entity)) {
-                            return getKeyUnica(entity).toLowerCase().startsWith(normalizedFilter);
-                        } else {
-                            if (reflection.isEsiste(entityClass, FIELD_NAME_CODE)) {
-                                if (reflection.getPropertyValue(entity, FIELD_NAME_CODE) == null) {
-                                    return true;
-                                } else {
-                                    return ((String) reflection.getPropertyValue(entity, FIELD_NAME_CODE)).startsWith(normalizedFilter);
-                                }// end of if/else cycle
-                            } else {
-                                if (reflection.isEsiste(entityClass, FIELD_NAME_DESCRIZIONE)) {
-                                    return ((String) reflection.getPropertyValue(entity, FIELD_NAME_DESCRIZIONE)).startsWith(normalizedFilter);
-                                } else {
-                                    return true;
-                                }// end of if/else cycle
-                            }// end of if/else cycle
-                        }// end of if/else cycle
-                    })
-                    .collect(Collectors.toList());
+            }// end of if cycle
         }// end of if/else cycle
 
         return lista;

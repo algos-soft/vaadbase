@@ -8,6 +8,7 @@ import com.vaadin.flow.component.polymertemplate.Id;
 import com.vaadin.flow.data.binder.BeanValidationBinder;
 import com.vaadin.flow.router.PageTitle;
 import com.vaadin.flow.router.Route;
+import com.vaadin.flow.spring.annotation.UIScope;
 import com.vaadin.flow.templatemodel.TemplateModel;
 import it.algos.vaadbase.backend.data.Role;
 import it.algos.vaadbase.modules.persona.PersonaViewDialog;
@@ -19,6 +20,7 @@ import org.springframework.security.access.annotation.Secured;
 
 import static it.algos.vaadbase.application.BaseCost.PAGE_USERS;
 
+@UIScope
 @Tag("users-view")
 @HtmlImport("src/views/admin/users/users-view.html")
 @Route(value = PAGE_USERS, layout = MainView.class)

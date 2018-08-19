@@ -18,9 +18,7 @@ import it.algos.vaadbase.ui.entities.PageInfo;
 import java.util.ArrayList;
 import java.util.List;
 
-//@SpringComponent
 @Tag("app-navigation")
-//@Scope(ConfigurableBeanFactory.SCOPE_SINGLETON)
 @HtmlImport("src/components/app-navigation.html")
 public class AppNavigation extends PolymerTemplate<TemplateModel> implements AfterNavigationObserver {
 
@@ -32,10 +30,6 @@ public class AppNavigation extends PolymerTemplate<TemplateModel> implements Aft
     private String defaultHref;
     private String currentHref;
 
-//    public AppNavigation() {
-//        super();
-//        int a = 87;
-//    }// end of costructor
 
     public void init(List<PageInfo> pages, String defaultHref, String logoutHref) {
         this.logoutHref = logoutHref;
@@ -69,7 +63,7 @@ public class AppNavigation extends PolymerTemplate<TemplateModel> implements Aft
         String href = event.getLocation().getFirstSegment().isEmpty() ? defaultHref
                 : event.getLocation().getFirstSegment();
         currentHref = href;
-//        tabs.setSelectedIndex(hrefs.indexOf(href));
+        tabs.setSelectedIndex(hrefs.indexOf(href));
     }// end of method
 
 }// end of class

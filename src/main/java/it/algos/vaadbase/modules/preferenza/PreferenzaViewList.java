@@ -9,6 +9,7 @@ import com.vaadin.flow.component.icon.Icon;
 import com.vaadin.flow.component.icon.VaadinIcon;
 import com.vaadin.flow.data.renderer.ComponentRenderer;
 import com.vaadin.flow.router.Route;
+import com.vaadin.flow.spring.annotation.UIScope;
 import it.algos.vaadbase.annotation.AIScript;
 import it.algos.vaadbase.enumeration.EAPrefType;
 import it.algos.vaadbase.presenter.IAPresenter;
@@ -42,7 +43,7 @@ import static it.algos.vaadbase.application.BaseCost.TAG_PRE;
  * Annotated with @Slf4j (facoltativo) per i logs automatici <br>
  * Annotated with @AIScript (facoltativo Algos) per controllare la ri-creazione di questo file dal Wizard <br>
  */
-@Scope(ConfigurableBeanFactory.SCOPE_SINGLETON)
+@UIScope
 @Route(value = TAG_PRE, layout = MainLayout.class)
 @Qualifier(TAG_PRE)
 @Slf4j

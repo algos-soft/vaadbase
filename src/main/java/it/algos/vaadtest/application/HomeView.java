@@ -6,9 +6,11 @@ import com.vaadin.flow.component.html.Paragraph;
 import com.vaadin.flow.component.icon.VaadinIcon;
 import com.vaadin.flow.router.*;
 import com.vaadin.flow.spring.annotation.SpringComponent;
+import com.vaadin.flow.spring.annotation.UIScope;
 import it.algos.vaadbase.annotation.AIScript;
 import it.algos.vaadbase.ui.AView;
 import it.algos.vaadbase.ui.MainLayout;
+import it.algos.vaadbase.ui.MainView;
 import it.algos.vaadtest.training.ExampleTemplate;
 import it.algos.vaadtest.training.VaadinWelcome;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -31,8 +33,8 @@ import static it.algos.vaadbase.application.BaseCost.TAG_HOM;
  * Annotated with @Route (obbligatorio) per la selezione della vista. @Route(value = "") per la vista iniziale
  * Annotated with @AIScript (facoltativo) per controllare la ri-creazione di questo file nello script di algos <br>
  */
-@Route(value = "", layout = MainLayout.class)
-//@Scope(ConfigurableBeanFactory.SCOPE_SINGLETON)
+@Route(value = "")
+@UIScope
 @AIScript(sovrascrivibile = false)
 public class HomeView extends AView {
 

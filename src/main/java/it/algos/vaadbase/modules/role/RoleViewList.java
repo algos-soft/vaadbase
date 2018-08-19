@@ -7,6 +7,7 @@ import com.vaadin.flow.component.icon.Icon;
 import com.vaadin.flow.component.html.Label;
 import com.vaadin.flow.component.textfield.TextField;
 import com.vaadin.flow.data.renderer.ComponentRenderer;
+import com.vaadin.flow.spring.annotation.UIScope;
 import it.algos.vaadbase.ui.MainView;
 import it.algos.vaadbase.ui.dialog.IADialog;
 import it.algos.vaadbase.ui.dialog.AViewDialog;
@@ -50,8 +51,8 @@ import static it.algos.vaadbase.application.BaseCost.TAG_ROL;
  * Annotated with @Slf4j (facoltativo) per i logs automatici <br>
  * Annotated with @AIScript (facoltativo Algos) per controllare la ri-creazione di questo file dal Wizard <br>
  */
-@Scope(ConfigurableBeanFactory.SCOPE_SINGLETON)
-@Route(value = TAG_ROL, layout = MainView.class)
+@UIScope
+@Route(value = TAG_ROL)
 @Qualifier(TAG_ROL)
 @Slf4j
 @AIScript(sovrascrivibile = true)

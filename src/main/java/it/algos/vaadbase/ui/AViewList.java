@@ -492,6 +492,9 @@ public abstract class AViewList extends VerticalLayout implements IAView, Before
             case integer:
                 colonna = grid.addColumn(property);
                 break;
+            case lungo:
+                colonna = grid.addColumn(property);
+                break;
             case checkbox:
                 colonna = grid.addColumn(new ComponentRenderer<>(entity -> {
                     Boolean status = false;

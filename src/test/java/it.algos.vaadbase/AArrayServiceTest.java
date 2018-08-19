@@ -14,8 +14,7 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
-import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.junit.jupiter.api.Assertions.assertNotNull;
+import static org.junit.jupiter.api.Assertions.*;
 
 
 /**
@@ -29,13 +28,15 @@ import static org.junit.jupiter.api.Assertions.assertNotNull;
 @TestInstance(TestInstance.Lifecycle.PER_CLASS)
 @Tag("array")
 @DisplayName("Test sul service di utility per gli arry")
-public class AArrayServiceTest extends ATest{
+public class AArrayServiceTest extends ATest {
 
 
     private final static String[] stringArray = {"primo", "secondo", "quarto", "quinto", "1Ad", "terzo", "a10"};
     private final static List<String> stringList = Arrays.asList(stringArray);
     private final static Object[] objArray = {new Label("Alfa"), new Button()};
     private final static List<Object> objList = Arrays.asList(objArray);
+    private final static Long[] longArray = {234L, 85L, 151099L, 123500L, 3L, 456772L};
+    private final static List<Long> longList = Arrays.asList(longArray);
     private List<String> prevista;
     private List<String> ottenuta;
 
@@ -163,5 +164,131 @@ public class AArrayServiceTest extends ATest{
         int ottenutoInt = objListOttenuta.size();
         assertEquals(previstoInt, ottenutoInt);
     }// end of single test
+
+    /**
+     * Costruisce una stringa con i singoli valori divisi da un pipe
+     * <p>
+     *
+     * @param array lista di valori
+     *
+     * @return stringa con i singoli valori divisi da un separatore
+     */
+    @Test
+    public void toStringaPipe() {
+        previsto = "primo|secondo|quarto|quinto|1Ad|terzo|a10";
+        ottenuto = service.toStringaPipe(stringList);
+        assertNotNull(ottenuto);
+        assertEquals(previsto, ottenuto);
+    }// end of method
+
+
+    /**
+     * Costruisce una stringa con i singoli valori divisi da un separatore
+     * <p>
+     *
+     * @param array lista di valori
+     * @param sep   carattere separatore
+     *
+     * @return stringa con i singoli valori divisi da un separatore
+     */
+    @Test
+    public void toStringa() {
+        previsto = "primo|secondo|quarto|quinto|1Ad|terzo|a10";
+        ottenuto = service.toStringa(stringList, "|");
+        assertNotNull(ottenuto);
+        assertEquals(previsto, ottenuto);
+
+        previsto = "primo,secondo,quarto,quinto,1Ad,terzo,a10";
+        ottenuto = service.toStringa(stringList, ",");
+        assertNotNull(ottenuto);
+        assertEquals(previsto, ottenuto);
+    }// end of method
+
+    /**
+     * Numero di cicli
+     *
+     * @param totale da dividere
+     * @param blocco divisore
+     *
+     * @return numero di cicli
+     */
+    @Test
+    public void numCicli() {
+        previstoIntero = 5;
+        ottenutoIntero = service.numCicli(50, 10);
+        assertNotNull(ottenuto);
+        assertEquals(previstoIntero, ottenutoIntero);
+
+        previstoIntero = 6;
+        ottenutoIntero = service.numCicli(51, 10);
+        assertNotNull(ottenuto);
+        assertEquals(previstoIntero, ottenutoIntero);
+    }// end of method
+
+    /**
+     * Estra un subset dalla lista
+     *
+     * @param listatTotale  da suddividere
+     * @param dimBlocco     di suddivisione
+     * @param cicloCorrente attuale
+     *
+     * @return sublista corrente del ciclo
+     */
+    @Test
+    public void estraeSublista() {
+        List listaOttenuta;
+        List listaPrevista;
+
+        String[] subStringa = {"primo", "secondo"};
+        listaPrevista = Arrays.asList(subStringa);
+        listaOttenuta = service.estraeSublista(stringList, 2, 1);
+        assertNotNull(listaOttenuta);
+        assertEquals(listaPrevista, listaOttenuta);
+
+        String[] subStringa2 = {"quinto", "1Ad", "terzo"};
+        listaPrevista = Arrays.asList(subStringa2);
+        listaOttenuta = service.estraeSublista(stringList, 3, 2);
+        assertNotNull(listaOttenuta);
+        assertEquals(listaPrevista, listaOttenuta);
+
+        listaOttenuta = service.estraeSublista(stringList, 2, 0);
+        assertNull(listaOttenuta);
+
+        listaOttenuta = service.estraeSublista(null, 2, 1);
+        assertNull(listaOttenuta);
+
+        listaOttenuta = service.estraeSublista(stringList, 9, 1);
+        assertNotNull(listaOttenuta);
+        assertEquals(stringList, listaOttenuta);
+    }// end of method
+
+    /**
+     * Estra un subset dalla lista
+     *
+     * @param listatTotale  da suddividere
+     * @param dimBlocco     di suddivisione
+     * @param cicloCorrente attuale
+     *
+     * @return sublista corrente del ciclo
+     */
+    @Test
+    public void estraeSublistaLong() {
+        previsto = "234L,85L,151099L,123500L,3L,456772L";
+        List<Long> listaOttenuta;
+        List<Long> listaPrevista;
+
+        Long[] subLong = {234L, 85L};
+        listaPrevista = Arrays.asList(subLong);
+        listaOttenuta = service.estraeSublistaLong(longList, 2, 1);
+        assertNotNull(listaOttenuta);
+        assertEquals(listaPrevista, listaOttenuta);
+
+        Long[] subLong2 = {123500L, 3L, 456772L};
+        listaPrevista = Arrays.asList(subLong2);
+        listaOttenuta = service.estraeSublistaLong(longList, 3, 2);
+        assertNotNull(listaOttenuta);
+        assertEquals(listaPrevista, listaOttenuta);
+
+    }// end of method
 
 }// end of class

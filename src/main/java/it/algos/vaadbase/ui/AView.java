@@ -39,8 +39,8 @@ import java.util.List;
 @SpringComponent
 //@Theme(Lumo.class)
 @HtmlImport("frontend://styles/shared-styles.html")
-@Scope(ConfigurableBeanFactory.SCOPE_SINGLETON)
-public class AView extends VerticalLayout implements IAView, BeforeEnterObserver {
+//@Scope(ConfigurableBeanFactory.SCOPE_SINGLETON)
+public abstract class AView extends VerticalLayout implements IAView, BeforeEnterObserver {
 
 
     protected final TextField searchField = new TextField("", "Search");
