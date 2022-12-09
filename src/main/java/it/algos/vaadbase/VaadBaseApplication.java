@@ -20,7 +20,7 @@ import org.springframework.data.mongodb.repository.config.EnableMongoRepositorie
  * <p>
  * Spring boot web application initializer.
  * The entry point of the Spring Boot application.
- * <p>pippoz
+ * <p>pippoz dopodomani
  * Questa classe contiene il metodo 'main' che è il punto di ingresso dell'applicazione Java
  * In fase di sviluppo si possono avere diverse configurazioni, ognuna delle quali punta un ''main' diverso
  * Nel JAR finale (runtime) si può avere una sola classe col metodo 'main'.
