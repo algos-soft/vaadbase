@@ -27,7 +27,7 @@ import static org.junit.jupiter.api.Assertions.assertNull;
 @TestInstance(TestInstance.Lifecycle.PER_CLASS)
 @Tag("pref")
 @DisplayName("Test sul service di preferenze")
-public class EAPrefTypeTest extends ATest {
+public class EAPrefTypeTestMaster extends ATest {
 
     @InjectMocks
     public APreferenzaService service;
